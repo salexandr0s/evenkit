@@ -127,6 +127,7 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
   const sidebarRef = useRef<HTMLElement>(null);
   const cycleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLElement>(null);
   const sidebarFocusRef = useRef<HTMLElement | null>(null);
 
@@ -162,6 +163,24 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
     restoreMobileFocus(event);
     if (event.relatedTarget !== null || !sidebarRef.current?.inert) sidebarFocusRef.current = null;
   }
+
+  const closeDrawerFromBrand: MouseEventHandler<HTMLDivElement> = (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[href]") : null;
+    if (!link || !event.currentTarget.contains(link) || link.hasAttribute("download") || (link.target && link.target !== "_self")) return;
+    setDrawerOpen(false);
+  };
+
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    const content = contentRef.current;
+    if (!header || !content) return;
+    const measure = () => content.style.setProperty("--pk-admin-header-height", `${header.getBoundingClientRect().height}px`);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
 
   useLayoutEffect(() => {
     if (sidebarState !== "hidden" || (!sidebarRef.current?.contains(document.activeElement) && !(sidebarFocusRef.current && document.activeElement === document.body))) return;
@@ -208,7 +227,7 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
         </aside>
         <div {...drag.handleProps} onBlurCapture={restoreMobileFocus} className="pk-admin-resize" role="separator" tabIndex={0} aria-label="Resize sidebar" aria-orientation="vertical" aria-controls={sidebarId} aria-valuemin={0} aria-valuemax={sidebarWidths.expanded} aria-valuenow={Math.round(drag.width ?? sidebarWidths[sidebarState])} aria-valuetext={`${sidebarState[0]?.toUpperCase()}${sidebarState.slice(1)}`} />
         <div className="pk-admin-workspace">
-          <header className="pk-admin-header">
+          <header ref={headerRef} className="pk-admin-header">
             <Dialog open={drawerOpen} onOpenChange={setDrawerOpen}>
               <DialogTrigger asChild>
                 <Button ref={menuRef} variant="ghost" shape="icon" className="pk-admin-menu" aria-label="Open navigation">
@@ -227,7 +246,7 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
               >
                 <DialogTitle className="pk-admin-drawer-title">{navLabel}</DialogTitle>
                 <DialogDescription className="pk-admin-visually-hidden">Choose a page in this application.</DialogDescription>
-                <div className="pk-admin-brand pk-admin-drawer-brand">{brand}</div>
+                <div className="pk-admin-brand pk-admin-drawer-brand" onClick={closeDrawerFromBrand}>{brand}</div>
                 <Navigation {...navProps} onNavigate={() => setDrawerOpen(false)} />
                 {footer ? <div className="pk-admin-sidebar-footer">{footer}</div> : null}
               </DialogContent>

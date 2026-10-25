@@ -15,6 +15,8 @@ Open `http://127.0.0.1:5173`. The dev command builds the packages first. If you 
 
 The catalog includes themes, design tokens, icons, buttons, fields, custom select, dialog, tooltips, status, loading, empty state, admin shell, data table, and AI chat. Open `/#themes` to compare eight palettes and apply one across the library. The catalog follows your system appearance until you choose light or dark with the sun/moon button; your choice is remembered. Forms, navigation, table state changes, and chat replies are local previews.
 
+The catalog uses AdminShell for its own navigation. Each entry has an icon. Drag the sidebar edge or use the single header button to expand, minimise, or hide it; the display mode is remembered. Search stays in the header, and narrow screens use a navigation drawer.
+
 ## Packages
 
 | Package | Contents | Public imports |

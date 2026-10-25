@@ -1,6 +1,12 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { themes, themeNames, type ColorMode, type ThemeName } from "@project-kit/tokens";
-import { Badge, Button, ChevronRightIcon, EmptyState, ExternalLinkIcon, Input, Label, MenuIcon, MoonIcon, SearchIcon, Select, Spinner, SunIcon, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@project-kit/ui";
+import {
+  AdminShell, Badge, Button, ChevronDownIcon, CircleCheckIcon, CircleHelpIcon, CircleIcon,
+  EmptyState, ExternalLinkIcon, FileTextIcon, InboxIcon, Input, Label, LayoutDashboardIcon,
+  MaximizeIcon, MessageSquareIcon, MoonIcon, PanelLeftIcon, PencilIcon, RotateCcwIcon,
+  SearchIcon, Select, Spinner, SquareIcon, SunIcon, Tooltip, TooltipContent, TooltipProvider,
+  TooltipTrigger, type AdminLinkProps, type AdminNavGroup, type AdminSidebarState,
+} from "@project-kit/ui";
 import { entries, groups } from "./catalog-data";
 import { CodeExample } from "./code-example";
 import { FieldPreview } from "./field-preview";
@@ -20,8 +26,16 @@ const ChatPreview = lazy(() => import("./chat-preview").then((module) => ({ defa
 const TooltipPreview = lazy(() => import("./tooltip-preview").then((module) => ({ default: module.TooltipPreview })));
 
 const appearances = ["system", "light", "dark"] as const;
+const sidebarStates = ["expanded", "collapsed", "hidden"] as const;
 type Appearance = (typeof appearances)[number];
 const themeOptions = themeNames.map((name) => ({ value: name, label: themes[name].name }));
+const navigationIcons: Record<string, ReactNode> = {
+  themes: <SunIcon />, tokens: <LayoutDashboardIcon />, icons: <CircleIcon />,
+  buttons: <SquareIcon />, fields: <PencilIcon />, select: <ChevronDownIcon />,
+  dialog: <MaximizeIcon />, tooltips: <CircleHelpIcon />, "admin-shell": <PanelLeftIcon />,
+  "data-table": <FileTextIcon />, chat: <MessageSquareIcon />, status: <CircleCheckIcon />,
+  loading: <RotateCcwIcon />, empty: <InboxIcon />,
+};
 
 function readPreference<T extends string>(key: string, options: readonly T[], fallback: T): T {
   try {
@@ -59,26 +73,26 @@ function Preview({ id, theme, mode, onThemeChange }: { id: string; theme: ThemeN
 export function Catalog() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(selectedFromHash);
-  const [navigationOpen, setNavigationOpen] = useState(false);
+  const [sidebarState, setSidebarState] = useState<AdminSidebarState>(() => readPreference("sidebar", sidebarStates, "expanded"));
   const searchRef = useRef<HTMLInputElement>(null);
-  const focusSearchAfterClear = useRef(false);
   const [theme, setTheme] = useState<ThemeName>(() => readPreference("theme", themeNames, "neutral"));
   const [appearance, setAppearance] = useState<Appearance>(() => readPreference("appearance", appearances, "system"));
   const [systemDark, setSystemDark] = useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches);
   const mode: ColorMode = appearance === "system" ? (systemDark ? "dark" : "light") : appearance;
   const appearanceAction = mode === "light" ? "Switch to dark mode" : "Switch to light mode";
 
-  useLayoutEffect(() => {
-    if (!focusSearchAfterClear.current) return;
-    focusSearchAfterClear.current = false;
-    searchRef.current?.focus();
-  }, [query, navigationOpen]);
-
   function clearCatalogSearch() {
-    focusSearchAfterClear.current = true;
+    searchRef.current?.focus();
     setQuery("");
-    if (!searchRef.current?.getClientRects().length) setNavigationOpen(true);
   }
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("project-kit.catalog.sidebar", sidebarState);
+    } catch {
+      // Sidebar controls still work when browser storage is unavailable.
+    }
+  }, [sidebarState]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
@@ -105,7 +119,6 @@ export function Catalog() {
       if (!entries.some((entry) => entry.id === id)) return;
       setSelectedId(id);
       setQuery("");
-      setNavigationOpen(false);
     };
     window.addEventListener("hashchange", change);
     return () => window.removeEventListener("hashchange", change);
@@ -114,48 +127,47 @@ export function Catalog() {
   const search = query.trim().toLowerCase();
   const visible = entries.filter((entry) => [entry.name, entry.group, entry.description, ...entry.tags].join(" ").toLowerCase().includes(search));
   const active = visible.find((entry) => entry.id === selectedId) ?? visible[0];
+  const navigation: readonly AdminNavGroup[] = groups.flatMap((group) => {
+    const items = visible.filter((entry) => entry.group === group).map((entry) => ({
+      id: entry.id, label: entry.name, href: `#${entry.id}`, icon: navigationIcons[entry.id],
+    }));
+    return items.length > 0 ? [{ label: group, items }] : [];
+  });
+
+  function selectEntry(event: MouseEvent<HTMLAnchorElement>, id: string) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (event.currentTarget.hasAttribute("download") || (event.currentTarget.target && event.currentTarget.target !== "_self")) return;
+    setSelectedId(id);
+    setQuery("");
+  }
+
+  function renderLink({ onClick, ...props }: AdminLinkProps) {
+    return <a {...props} onClick={(event) => {
+      onClick?.(event);
+      const entry = entries.find((item) => props.href === `#${item.id}`);
+      if (entry) selectEntry(event, entry.id);
+    }} />;
+  }
+
+  const brandMark = <span className="catalog-brand-mark" aria-hidden="true"><span /><span /><span /><span /></span>;
 
   return (
-    <div className="catalog-app">
-      <a className="catalog-skip" href="#catalog-main">Skip to component preview</a>
-      <aside className="catalog-sidebar" aria-label="Component library">
-        <div className="catalog-brand-row">
-          <a className="catalog-brand" href="#buttons" aria-label="Project kit home">
-            <span className="catalog-brand-mark" aria-hidden="true"><span /><span /><span /><span /></span>
-            <span>Project kit<small>Shared foundations</small></span>
-          </a>
-          <Button className="catalog-menu-toggle" size="sm" variant="outline" aria-expanded={navigationOpen} aria-controls="catalog-navigation" onClick={() => setNavigationOpen((value) => !value)}>
-            <MenuIcon size="sm" />{navigationOpen ? "Close components" : "Browse components"}
-          </Button>
-        </div>
-        <div className="catalog-sidebar-body" id="catalog-navigation" data-open={navigationOpen}>
-          <div className="catalog-search">
-            <Label htmlFor="component-search">Search components</Label>
-            <div className="catalog-search-control"><SearchIcon size="sm" /><Input ref={searchRef} id="component-search" type="search" placeholder="Search the library…" value={query} onChange={(event) => setQuery(event.target.value)} aria-describedby="search-results" /></div>
-            <p id="search-results" className="catalog-search-count" role="status">{visible.length} {visible.length === 1 ? "entry" : "entries"}</p>
-          </div>
-          <nav aria-label="Components" className="catalog-navigation">
-            {groups.map((group) => {
-              const groupEntries = visible.filter((entry) => entry.group === group);
-              return groupEntries.length > 0 ? (
-                <div className="catalog-navigation-group" key={group}>
-                  <p>{group}</p>
-                  {groupEntries.map((entry) => (
-                    <a href={`#${entry.id}`} key={entry.id} aria-current={entry.id === active?.id ? "page" : undefined} onClick={() => { setSelectedId(entry.id); setQuery(""); setNavigationOpen(false); }}>
-                      <span>{entry.name}</span><span aria-hidden="true"><ChevronRightIcon size="sm" /></span>
-                    </a>
-                  ))}
-                </div>
-              ) : null;
-            })}
-          </nav>
-          <div className="catalog-sidebar-footer"><Badge tone="accent">Pilot</Badge><span>Version 0.1.0</span><p>Internal component library</p></div>
-        </div>
-      </aside>
-      <div className="catalog-workspace">
-        <header className="catalog-toolbar">
-          <p className="catalog-breadcrumb">Library <span aria-hidden="true">/</span> <strong>Component reference</strong></p>
-          <div className="catalog-preferences">
+    <AdminShell
+      className="catalog-app"
+      brand={<a className="catalog-brand" href="#buttons" aria-label="Project kit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}<span>Project kit<small>Shared foundations</small></span></a>}
+      compactBrand={<a className="catalog-brand" href="#buttons" aria-label="Project kit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}</a>}
+      sidebarState={sidebarState}
+      onSidebarStateChange={setSidebarState}
+      navigation={navigation}
+      {...(active ? { activeItemId: active.id } : {})}
+      renderLink={renderLink}
+      navLabel="Components"
+      contentId="catalog-main"
+      header={<div className="catalog-search">
+        <div className="catalog-search-heading"><Label htmlFor="component-search">Search components</Label><p id="search-results" className="catalog-search-count" role="status">{visible.length} {visible.length === 1 ? "entry" : "entries"}</p></div>
+        <Input ref={searchRef} id="component-search" type="search" startAdornment={<SearchIcon size="sm" />} placeholder="Search the library…" value={query} onChange={(event) => setQuery(event.target.value)} aria-describedby="search-results" />
+      </div>}
+      actions={<div className="catalog-preferences">
             <div><Label htmlFor="theme-select">Theme</Label><Select id="theme-select" value={theme} options={themeOptions} onValueChange={(selected) => { const value = themeNames.find((name) => name === selected); if (value) setTheme(value); }} /></div>
             <TooltipProvider>
               <Tooltip>
@@ -167,9 +179,10 @@ export function Catalog() {
                 <TooltipContent side="bottom" align="end">{appearanceAction}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          </div>
-        </header>
-        <main className="catalog-main" id="catalog-main" tabIndex={-1}>
+          </div>}
+      footer={<div className="catalog-library-footer"><div><Badge tone="accent">Pilot</Badge><span>Version 0.1.0</span></div><p>Internal component library</p></div>}
+      compactFooter={<span className="catalog-compact-footer" aria-label="Version 0.1.0">0.1.0</span>}
+    >
           {active ? (
             <article className="catalog-detail" data-composition={active.group === "Compositions" ? active.id : undefined} key={active.id}>
               <div className="catalog-detail-heading">
@@ -191,8 +204,6 @@ export function Catalog() {
           ) : (
             <div className="catalog-no-results"><EmptyState icon={<SearchIcon />} titleAs="h1" title="No components match your search" description={`No results for “${query.trim()}”. Try a component name or a state such as loading.`} action={<Button onClick={clearCatalogSearch}>Clear search</Button>} /></div>
           )}
-        </main>
-      </div>
-    </div>
+    </AdminShell>
   );
 }

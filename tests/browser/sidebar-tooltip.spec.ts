@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("sidebar expands, becomes an icon rail with tooltips, and hides without reserving space", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/#admin-shell");
-  const shell = page.locator(".pk-admin-shell");
+  const shell = page.locator(".catalog-admin-preview .pk-admin-shell");
   const aside = shell.locator(".pk-admin-sidebar");
   const controls = shell.locator(".pk-admin-sidebar-controls");
   await expect(controls.getByRole("button")).toHaveCount(1);
@@ -30,7 +30,7 @@ test("sidebar expands, becomes an icon rail with tooltips, and hides without res
   await expect(tooltip).toBeVisible();
   await expect(team).toHaveAccessibleDescription("Team");
   await team.press("Enter");
-  await expect(page.getByRole("heading", { name: "Workspace team", exact: true })).toBeVisible();
+  await expect(shell.getByRole("heading", { name: "Workspace team", exact: true })).toBeVisible();
   await expect(team).toHaveAttribute("aria-current", "page");
   await expect(tooltip).not.toBeVisible();
   // A team uses a group glyph; each individual uses the single-person glyph.
@@ -47,26 +47,28 @@ test("sidebar expands, becomes an icon rail with tooltips, and hides without res
   await controls.getByRole("button", { name: "Expand sidebar", exact: true }).click();
   await expect(aside).toHaveCSS("width", "260px");
   await expect(team).toHaveAttribute("aria-current", "page");
-  await expect(page.getByRole("heading", { name: "Workspace team", exact: true })).toBeVisible();
+  await expect(shell.getByRole("heading", { name: "Workspace team", exact: true })).toBeVisible();
 });
 
 test("sidebar state survives the mobile drawer and tooltips follow inherited RTL", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/#admin-shell");
-  const aside = page.locator(".pk-admin-sidebar");
-  await page.getByRole("button", { name: "Minimise sidebar", exact: true }).click();
+  const shell = page.locator(".catalog-admin-preview .pk-admin-shell");
+  const aside = shell.locator(".pk-admin-sidebar");
+  const menu = shell.getByRole("button", { name: "Open navigation", exact: true });
+  await shell.getByRole("button", { name: "Minimise sidebar", exact: true }).click();
   await aside.getByRole("link", { name: "Team", exact: true }).focus();
   await expect(page.getByRole("tooltip", { name: "Team", exact: true })).toBeVisible();
   await page.setViewportSize({ width: 360, height: 800 });
   await expect(aside).not.toBeVisible();
   await expect(page.getByRole("tooltip")).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Open navigation", exact: true })).toBeFocused();
-  await page.getByRole("button", { name: "Open navigation", exact: true }).click();
+  await expect(menu).toBeFocused();
+  await menu.click();
   const drawer = page.getByRole("dialog", { name: "Demo workspace navigation", exact: true });
   await drawer.getByRole("link", { name: "Team", exact: true }).click();
   await expect(drawer).not.toBeVisible();
-  await expect(page.getByRole("heading", { name: "Workspace team", exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Open navigation", exact: true })).toBeFocused();
+  await expect(shell.getByRole("heading", { name: "Workspace team", exact: true })).toBeVisible();
+  await expect(menu).toBeFocused();
   await page.setViewportSize({ width: 1440, height: 900 });
   await expect(aside).toHaveCSS("width", "72px");
   await page.evaluate(() => { document.documentElement.dir = "rtl"; });
@@ -79,20 +81,21 @@ test("sidebar state survives the mobile drawer and tooltips follow inherited RTL
   const linkBox = await team.boundingBox();
   expect(tipBox!.x + tipBox!.width).toBeLessThanOrEqual(linkBox!.x);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-  await page.getByRole("button", { name: "Hide sidebar", exact: true }).focus();
+  await shell.getByRole("button", { name: "Hide sidebar", exact: true }).focus();
   await page.setViewportSize({ width: 360, height: 800 });
-  await expect(page.getByRole("button", { name: "Open navigation", exact: true })).toBeFocused();
+  await expect(menu).toBeFocused();
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.getByRole("button", { name: "Hide sidebar", exact: true }).focus();
+  await shell.getByRole("button", { name: "Hide sidebar", exact: true }).focus();
   await expect(page.getByRole("tooltip", { name: "Hide sidebar", exact: true })).toBeVisible();
 });
 
 test("sidebar edge tracks dragging, snaps to each mode, and cancels without committing", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/#admin-shell");
-  const frame = page.locator(".pk-admin-frame");
-  const aside = page.locator(".pk-admin-sidebar");
-  const handle = page.getByRole("separator", { name: "Resize sidebar", exact: true });
+  const shell = page.locator(".catalog-admin-preview .pk-admin-shell");
+  const frame = shell.locator(".pk-admin-frame");
+  const aside = shell.locator(".pk-admin-sidebar");
+  const handle = shell.getByRole("separator", { name: "Resize sidebar", exact: true });
   await expect(aside).toHaveCSS("width", "260px");
 
   async function grabEdge() {
@@ -114,7 +117,7 @@ test("sidebar edge tracks dragging, snaps to each mode, and cancels without comm
   await page.mouse.up();
   await expect(aside).toHaveCSS("width", "72px");
   await expect(handle).toHaveAttribute("aria-valuenow", "72");
-  await expect(page.getByRole("button", { name: "Hide sidebar", exact: true })).toBeVisible();
+  await expect(shell.getByRole("button", { name: "Hide sidebar", exact: true })).toBeVisible();
 
   edge = await grabEdge();
   await page.mouse.move(edge.x - 60, edge.y, { steps: 6 });
@@ -143,7 +146,7 @@ test("sidebar edge tracks dragging, snaps to each mode, and cancels without comm
   await page.setViewportSize({ width: 360, height: 800 });
   await page.mouse.up();
   await expect(handle).not.toBeVisible();
-  await expect(page.getByRole("button", { name: "Open navigation", exact: true })).toBeFocused();
+  await expect(shell.getByRole("button", { name: "Open navigation", exact: true })).toBeFocused();
   await page.setViewportSize({ width: 1440, height: 1000 });
   await expect(aside).toHaveCSS("width", "260px");
   await expect(frame).toHaveAttribute("data-sidebar-state", "expanded");
@@ -152,9 +155,10 @@ test("sidebar edge tracks dragging, snaps to each mode, and cancels without comm
 test("sidebar separator supports keyboard resizing, RTL, and reduced motion", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/#admin-shell");
-  const frame = page.locator(".pk-admin-frame");
-  const aside = page.locator(".pk-admin-sidebar");
-  const handle = page.getByRole("separator", { name: "Resize sidebar", exact: true });
+  const shell = page.locator(".catalog-admin-preview .pk-admin-shell");
+  const frame = shell.locator(".pk-admin-frame");
+  const aside = shell.locator(".pk-admin-sidebar");
+  const handle = shell.getByRole("separator", { name: "Resize sidebar", exact: true });
   await expect(handle).toHaveAttribute("aria-orientation", "vertical");
   await expect(aside).toHaveAttribute("id", /.+/);
   await expect(handle).toHaveAttribute("aria-controls", (await aside.getAttribute("id"))!);
@@ -192,26 +196,29 @@ test("sidebar separator supports keyboard resizing, RTL, and reduced motion", as
   await expect(frame).toHaveCSS("transition-duration", "0s");
   await handle.press("Home");
   await expect(aside).toHaveCSS("width", "0px");
-  await page.getByRole("button", { name: "Expand sidebar", exact: true }).click();
+  await shell.getByRole("button", { name: "Expand sidebar", exact: true }).click();
   await expect(aside).toHaveCSS("width", "260px");
 });
 
 test("hiding a controlled sidebar with a focused link recovers focus to its restore control", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/#admin-shell");
-  await page.getByRole("button", { name: "Minimise sidebar", exact: true }).click();
-  await page.locator(".pk-admin-sidebar").getByRole("link", { name: "Projects", exact: true }).focus();
+  const shell = page.locator(".catalog-admin-preview .pk-admin-shell");
+  const aside = shell.locator(".pk-admin-sidebar");
+  await shell.getByRole("button", { name: "Minimise sidebar", exact: true }).click();
+  await aside.getByRole("link", { name: "Projects", exact: true }).focus();
   // Invoke the controlled parent's change handler without moving focus first.
-  await page.getByRole("button", { name: "Hide sidebar", exact: true }).evaluate((element: HTMLButtonElement) => element.click());
-  await expect(page.locator(".pk-admin-sidebar")).not.toBeVisible();
-  await expect(page.getByRole("button", { name: "Expand sidebar", exact: true })).toBeFocused();
+  await shell.getByRole("button", { name: "Hide sidebar", exact: true }).evaluate((element: HTMLButtonElement) => element.click());
+  await expect(aside).not.toBeVisible();
+  await expect(shell.getByRole("button", { name: "Expand sidebar", exact: true })).toBeFocused();
   await page.keyboard.press("Enter");
-  await expect(page.locator(".pk-admin-sidebar")).toHaveCSS("width", "260px");
+  await expect(aside).toHaveCSS("width", "260px");
 });
 
 test("custom tooltip preserves descriptions, dismisses with Escape, and wraps within the viewport", async ({ page }) => {
   await page.goto("/#tooltips");
-  const bookmark = page.getByRole("button", { name: "Bookmark project", exact: true });
+  const preview = page.locator(".tooltip-workbench");
+  const bookmark = preview.getByRole("button", { name: "Bookmark project", exact: true });
   await bookmark.focus();
   const tip = page.getByRole("tooltip", { name: "Keep this project in your bookmarks.", exact: true });
   await expect(tip).toBeVisible();
@@ -221,14 +228,14 @@ test("custom tooltip preserves descriptions, dismisses with Escape, and wraps wi
   await expect(bookmark).toBeFocused();
   await bookmark.press("Enter");
   await expect(bookmark).toHaveAttribute("aria-pressed", "true");
-  await expect(page.getByRole("status").filter({ hasText: "Project bookmarked in this preview." })).toBeVisible();
+  await expect(preview.getByRole("status").filter({ hasText: "Project bookmarked in this preview." })).toBeVisible();
   await expect(bookmark).toHaveAccessibleDescription("Changes stay in this preview.");
 
-  const sharing = page.getByRole("button", { name: "Sharing help", exact: true });
+  const sharing = preview.getByRole("button", { name: "Sharing help", exact: true });
+  const longTip = page.getByRole("tooltip", { name: "Changing visibility keeps existing members' permissions.", exact: true });
   for (const width of [360, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 800 });
     await sharing.hover();
-    const longTip = page.getByRole("tooltip");
     await expect(longTip).toBeVisible();
     const box = await longTip.boundingBox();
     expect(box!.x).toBeGreaterThanOrEqual(0);
@@ -240,5 +247,5 @@ test("custom tooltip preserves descriptions, dismisses with Escape, and wraps wi
   }
   await page.emulateMedia({ reducedMotion: "reduce" });
   await sharing.hover();
-  await expect(page.getByRole("tooltip")).toHaveCSS("animation-name", "none");
+  await expect(longTip).toHaveCSS("animation-name", "none");
 });

@@ -2,6 +2,18 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Library sidebar: 25 October 2026
+
+The component library now uses the public AdminShell, with icons for all 14 entries, magnetic edge dragging, one changing display button, and custom tooltips in the icon rail. Expanded, collapsed, and hidden modes persist through reloads. Search remains in the header in every mode. Theme selection, the sun/moon appearance button, native hash navigation, and browser history remain available.
+
+Shared shell fixes keep nested resize handles independent, close the mobile drawer after home-link navigation, and measure the sticky header so skip navigation leaves the destination visible. Existing browser tests now scope embedded shell controls to their preview. Two library journeys cover mode changes, dragging, persistence, tooltips, nested shells, search, history, drawer focus, home navigation, and the skip destination.
+
+Verification passed: source review, production build, configured typecheck, ESLint, all 41 Chromium journeys before the final home-link and skip-link fixes, and 17 affected journeys after those fixes. Packed Vite and Next consumers passed production builds, HTTP 200, and stylesheet delivery; owned servers and temporary consumers were removed. Logs: `.artifacts/catalog-sidebar-final-build.log`, `.artifacts/catalog-sidebar-final-browser.log`, and `.artifacts/catalog-sidebar-packages.log`. Package report: `.artifacts/catalog-sidebar-package-verification.json`.
+
+Manual inspection covered expanded, compact, hidden, dragging, icon tooltips, and light/dark appearance. Screenshots: `.artifacts/catalog-sidebar-expanded.png`, `.artifacts/catalog-sidebar-compact.png`, and `.artifacts/catalog-sidebar-light.png`. Dark appearance and expanded navigation were restored; the temporary browser tab was closed and the existing preview on port 5173 preserved. Firefox and Safari were not tested. No work remains for this request; the earlier component goal remains complete.
+
+A separate Hallmark visual pass began editing shared files after verification. Those edits are preserved outside this sidebar commit; recheck the working tree before continuing.
+
 ## Appearance icon: 25 October 2026
 
 The catalog appearance dropdown is now one ghost icon button beside Theme. A moon switches to dark mode; a sun switches to light mode. The accessible action name and custom tooltip change with the glyph, while the button and keyboard focus remain stable. The catalog still follows a saved/default system preference until the user makes an explicit choice, which persists across reloads. The two-state button replaces the system selection menu.

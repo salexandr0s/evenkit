@@ -18,10 +18,8 @@ test("search finds controls and recovers from no results", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Buttons", exact: true })).toBeVisible();
 
   await page.setViewportSize({ width: 360, height: 800 });
-  await page.getByRole("button", { name: "Browse components" }).click();
   await search.fill("unmatched-component");
-  await page.getByRole("button", { name: "Close components" }).click();
-  await expect(search).not.toBeVisible();
+  await expect(search).toBeVisible();
   await page.getByRole("button", { name: "Clear search" }).click();
   await expect(search).toBeVisible();
   await expect(search).toHaveValue("");
@@ -171,7 +169,7 @@ test("narrow layouts preserve controls and recoverable feedback", async ({ page 
   await expect(loading).toBeDisabled();
   await expect(loading).toHaveAttribute("aria-busy", "true");
   for (const entry of ["Fields", "Select", "Dialog", "Design tokens", "Empty state"]) {
-    await page.getByRole("button", { name: "Browse components" }).click();
+    await page.getByRole("button", { name: "Open navigation", exact: true }).click();
     await page.getByRole("navigation", { name: "Components", exact: true }).getByRole("link", { name: entry, exact: true }).click();
     await expect(page.getByRole("heading", { name: entry, exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -179,7 +177,7 @@ test("narrow layouts preserve controls and recoverable feedback", async ({ page 
   await page.getByRole("button", { name: "Retry preview" }).click();
   await expect(page.getByText("The retry preview succeeded. No external service was contacted.", { exact: true })).toBeVisible();
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.getByRole("button", { name: "Browse components" }).click();
+  await page.getByRole("button", { name: "Open navigation", exact: true }).click();
   await page.getByRole("navigation", { name: "Components", exact: true }).getByRole("link", { name: "Loading", exact: true }).click();
   const spinners = page.getByRole("region", { name: "Spinner sizes" }).locator(".pk-spinner");
   await expect(spinners).toHaveCount(3);

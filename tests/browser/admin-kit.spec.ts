@@ -74,7 +74,8 @@ test("table states recover and narrow layouts confine horizontal scrolling", asy
 test("shell drawer closes on navigation, Escape, outside click, and container growth", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/#admin-shell");
-  const trigger = page.getByRole("button", { name: "Open navigation", exact: true });
+  const shell = page.locator(".catalog-admin-preview .pk-admin-shell");
+  const trigger = shell.getByRole("button", { name: "Open navigation", exact: true });
   const drawer = page.getByRole("dialog", { name: "Demo workspace navigation", exact: true });
   await trigger.click();
   await expect(drawer).toBeVisible();
@@ -88,7 +89,7 @@ test("shell drawer closes on navigation, Escape, outside click, and container gr
   await trigger.click();
   await drawer.getByRole("link", { name: "Team", exact: true }).click();
   await expect(drawer).not.toBeVisible();
-  await expect(page.getByRole("heading", { name: "Workspace team", exact: true })).toBeVisible();
+  await expect(shell.getByRole("heading", { name: "Workspace team", exact: true })).toBeVisible();
   await trigger.click();
   await expect(drawer.getByRole("button", { name: "Close navigation", exact: true })).toBeFocused();
   await page.locator(".pk-dialog-overlay").click({ position: { x: 350, y: 400 } });
@@ -98,13 +99,13 @@ test("shell drawer closes on navigation, Escape, outside click, and container gr
   await page.setViewportSize({ width: 1700, height: 1000 });
   await expect(drawer).not.toBeVisible();
   await expect(trigger).not.toBeVisible();
-  await expect(page.locator("#admin-preview-content")).toBeFocused();
+  await expect(shell.locator("#admin-preview-content")).toBeFocused();
   await expect(page.locator("body")).not.toHaveAttribute("data-scroll-locked");
-  await expect(page.getByRole("navigation", { name: "Demo workspace navigation", exact: true }).getByRole("link", { name: "Team", exact: true })).toHaveAttribute("aria-current", "page");
-  const skip = page.getByRole("link", { name: "Skip to main content", exact: true });
+  await expect(shell.getByRole("navigation", { name: "Demo workspace navigation", exact: true }).getByRole("link", { name: "Team", exact: true })).toHaveAttribute("aria-current", "page");
+  const skip = shell.getByRole("link", { name: "Skip to main content", exact: true });
   await skip.focus();
   await skip.press("Enter");
-  await expect(page.locator("#admin-preview-content")).toBeFocused();
+  await expect(shell.locator("#admin-preview-content")).toBeFocused();
 
   // The shared dialog close control and the drawer title must agree on RTL.
   await page.setViewportSize({ width: 360, height: 800 });

@@ -13,9 +13,9 @@
 .pk-admin-sidebar[data-sidebar-view="collapsed"] .pk-admin-sidebar-inner { width: var(--pk-layout-sidebar-collapsed); }
 .pk-admin-resize { position: sticky; top: var(--pk-space-6); z-index: var(--pk-z-index-sticky); grid-area: 1 / 1; align-self: start; justify-self: end; display: flex; align-items: center; justify-content: center; width: var(--pk-space-3); height: var(--pk-space-16); margin-block-start: calc(var(--pk-admin-height, 100dvh) / 2 - var(--pk-space-8)); margin-inline-end: calc(var(--pk-space-1-5) * -1); border-radius: var(--pk-radius-full); cursor: col-resize; touch-action: none; transition: background-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), margin-inline-end var(--pk-motion-duration-base) var(--pk-motion-easing-standard); }
 .pk-admin-resize::before { content: ""; width: var(--pk-border-width-thick); height: var(--pk-space-8); border-radius: var(--pk-radius-full); background: var(--pk-color-border-strong); }
-.pk-admin-resize:hover, .pk-admin-resize:focus-visible, .pk-admin-frame[data-dragging] .pk-admin-resize { background: var(--pk-color-accent-soft); }
-.pk-admin-resize:hover::before, .pk-admin-resize:focus-visible::before, .pk-admin-frame[data-dragging] .pk-admin-resize::before { background: var(--pk-color-accent); }
-.pk-admin-frame[data-sidebar-state="hidden"] .pk-admin-resize { margin-inline-end: calc(var(--pk-space-3) * -1); }
+.pk-admin-resize:hover, .pk-admin-resize:focus-visible, .pk-admin-frame[data-dragging] > .pk-admin-resize { background: var(--pk-color-accent-soft); }
+.pk-admin-resize:hover::before, .pk-admin-resize:focus-visible::before, .pk-admin-frame[data-dragging] > .pk-admin-resize::before { background: var(--pk-color-accent); }
+.pk-admin-frame[data-sidebar-state="hidden"] > .pk-admin-resize { margin-inline-end: calc(var(--pk-space-3) * -1); }
 .pk-admin-brand { display: flex; align-items: center; min-height: var(--pk-layout-header); min-width: 0; padding: var(--pk-space-3) var(--pk-space-6); border-bottom: var(--pk-border-width-hairline) solid var(--pk-color-border); font-size: var(--pk-font-size-base); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
 .pk-admin-brand > * { min-width: 0; max-width: 100%; }
 .pk-admin-full-brand { display: flex; align-items: center; min-width: 0; }
@@ -48,7 +48,7 @@
 .pk-admin-header-content { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .pk-admin-sidebar-controls { display: flex; align-items: center; flex: none; gap: var(--pk-space-0-5); padding-inline-end: var(--pk-space-2); border-inline-end: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .pk-admin-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--pk-space-2); min-width: 0; max-width: 100%; }
-.pk-admin-content { width: 100%; max-width: var(--pk-layout-content); min-width: 0; margin-inline: auto; padding: var(--pk-space-6); }
+.pk-admin-content { width: 100%; max-width: var(--pk-layout-content); min-width: 0; margin-inline: auto; padding: var(--pk-space-6); scroll-margin-block-start: calc(var(--pk-admin-header-height, var(--pk-layout-header)) + var(--pk-space-2)); }
 .pk-admin-menu.pk-button { display: none; flex: none; min-width: var(--pk-layout-touch); min-height: var(--pk-layout-touch); padding: var(--pk-space-2); }
 .pk-admin-menu .pk-button-label { display: inline-flex; }
 .pk-admin-skip { position: absolute; top: var(--pk-space-2); inset-inline-start: var(--pk-space-2); z-index: var(--pk-z-index-tooltip); width: var(--pk-border-width-hairline); height: var(--pk-border-width-hairline); overflow: hidden; clip-path: inset(50%); white-space: nowrap; padding: 0; border-radius: var(--pk-radius-sm); background: var(--pk-color-accent); color: var(--pk-color-on-accent); text-decoration: none; }
@@ -67,7 +67,7 @@
 
 @media (pointer: coarse) {
   .pk-admin-resize { width: var(--pk-layout-touch); margin-inline-end: calc(var(--pk-layout-touch) / -2); }
-  .pk-admin-frame[data-sidebar-state="hidden"] .pk-admin-resize { margin-inline-end: calc(var(--pk-layout-touch) * -1); }
+  .pk-admin-frame[data-sidebar-state="hidden"] > .pk-admin-resize { margin-inline-end: calc(var(--pk-layout-touch) * -1); }
 }
 
 /* 768px is the inherited md breakpoint, also used by the shell's ResizeObserver. */
