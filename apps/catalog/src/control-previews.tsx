@@ -10,35 +10,6 @@ const visibilityOptions = [
   { value: "team", label: "Team" },
   { value: "public", label: "Public" }
 ] as const;
-const regionOptions = [{ value: "eu", label: "Europe" }] as const;
-
-export function SelectPreview() {
-  const [visibility, setVisibility] = useState("private");
-  const [formValue, setFormValue] = useState<string>();
-
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const value = new FormData(event.currentTarget).get("visibility");
-    setFormValue(typeof value === "string" ? value : "");
-  }
-
-  return (
-    <form className="catalog-preview-form" onSubmit={submit}>
-      <div className="catalog-demo-field">
-        <Label htmlFor="preview-visibility">Project visibility</Label>
-        <Select id="preview-visibility" name="visibility" required value={visibility} options={visibilityOptions} onValueChange={(value) => { setVisibility(value); setFormValue(undefined); }} aria-describedby="visibility-help" />
-        <p className="catalog-caption" id="visibility-help" role="status">Selected in this preview: {visibility}.</p>
-      </div>
-      <div className="catalog-demo-field">
-        <Label htmlFor="preview-region">Region</Label>
-        <Select id="preview-region" disabled defaultValue="eu" options={regionOptions} />
-        <p className="catalog-caption">Disabled selection example.</p>
-      </div>
-      <Button type="submit">Read selection</Button>
-      {formValue !== undefined && <ActionMessage tone={formValue ? "info" : "error"}>{formValue ? `Form value: ${formValue}.` : "No selection value was included in this preview form."}</ActionMessage>}
-    </form>
-  );
-}
 
 export function DialogPreview() {
   const [open, setOpen] = useState(false);

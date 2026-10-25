@@ -28,6 +28,12 @@ test("table keeps selection with IDs through numeric sorting, search, and pagina
   await expect(table.getByText("12 records · 1 selected", { exact: true })).toBeVisible();
   await table.getByRole("button", { name: "Sort by Members", exact: true }).click();
   await expect(table.locator("tbody tr").first()).toContainText("Client portal");
+  await table.getByRole("combobox", { name: "Rows per page", exact: true }).click();
+  const pageSize = page.getByRole("option", { name: "25", exact: true });
+  expect((await pageSize.boundingBox())?.height).toBe(36);
+  await pageSize.click();
+  await expect(table.getByText("Page 1 of 1", { exact: true })).toBeVisible();
+  await expect(table.locator("tbody tr")).toHaveCount(12);
 });
 
 test("table states recover and narrow layouts confine horizontal scrolling", async ({ page }) => {

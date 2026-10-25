@@ -87,6 +87,30 @@ Input and TextField accept `startAdornment` and `endAdornment` for icons, text, 
 
 Input always renders a stable wrapper so changing adornments preserves the native input, its value, and focus. The wrapper uses `display: contents` when empty of adornments. `className`, `style`, events, and refs remain on the native input; consumer CSS should not rely on the input being a direct child of the field. Textarea retains native vertical resizing. Use refs to focus the first invalid control on submission, as the catalog form demonstrates. Validation rules and character counters belong to the consuming form.
 
+## Select
+
+Select accepts flat options or a mix of options and `SelectOptionGroup` objects. Each group has a stable `id`, a `label`, and an `options` array. Option values must be nonempty and unique across the entire control; group IDs must be unique. Empty groups are omitted. When there are no options, the popup shows `emptyMessage` (default: “No options available.”) and remains keyboard dismissible.
+
+```tsx
+import { SelectField, type SelectOptionGroup } from "@project-kit/ui";
+
+const templates: SelectOptionGroup = {
+  id: "team", label: "Team templates",
+  options: [
+    { value: "blank", label: "Blank project" },
+    { value: "launch", label: "Product launch", description: "Plan the next release." }
+  ]
+};
+
+<SelectField label="Project template" name="template" required
+  options={[templates]} value={template} onValueChange={setTemplate}
+  hint="Choose a starting point." error={errors.template} />
+```
+
+SelectField adds the same label, hint, error, optional cue, and external-description support as TextField. Its ref points to the trigger button. Option descriptions are associated with their menu items; the closed trigger and native form option retain only the label. Plain rows stay 36px on desktop and at least 44px in touch layouts. Described or long rows grow to fit their text. Set `dir` for RTL control and popup layout.
+
+Use `defaultValue` for an uncontrolled selection or `value` with `onValueChange` for application state. An empty value displays the placeholder. A named control participates in its containing form, or the form identified by `form`. Applications own validation and controlled reset behavior; the catalog demonstrates focusing an invalid field and clearing it with a reset action.
+
 ## Admin shell and tables
 
 `AdminShell` provides a sidebar, header, content area, skip link, and a drawer for narrow containers. Supply navigation items, the active item ID, branding, actions, and footer content. Native links work by default; `renderLink` lets a consuming router receive the same link props. Authentication and route matching belong to the application. Use `contentAs="section"` when embedding a shell inside an existing main landmark.

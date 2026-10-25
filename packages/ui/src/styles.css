@@ -122,7 +122,9 @@
 .pk-input-adornment[data-side="end"] { padding-inline-end: var(--pk-space-3); }
 .pk-input-container:has(> .pk-input-adornment[data-side="start"]) > .pk-input { padding-inline-start: var(--pk-space-2); }
 .pk-input-container:has(> .pk-input-adornment[data-side="end"]) > .pk-input { padding-inline-end: var(--pk-space-2); }
-.pk-select { position: relative; display: inline-flex; align-items: center; justify-content: flex-start; cursor: pointer; text-align: start; }
+.pk-select { --pk-select-height: var(--pk-control-height-md); position: relative; display: inline-flex; align-items: center; justify-content: flex-start; cursor: pointer; text-align: start; }
+.pk-select[data-size="sm"] { --pk-select-height: var(--pk-control-height-sm); }
+.pk-select[data-size="lg"] { --pk-select-height: var(--pk-control-height-lg); padding-block: var(--pk-space-2); }
 .pk-select-value, .pk-select-chevron, .pk-select-viewport, .pk-select-item, .pk-select-indicator, .pk-select-scroll { box-sizing: border-box; }
 .pk-select[data-size] { padding-inline-end: calc(var(--pk-space-3) + var(--pk-layout-icon) + var(--pk-space-2)); }
 .pk-select-value { min-width: 0; overflow-wrap: anywhere; }
@@ -130,9 +132,18 @@
 .pk-select[data-state="open"] { border-color: var(--pk-color-ring); }
 .pk-select-chevron { position: absolute; inset-inline-end: var(--pk-space-3); top: 50%; display: inline-flex; width: var(--pk-layout-icon); height: var(--pk-layout-icon); color: var(--pk-color-fg-muted); pointer-events: none; transform: translateY(-50%); }
 .pk-select-chevron svg, .pk-select-indicator svg, .pk-select-scroll svg { width: 100%; height: 100%; }
-.pk-select-content { z-index: var(--pk-z-index-popover); min-width: var(--radix-select-trigger-width); max-width: var(--radix-select-content-available-width); max-height: min(var(--radix-select-content-available-height), calc(var(--pk-space-16) * 5)); overflow: hidden; border: var(--pk-border-width-hairline) solid var(--pk-color-border-strong); border-radius: var(--pk-radius-md); background: var(--pk-color-surface-elevated); color: var(--pk-color-fg); box-shadow: var(--pk-shadow-md); transform-origin: var(--radix-select-content-transform-origin); animation: pk-fade-in var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
+.pk-select-content { z-index: var(--pk-z-index-popover); width: max-content; min-width: min(var(--radix-select-trigger-width), var(--radix-select-content-available-width)); max-width: min(var(--radix-select-content-available-width), max(var(--radix-select-trigger-width), calc(var(--pk-space-16) * 5))); max-height: min(var(--radix-select-content-available-height), calc(var(--pk-space-16) * 5)); overflow: hidden; border: var(--pk-border-width-hairline) solid var(--pk-color-border-strong); border-radius: var(--pk-radius-md); background: var(--pk-color-surface-elevated); color: var(--pk-color-fg); box-shadow: var(--pk-shadow-md); transform-origin: var(--radix-select-content-transform-origin); animation: pk-fade-in var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
+/* Radix sets outline:none inline; an inset shadow keeps empty-popup focus visible. */
+.pk-select-content:focus-visible { box-shadow: inset 0 0 0 var(--pk-border-width-thick) var(--pk-color-ring), var(--pk-shadow-md); }
 .pk-select-viewport { padding: var(--pk-space-1); }
+.pk-select-group:not(:first-child) { margin-top: var(--pk-space-1); padding-top: var(--pk-space-1); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.pk-select-group-label { padding: var(--pk-space-2) var(--pk-space-3); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-medium); overflow-wrap: anywhere; }
+.pk-select-empty { padding: var(--pk-space-4) var(--pk-space-3); color: var(--pk-color-fg-muted); overflow-wrap: anywhere; }
 .pk-select-item { position: relative; display: flex; align-items: center; min-height: var(--pk-control-option-height); padding: var(--pk-space-1) var(--pk-space-3); padding-inline-start: calc(var(--pk-space-3) + var(--pk-layout-icon) + var(--pk-space-2)); border-radius: var(--pk-radius-sm); cursor: pointer; overflow-wrap: anywhere; user-select: none; outline: none; }
+.pk-select-item-copy { display: grid; gap: var(--pk-space-0-5); min-width: 0; }
+.pk-select-item[data-described] { padding-block: var(--pk-space-2); }
+.pk-select-description { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-regular); }
+.pk-select-item[data-highlighted] .pk-select-description { color: inherit; }
 .pk-select-item[data-state="checked"] { font-weight: var(--pk-font-weight-medium); }
 .pk-select-item[data-highlighted] { background: var(--pk-color-accent-soft); color: var(--pk-color-accent); outline: var(--pk-border-width-hairline) solid var(--pk-color-ring); outline-offset: calc(var(--pk-border-width-hairline) * -1); }
 .pk-select-item[data-disabled] { opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
@@ -181,14 +192,15 @@
 
 /* 640px is breakpoint.sm in the inherited token contract; CSS variables cannot drive media queries. */
 @media (max-width: 640px) {
-  .pk-select[data-size], .pk-dialog-close { min-height: var(--pk-layout-touch); }
-  .pk-select-item { min-height: var(--pk-layout-touch); }
+  .pk-dialog-close { min-height: var(--pk-layout-touch); }
   .pk-input, .pk-textarea, .pk-select { font-size: var(--pk-font-size-base); }
   .pk-dialog-close { min-width: var(--pk-layout-touch); }
   .pk-dialog-content { width: calc(100% - var(--pk-space-4) * 2); padding: var(--pk-space-5); }
 }
 
 @media (max-width: 640px), (pointer: coarse) {
+  .pk-select[data-size] { min-height: max(var(--pk-layout-touch), var(--pk-select-height)); }
+  .pk-select-item { min-height: var(--pk-layout-touch); }
   .pk-input[data-size], .pk-textarea[data-size], .pk-input-container[data-adorned] { min-height: max(var(--pk-layout-touch), var(--pk-field-height)); }
   .pk-input-container[data-adorned] > .pk-input { min-height: calc(max(var(--pk-layout-touch), var(--pk-field-height)) - var(--pk-border-width-hairline) * 2); }
   .pk-button[data-size] { min-height: max(var(--pk-layout-touch), var(--pk-button-height)); min-width: var(--pk-layout-touch); }

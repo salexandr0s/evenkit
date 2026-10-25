@@ -54,11 +54,11 @@ export const entries: readonly CatalogEntry[] = [
     id: "select",
     name: "Select",
     group: "Controls",
-    description: "A themed dropdown with an inset chevron, keyboard navigation, and explicit option states.",
-    tags: ["select", "dropdown", "options", "form", "disabled", "keyboard"],
+    description: "Flat or grouped choices with descriptions, field validation, and keyboard navigation.",
+    tags: ["select", "dropdown", "options", "form", "disabled", "keyboard", "groups", "description", "empty", "validation"],
     source: "Radix Select · custom kit trigger and popup",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/select",
-    usage: 'import { Label, Select } from "@project-kit/ui";\n\n<Label htmlFor="visibility">Visibility</Label>\n<Select\n  id="visibility"\n  name="visibility"\n  defaultValue="private"\n  options={[\n    { value: "private", label: "Private" },\n    { value: "team", label: "Team" }\n  ]}\n/>'
+    usage: 'import { SelectField, type SelectOptionGroup } from "@project-kit/ui";\n\nconst templates: SelectOptionGroup = {\n  id: "team",\n  label: "Team templates",\n  options: [\n    { value: "blank", label: "Blank project" },\n    { value: "launch", label: "Product launch",\n      description: "Plan milestones, owners, and launch tasks." }\n  ]\n};\n\n<SelectField\n  label="Project template"\n  name="template"\n  required\n  options={[templates]}\n  value={template}\n  onValueChange={setTemplate}\n  hint="Choose a starting point for your team."\n  error={errors.template}\n/>\n\n// Flat options still work. Use an empty value to show the placeholder.'
   },
   {
     id: "dialog",

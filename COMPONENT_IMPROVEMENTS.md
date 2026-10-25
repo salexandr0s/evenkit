@@ -12,7 +12,7 @@ Keep the existing public API compatible. Preserve the Neutral and Grove themes, 
 | 2 | Icons: all named wrappers | Search categories and aliases, select preview size, copy named imports, and demonstrate decorative, labelled, and action use. | Complete |
 | 3 | Button, ButtonLink | Icon-only sizing, leading/trailing icons, full-width layout, clearer variant hierarchy, and a working asynchronous loading example. | Complete |
 | 4 | Label, Input, Textarea, TextField, TextareaField | Shared field composition, textarea field, required/optional cues, adornments, read-only styling, and validation focus recovery. | Complete |
-| 5 | Select | Grouped and described options, empty-options feedback, shared field composition, and long-label handling while preserving compact rows. | Pending |
+| 5 | Select, SelectField | Grouped and described options, empty-options feedback, shared field composition, and long-label handling while preserving compact rows. | Complete |
 | 6 | Dialog, DialogTrigger, DialogClose, DialogContent, DialogTitle, DialogDescription, DialogFooter | Size and layout composition, long-content scrolling, reachable actions, mobile presentation, and logical RTL positioning. | Pending |
 | 7 | Badge, ActionMessage | Status icons, wrapping labels, message titles/actions, warning feedback, and a retry/dismiss example. | Pending |
 | 8 | Spinner, Skeleton | Token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. | Pending |
@@ -63,4 +63,12 @@ The form preview demonstrates optional multiline notes, a character counter link
 
 Plan, implementation, and test/documentation reviews passed. Review found and resolved long adornment overflow and missing wrapper direction; visual inspection also improved the space available to short suffixes. Production build, workspace/test type checks, ESLint, seven token tests, all 14 Chromium journeys, and independent packed Vite/Next consumers passed. After the final CSS spacing refinement, UI/catalog builds and all seven field/catalog journeys passed again. Coverage includes external descriptions, native FormData, validation/reset focus, input identity through conditional slots, enabled read-only controls, touch sizes, long-slot geometry, RTL order, and overflow at 360/768/1024/1440px. Package verification cleaned its own servers and temporary directory. Light and dark views were inspected. Screenshot: `.artifacts/field-reference.png`.
 
-Next: Select. The goal remains active; items 5–11 and final integration review are unfinished.
+### 5. Select
+
+Select accepts flat or mixed grouped options, with named group headings and optional descriptions associated with each item. The closed trigger, typeahead, and native form labels retain only the option label. Empty groups are omitted; an empty menu provides a status message, keyboard focus, Escape dismissal, and trigger focus recovery. SelectField reuses the shared label/hint/error frame and preserves external description IDs and the trigger ref.
+
+Plain rows remain 36px on desktop and 44px on narrow or coarse-pointer screens. Described rows grow to fit. Popups expand for narrow triggers and constrain long content to available space. Review caught a narrow table-selector regression; intrinsic sizing now keeps two-digit options on one line. Large triggers retain 48px touch height. The preview covers grouped validation/reset, flat form values, loading sample options into an empty group, long labels, and RTL alignment. Documentation and packed fixtures cover the new public types and field composition.
+
+Plan, implementation, and test/documentation reviews passed. Production build, workspace/test type checks, ESLint, seven token tests, all 17 Chromium journeys, and independent packed Vite/Next consumers passed. New journeys verify grouped keyboard/typeahead navigation, disabled-option skipping, descriptions, invalid/reset focus, native form values, empty-menu focus/recovery, long-label bounds at 360/768/1024/1440px, RTL geometry, and wide-screen touch targets. The existing table journey now protects compact page-size options. Package verification removed its own servers and temporary directory. Light and dark grouped menus were inspected. Screenshot: `.artifacts/select-reference.png`.
+
+Next: Dialog. The goal remains active; items 6–11 and final integration review are unfinished.
