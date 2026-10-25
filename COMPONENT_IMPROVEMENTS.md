@@ -9,7 +9,7 @@ Keep the existing public API compatible. Preserve the Neutral and Grove themes, 
 | Order | Area and public components | Planned outcome | Status |
 |---|---|---|---|
 | 1 | Design tokens | Search every resolved CSS variable, copy its usage, inspect visual scales and defined contrast pairs for the current theme. | Complete |
-| 2 | Icons: all named wrappers | Search categories and aliases, select preview size, copy named imports, and demonstrate decorative, labelled, and action use. | Pending |
+| 2 | Icons: all named wrappers | Search categories and aliases, select preview size, copy named imports, and demonstrate decorative, labelled, and action use. | Complete |
 | 3 | Button, ButtonLink | Icon-only sizing, leading/trailing icons, full-width layout, clearer variant hierarchy, and a working asynchronous loading example. | Pending |
 | 4 | Label, Input, Textarea, TextField | Shared field composition, textarea field, required/optional cues, adornments, read-only styling, and validation focus recovery. | Pending |
 | 5 | Select | Grouped and described options, empty-options feedback, shared field composition, and long-label handling while preserving compact rows. | Pending |
@@ -41,4 +41,10 @@ Plan and source reviews passed. Explicit list semantics were added after review.
 
 Verification: production build, workspace/test type checks, ESLint, and all seven token tests passed. Seven Chromium journeys passed (six existing catalog journeys plus the new token reference journey); the token journey passed again after the list-semantics change. Coverage includes exact variable completeness, copying and denial recovery, filter reset/focus, live theme values and contrast, and long font values at 360/768/1024/1440px. Light and dark views were inspected in the app browser. Screenshot: `.artifacts/token-reference.png`.
 
-Next: Icons. The goal remains active; items 2–11 and final integration review are unfinished.
+### 2. Icons
+
+All 31 public wrappers appear in a reference with readable names, category and alias filters, actual 16/20/24px size previews, and named-import copying. Import expressions remain selectable if clipboard access fails. Reset restores all icons and search focus while preserving the chosen size. Three working examples distinguish icons beside visible text, labelled icon actions, and independently labelled images. Metadata stays in the catalog; package exports and tree shaking are unchanged.
+
+Plan and implementation reviews passed. Catalog build, workspace/test type checks, ESLint, and the focused Chromium icon journey passed. The journey checks the gallery against public icon exports, alias/category intersection, keyboard copying and denial recovery, size changes, reset focus, accessible names, and 360px wrapping/touch targets. Light and dark views were inspected. Screenshot: `.artifacts/icon-reference.png`.
+
+Next: Buttons. The goal remains active; items 3–11 and final integration review are unfinished.

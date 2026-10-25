@@ -14,7 +14,9 @@ import { Button, PlusIcon, SearchIcon } from "@project-kit/ui";
 
 Icons are decorative by default. Label an icon-only button on the button itself. Use an icon's `label` only when the icon independently conveys meaning. Pair status icons with visible text. Sizes are `sm` (16px), `md` (20px, default), and `lg` (24px), with a shared stroke width of 2 and inherited text color.
 
-The catalog lists the curated imports and supports searching their names. Add new named wrappers to `packages/ui/src/icons.tsx` when a product needs them. Keep imports static; a runtime map of every library icon would include unnecessary assets.
+The catalog lets you filter by category, search names and related words such as "delete" or "directory", compare the three token sizes, and copy a named import. Each card keeps its import selectable when clipboard access is unavailable. Examples show decorative icons beside text, labelled icon buttons, and icons with independent meaning.
+
+Add new named wrappers to `packages/ui/src/icons.tsx` when a product needs them, and include them in the catalog inventory in `apps/catalog/src/icon-data.ts`. Keep imports static; a runtime map of every library icon would include unnecessary assets.
 
 ## Alternatives inspected
 
