@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Current continuation: feedback complete
+
+Badge and ActionMessage are complete, bringing the component goal to nine of twelve areas. `packages/ui/src/feedback.tsx` and the targeted shared CSS add badge sizes/variants/icon/dot/wrapping and message warning/heading/actions/custom-icon composition. Root element/ref/native-title/role contracts remain compatible. Three feedback icons and their exports/catalog metadata bring the icon set to 60. README, UI provenance, icon guidance, and both packed fixtures cover the public API.
+
+`apps/catalog/src/status-preview.tsx/css` replaces the old static StatusPreview. It demonstrates retry/dismiss/reset with timer cancellation and stable focus, plus static notes, RTL, long labels, and custom icons. `tests/browser/status.spec.ts` adds two journeys for those behaviors and responsive geometry. Review caught and fixed missing 20/24px minimum badge heights. Retry transfers focus before becoming disabled; completion never steals focus.
+
+Verification: production build, configured workspace/test typecheck, ESLint, eight token tests, all 32 Chromium journeys, and independent packed Vite/Next builds plus HTTP/CSS checks passed. The report was copied to `.artifacts/feedback-package-verification.json`; temporary consumers and owned servers were cleaned. Manual light/dark status inspection and the single sidebar cycle passed. Screenshots: `.artifacts/status-reference.png`, `.artifacts/status-dark-reference.png`, `.artifacts/sidebar-single-control.png`. The temporary browser tab was closed and its original Light appearance restored. Firefox/Safari remain untested.
+
+Next: Spinner/Skeleton, then EmptyState and DataTable, then final integration including separately added chat and themes. The goal remains active. New concurrent tooltip edits appeared in `packages/ui/src/tooltip.tsx/css` and `apps/catalog/src/tooltip-preview.tsx/css` after this feedback verification; preserve them and do not stage them in the feedback commit. Recheck working-tree ownership before starting the next area. Earlier theme/chat sections below are historical context.
+
 ## Theme expansion: 25 October 2026
 
 The separate theme goal is implemented: six additional palettes (Graphite, Linen, Ocean, Dusk, Clay, Rose) bring the kit to eight themes and sixteen light/dark combinations. Each new palette defines coordinated surfaces, primary/secondary text, control borders, and action states. Linen uses local Georgia headings with the shared system body font. The 204-variable contract and component dimensions remain unchanged.
@@ -16,7 +26,7 @@ The theme work is separate from the earlier component-improvement queue below. P
 
 ## Earlier component work
 
-The user's active goal is to substantially improve every component one by one. Eight of twelve areas are complete: Tokens, Icons, Buttons, Fields, Select, Dialog, Tooltips, and AdminShell. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. Feedback, loading, empty states, DataTable, and final integration remain unfinished. The goal stays active; queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
+The user's active goal is to substantially improve every component one by one. Nine of twelve areas are complete: Tokens, Icons, Buttons, Fields, Select, Dialog, Tooltips, AdminShell, and Badge/ActionMessage. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. Loading, empty states, DataTable, and final integration remain unfinished. The goal stays active; queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
 
 ## Completed
 
@@ -55,9 +65,9 @@ Unrelated chat-component work is occurring concurrently in this same checkout, i
 
 ## Remaining work
 
-Next: Badge and ActionMessage. Read `packages/ui/src/feedback.tsx`, their styles, StatusPreview in `control-previews.tsx`, existing consumers/tests, and applicable specs in `~/.claude/uiux-contract/components/`. Planned improvements: decorative status icons/indicators, wrapping labels, message title/action composition, warning feedback, and a working retry/dismiss example. Existing badge nowrap can overflow. Preserve alert/status semantics, native props, and current usages (including table and shell).
+Next: Spinner and Skeleton. Read their implementations in `packages/ui/src/feedback.tsx`, targeted styles, LoadingPreview in `control-previews.tsx`, existing consumers/tests, and applicable specs in `~/.claude/uiux-contract/components/`. Planned improvements: token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. Preserve decorative spinners inside Button and Chat.
 
-Then Spinner/Skeleton, EmptyState, DataTable. Known table issue: every cell truncates arbitrary controls and can clip focus rings. After the queue, review catalog frame, snippets, exports, docs (including older `docs/compatibility.md` report), and independent packed consumers together.
+Then EmptyState and DataTable. Known table issue: every cell truncates arbitrary controls and can clip focus rings. After the queue, review catalog frame, snippets, exports, docs (including older `docs/compatibility.md` report), and independent packed consumers together.
 
 Keep plan/review, relevant verification, and logical local commits. Shared source/CSS ownership must remain sequential.
 

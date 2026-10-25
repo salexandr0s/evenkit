@@ -13,7 +13,10 @@ import {
   ChevronLeft,
   ChevronRight,
   CircleAlert,
+  CircleCheck,
   CircleHelp,
+  Info,
+  TriangleAlert,
   Download,
   ExternalLink,
   FileText,
@@ -112,7 +115,10 @@ export const ChevronUpIcon = /* @__PURE__ */ createKitIcon(ChevronUp, "ChevronUp
 export const ChevronLeftIcon = /* @__PURE__ */ createKitIcon(ChevronLeft, "ChevronLeftIcon");
 export const ChevronRightIcon = /* @__PURE__ */ createKitIcon(ChevronRight, "ChevronRightIcon");
 export const CircleAlertIcon = /* @__PURE__ */ createKitIcon(CircleAlert, "CircleAlertIcon");
+export const CircleCheckIcon = /* @__PURE__ */ createKitIcon(CircleCheck, "CircleCheckIcon");
 export const CircleHelpIcon = /* @__PURE__ */ createKitIcon(CircleHelp, "CircleHelpIcon");
+export const InfoIcon = /* @__PURE__ */ createKitIcon(Info, "InfoIcon");
+export const TriangleAlertIcon = /* @__PURE__ */ createKitIcon(TriangleAlert, "TriangleAlertIcon");
 export const DownloadIcon = /* @__PURE__ */ createKitIcon(Download, "DownloadIcon");
 export const ExternalLinkIcon = /* @__PURE__ */ createKitIcon(ExternalLink, "ExternalLinkIcon");
 export const FileTextIcon = /* @__PURE__ */ createKitIcon(FileText, "FileTextIcon");

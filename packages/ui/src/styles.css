@@ -161,11 +161,18 @@
 .pk-field-hint > :last-child, .pk-field-error > div > :last-child { margin-bottom: 0; }
 .pk-feedback-symbol { display: inline-flex; flex: none; align-items: center; justify-content: center; min-width: var(--pk-layout-icon); font-weight: var(--pk-font-weight-semibold); }
 
-.pk-badge { display: inline-flex; align-items: center; max-width: 100%; padding: var(--pk-space-0-5) var(--pk-space-2); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-full); background: var(--pk-color-bg-muted); color: var(--pk-color-fg); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-medium); white-space: nowrap; }
+.pk-badge { display: inline-flex; align-items: center; gap: var(--pk-space-1); min-height: var(--pk-space-6); min-width: 0; max-width: 100%; padding: var(--pk-space-0-5) var(--pk-space-2); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-full); background: var(--pk-color-bg-muted); color: var(--pk-color-fg); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-medium); white-space: normal; overflow-wrap: anywhere; }
+.pk-badge[data-size="sm"] { min-height: var(--pk-space-5); padding: 0 var(--pk-space-1-5); }
+.pk-badge-label { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-1); min-width: 0; max-width: 100%; }
+.pk-badge-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); }
+.pk-badge-icon > svg, .pk-badge-label > svg { flex: none; width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); }
+.pk-badge-dot { flex: none; width: var(--pk-space-1-5); height: var(--pk-space-1-5); border-radius: var(--pk-radius-full); background: currentColor; }
 .pk-badge[data-tone="accent"] { background: var(--pk-color-accent-soft); color: var(--pk-color-accent); border-color: transparent; }
 .pk-badge[data-tone="success"] { background: var(--pk-color-success-bg); color: var(--pk-color-success); border-color: transparent; }
 .pk-badge[data-tone="warning"] { background: var(--pk-color-warning-bg); color: var(--pk-color-warning); border-color: transparent; }
 .pk-badge[data-tone="danger"] { background: var(--pk-color-danger-bg); color: var(--pk-color-danger); border-color: transparent; }
+.pk-badge[data-variant="outline"] { background: transparent; border-color: currentColor; }
+.pk-badge[data-variant="outline"][data-tone="neutral"] { border-color: var(--pk-color-border-strong); }
 
 .pk-spinner { display: inline-block; box-sizing: border-box; flex: none; width: var(--pk-layout-icon); height: var(--pk-layout-icon); border: var(--pk-border-width-thick) solid currentColor; border-right-color: transparent; border-radius: var(--pk-radius-full); color: var(--pk-color-accent); animation: pk-spin var(--pk-motion-duration-spinner) linear infinite; }
 .pk-skeleton { min-height: var(--pk-control-height-md); width: 100%; border-radius: var(--pk-radius-sm); background: var(--pk-color-border); opacity: var(--pk-opacity-skeleton); }
@@ -173,10 +180,20 @@
 .pk-empty-title { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-lg); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
 .pk-empty-description { margin-top: var(--pk-space-2); color: var(--pk-color-fg-muted); overflow-wrap: anywhere; }
 .pk-empty-action { margin-top: var(--pk-space-4); }
-.pk-action-message { display: flex; align-items: baseline; gap: var(--pk-space-2); padding: var(--pk-space-3) var(--pk-space-4); border: var(--pk-border-width-hairline) solid currentColor; border-radius: var(--pk-radius-md); background: var(--pk-color-accent-soft); color: var(--pk-color-accent); overflow-wrap: anywhere; }
-.pk-action-message > div { min-width: 0; }
+.pk-action-message { display: flex; align-items: flex-start; gap: var(--pk-space-3); min-width: 0; max-width: 100%; padding: var(--pk-space-3) var(--pk-space-4); border: var(--pk-border-width-hairline) solid currentColor; border-radius: var(--pk-radius-md); background: var(--pk-color-accent-soft); color: var(--pk-color-accent); overflow-wrap: anywhere; }
+.pk-action-message-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--pk-icon-size-md); height: var(--pk-icon-size-md); }
+.pk-action-message-icon > svg { width: 100%; height: 100%; }
+.pk-action-message-content { display: grid; flex: 1; gap: var(--pk-space-1); min-width: 0; max-width: 100%; }
+.pk-action-message-heading { min-width: 0; font-weight: var(--pk-font-weight-semibold); }
+.pk-action-message-body { min-width: 0; max-width: 100%; }
+.pk-action-message-body:empty { display: none; }
+.pk-action-message-heading > :first-child, .pk-action-message-body > :first-child { margin-top: 0; }
+.pk-action-message-heading > :last-child, .pk-action-message-body > :last-child { margin-bottom: 0; }
+.pk-action-message-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-2); min-width: 0; max-width: 100%; margin-top: var(--pk-space-2); }
+.pk-action-message-actions > * { min-width: 0; max-width: 100%; }
 .pk-action-message[data-tone="success"] { background: var(--pk-color-success-bg); color: var(--pk-color-success); }
 .pk-action-message[data-tone="error"] { background: var(--pk-color-danger-bg); color: var(--pk-color-danger); }
+.pk-action-message[data-tone="warning"] { background: var(--pk-color-warning-bg); color: var(--pk-color-warning); }
 
 .pk-dialog-overlay { position: fixed; inset: 0; z-index: var(--pk-z-index-overlay); background: var(--pk-color-overlay); animation: pk-fade-in var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
 .pk-dialog-content { --pk-dialog-width: var(--pk-layout-dialog); position: fixed; top: 50%; left: 50%; z-index: var(--pk-z-index-modal); display: grid; gap: var(--pk-space-4); width: min(var(--pk-dialog-width), calc(100% - var(--pk-space-6) * 2)); max-height: calc(100dvh - var(--pk-space-6) * 2); overflow-y: auto; padding: var(--pk-space-6); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface-elevated); color: var(--pk-color-fg); box-shadow: var(--pk-shadow-lg); transform: translate(-50%, -50%); animation: pk-fade-in var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }

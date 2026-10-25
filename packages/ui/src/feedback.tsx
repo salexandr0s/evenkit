@@ -2,16 +2,32 @@
 
 import { forwardRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { classes } from "./classes.js";
+import { CircleAlertIcon, CircleCheckIcon, InfoIcon, TriangleAlertIcon } from "./icons.js";
+
+export type BadgeTone = "neutral" | "accent" | "success" | "warning" | "danger";
+export type BadgeSize = "sm" | "md";
+export type BadgeVariant = "soft" | "outline";
 
 export interface BadgeProps extends ComponentPropsWithoutRef<"span"> {
-  tone?: "neutral" | "accent" | "success" | "warning" | "danger";
+  tone?: BadgeTone;
+  size?: BadgeSize;
+  variant?: BadgeVariant;
+  /** Decorative content before the label. Takes precedence over dot. */
+  icon?: ReactNode;
+  dot?: boolean;
 }
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
-  { className, tone = "neutral", ...props },
+  { className, tone = "neutral", size = "md", variant = "soft", icon, dot = false, children, ...props },
   ref,
 ) {
-  return <span {...props} ref={ref} className={classes("pk-badge", className)} data-tone={tone} />;
+  const hasIcon = icon !== undefined && icon !== null && icon !== false;
+  return (
+    <span {...props} ref={ref} className={classes("pk-badge", className)} data-tone={tone} data-size={size} data-variant={variant}>
+      {hasIcon ? <span className="pk-badge-icon" aria-hidden="true">{icon}</span> : dot ? <span className="pk-badge-dot" aria-hidden="true" /> : null}
+      <span className="pk-badge-label">{children}</span>
+    </span>
+  );
 });
 
 export interface SpinnerProps extends ComponentPropsWithoutRef<"span"> {
@@ -57,18 +73,31 @@ export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(function E
   );
 });
 
+export type ActionMessageTone = "success" | "error" | "info" | "warning";
+
 export interface ActionMessageProps extends ComponentPropsWithoutRef<"div"> {
-  tone?: "success" | "error" | "info";
+  tone?: ActionMessageTone;
+  heading?: ReactNode;
+  actions?: ReactNode;
+  /** Decorative status icon. Omit for the tone's icon, or pass false/null to hide it. */
+  icon?: ReactNode;
 }
 
 export const ActionMessage = forwardRef<HTMLDivElement, ActionMessageProps>(function ActionMessage(
-  { className, tone = "info", children, role, ...props },
+  { className, tone = "info", heading, actions, icon, children, role, ...props },
   ref,
 ) {
+  const messageIcon = icon === undefined
+    ? { success: <CircleCheckIcon />, error: <CircleAlertIcon />, info: <InfoIcon />, warning: <TriangleAlertIcon /> }[tone]
+    : icon;
   return (
     <div {...props} ref={ref} className={classes("pk-action-message", className)} data-tone={tone} role={role ?? (tone === "error" ? "alert" : "status")}>
-      <span className="pk-feedback-symbol" aria-hidden="true">{tone === "success" ? "✓" : tone === "error" ? "!" : "i"}</span>
-      <div>{children}</div>
+      {messageIcon !== null && messageIcon !== false ? <span className="pk-action-message-icon" aria-hidden="true">{messageIcon}</span> : null}
+      <div className="pk-action-message-content">
+        {heading !== undefined && heading !== null && heading !== false ? <div className="pk-action-message-heading">{heading}</div> : null}
+        <div className="pk-action-message-body">{children}</div>
+        {actions !== undefined && actions !== null && actions !== false ? <div className="pk-action-message-actions">{actions}</div> : null}
+      </div>
     </div>
   );
 });

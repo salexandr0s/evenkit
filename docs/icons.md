@@ -23,7 +23,7 @@ import { UserIcon, UsersIcon } from "@project-kit/ui";
 <span><UsersIcon />Team</span>
 ```
 
-The set contains 53 named wrappers, including these families:
+The set contains 60 named wrappers, including these families:
 
 | Purpose | Icons |
 |---|---|
@@ -33,9 +33,12 @@ The set contains 53 named wrappers, including these families:
 | Time and saved content | `CalendarDaysIcon`, `ClockIcon`, `BookmarkIcon`, `ArchiveIcon` |
 | Common actions | `UploadIcon`, `DownloadIcon`, `CopyIcon`, `PencilIcon`, `FilterIcon` |
 | Sidebar controls | `PanelLeftIcon`, `PanelLeftCloseIcon`, `PanelLeftOpenIcon` |
-| Status | `ActivityIcon`, `CheckIcon`, `CircleAlertIcon`, `CircleHelpIcon`, `CircleIcon` |
+| Status | `ActivityIcon`, `CheckIcon`, `CircleCheckIcon`, `CircleAlertIcon`, `TriangleAlertIcon`, `InfoIcon`, `CircleHelpIcon`, `CircleIcon` |
+| Chat actions | `MaximizeIcon`, `MinimizeIcon`, `SquareIcon`, `RotateCcwIcon` |
 
 Use `PanelLeftCloseIcon` for collapsing the sidebar and `PanelLeftOpenIcon` for expanding it. Keep the action's accessible name on its button; a tooltip can also show that action to pointer users.
+
+ActionMessage uses `CircleCheckIcon` for success, `CircleAlertIcon` for errors, `TriangleAlertIcon` for warnings, and `InfoIcon` for information. Each glyph accompanies visible text so color is not the only status cue.
 
 The catalog lets you filter by category, search names and related words such as "delete" or "directory", compare the three token sizes, and copy a named import. Each card keeps its import selectable when clipboard access is unavailable. Examples show decorative icons beside text, labelled icon buttons, and icons with independent meaning.
 

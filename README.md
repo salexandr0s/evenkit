@@ -20,7 +20,7 @@ The catalog includes themes, design tokens, icons, buttons, fields, custom selec
 | Package | Contents | Public imports |
 |---|---|---|
 | `@project-kit/tokens` | Typed scales, palettes, eight themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
-| `@project-kit/ui` | Controls and feedback, 57 Lucide icons, responsive AdminShell, TanStack-backed DataTable, ChatWidget and ChatPanel | Main export, `/css` |
+| `@project-kit/ui` | Controls and feedback, 60 Lucide icons, responsive AdminShell, TanStack-backed DataTable, ChatWidget and ChatPanel | Main export, `/css` |
 | `@project-kit/catalog` | Searchable examples and usage reference | Local application |
 
 Both libraries export built files and declarations. UI styles use `pk-` classes and `--pk-` variables, with no global reset. Consumers need React 19 and React DOM 19; no Tailwind, Next.js, database, or authentication dependency is required by the UI package.
@@ -71,6 +71,23 @@ Choose from Neutral, Grove, Graphite, Linen, Ocean, Dusk, Clay, and Rose using t
 Omit `data-kit-mode` to follow the system. Neutral is the default theme. This release supports document-level themes; nested scopes are not supported for body-mounted dialog portals. Custom brands use the same validated model and contrast checks; see [token usage](packages/tokens/README.md).
 
 For Next.js, import CSS in the root layout. Interactive UI exports retain their `"use client"` boundary. Server components may render controls with serializable props; handlers and client state belong in a client component. A dialog needs its Title and Description, with a trigger and a clear dismissal action.
+
+## Status and feedback
+
+Badge supports `tone`, `size="sm" | "md"`, `variant="soft" | "outline"`, and an optional decorative `icon` or `dot`. An icon takes precedence over a dot. Short labels retain 20/24px heights; longer labels wrap within the available width. Keep labels concise and format counts in your application. Badges are passive spans and preserve native attributes and refs.
+
+```tsx
+import { ActionMessage, Badge, Button, CheckIcon } from "@project-kit/ui";
+
+<Badge tone="success" icon={<CheckIcon />}>Approved</Badge>
+<Badge tone="accent" size="sm" variant="outline" dot>Live</Badge>
+<ActionMessage tone="warning" heading="Review before publishing"
+  actions={<Button variant="outline" onClick={review}>Review changes</Button>}>
+  Two required fields still need attention.
+</ActionMessage>
+```
+
+ActionMessage accepts `info`, `success`, `warning`, and `error` tones with distinct decorative icons. Use `heading` for a visible heading, `actions` for buttons or links, and `icon` to replace the default glyph; `null` or `false` hides it. The native `title` attribute remains available. Headings, bodies, and actions accept React content and wrap in narrow layouts. Error messages default to `role="alert"`; other tones use `role="status"`. You can override the role and ARIA attributes, for example `role="note"` for static guidance. Your application owns dismissal, retry behavior, and focus recovery; messages do not disappear automatically.
 
 ## AI chat
 

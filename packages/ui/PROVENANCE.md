@@ -22,6 +22,12 @@ Icons use the kit's `sm`, `md`, and `lg` size tokens, a shared stroke-width toke
 
 Dropdown rows use border-box sizing and the shared option-height token. Small desktop controls use the shared small-control height without extra content-box padding; mobile controls retain the touch-height token.
 
+## Status and persistent feedback
+
+Badge follows the inherited badge contract's 20/24px short-label sizes, optional dot/icon, and outline treatment. Labels may wrap when their container is narrow or text is localized. This deliberately departs from the contract's no-wrap rule to prevent overflow while retaining the compact default geometry. Count formatting remains application-owned.
+
+ActionMessage is an original persistent-feedback composition with a decorative tone icon, optional heading, body, and actions. Its default alert/status semantics remain configurable through native attributes. The component adds no timers or dismissal policy; consumers own action behavior and focus recovery.
+
 ## Admin shell and tables
 
 `AdminShell` is an original composition of the inherited sidebar/navbar contracts and kit controls. Its mobile drawer uses the existing Radix Dialog wrapper. CSS container queries adapt navigation to the available width; a ResizeObserver closes an open drawer when the shell expands and restores focus to visible content. Branding, links, the active item, router integration, and page content come from the consumer.

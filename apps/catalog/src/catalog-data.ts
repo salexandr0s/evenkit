@@ -124,11 +124,11 @@ export const entries: readonly CatalogEntry[] = [
     id: "status",
     name: "Status",
     group: "Feedback",
-    description: "Short status labels and persistent action messages. Pair color with text to explain the result.",
+    description: "Status labels with icons and indicators, plus persistent messages with a heading and actions. Retry a failed action and dismiss the result.",
     tags: ["badge", "message", "feedback", "success", "warning", "danger", "error", "status", "alert"],
     source: "Original implementation · internal feedback requirements",
     sourceUrl: "https://ui.shadcn.com/docs/components/radix/badge",
-    usage: 'import { Badge, ActionMessage } from "@project-kit/ui";\n\n<Badge tone="success">Active</Badge>\n<ActionMessage tone="error">\n  Your changes could not be saved. Try again.\n</ActionMessage>'
+    usage: 'import { Badge, ActionMessage, Button } from "@project-kit/ui";\n\n<Badge tone="success" dot>Active</Badge>\n<Badge size="sm" variant="outline">Draft</Badge>\n<ActionMessage\n  tone="error"\n  heading="Changes could not be saved"\n  actions={<Button variant="outline" onClick={retrySave}>Try again</Button>}\n>\n  Your draft is still here. Check your connection and retry.\n</ActionMessage>\n\n// Messages stay visible until your app removes them.\n// Pass icon={null} to omit the decorative tone icon.'
   },
   {
     id: "loading",

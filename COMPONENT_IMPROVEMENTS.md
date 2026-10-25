@@ -2,7 +2,7 @@
 
 Requested on 25 October 2026. Goal: review every component one by one, make substantial improvements, and verify each before moving on. Work runs on `codex/component-improvements`.
 
-Keep the existing public API compatible. Preserve the Neutral and Grove themes, document-level theming, token-based dimensions, prefixed package CSS, and independent Next/Vite installation. Improvements should make the component more useful, easier to understand, or safer to compose. Changes to an already sound primitive need a concrete reason.
+Keep the existing public API compatible. Preserve all built-in themes, document-level theming, token-based dimensions, prefixed package CSS, and independent Next/Vite installation. Improvements should make the component more useful, easier to understand, or safer to compose. Changes to an already sound primitive need a concrete reason.
 
 ## Queue
 
@@ -16,7 +16,7 @@ Keep the existing public API compatible. Preserve the Neutral and Grove themes, 
 | 6 | Dialog, DialogTrigger, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter | Size and layout composition, long-content scrolling, reachable actions, mobile presentation, and logical RTL positioning. | Complete |
 | 7 | TooltipProvider, Tooltip, TooltipTrigger, TooltipContent | Custom theme-aware surfaces, hover/focus behavior, dismissal, wrapping, and reusable positioning. | Complete |
 | 8 | AdminShell | Expanded, icon-only, and hidden modes; restore controls, navigation icons/tooltips, compact slots, badges, mobile and focus recovery. | Complete |
-| 9 | Badge, ActionMessage | Status icons, wrapping labels, message titles/actions, warning feedback, and a retry/dismiss example. | Pending |
+| 9 | Badge, ActionMessage | Status icons, wrapping labels, message titles/actions, warning feedback, and a retry/dismiss example. | Complete |
 | 10 | Spinner, Skeleton | Token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. | Pending |
 | 11 | EmptyState | Icon slot, heading semantics, secondary action, compact layout, and distinct first-use, no-results, and failure examples. | Pending |
 | 12 | DataTable | Per-column wrapping, usable custom action cells, clear search, displayed-row range, selection clearing/bulk actions, and improved state presentation. | Pending |
@@ -104,4 +104,14 @@ Drag state is temporary and emits one callback only when a new mode is committed
 
 The follow-up passed build, type checks, lint, all nine affected Chromium journeys, and packed Vite/Next consumers in an isolated copy of the previous commit plus the sidebar changes. This kept unrelated chat-component work in progress outside the verification scope. The shared workspace also built successfully after its new files landed. Manual dark-mode dragging, hidden-edge restoration, and the single icon were inspected. No remaining review findings. Screenshot: `.artifacts/sidebar-drag-reference.png`.
 
-Next: Badge and ActionMessage. Eight of twelve planned areas are complete. The goal remains active; items 9–12 and final integration review are unfinished. Account for concurrently added components in that final integration review.
+### 9. Badge and ActionMessage
+
+Badge now supports small/medium sizes, soft/outline variants, decorative icons, and dots. Root span semantics, native props/refs, existing tones, and inline icon children remain compatible. Short labels retain 20/24px heights; explicit minimum heights also protect empty or icon-only content. Longer labels wrap safely. This deliberately departs from the inherited no-wrap rule for narrow containers and localized text; the rationale is recorded in UI provenance.
+
+ActionMessage adds a warning tone, separate heading/actions slots, and configurable decorative icons. Native title and ARIA attributes remain available. Errors default to alert, other tones to status, and caller roles override those defaults. Three new named wrappers distinguish success, information, and warning, bringing the icon reference to 60 after the concurrent chat additions.
+
+The new Status preview demonstrates variants, rich headings, static notes, custom/absent icons, RTL, and a working retry/dismiss/reset flow. Retry moves focus from the soon-disabled control to a stable Dismiss button; completion never moves focus. Dismiss/reset cancel pending work, and dismissal returns focus to Reset. Two browser journeys protect cancellation, focus, roles, compact geometry, narrow wrapping, and RTL placement.
+
+Plan and source reviews passed with no remaining findings. Production build, workspace/test type checks, ESLint, eight token tests, all 32 Chromium journeys, and independent packed Vite/Next consumers passed. Existing table and sidebar consumers retain their dimensions and behavior. Package verification cleaned its servers and temporary directory. Light/dark views and the single sidebar control were inspected in the app browser; screenshots: `.artifacts/status-reference.png`, `.artifacts/status-dark-reference.png`, and `.artifacts/sidebar-single-control.png`. Firefox and Safari were not tested.
+
+Next: Spinner and Skeleton. Nine of twelve planned areas are complete. The goal remains active; items 10–12 and final integration review are unfinished. Include the separately added chat and theme components in that final integration review.
