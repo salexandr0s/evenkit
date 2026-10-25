@@ -76,6 +76,8 @@ export const contrastChecks: readonly ContrastCheck[] = [
   { foreground: "on-danger", background: "danger-hover", minimum: 4.5 },
   { foreground: "accent", background: "accent-soft", minimum: 4.5 },
   { foreground: "fg", background: "accent-soft", minimum: 4.5 },
+  { foreground: "fg-muted", background: "accent-soft", minimum: 4.5 },
+  { foreground: "ring", background: "accent-soft", minimum: 3 },
   { foreground: "danger", background: "danger-bg", minimum: 4.5 },
   { foreground: "warning", background: "warning-bg", minimum: 4.5 },
   { foreground: "success", background: "success-bg", minimum: 4.5 },

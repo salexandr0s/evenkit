@@ -51,7 +51,7 @@ describe("theme trust boundary", () => {
     }).success).toBe(false);
   });
 
-  it("checks every required foreground/background pair in both themes and modes", () => {
+  it("checks every required foreground/background pair in all themes and modes", () => {
     for (const name of themeNames) {
       for (const mode of colorModes) {
         const colors = themes[name].modes[mode];
@@ -76,6 +76,21 @@ describe("theme trust boundary", () => {
       expect(result.error.issues.some((issue) => issue.path.join(".") === "modes.dark.fg" && issue.message.includes("accent-soft"))).toBe(true);
     }
     expect(() => createBrandCss(input)).toThrow();
+  });
+
+  it("rejects unreadable secondary text and inset focus rings on selected surfaces", () => {
+    for (const [foreground, value] of [["fg-muted", "#9696A0"], ["ring", "#767680"]] as const) {
+      const input = structuredClone(themes.neutral);
+      input.modes.dark[foreground] = value;
+      for (const background of ["bg", "bg-muted", "surface", "surface-elevated"] as const) {
+        expect(contrastRatio(value, input.modes.dark[background])).toBeGreaterThanOrEqual(foreground === "ring" ? 3 : 4.5);
+      }
+      const result = brandSchema.safeParse(input);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues.some((issue) => issue.path.join(".") === `modes.dark.${foreground}` && issue.message.includes("accent-soft"))).toBe(true);
+      }
+    }
   });
 });
 

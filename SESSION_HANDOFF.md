@@ -2,6 +2,20 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Theme expansion: 25 October 2026
+
+The separate theme goal is implemented: six additional palettes (Graphite, Linen, Ocean, Dusk, Clay, Rose) bring the kit to eight themes and sixteen light/dark combinations. Each new palette defines coordinated surfaces, primary/secondary text, control borders, and action states. Linen uses local Georgia headings with the shared system body font. The 204-variable contract and component dimensions remain unchanged.
+
+`packages/tokens/src/themes.ts` owns the palettes. `schema.ts` now checks secondary text and inset focus rings against `accent-soft`, used by chat history and selected controls. Grove's dark selected background changes from `#14532D` to `#123D24`, improving secondary-text contrast from 3.55:1 to 4.77:1. Custom brands may need adjustments for the stricter validation; this is documented in `packages/tokens/README.md` and `PROVENANCE.md`.
+
+`apps/catalog/src/theme-preview.tsx/css` adds `/#themes`, with eight comparison cards, actual semantic swatches, and keyboard-operable Apply buttons. Catalog toolbar/card selection and persistence use the same state. All previews follow resolved appearance; portals use the document theme. `tests/browser/themes.spec.ts` checks computed colours/fonts, keyboard apply, persistence, mode precedence, independent card palettes, responsive widths, and a Linen dialog. Root README and `docs/compatibility.md` describe the new options.
+
+Verification: independent static review passed. All 560 contrast pairs (35 × 2 × 8) pass; every new-theme text pair exceeds 5:1. Token build, focused lint, and eight unit tests passed in the shared checkout. Full build/typecheck initially encountered concurrent unfinished feedback changes importing missing CircleCheckIcon, InfoIcon, and TriangleAlertIcon. They are unrelated to this goal and were preserved. An isolated copy of `88c8c93` plus only this goal's changes passed production build, workspace/test type checks, ESLint, eight token tests, eight Chromium journeys, and packed Vite/Next consumer builds plus HTTP/stylesheet checks. Its verified catalog output was copied to the existing preview on port 5173. The package report is `.artifacts/theme-package-verification.json`. Firefox and Safari were not tested.
+
+The theme work is separate from the earlier component-improvement queue below. Preserve concurrent changes in `packages/ui/src/feedback.tsx` and `styles.css`; do not stage or revert them as part of themes. Recheck their state before a shared build. Resume with `git status --short`, `git log --oneline -5`, and `npm run build`; the theme browser checks are `tests/browser/themes.spec.ts`, `token-reference.spec.ts`, and `catalog.spec.ts`. User-facing preview: `http://127.0.0.1:5173/#themes`.
+
+## Earlier component work
+
 The user's active goal is to substantially improve every component one by one. Eight of twelve areas are complete: Tokens, Icons, Buttons, Fields, Select, Dialog, Tooltips, and AdminShell. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. Feedback, loading, empty states, DataTable, and final integration remain unfinished. The goal stays active; queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
 
 ## Completed

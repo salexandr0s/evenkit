@@ -7,7 +7,7 @@ Foundation and admin/table phases, 25 October 2026. These packages are local pil
 | Runtime/tooling | Node.js 26.12.1, npm 11.20.0 | Local builds and validation commands |
 | React | React and React DOM 19.3.1 | Catalog plus independent consumers |
 | TypeScript | 6.0.3, strict mode | Package, catalog, test/config, and consumer checks |
-| Validation | Zod 4.6.7 | Seven schema, contrast, and output tests |
+| Validation | Zod 4.6.7 | Eight schema, contrast, and output tests |
 | Dialog | Radix Dialog 1.3.1 | Focus containment, Escape, restoration, inherited theme |
 | Custom dropdown | Radix Select 2.4.1 | Keyboard/typeahead, form value, disabled state, popup-over-dialog layer, and inset chevron |
 | Icons | Lucide React 1.61.0 | Named wrappers, token sizes, decorative/labelled semantics; catalog search and icon action inspected |
@@ -17,9 +17,11 @@ Foundation and admin/table phases, 25 October 2026. These packages are local pil
 | Next.js | 16.4.3, App Router | Independent packed-package build, server render, CSS HTTP smoke |
 | Browser | Chromium through Playwright 1.64.1 | Nine catalog journeys, with a focused final shell rerun |
 | Layout widths | 360, 768, 1024, 1440, 1700 CSS pixels | Overflow checks, touch targets, container navigation, resize cleanup |
-| Themes | Neutral and Grove; light, dark, and system | Token contrast validation plus browser mode-precedence checks |
+| Themes | Neutral, Grove, Graphite, Linen, Ocean, Dusk, Clay, Rose; light, dark, and system | 560 contrast pairs; gallery selection, persistence, computed colours/fonts, system precedence, and dialog inheritance |
 
 The declared Node minimum is 22.12.0; the current verification ran on Node 26.12.1. TypeScript 6.0.3 was selected because the installed lint parser's supported range excludes TypeScript 7. The lockfile records the actual development dependency graph.
+
+The theme expansion was checked on 25 October 2026 against `88c8c93` plus the theme changes in an isolated copy. Production build, workspace/test type checks, ESLint, eight token tests, and eight Chromium journeys passed. Packed Vite and Next.js consumers also passed production builds and HTTP/stylesheet checks. The shared checkout had concurrent unfinished feedback changes referencing missing icons, so its full build and type check could not pass at that point. The existing catalog preview uses the verified isolated build.
 
 ## Supported boundaries
 

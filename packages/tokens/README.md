@@ -6,7 +6,7 @@ Typed values, validated themes, and generated CSS for the shared project kit. Im
 import "@project-kit/tokens/css";
 ```
 
-Set `data-kit-theme="neutral"` or `data-kit-theme="grove"` on the document element. Set `data-kit-mode="light"` or `data-kit-mode="dark"` to choose a mode. Omit `data-kit-mode` to follow the system preference. These themes apply to the document root; nested theme scopes are not supported in this release.
+Set `data-kit-theme` to a theme ID from the table below on the document element. Set `data-kit-mode="light"` or `data-kit-mode="dark"` to choose a mode. Omit `data-kit-mode` to follow the system preference. These themes apply to the document root; nested theme scopes are not supported in this release.
 
 ```ts
 import { themes, cssVariables } from "@project-kit/tokens";
@@ -19,6 +19,25 @@ const variables = cssVariables("grove", "dark");
 ```
 
 The `foundation` export contains inherited spacing, type, radii, shadows, palette, and control scales, plus documented kit layout/state additions. Semantic colors live in `themes[name].modes[mode]`. All emitted CSS custom properties use the `--pk-` prefix. The JSON export is available at `@project-kit/tokens/tokens.json`.
+
+## Built-in themes
+
+Compare the themes in the catalog at `/#themes`, then apply one to see it on forms, tables, navigation, dialogs, and chat. The gallery follows the selected appearance, and the catalog remembers your choice.
+
+| Theme ID | Palette direction |
+|---|---|
+| `neutral` | Neutral surfaces and blue actions; the default. |
+| `grove` | Neutral surfaces with green actions and selected backgrounds. |
+| `graphite` | Monochrome surfaces, charcoal text, and restrained actions. |
+| `linen` | Warm paper surfaces, brown ink, and Georgia serif headings. |
+| `ocean` | Cool blue surfaces, navy text, and teal actions. |
+| `dusk` | Violet surfaces, plum text, and purple actions. |
+| `clay` | Sand surfaces, umber text, and terracotta actions. |
+| `rose` | Warm mauve surfaces, rose-tinted text, and dusty rose actions. |
+
+Each theme has a complete light and dark palette. Dark palettes use tinted dark surfaces and lighter text and actions. Text, muted text, hover states, and focus rings are checked against the backgrounds used by the kit. Error, warning, and success colours retain their meanings across themes.
+
+Body text uses the shared system font stack. Linen's heading stack is `Georgia, 'Times New Roman', serif`; it uses locally available fonts and requires no download. Other themes use the system stack for headings too. Spacing, type sizes, and control dimensions stay consistent when switching themes.
 
 ## Custom brands
 
@@ -38,6 +57,8 @@ const css = createBrandCss({
 ```
 
 `brandSchema`, `themeSchema`, `validateBrand`, and `validateTheme` share this supported configuration shape. The typography and radius properties receive foundation defaults when omitted. The helpers emit every accepted visual property; unsupported properties are rejected.
+
+Validation includes secondary text (`fg-muted`, at least 4.5:1) and focus rings (`ring`, at least 3:1) against `accent-soft`, which the kit uses for selected and hovered surfaces. Custom brands accepted before these checks may need a darker or lighter `accent-soft` value. Grove's dark selected background is adjusted for the same secondary-text requirement.
 
 ## Build and checks
 

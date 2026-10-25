@@ -13,13 +13,13 @@ npm run dev
 
 Open `http://127.0.0.1:5173`. The dev command builds the packages first. If you edit package source while the catalog is running, run `npm run build:packages` to update its public artifacts. The catalog itself has Vite hot reload.
 
-The catalog has thirteen entries: design tokens, icons, buttons, fields, custom select, dialog, tooltips, status, loading, empty state, admin shell, data table, and AI chat. Search by component or state, switch between Neutral and Grove, and try light, dark, or system appearance. Forms, navigation, table state changes, and chat replies are local previews.
+The catalog includes themes, design tokens, icons, buttons, fields, custom select, dialog, tooltips, status, loading, empty state, admin shell, data table, and AI chat. Open `/#themes` to compare eight palettes and apply one across the library. Every theme supports light, dark, and system appearance. Forms, navigation, table state changes, and chat replies are local previews.
 
 ## Packages
 
 | Package | Contents | Public imports |
 |---|---|---|
-| `@project-kit/tokens` | Typed scales, palettes, two themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
+| `@project-kit/tokens` | Typed scales, palettes, eight themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
 | `@project-kit/ui` | Controls and feedback, 57 Lucide icons, responsive AdminShell, TanStack-backed DataTable, ChatWidget and ChatPanel | Main export, `/css` |
 | `@project-kit/catalog` | Searchable examples and usage reference | Local application |
 
@@ -65,6 +65,8 @@ Set theme attributes on the document root:
 ```html
 <html lang="en" data-kit-theme="grove" data-kit-mode="dark">
 ```
+
+Choose from Neutral, Grove, Graphite, Linen, Ocean, Dusk, Clay, and Rose using their lowercase names. Each theme coordinates page and surface shades, primary and secondary text, borders, and actions. Linen also uses serif headings. See the [theme guide](packages/tokens/README.md#built-in-themes) for the palette directions.
 
 Omit `data-kit-mode` to follow the system. Neutral is the default theme. This release supports document-level themes; nested scopes are not supported for body-mounted dialog portals. Custom brands use the same validated model and contrast checks; see [token usage](packages/tokens/README.md).
 

@@ -10,6 +10,7 @@ import { SelectPreview } from "./select-preview";
 import { ButtonPreview } from "./button-preview";
 import { TokenPreview } from "./token-preview";
 import { IconPreview } from "./icon-preview";
+import { ThemePreview } from "./theme-preview";
 
 const ShellPreview = lazy(() => import("./shell-preview").then((module) => ({ default: module.ShellPreview })));
 const TablePreview = lazy(() => import("./table-preview").then((module) => ({ default: module.TablePreview })));
@@ -39,8 +40,9 @@ function selectedFromHash() {
   return entries.some((entry) => entry.id === id) ? id : "buttons";
 }
 
-function Preview({ id, theme, mode }: { id: string; theme: ThemeName; mode: ColorMode }) {
+function Preview({ id, theme, mode, onThemeChange }: { id: string; theme: ThemeName; mode: ColorMode; onThemeChange: (theme: ThemeName) => void }) {
   switch (id) {
+    case "themes": return <ThemePreview theme={theme} mode={mode} onThemeChange={onThemeChange} />;
     case "tokens": return <TokenPreview theme={theme} mode={mode} />;
     case "icons": return <IconPreview />;
     case "admin-shell": return <ShellPreview />;
@@ -156,7 +158,7 @@ export function Catalog() {
               </div>
               <section className="catalog-preview" aria-label={`${active.name} live preview`}>
                 <div className="catalog-preview-header"><h2>Live preview</h2><span><span className="catalog-live-dot" aria-hidden="true" />{themes[theme].name} · {mode}</span></div>
-                <div className="catalog-preview-content"><Suspense fallback={<Spinner label="Loading component preview" />}><Preview id={active.id} theme={theme} mode={mode} /></Suspense></div>
+                <div className="catalog-preview-content"><Suspense fallback={<Spinner label="Loading component preview" />}><Preview id={active.id} theme={theme} mode={mode} onThemeChange={setTheme} /></Suspense></div>
               </section>
               <CodeExample code={active.usage} />
               <div className="catalog-information-grid">

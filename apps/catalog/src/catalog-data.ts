@@ -11,6 +11,16 @@ export interface CatalogEntry {
 
 export const entries: readonly CatalogEntry[] = [
   {
+    id: "themes",
+    name: "Themes",
+    group: "Foundations",
+    description: "Palettes for different projects, with coordinated surfaces, text, and actions. Every theme includes light and dark colours.",
+    tags: ["theme", "colour", "color", "palette", "shades", "font", "typography", "brand", "dark mode", "graphite", "linen", "ocean", "dusk", "clay", "rose", "grove", "neutral"],
+    source: "Original kit palettes · validated semantic colours",
+    sourceUrl: "https://ui.shadcn.com/docs/theming",
+    usage: 'import "@project-kit/tokens/css";\n\n// Apply a theme to the whole document, including dialogs.\ndocument.documentElement.dataset.kitTheme = "linen";\ndocument.documentElement.dataset.kitMode = "light";\n\n// Follow the system appearance.\ndelete document.documentElement.dataset.kitMode;'
+  },
+  {
     id: "tokens",
     name: "Design tokens",
     group: "Foundations",
