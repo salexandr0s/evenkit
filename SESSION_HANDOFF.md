@@ -2,6 +2,10 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Theme heading wording: 25 October 2026
+
+Changed the homepage heading to the user's exact wording, "Multiple color themes". Catalog build, TypeScript and focused ESLint passed; the rebuilt preview includes the new text. Concurrent palette changes were preserved and excluded from this wording commit. No remaining work for this request.
+
 ## Homepage copy cleanup: 25 October 2026
 
 Applied the requested `avoid-ai-writing` pass to homepage text. The hero now reads "React components and design tokens." Replaced vague theme, library, setup and footer wording, shortened the introduction, and made the demo instructions and checklist labels specific. Only ten selected copy spans in `apps/catalog/src/homepage.tsx` changed; component behavior, links, IDs and styling are preserved.
