@@ -2,6 +2,14 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Sidebar icon coverage: 25 October 2026
+
+All 62 catalog entries now have explicit sidebar icons. The 48 entries added after the original catalog had used AdminShell's circle fallback. Added 36 static Lucide wrappers and public exports, bringing the searchable icon inventory to 96. The icon reference includes a Controls category and component aliases such as checkbox, fieldset and combobox. Existing icon sizing, stroke, color and accessibility behavior remain intact; no dependency was added.
+
+Changed files: `packages/ui/src/icons.tsx`, `packages/ui/src/index.ts`, `apps/catalog/src/catalog.tsx`, `apps/catalog/src/icon-data.ts`, `docs/icons.md` and `README.md`. Production build, configured typecheck, focused ESLint, all three existing sidebar/icon Chromium journeys, an AST coverage/inventory check and independent code review passed. Live preview inspection confirmed 62 decorative 20px icons with no fallback circles, all 96 gallery entries, component search and category filtering. Dark and light sidebar captures passed visual review. An initial gallery smoke assertion expected 12 Controls entries; the actual 11-entry category was correct, and the corrected smoke passed. The build reports a chunk-size warning.
+
+Evidence is in `.artifacts/sidebar-icons/`: `build.log`, `typecheck.log`, `lint.log`, `browser.log`, `gallery.log`, `sidebar-dark.png`, `sidebar-light.png` and `controls-gallery.png`. No required work remains. Firefox/Safari were not tested. Existing design-pass edits and concurrent forms/selection work remain outside this change. Resume with `git status --short`; the existing preview at `http://127.0.0.1:5173` remains running.
+
 ## Completed 48-priority build
 
 All 48 Next priorities are implemented and verified. The catalog has 62 entries with complete copied examples. Six public UI modules cover foundations, selection/progress, forms, navigation, overlays, data/files; editable record and recovery blocks are in `registry/blocks`. Every ID has source, contract and verification evidence in `docs/priority-build-plan.md`. No required implementation or verification work remains for this goal.

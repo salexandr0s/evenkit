@@ -18,6 +18,14 @@ export {
   BookmarkIcon, ArchiveIcon, UploadIcon, CopyIcon, PencilIcon, FilterIcon,
   PanelLeftIcon, PanelLeftCloseIcon, PanelLeftOpenIcon, CircleIcon,
   MaximizeIcon, MinimizeIcon, SquareIcon, RotateCcwIcon,
+  TypeIcon, RectangleHorizontalIcon, LayoutGridIcon, SeparatorHorizontalIcon,
+  PanelTopIcon, HeadingIcon, SlidersHorizontalIcon, AccessibilityIcon, TagsIcon,
+  ListIcon, ListTreeIcon, ListCollapseIcon, KeyboardIcon, SquareCheckIcon,
+  CircleDotIcon, ToggleRightIcon, BoldIcon, Columns3Icon, GroupIcon, GaugeIcon,
+  ListChecksIcon, ListXIcon, KeyRoundIcon, ListFilterIcon, SaveIcon, CloudCheckIcon,
+  PanelsTopLeftIcon, ChevronsUpDownIcon, PanelTopDashedIcon, ArrowLeftRightIcon,
+  MessageSquareTextIcon, PanelRightIcon, Table2Icon, FilterXIcon, FilePenLineIcon,
+  ShapesIcon,
   type IconProps, type IconSize,
 } from "./icons.js";
 export { AdminShell, type AdminShellProps, type AdminNavGroup, type AdminNavItem, type AdminLinkProps, type AdminSidebarState } from "./admin-shell.js";

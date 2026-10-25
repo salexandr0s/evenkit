@@ -61,6 +61,42 @@ import {
   Minimize,
   Square,
   RotateCcw,
+  Type,
+  RectangleHorizontal,
+  LayoutGrid,
+  SeparatorHorizontal,
+  PanelTop,
+  Heading,
+  SlidersHorizontal,
+  Accessibility,
+  Tags,
+  List,
+  ListTree,
+  ListCollapse,
+  Keyboard,
+  SquareCheck,
+  CircleDot,
+  ToggleRight,
+  Bold,
+  Columns3,
+  Group,
+  Gauge,
+  ListChecks,
+  ListX,
+  KeyRound,
+  ListFilter,
+  Save,
+  CloudCheck,
+  PanelsTopLeft,
+  ChevronsUpDown,
+  PanelTopDashed,
+  ArrowLeftRight,
+  MessageSquareText,
+  PanelRight,
+  Table2,
+  FilterX,
+  FilePenLine,
+  Shapes,
   type LucideIcon,
   type LucideProps,
 } from "lucide-react";
@@ -163,3 +199,39 @@ export const MaximizeIcon = /* @__PURE__ */ createKitIcon(Maximize, "MaximizeIco
 export const MinimizeIcon = /* @__PURE__ */ createKitIcon(Minimize, "MinimizeIcon");
 export const SquareIcon = /* @__PURE__ */ createKitIcon(Square, "SquareIcon");
 export const RotateCcwIcon = /* @__PURE__ */ createKitIcon(RotateCcw, "RotateCcwIcon");
+export const TypeIcon = /* @__PURE__ */ createKitIcon(Type, "TypeIcon");
+export const RectangleHorizontalIcon = /* @__PURE__ */ createKitIcon(RectangleHorizontal, "RectangleHorizontalIcon");
+export const LayoutGridIcon = /* @__PURE__ */ createKitIcon(LayoutGrid, "LayoutGridIcon");
+export const SeparatorHorizontalIcon = /* @__PURE__ */ createKitIcon(SeparatorHorizontal, "SeparatorHorizontalIcon");
+export const PanelTopIcon = /* @__PURE__ */ createKitIcon(PanelTop, "PanelTopIcon");
+export const HeadingIcon = /* @__PURE__ */ createKitIcon(Heading, "HeadingIcon");
+export const SlidersHorizontalIcon = /* @__PURE__ */ createKitIcon(SlidersHorizontal, "SlidersHorizontalIcon");
+export const AccessibilityIcon = /* @__PURE__ */ createKitIcon(Accessibility, "AccessibilityIcon");
+export const TagsIcon = /* @__PURE__ */ createKitIcon(Tags, "TagsIcon");
+export const ListIcon = /* @__PURE__ */ createKitIcon(List, "ListIcon");
+export const ListTreeIcon = /* @__PURE__ */ createKitIcon(ListTree, "ListTreeIcon");
+export const ListCollapseIcon = /* @__PURE__ */ createKitIcon(ListCollapse, "ListCollapseIcon");
+export const KeyboardIcon = /* @__PURE__ */ createKitIcon(Keyboard, "KeyboardIcon");
+export const SquareCheckIcon = /* @__PURE__ */ createKitIcon(SquareCheck, "SquareCheckIcon");
+export const CircleDotIcon = /* @__PURE__ */ createKitIcon(CircleDot, "CircleDotIcon");
+export const ToggleRightIcon = /* @__PURE__ */ createKitIcon(ToggleRight, "ToggleRightIcon");
+export const BoldIcon = /* @__PURE__ */ createKitIcon(Bold, "BoldIcon");
+export const Columns3Icon = /* @__PURE__ */ createKitIcon(Columns3, "Columns3Icon");
+export const GroupIcon = /* @__PURE__ */ createKitIcon(Group, "GroupIcon");
+export const GaugeIcon = /* @__PURE__ */ createKitIcon(Gauge, "GaugeIcon");
+export const ListChecksIcon = /* @__PURE__ */ createKitIcon(ListChecks, "ListChecksIcon");
+export const ListXIcon = /* @__PURE__ */ createKitIcon(ListX, "ListXIcon");
+export const KeyRoundIcon = /* @__PURE__ */ createKitIcon(KeyRound, "KeyRoundIcon");
+export const ListFilterIcon = /* @__PURE__ */ createKitIcon(ListFilter, "ListFilterIcon");
+export const SaveIcon = /* @__PURE__ */ createKitIcon(Save, "SaveIcon");
+export const CloudCheckIcon = /* @__PURE__ */ createKitIcon(CloudCheck, "CloudCheckIcon");
+export const PanelsTopLeftIcon = /* @__PURE__ */ createKitIcon(PanelsTopLeft, "PanelsTopLeftIcon");
+export const ChevronsUpDownIcon = /* @__PURE__ */ createKitIcon(ChevronsUpDown, "ChevronsUpDownIcon");
+export const PanelTopDashedIcon = /* @__PURE__ */ createKitIcon(PanelTopDashed, "PanelTopDashedIcon");
+export const ArrowLeftRightIcon = /* @__PURE__ */ createKitIcon(ArrowLeftRight, "ArrowLeftRightIcon");
+export const MessageSquareTextIcon = /* @__PURE__ */ createKitIcon(MessageSquareText, "MessageSquareTextIcon");
+export const PanelRightIcon = /* @__PURE__ */ createKitIcon(PanelRight, "PanelRightIcon");
+export const Table2Icon = /* @__PURE__ */ createKitIcon(Table2, "Table2Icon");
+export const FilterXIcon = /* @__PURE__ */ createKitIcon(FilterX, "FilterXIcon");
+export const FilePenLineIcon = /* @__PURE__ */ createKitIcon(FilePenLine, "FilePenLineIcon");
+export const ShapesIcon = /* @__PURE__ */ createKitIcon(Shapes, "ShapesIcon");

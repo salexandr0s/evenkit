@@ -1,11 +1,20 @@
 import { lazy, Suspense, useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { themes, themeNames, type ColorMode, type ThemeName } from "@project-kit/tokens";
 import {
-  AdminShell, Badge, Button, ChevronDownIcon, CircleCheckIcon, CircleHelpIcon, CircleIcon,
+  AdminShell, Badge, Button, ChevronDownIcon, CircleCheckIcon, CircleHelpIcon,
   EmptyState, ExternalLinkIcon, FileTextIcon, InboxIcon, Input, Label, LayoutDashboardIcon,
   MaximizeIcon, MessageSquareIcon, MoonIcon, PanelLeftIcon, PencilIcon, RotateCcwIcon,
   SearchIcon, Select, Spinner, SquareIcon, SunIcon, Tooltip, TooltipContent, TooltipProvider,
   TooltipTrigger, type AdminLinkProps, type AdminNavGroup, type AdminSidebarState,
+  AccessibilityIcon, ArrowLeftRightIcon, BellIcon, BoldIcon, ChevronRightIcon,
+  ChevronsUpDownIcon, CircleAlertIcon, CircleDotIcon, CloudCheckIcon, Columns3Icon,
+  ContactRoundIcon, CopyIcon, FilePenLineIcon, FilterIcon, FilterXIcon, GaugeIcon,
+  GroupIcon, HeadingIcon, KeyboardIcon, KeyRoundIcon, LayoutGridIcon, ListChecksIcon,
+  ListCollapseIcon, ListFilterIcon, ListIcon, ListTreeIcon, ListXIcon, MenuIcon,
+  MessageSquareTextIcon, PanelRightIcon, PanelsTopLeftIcon, PanelTopDashedIcon,
+  PanelTopIcon, RectangleHorizontalIcon, SaveIcon, SeparatorHorizontalIcon,
+  ShapesIcon, SlidersHorizontalIcon, SquareCheckIcon, Table2Icon, TagsIcon,
+  ToggleRightIcon, TriangleAlertIcon, TypeIcon, UploadIcon, UserIcon,
 } from "@project-kit/ui";
 import { entries, groups } from "./catalog-data";
 import { foundationsEntries } from "./foundations-entries";
@@ -42,11 +51,28 @@ const sidebarStates = ["expanded", "collapsed", "hidden"] as const;
 type Appearance = (typeof appearances)[number];
 const themeOptions = themeNames.map((name) => ({ value: name, label: themes[name].name }));
 const navigationIcons: Record<string, ReactNode> = {
-  themes: <SunIcon />, tokens: <LayoutDashboardIcon />, icons: <CircleIcon />,
+  themes: <SunIcon />, tokens: <LayoutDashboardIcon />, icons: <ShapesIcon />,
   buttons: <SquareIcon />, fields: <PencilIcon />, select: <ChevronDownIcon />,
   dialog: <MaximizeIcon />, tooltips: <CircleHelpIcon />, "admin-shell": <PanelLeftIcon />,
   "data-table": <FileTextIcon />, chat: <MessageSquareIcon />, status: <CircleCheckIcon />,
   loading: <RotateCcwIcon />, empty: <InboxIcon />,
+  typography: <TypeIcon />, "layout-widths": <RectangleHorizontalIcon />,
+  "layout-groups": <LayoutGridIcon />, separator: <SeparatorHorizontalIcon />,
+  card: <PanelTopIcon />, "page-header": <HeadingIcon />, toolbar: <SlidersHorizontalIcon />,
+  accessibility: <AccessibilityIcon />, avatar: <UserIcon />, tags: <TagsIcon />,
+  "data-list": <ListTreeIcon />, "list-item": <ListIcon />, kbd: <KeyboardIcon />,
+  checkbox: <SquareCheckIcon />, "radio-group": <CircleDotIcon />, switch: <ToggleRightIcon />,
+  "toggle-group": <BoldIcon />, "segmented-control": <Columns3Icon />, "button-group": <GroupIcon />,
+  "copy-action": <CopyIcon />, progress: <GaugeIcon />, fieldset: <ListChecksIcon />,
+  "form-summary": <ListXIcon />, "search-field": <SearchIcon />, "password-field": <KeyRoundIcon />,
+  combobox: <ListFilterIcon />, "form-actions": <SaveIcon />, "save-status": <CloudCheckIcon />,
+  tabs: <PanelsTopLeftIcon />, accordion: <ListCollapseIcon />, collapsible: <ChevronsUpDownIcon />,
+  breadcrumbs: <ChevronRightIcon />, navbar: <PanelTopDashedIcon />, pagination: <ArrowLeftRightIcon />,
+  "dropdown-menu": <MenuIcon />, popover: <MessageSquareTextIcon />, "alert-dialog": <TriangleAlertIcon />,
+  sheet: <PanelRightIcon />, toast: <BellIcon />, "account-menu": <ContactRoundIcon />,
+  "semantic-table": <Table2Icon />, filters: <FilterIcon />, "applied-filters": <FilterXIcon />,
+  "file-input": <UploadIcon />, "file-row": <FileTextIcon />, "list-page": <ListIcon />,
+  "edit-page": <FilePenLineIcon />, "error-pages": <CircleAlertIcon />,
 };
 
 function readPreference<T extends string>(key: string, options: readonly T[], fallback: T): T {
