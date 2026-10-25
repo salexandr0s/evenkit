@@ -3,6 +3,7 @@
 import { forwardRef, useId, useState } from "react";
 import { Button } from "./button.js";
 import { TextField, type TextFieldProps } from "./field.js";
+import { LockIcon } from "./icons.js";
 
 export interface PasswordFieldProps extends Omit<TextFieldProps, "type" | "endAdornment"> {
   showText?: string;
@@ -12,7 +13,7 @@ export interface PasswordFieldProps extends Omit<TextFieldProps, "type" | "endAd
 }
 
 export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(function PasswordField(
-  { id, disabled, showText = "Show", hideText = "Hide", showLabel = "Show password", hideLabel = "Hide password", ...props },
+  { id, disabled, startAdornment = <LockIcon />, showText = "Show", hideText = "Hide", showLabel = "Show password", hideLabel = "Hide password", ...props },
   ref,
 ) {
   const generatedId = useId();
@@ -30,6 +31,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(fu
       id={controlId}
       disabled={disabled}
       type={visible ? "text" : "password"}
+      startAdornment={startAdornment}
       endAdornment={
         <Button
           type="button"

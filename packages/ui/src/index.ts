@@ -9,7 +9,7 @@ export {
   ActivityIcon, ArrowDownIcon, ArrowUpIcon, ArrowUpDownIcon, ArrowLeftIcon, ArrowRightIcon,
   CheckIcon, ChevronDownIcon, ChevronUpIcon, ChevronLeftIcon, ChevronRightIcon,
   CircleAlertIcon, CircleHelpIcon, DownloadIcon, ExternalLinkIcon, FileTextIcon, FolderIcon,
-  LayoutDashboardIcon, LogOutIcon, MailIcon, MenuIcon, MoreHorizontalIcon, PlusIcon,
+  LayoutDashboardIcon, LockIcon, LogOutIcon, MailIcon, MenuIcon, MoreHorizontalIcon, PlusIcon,
   SearchIcon, SettingsIcon, ShieldIcon, TrashIcon, UsersIcon, XIcon, SunIcon, MoonIcon,
   type IconProps, type IconSize,
 } from "./icons.js";

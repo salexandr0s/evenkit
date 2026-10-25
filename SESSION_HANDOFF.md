@@ -2,7 +2,7 @@
 
 Project: shared project kit. Auth worktree: `/Users/nationalbank/.codex/worktrees/auth-pages/design-tokens`. Branch: `codex/auth-pages`, based on `1dfd7f9` from `codex/component-improvements`.
 
-Latest work: the user requested a fresh implementation audit and design pass after auth implementation commit `6fc9302`.
+Latest work: the user noticed the password fields lacked a leading icon after the design pass in `0a93d90`.
 
 ## Completed
 
@@ -16,6 +16,7 @@ Latest work: the user requested a fresh implementation audit and design pass aft
 - Fixed keyboard focus loss when a live recovery-state change removes a focused form. Focus moves to the recovery notice only when it was lost from that form; initial and external-control focus remain intact.
 - Added visible `showText`/`hideText` password-toggle captions. Accessible names retain their visible captions; the docs state the English page-copy boundary.
 - Tightened auth spacing, icon size, and mobile card padding. Catalog controls now follow the page, with a compact preview caption and fewer nested frames. Embedded mobile form width increased from 218px to 252px.
+- Added a public `LockIcon` and made it the default leading adornment in `PasswordField`, including confirmation fields. Custom adornments and explicit `null` remain supported. The icon catalog includes password/credentials aliases; the kit now has 32 icons.
 
 ## Key files
 
@@ -27,6 +28,8 @@ Latest work: the user requested a fresh implementation audit and design pass aft
 - `AUTH_PAGES_PLAN.md`, `docs/authentication.md`, `docs/compatibility.md`, README, and UI provenance.
 
 ## Verification
+
+Password-icon correction: production build, workspace/test type checks, ESLint, all seven existing auth Chromium journeys, and the icon-reference Chromium journey passed. The icon-reference check initially used a catalog build created before the inventory edit; rebuilding the catalog resolved the mismatch without changing the test. Independent review found no actionable concerns. The refreshed retained preview visibly shows the lock icon beside the password input; `.artifacts/auth-audit/password-lock-icon.png` records it. No new dependency or test was added for this visual change.
 
 Passed on the final audit revision: production build, workspace/test type checks, ESLint, seven token tests, seven auth Chromium journeys, and seventeen existing Chromium journeys. The auth and regression groups ran separately against the same final app build.
 

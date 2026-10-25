@@ -20,7 +20,7 @@ The catalog has fifteen entries, including login, signup, password reset, and ne
 | Package | Contents | Public imports |
 |---|---|---|
 | `@project-kit/tokens` | Typed scales, palettes, two themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
-| `@project-kit/ui` | Controls and feedback, 31 icons, AdminShell, DataTable, and four authentication pages | Main export, `/css` |
+| `@project-kit/ui` | Controls and feedback, 32 icons, AdminShell, DataTable, and four authentication pages | Main export, `/css` |
 | `@project-kit/catalog` | Searchable examples and usage reference | Local application |
 
 Both libraries export built files and declarations. UI styles use `pk-` classes and `--pk-` variables, with no global reset. Consumers need React 19 and React DOM 19; no Tailwind, Next.js, database, or authentication dependency is required by the UI package.

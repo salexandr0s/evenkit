@@ -3,7 +3,7 @@ import {
   ActivityIcon, ArrowDownIcon, ArrowUpIcon, ArrowUpDownIcon, ArrowLeftIcon,
   ArrowRightIcon, CheckIcon, ChevronDownIcon, ChevronUpIcon, ChevronLeftIcon,
   ChevronRightIcon, CircleAlertIcon, CircleHelpIcon, DownloadIcon, ExternalLinkIcon,
-  FileTextIcon, FolderIcon, LayoutDashboardIcon, LogOutIcon, MailIcon,
+  FileTextIcon, FolderIcon, LayoutDashboardIcon, LockIcon, LogOutIcon, MailIcon,
   MenuIcon, MoonIcon, MoreHorizontalIcon, PlusIcon, SearchIcon, SettingsIcon,
   ShieldIcon, SunIcon, TrashIcon, UsersIcon, XIcon, type IconProps,
 } from "@project-kit/ui";
@@ -47,6 +47,7 @@ export const icons: readonly IconEntry[] = [
   { name: "FileTextIcon", label: "Document", category: "content", aliases: ["file", "text", "notes", "report"], Icon: FileTextIcon },
   { name: "FolderIcon", label: "Folder", category: "content", aliases: ["directory", "files", "projects"], Icon: FolderIcon },
   { name: "LayoutDashboardIcon", label: "Dashboard", category: "navigation", aliases: ["home", "overview", "layout"], Icon: LayoutDashboardIcon },
+  { name: "LockIcon", label: "Lock", category: "workspace", aliases: ["password", "lock", "credentials", "security"], Icon: LockIcon },
   { name: "LogOutIcon", label: "Log out", category: "actions", aliases: ["sign out", "exit", "leave"], Icon: LogOutIcon },
   { name: "MailIcon", label: "Mail", category: "content", aliases: ["email", "message", "envelope", "inbox"], Icon: MailIcon },
   { name: "MenuIcon", label: "Menu", category: "navigation", aliases: ["hamburger", "sidebar", "navigation"], Icon: MenuIcon },

@@ -31,7 +31,7 @@ Signup receives `{ email, password }`; password confirmation stays local. Its su
 
 `SignupPage` and `NewPasswordPage` accept `passwordHint` and `validatePassword(password)`, which returns an error string or `undefined`. Match that validator to the service's policy. Without an override, the pages require a password and matching confirmation, without imposing a minimum length or composition rule. Password policy is also enforced by the service.
 
-`PasswordField` exposes a labelled show/hide action and forwards input props and refs. Passwords start concealed. The pages clear their password inputs after success and keep credentials out of persistence and logs.
+`PasswordField` includes a decorative `LockIcon`, exposes a labelled show/hide action, and forwards input props and refs. Replace the icon with `startAdornment`, or pass `startAdornment={null}` to omit it. Passwords start concealed. The pages clear their password inputs after success and keep credentials out of persistence and logs.
 
 Use `showText` and `hideText` to customize the visible toggle captions, and `showLabel` and `hideLabel` for descriptive accessible names. The accessible name includes the visible caption so voice controls can match it. For example, a standalone German control can use `showText="Anzeigen"`, `hideText="Verbergen"`, `showLabel="Passwort anzeigen"`, and `hideLabel="Passwort verbergen"`. The page fields, submit actions, form names, and built-in validation messages remain in English; changing a page title does not translate the entire form.
 
