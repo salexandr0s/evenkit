@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Homepage and default landing page: 25 October 2026
+
+Completed the homepage goal. The root URL now opens a dedicated Evenkit homepage with an interactive project form and checklist, eight theme choices, links into the component library, and copyable starter code. Existing component URLs such as `/#buttons`, `/#themes` and `/#tokens` still open the catalog. Catalog branding returns to `/`; theme, appearance and sidebar preferences retain their existing storage keys. The homepage accurately describes the packages as unpublished pilots.
+
+Key files: `apps/catalog/src/homepage.tsx`, `homepage.css`, `app.tsx`, `use-catalog-preferences.ts`, `catalog.tsx`, `main.tsx`, `apps/catalog/index.html`, `README.md`, and the homepage/catalog/sidebar browser tests. The catalog loads on entry through a lazy boundary; homepage section anchors use `#home-*` to keep them separate from component routes.
+
+Verification passed: production package/catalog builds, configured workspace TypeScript, full ESLint, and all 19 Chromium journeys across homepage, catalog, catalog-sidebar, themes and sidebar-tooltip. Additional production-preview checks covered form validation/submission, visibility selection, checklist state, copied clipboard text, overflow at 360/768/1024/1440px, action text across all eight palettes and dark Ocean, 44px brand links, skip-link focus, and runtime errors. Independent review found no remaining actionable issue. Corrected the CopyAction prop and homepage anchor specificity during verification. Evidence is under `.artifacts/homepage/`. Firefox, Safari and physical touch were not tested.
+
+Local preview: `http://127.0.0.1:5390/`. The homepage has not been pushed or deployed to production. No required implementation work remains. Resume with `git status --short` and `git log -2 --oneline`. If the preview stops, run `npm run preview --workspace @evenkit/catalog -- --port 5390 --strictPort`. Deployment remains a separate action using `vercel deploy --prod --scope blockconsult`; the current production deployment is recorded below.
+
 ## Private repository and production deployment: 25 October 2026
 
 Committed all remaining navigation and catalog design changes as `f2eff93` and `20d89eb`. Created the private GitHub repository `https://github.com/salexandr0s/evenkit`, added it as `origin`, and pushed all three local branches with upstream tracking. The default branch is `codex/component-improvements`; `main` and `codex/auth-pages` retain their existing histories. The concurrent sidebar fix `d8dfd23` is also pushed.

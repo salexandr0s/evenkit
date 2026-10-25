@@ -35,7 +35,7 @@ async function observeSelectExit(popup: Locator) {
 }
 
 test("search finds controls and recovers from no results", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/#buttons");
   const search = page.getByRole("searchbox", { name: "Search components" });
   await search.fill("modal");
   await expect(page.getByRole("heading", { name: "Dialog", exact: true })).toBeVisible();
@@ -57,7 +57,7 @@ test("search finds controls and recovers from no results", async ({ page }) => {
 
 test("appearance icon follows the system until a keyboard choice and remembers that choice", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
-  await page.goto("/");
+  await page.goto("/#buttons");
   const toLight = page.getByRole("button", { name: "Switch to light mode", exact: true });
   const toDark = page.getByRole("button", { name: "Switch to dark mode", exact: true });
   await expect(page.locator("html")).not.toHaveAttribute("data-kit-mode");
@@ -226,7 +226,7 @@ test("dialog contains focus, inherits the theme, closes with Escape and restores
 
 test("narrow layouts preserve controls and recoverable feedback", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
-  await page.goto("/");
+  await page.goto("/#buttons");
   const primary = page.getByRole("button", { name: "Primary action", exact: true });
   expect((await primary.boundingBox())?.height).toBeGreaterThanOrEqual(44);
   await expect(page.getByRole("button", { name: "Disabled action" })).toBeDisabled();

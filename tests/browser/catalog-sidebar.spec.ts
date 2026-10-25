@@ -95,7 +95,8 @@ test("library drawer keeps navigation reachable while preserving the hidden desk
   await trigger.click();
   await drawer.getByRole("link", { name: "Evenkit home", exact: true }).click();
   await expect(drawer).not.toBeVisible();
-  await expect(trigger).toBeFocused();
+  await expect(page.locator("main#home-main")).toBeVisible();
+  await page.getByRole("link", { name: "Browse components", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Buttons", exact: true })).toBeVisible();
   const skip = page.locator(".catalog-app > .pk-admin-skip");
   await skip.focus();

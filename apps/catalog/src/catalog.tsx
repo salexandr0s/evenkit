@@ -35,6 +35,7 @@ import { SelectPreview } from "./select-preview";
 import { ButtonPreview } from "./button-preview";
 import { TokenPreview } from "./token-preview";
 import { ThemePreview } from "./theme-preview";
+import { readPreference, type CatalogPreferences } from "./use-catalog-preferences";
 
 const IconPreview = lazy(() => import("./icon-preview").then((module) => ({ default: module.IconPreview })));
 const ShellPreview = lazy(() => import("./shell-preview").then((module) => ({ default: module.ShellPreview })));
@@ -49,9 +50,7 @@ const OverlaysPreview = lazy(() => import("./overlays-preview").then((module) =>
 const WorkflowsPreview = lazy(() => import("./workflows-preview").then((module) => ({ default: module.WorkflowsPreview })));
 const RoadmapPreview = lazy(() => import("./roadmap-preview").then((module) => ({ default: module.RoadmapPreview })));
 
-const appearances = ["system", "light", "dark"] as const;
 const sidebarStates = ["expanded", "collapsed", "hidden"] as const;
-type Appearance = (typeof appearances)[number];
 const themeOptions = themeNames.map((name) => ({ value: name, label: themes[name].name }));
 const navigationIcons: Record<string, ReactNode> = {
   themes: <SunIcon />, tokens: <LayoutDashboardIcon />, icons: <ShapesIcon />,
@@ -87,16 +86,6 @@ const navigationIcons: Record<string, ReactNode> = {
   "onboarding-wizard": <PanelsTopLeftIcon />,
 };
 
-function readPreference<T extends string>(key: string, options: readonly T[], fallback: T): T {
-  try {
-    // Preserve preferences saved before the Evenkit rename on this origin.
-    const stored = localStorage.getItem(`evenkit.catalog.${key}`) ?? localStorage.getItem(`project-kit.catalog.${key}`);
-    return options.find((option) => option === stored) ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-
 function selectedFromHash() {
   const id = window.location.hash.slice(1);
   return entries.some((entry) => entry.id === id) ? id : "buttons";
@@ -128,15 +117,11 @@ function Preview({ id, theme, mode, onThemeChange }: { id: string; theme: ThemeN
   }
 }
 
-export function Catalog() {
+export function Catalog({ theme, mode, onThemeChange: setTheme, onToggleAppearance }: CatalogPreferences) {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(selectedFromHash);
   const [sidebarState, setSidebarState] = useState<AdminSidebarState>(() => readPreference("sidebar", sidebarStates, "expanded"));
   const searchRef = useRef<HTMLInputElement>(null);
-  const [theme, setTheme] = useState<ThemeName>(() => readPreference("theme", themeNames, "neutral"));
-  const [appearance, setAppearance] = useState<Appearance>(() => readPreference("appearance", appearances, "system"));
-  const [systemDark, setSystemDark] = useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches);
-  const mode: ColorMode = appearance === "system" ? (systemDark ? "dark" : "light") : appearance;
   const appearanceAction = mode === "light" ? "Switch to dark mode" : "Switch to light mode";
 
   function clearCatalogSearch() {
@@ -151,25 +136,6 @@ export function Catalog() {
       // Sidebar controls still work when browser storage is unavailable.
     }
   }, [sidebarState]);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const change = () => setSystemDark(media.matches);
-    media.addEventListener("change", change);
-    return () => media.removeEventListener("change", change);
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.dataset.kitTheme = theme;
-    if (appearance === "system") delete document.documentElement.dataset.kitMode;
-    else document.documentElement.dataset.kitMode = appearance;
-    try {
-      localStorage.setItem("evenkit.catalog.theme", theme);
-      localStorage.setItem("evenkit.catalog.appearance", appearance);
-    } catch {
-      // Blocked browser storage does not prevent changing the current preview.
-    }
-  }, [theme, appearance]);
 
   useEffect(() => {
     const change = () => {
@@ -212,8 +178,8 @@ export function Catalog() {
   return (
     <AdminShell
       className="catalog-app"
-      brand={<a className="catalog-brand" href="#buttons" aria-label="Evenkit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}<span>Evenkit<small>Components & themes</small></span></a>}
-      compactBrand={<Tooltip><TooltipTrigger asChild><a className="catalog-brand" href="#buttons" aria-label="Evenkit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}</a></TooltipTrigger><TooltipContent side="right">Evenkit home</TooltipContent></Tooltip>}
+      brand={<a className="catalog-brand" href="/" aria-label="Evenkit home">{brandMark}<span>Evenkit<small>Components & themes</small></span></a>}
+      compactBrand={<Tooltip><TooltipTrigger asChild><a className="catalog-brand" href="/" aria-label="Evenkit home">{brandMark}</a></TooltipTrigger><TooltipContent side="right">Evenkit home</TooltipContent></Tooltip>}
       sidebarState={sidebarState}
       onSidebarStateChange={setSidebarState}
       navigation={navigation}
@@ -230,7 +196,7 @@ export function Catalog() {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button shape="icon" variant="ghost" aria-label={appearanceAction} onClick={() => setAppearance(mode === "light" ? "dark" : "light")}>
+                  <Button shape="icon" variant="ghost" aria-label={appearanceAction} onClick={onToggleAppearance}>
                     {mode === "light" ? <MoonIcon /> : <SunIcon />}
                   </Button>
                 </TooltipTrigger>

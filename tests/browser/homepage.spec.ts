@@ -1,0 +1,53 @@
+import { expect, test } from "@playwright/test";
+
+test("homepage opens the catalog and preserves navigation history and deep links", async ({ page }) => {
+  await page.goto("/");
+  const home = page.locator("main#home-main");
+  await expect(home).toBeVisible();
+  await expect(page.getByRole("main")).toHaveCount(1);
+  await page.getByRole("link", { name: "Browse components", exact: true }).click();
+  await expect(page).toHaveURL(/\/#buttons$/);
+  await expect(page.getByRole("heading", { name: "Buttons", exact: true })).toBeVisible();
+  await page.getByRole("navigation", { name: "Components", exact: true }).getByRole("link", { name: "Design tokens", exact: true }).click();
+  await expect(page).toHaveURL(/\/#tokens$/);
+  await expect(page.getByRole("heading", { name: "Design tokens", exact: true })).toBeVisible();
+  await page.getByRole("link", { name: "Evenkit home", exact: true }).click();
+  await expect(home).toBeVisible();
+  await page.goBack();
+  await expect(page.getByRole("heading", { name: "Design tokens", exact: true })).toBeVisible();
+  await page.goBack();
+  await expect(page.getByRole("heading", { name: "Buttons", exact: true })).toBeVisible();
+  await page.goBack();
+  await expect(home).toBeVisible();
+  await page.goForward();
+  await expect(page.getByRole("heading", { name: "Buttons", exact: true })).toBeVisible();
+  await page.goto("/#themes");
+  await expect(page.getByRole("heading", { name: "Themes", exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Themes", exact: true })).toBeVisible();
+  await page.goto("/#home-start");
+  await expect(home).toBeVisible();
+  await expect(page.locator("#home-start")).toBeInViewport();
+});
+
+test("homepage and catalog share theme and appearance preferences", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+  const ocean = page.getByRole("button", { name: "Apply Ocean", exact: true });
+  await ocean.focus();
+  await ocean.press("Enter");
+  await expect(ocean).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("html")).toHaveAttribute("data-kit-theme", "ocean");
+  await page.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-kit-mode", "dark");
+  await page.getByRole("link", { name: "Browse components", exact: true }).click();
+  await expect(page.getByRole("combobox", { name: "Theme", exact: true })).toHaveText("Ocean");
+  await expect(page.getByRole("button", { name: "Switch to light mode", exact: true })).toBeVisible();
+  await page.getByRole("combobox", { name: "Theme", exact: true }).click();
+  await page.getByRole("option", { name: "Linen", exact: true }).click();
+  await page.getByRole("link", { name: "Evenkit home", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Apply Linen", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Apply Linen", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("html")).toHaveAttribute("data-kit-mode", "dark");
+});

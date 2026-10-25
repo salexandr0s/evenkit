@@ -11,7 +11,9 @@ npm ci
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. The dev command builds the packages first. If you edit package source while the catalog is running, run `npm run build:packages` to update its public artifacts. The catalog itself has Vite hot reload.
+Open `http://127.0.0.1:5173` for the Evenkit homepage, with interactive component examples, theme previews and setup guidance. Choose Browse components to enter the catalog, or open `/#buttons` directly. The Evenkit logo returns to the homepage. Theme and appearance choices carry across both views.
+
+The dev command builds the packages first. If you edit package source while the catalog is running, run `npm run build:packages` to update its public artifacts. The catalog itself has Vite hot reload.
 
 The catalog includes 86 sections: the original 14, 48 priority examples, and 24 additions for dates, multiple values, numbers, remote tables, records, accounts, uploads, search and onboarding. Search a component name or an inventory ID such as `D02`. Open `/#themes` to compare eight palettes and apply one across the library. The catalog follows your system appearance until you choose light or dark with the sun/moon button; your choice is remembered. Forms, navigation, table state changes, uploads and chat replies are local previews.
 
