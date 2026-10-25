@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, ChatWidget, DataTable, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserIcon, type AdminSidebarState, type ButtonShape, type ChatMessage, type DataTableColumn, type DialogSize, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
 import "@project-kit/tokens/css";
 import "@project-kit/ui/css";
-import { ActionMessage, CircleCheckIcon, type ActionMessageProps, type BadgeProps } from "@project-kit/ui";
+import { ActionMessage, CircleCheckIcon, Skeleton, Spinner, type ActionMessageProps, type BadgeProps, type SkeletonProps, type SpinnerProps } from "@project-kit/ui";
 
 const element = document.getElementById("root");
 if (!element) throw new Error("Missing fixture root.");
@@ -15,6 +15,10 @@ const badgeProps: BadgeProps = { size: "sm", variant: "outline", tone: "success"
 const badgeRef = createRef<HTMLSpanElement>();
 const messageProps: ActionMessageProps = { tone: "warning", heading: <h2>Review the package</h2>, title: "Packed feedback", role: "note", "aria-label": "Package feedback" };
 const messageRef = createRef<HTMLDivElement>();
+const spinnerProps: SpinnerProps = { size: "lg", label: "Loading package preview", "aria-label": "Loading packed content", role: "status" };
+const spinnerRef = createRef<HTMLSpanElement>();
+const skeletonProps: SkeletonProps = { variant: "text", size: "sm", title: "Packed placeholder" };
+const skeletonRef = createRef<HTMLDivElement>();
 const notesProps: TextareaFieldProps = { label: "Notes", name: "notes", optional: true, hint: "Details for the team.", rows: 3 };
 const templates: SelectOptionGroup = { id: "team", label: "Team templates", options: [{ value: "blank", label: "Blank project", description: "Start with an empty project." }] };
 const columns: readonly DataTableColumn<(typeof records)[number]>[] = [
@@ -42,6 +46,8 @@ createRoot(element).render(<main>
   <h1>Packed package check</h1>
   <Badge {...badgeProps} ref={badgeRef}>Vite consumer</Badge>
   <ActionMessage {...messageProps} ref={messageRef} actions={<ButtonLink href="#projects">Review projects</ButtonLink>}>Persistent feedback from the installed package.</ActionMessage>
+  <Spinner {...spinnerProps} ref={spinnerRef} />
+  <Skeleton {...skeletonProps} ref={skeletonRef} />
   <TextField label="Project name" defaultValue="Independent consumer" required startAdornment={<FolderIcon />} />
   <TextareaField {...notesProps} />
   <SelectField label="Project template" name="template" options={[templates]} defaultValue="blank" hint="Choose a starting point." required />

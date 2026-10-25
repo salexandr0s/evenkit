@@ -17,7 +17,7 @@ Keep the existing public API compatible. Preserve all built-in themes, document-
 | 7 | TooltipProvider, Tooltip, TooltipTrigger, TooltipContent | Custom theme-aware surfaces, hover/focus behavior, dismissal, wrapping, and reusable positioning. | Complete |
 | 8 | AdminShell | Expanded, icon-only, and hidden modes; restore controls, navigation icons/tooltips, compact slots, badges, mobile and focus recovery. | Complete |
 | 9 | Badge, ActionMessage | Status icons, wrapping labels, message titles/actions, warning feedback, and a retry/dismiss example. | Complete |
-| 10 | Spinner, Skeleton | Token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. | Pending |
+| 10 | Spinner, Skeleton | Token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. | Complete |
 | 11 | EmptyState | Icon slot, heading semantics, secondary action, compact layout, and distinct first-use, no-results, and failure examples. | Pending |
 | 12 | DataTable | Per-column wrapping, usable custom action cells, clear search, displayed-row range, selection clearing/bulk actions, and improved state presentation. | Pending |
 
@@ -114,4 +114,12 @@ The new Status preview demonstrates variants, rich headings, static notes, custo
 
 Plan and source reviews passed with no remaining findings. Production build, workspace/test type checks, ESLint, eight token tests, all 32 Chromium journeys, and independent packed Vite/Next consumers passed. Existing table and sidebar consumers retain their dimensions and behavior. Package verification cleaned its servers and temporary directory. Light/dark views and the single sidebar control were inspected in the app browser; screenshots: `.artifacts/status-reference.png`, `.artifacts/status-dark-reference.png`, and `.artifacts/sidebar-single-control.png`. Firefox and Safari were not tested.
 
-Next: Spinner and Skeleton. Nine of twelve planned areas are complete. The goal remains active; items 10–12 and final integration review are unfinished. Include the separately added chat and theme components in that final integration review.
+### 10. Spinner and Skeleton
+
+Spinner now forwards its span ref and supports 16/20/24px sizes, retaining the 20px default, native naming/roles, and decorative behavior used by buttons, tables, and chat. Skeleton adds block, text, and avatar variants in three sizes. Text lines override the old 40px minimum; avatars stay square when shrinking. The default remains a 40px block. Low-specificity selectors preserve later host class overrides. All dimensions reuse existing tokens, and skeletons remain static.
+
+The new Loading preview replaces placeholders with a fictional project card. One persistent status sits outside the busy content, and the enabled reload button keeps its name and focus. A repeated reload cancels the previous timer. Hidden loaded content preserves the card's responsive footprint while decorative placeholders occupy the same space. Obsolete catalog skeleton styles were removed. Documentation, exports, and packed fixtures cover the new props, types, and refs.
+
+Plan and source reviews passed without remaining findings. Reviewer checks confirmed square shrinking avatars and host class overrides. Production build, configured workspace/test type checks, ESLint, all 12 relevant Chromium journeys, and independent packed Vite/Next builds plus HTTP/CSS checks passed. The loading journey covers timer restarts, one status, hidden placeholders, focus preservation, dimensions at 360/768/1024/1440px, and all size mappings. Existing button, table, and catalog journeys protect their loading states and reduced-motion behavior. Light/dark views were inspected; screenshots: `.artifacts/loading-reference.png` and `.artifacts/loading-dark-reference.png`. Package verification cleaned its servers and temporary directory. Firefox and Safari were not tested.
+
+Next: EmptyState, then DataTable. Ten of twelve planned areas are complete. The goal remains active; items 11–12 and final integration review are unfinished. Include the separately added chat and theme components in that final integration review.

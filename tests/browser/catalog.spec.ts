@@ -154,7 +154,9 @@ test("narrow layouts preserve controls and recoverable feedback", async ({ page 
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.getByRole("button", { name: "Browse components" }).click();
   await page.getByRole("navigation", { name: "Components", exact: true }).getByRole("link", { name: "Loading", exact: true }).click();
-  await expect(page.locator(".pk-spinner")).toHaveCSS("animation-name", "none");
+  const spinners = page.getByRole("region", { name: "Spinner sizes" }).locator(".pk-spinner");
+  await expect(spinners).toHaveCount(3);
+  for (const spinner of await spinners.all()) await expect(spinner).toHaveCSS("animation-name", "none");
   for (const width of [768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

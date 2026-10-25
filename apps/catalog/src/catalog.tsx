@@ -4,7 +4,8 @@ import { Badge, Button, ChevronRightIcon, EmptyState, ExternalLinkIcon, Input, L
 import { entries, groups } from "./catalog-data";
 import { CodeExample } from "./code-example";
 import { FieldPreview } from "./field-preview";
-import { EmptyPreview, LoadingPreview } from "./control-previews";
+import { EmptyPreview } from "./control-previews";
+import { LoadingPreview } from "./loading-preview";
 import { StatusPreview } from "./status-preview";
 import { DialogPreview } from "./dialog-preview";
 import { SelectPreview } from "./select-preview";

@@ -1,21 +1,5 @@
 import { useState } from "react";
-import { ActionMessage, Button, EmptyState, Skeleton, Spinner } from "@project-kit/ui";
-
-export function LoadingPreview() {
-  return (
-    <div className="catalog-demo-stack">
-      <div className="catalog-demo-actions"><Spinner label="Loading projects" /><span>Loading projects</span></div>
-      <div className="catalog-demo-divider">
-        <p className="catalog-state-label">Content placeholder</p>
-        <div className="catalog-skeleton-card" aria-label="Loading project details" aria-busy="true">
-          <Skeleton className="catalog-skeleton-avatar" />
-          <div className="catalog-skeleton-lines"><Skeleton /><Skeleton /><Skeleton /></div>
-        </div>
-      </div>
-      <p className="catalog-caption">Motion follows the reduced-motion preference on your device.</p>
-    </div>
-  );
-}
+import { ActionMessage, Button, EmptyState } from "@project-kit/ui";
 
 export function EmptyPreview() {
   const [created, setCreated] = useState(false);

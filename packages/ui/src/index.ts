@@ -5,7 +5,7 @@ export { Input, Textarea, Label, TextField, TextareaField, type InputProps, type
 export { Select, SelectField, type SelectProps, type SelectFieldProps, type SelectOption, type SelectOptionGroup } from "./select.js";
 export { Dialog, DialogTrigger, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter, type DialogContentProps, type DialogSize } from "./dialog.js";
 export { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent, type TooltipProviderProps, type TooltipContentProps } from "./tooltip.js";
-export { Badge, Spinner, Skeleton, EmptyState, ActionMessage, type BadgeProps, type BadgeTone, type BadgeSize, type BadgeVariant, type SpinnerProps, type EmptyStateProps, type ActionMessageProps, type ActionMessageTone } from "./feedback.js";
+export { Badge, Spinner, Skeleton, EmptyState, ActionMessage, type BadgeProps, type BadgeTone, type BadgeSize, type BadgeVariant, type SpinnerProps, type SpinnerSize, type SkeletonProps, type SkeletonSize, type SkeletonVariant, type EmptyStateProps, type ActionMessageProps, type ActionMessageTone } from "./feedback.js";
 export {
   ActivityIcon, ArrowDownIcon, ArrowUpIcon, ArrowUpDownIcon, ArrowLeftIcon, ArrowRightIcon,
   CheckIcon, ChevronDownIcon, ChevronUpIcon, ChevronLeftIcon, ChevronRightIcon,

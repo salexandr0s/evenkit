@@ -89,6 +89,26 @@ import { ActionMessage, Badge, Button, CheckIcon } from "@project-kit/ui";
 
 ActionMessage accepts `info`, `success`, `warning`, and `error` tones with distinct decorative icons. Use `heading` for a visible heading, `actions` for buttons or links, and `icon` to replace the default glyph; `null` or `false` hides it. The native `title` attribute remains available. Headings, bodies, and actions accept React content and wrap in narrow layouts. Error messages default to `role="alert"`; other tones use `role="status"`. You can override the role and ARIA attributes, for example `role="note"` for static guidance. Your application owns dismissal, retry behavior, and focus recovery; messages do not disappear automatically.
 
+## Loading
+
+Spinner accepts `size="sm" | "md" | "lg"` for 16/20/24px, with a 20px default and a forwarded span ref. A standalone spinner uses `role="status"` and `label="Loading"`; supply a useful label or native ARIA naming. Set `aria-hidden="true"` when visible text or a parent status already describes progress. Decorative spinners do not add a role or generated label. Reduced motion stops the rotation.
+
+Skeleton accepts `variant="block" | "text" | "avatar"` and `size="sm" | "md" | "lg"`. Blocks have 32/40/48px minimum heights, text lines are 12/14/16px high, and square avatars are 32/40/48px. The default remains a medium block with a 40px minimum. Avatar placeholders shrink square in narrow containers. Native div props, refs, and custom classes/styles remain available. Skeletons stay static and hidden from assistive technology; keep interactive content outside them.
+
+Use `aria-busy` on the content being replaced and one persistent status outside it:
+
+```tsx
+<section aria-label="Project details" aria-busy={loading}>
+  {loading ? <Skeleton variant="text" /> : <ProjectDetails />}
+</section>
+<p role="status" aria-atomic="true">
+  {loading && <Spinner size="sm" aria-hidden="true" />}
+  {loading ? "Loading project details…" : "Project details loaded."}
+</p>
+```
+
+Match the placeholder layout to the content it replaces. The catalog keeps the reload control mounted and cancels an earlier request when another reload starts.
+
 ## AI chat
 
 Use `ChatWidget` for a floating launcher that opens a compact chat and expands into a workspace with conversation history. Use `ChatPanel` to embed the same interface in a page. Both include searchable history, suggested prompts, multiline input, streaming feedback, stop/retry controls, and answer copying. They inherit the kit's theme and tokens.

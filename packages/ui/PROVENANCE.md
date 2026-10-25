@@ -28,6 +28,10 @@ Badge follows the inherited badge contract's 20/24px short-label sizes, optional
 
 ActionMessage is an original persistent-feedback composition with a decorative tone icon, optional heading, body, and actions. Its default alert/status semantics remain configurable through native attributes. The component adds no timers or dismissal policy; consumers own action behavior and focus recovery.
 
+## Loading primitives
+
+Spinner reuses the existing 16/20/24px icon tokens and preserves its 20px default. Skeleton uses the existing control and font scales for block, avatar, and text geometry, keeping the 40px default block compatible. Text and avatar variants replace the old block minimum rather than competing with it. Low-specificity selectors preserve later consumer class overrides. Skeletons remain static and decorative; spinner rotation follows reduced-motion preferences. Loading announcements and async state belong to the consumer.
+
 ## Admin shell and tables
 
 `AdminShell` is an original composition of the inherited sidebar/navbar contracts and kit controls. Its mobile drawer uses the existing Radix Dialog wrapper. CSS container queries adapt navigation to the available width; a ResizeObserver closes an open drawer when the shell expands and restores focus to visible content. Branding, links, the active item, router integration, and page content come from the consumer.

@@ -134,11 +134,11 @@ export const entries: readonly CatalogEntry[] = [
     id: "loading",
     name: "Loading",
     group: "Feedback",
-    description: "A labeled spinner and content placeholders, with reduced-motion support.",
+    description: "Sized spinners and text, avatar, or block placeholders. Reload the project to see content replace its skeleton while progress is announced once.",
     tags: ["spinner", "skeleton", "loading", "busy", "pending", "motion"],
     source: "Original implementation · token-based motion",
     sourceUrl: "https://ui.shadcn.com/docs/components/radix/skeleton",
-    usage: 'import { Spinner, Skeleton } from "@project-kit/ui";\n\n<Spinner label="Loading projects" />\n<div aria-label="Loading project details" aria-busy="true">\n  <Skeleton />\n  <Skeleton />\n</div>'
+    usage: 'import { Spinner, Skeleton } from "@project-kit/ui";\n\n<section aria-label="Project details" aria-busy={loading}>\n  {loading ? <>\n    <Skeleton variant="avatar" size="lg" />\n    <Skeleton variant="text" />\n    <Skeleton variant="block" />\n  </> : <ProjectDetails />}\n</section>\n<p role="status" aria-atomic="true">\n  {loading && <Spinner size="sm" aria-hidden="true" />}\n  {loading ? "Loading project details…" : "Project details loaded."}\n</p>\n\n// For a standalone spinner, supply a useful label.\n// Skeletons are decorative; keep announcements outside busy content.'
   },
   {
     id: "empty",

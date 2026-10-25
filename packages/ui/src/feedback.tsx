@@ -30,28 +30,44 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   );
 });
 
+export type SpinnerSize = "sm" | "md" | "lg";
+
 export interface SpinnerProps extends ComponentPropsWithoutRef<"span"> {
   label?: string;
+  size?: SpinnerSize;
 }
 
-export function Spinner({ className, label = "Loading", "aria-hidden": hidden, "aria-label": ariaLabel, role, ...props }: SpinnerProps) {
+export const Spinner = forwardRef<HTMLSpanElement, SpinnerProps>(function Spinner(
+  { className, label = "Loading", size = "md", "aria-hidden": hidden, "aria-label": ariaLabel, role, ...props },
+  ref,
+) {
   const decorative = hidden === true || hidden === "true";
   return (
     <span
       {...props}
+      ref={ref}
       className={classes("pk-spinner", className)}
-      aria-hidden={decorative || undefined}
+      data-size={size}
+      aria-hidden={hidden}
       role={decorative ? undefined : (role ?? "status")}
       aria-label={decorative ? undefined : (ariaLabel ?? label)}
     />
   );
+});
+
+export type SkeletonVariant = "block" | "text" | "avatar";
+export type SkeletonSize = "sm" | "md" | "lg";
+
+export interface SkeletonProps extends ComponentPropsWithoutRef<"div"> {
+  variant?: SkeletonVariant;
+  size?: SkeletonSize;
 }
 
-export const Skeleton = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(function Skeleton(
-  { className, ...props },
+export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(function Skeleton(
+  { className, variant = "block", size = "md", ...props },
   ref,
 ) {
-  return <div {...props} ref={ref} className={classes("pk-skeleton", className)} aria-hidden="true" />;
+  return <div {...props} ref={ref} className={classes("pk-skeleton", className)} data-variant={variant} data-size={size} aria-hidden="true" />;
 });
 
 export interface EmptyStateProps extends Omit<ComponentPropsWithoutRef<"div">, "title"> {

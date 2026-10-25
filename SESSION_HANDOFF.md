@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Current continuation: loading complete
+
+Spinner and Skeleton are complete; ten of twelve component areas are now verified. `packages/ui/src/feedback.tsx` adds Spinner size/ref support and Skeleton variant/size props; shared CSS preserves the 20px spinner and 40px block defaults, fixes text-line minimum heights, and keeps avatars square when narrow. Low-specificity selectors preserve custom class overrides. Public exports, README/provenance, and packed Vite/Next fixtures cover the additions. No new dependency or token was added.
+
+`apps/catalog/src/loading-preview.tsx/css` supplies an initially loaded project card, a persistent enabled Reload project button, one status outside the busy content, and decorative spinner/skeleton specimens. Reload restarts one 1200ms timer; unmount cancels it and completion never moves focus. Hidden loaded content preserves the card footprint beneath a placeholder overlay. The old LoadingPreview and its obsolete catalog CSS were removed. `tests/browser/loading.spec.ts` covers restarts, focus, roles, sizes, and responsive geometry; the catalog reduced-motion assertion now handles the three spinner specimens.
+
+Verification: plan/source reviews, production build, configured workspace/test typecheck, ESLint, 12 relevant Chromium journeys (loading, button, catalog, admin), and independent packed Vite/Next builds plus HTTP/CSS checks passed. The package report is `.artifacts/loading-package-verification.json`; its temporary consumers and servers were cleaned. Manual light/dark inspection passed. Screenshots: `.artifacts/loading-reference.png` and `.artifacts/loading-dark-reference.png`. The temporary browser tab was closed and original Light appearance restored. Firefox/Safari remain untested.
+
+Next: EmptyState, then DataTable, then final integration including the separate chat, theme, and tooltip additions. The active goal is not complete. The previous goal turn made progress in fa5586f; this turn completes area 10. Tooltip work is now committed as a5a4c70 and was preserved. Recheck git state before editing because other chats share this checkout.
+
 ## Tooltip design pass: 25 October 2026
 
 The separate tooltip design goal is complete. `packages/ui/src/tooltip.tsx/css` now uses the theme's elevated surface and foreground, a fine border, medium radius, and an outlined arrow. The existing medium shadow keeps the light surface distinct from adjacent controls. The inner height cap accounts for both borders. The public API, 280px width cap, hover delay, keyboard behavior, and collision handling are unchanged.
@@ -12,7 +22,7 @@ Verification passed: production build, configured workspace/test typecheck, focu
 
 Preview: `http://127.0.0.1:5173/#tooltips`; original Neutral/Light selection restored. This goal does not complete the broader component queue below. Resume with `git status --short` and `npm run build`; focused browser command: `KIT_CATALOG_PORT=5317 npx playwright test tests/browser/sidebar-tooltip.spec.ts --workers=1 --output=.artifacts/tooltip-design-browser-results`.
 
-## Current continuation: feedback complete
+## Feedback pass: complete
 
 Badge and ActionMessage are complete, bringing the component goal to nine of twelve areas. `packages/ui/src/feedback.tsx` and the targeted shared CSS add badge sizes/variants/icon/dot/wrapping and message warning/heading/actions/custom-icon composition. Root element/ref/native-title/role contracts remain compatible. Three feedback icons and their exports/catalog metadata bring the icon set to 60. README, UI provenance, icon guidance, and both packed fixtures cover the public API.
 
@@ -36,7 +46,7 @@ The theme work is separate from the earlier component-improvement queue below. P
 
 ## Earlier component work
 
-The user's active goal is to substantially improve every component one by one. Nine of twelve areas are complete: Tokens, Icons, Buttons, Fields, Select, Dialog, Tooltips, AdminShell, and Badge/ActionMessage. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. Loading, empty states, DataTable, and final integration remain unfinished. The goal stays active; queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
+The user's active goal is to substantially improve every component one by one. Ten of twelve areas are complete: Tokens, Icons, Buttons, Fields, Select, Dialog, Tooltips, AdminShell, Badge/ActionMessage, and Spinner/Skeleton. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. Empty states, DataTable, and final integration remain unfinished. The goal stays active; queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
 
 ## Completed
 
@@ -75,9 +85,9 @@ Unrelated chat-component work is occurring concurrently in this same checkout, i
 
 ## Remaining work
 
-Next: Spinner and Skeleton. Read their implementations in `packages/ui/src/feedback.tsx`, targeted styles, LoadingPreview in `control-previews.tsx`, existing consumers/tests, and applicable specs in `~/.claude/uiux-contract/components/`. Planned improvements: token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. Preserve decorative spinners inside Button and Chat.
+Next: EmptyState. Read its implementation in `packages/ui/src/feedback.tsx`, targeted shared styles, EmptyPreview in `control-previews.tsx`, DataTable consumers, and applicable contracts. Planned improvements: icon slot, configurable heading semantics, secondary action, compact layout, and distinct first-use/no-results/failure examples. Preserve native div refs and current title/description/action callers.
 
-Then EmptyState and DataTable. Known table issue: every cell truncates arbitrary controls and can clip focus rings. After the queue, review catalog frame, snippets, exports, docs (including older `docs/compatibility.md` report), and independent packed consumers together.
+Then DataTable. Known table issue: every cell truncates arbitrary controls and can clip focus rings. After the queue, review catalog frame, snippets, exports, docs (including older `docs/compatibility.md` report), and independent packed consumers together.
 
 Keep plan/review, relevant verification, and logical local commits. Shared source/CSS ownership must remain sequential.
 
