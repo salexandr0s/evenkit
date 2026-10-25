@@ -19,3 +19,22 @@ Tokens use the prefix `--pk-`. Document-level attributes are `data-kit-theme="ne
 The user subsequently requested custom dropdowns with chevrons inset from the right edge. Select therefore uses kit-styled Radix behavior rather than the initially proposed native dropdown. Apply it consistently to catalog preferences and reusable form controls, with keyboard/focus and popup positioning checks.
 
 The root agent coordinates interface changes in the shared task list. Each coder owns only its assigned directory and must preserve others' edits. Build and inspect each subsystem, integrate, run the meaningful browser and package-consumption checks, review fixes, and commit the completed phase locally. No publication or deployment is part of this phase.
+
+# Admin shell, tables, and icons
+
+The user approved this phase on 25 October 2026 and requested a goal for its completion. Extend the existing packages and catalog. Reduce dropdown row heights by correcting their box sizing; use 36px desktop options and retain 44px touch targets.
+
+| Work area | Owner | Completion check |
+|---|---|---|
+| Token extensions | Tokens coder | Icon sizes and stroke, option height, header heights, and table densities generate correctly |
+| Icons and control density | Controls coder | Named Lucide wrappers, consistent accessible labels, compact dropdowns and inset chevrons |
+| Admin shell | Shell coder | Configurable navigation and slots, router boundary, skip link, mobile drawer and focus recovery |
+| Reusable table | Tables coder | TanStack-backed client sorting, search, pagination, stable selection, loading/error/empty states |
+| Component catalog | Catalog coder | Working shell, table, and searchable icon examples with public API usage |
+| Integration and review | Root and reviewer | Browser interactions, narrow layouts, packed Next/Vite consumers, docs, handoff, local commit |
+
+Use `lucide-react` 1.61.0 and `@tanstack/react-table` 9.3.1 through `@project-kit/ui`. Import icons statically and export named wrappers; avoid a runtime registry that includes every icon. Table data is supplied by its consumer, with mandatory stable row IDs. The kit owns presentation and client table behavior; applications own fetching, authorization, routing, and persistence.
+
+Shell and table styles live in separate prefixed source files, combined into the existing UI stylesheet at build time. Keep the two-package installation contract. The catalog is a local demonstration, and the packages remain unpublished pilots. This phase does not migrate existing products or provide authentication services.
+
+Completed as a local pilot: eleven catalog entries, 31 icons, compact dropdown options, container-responsive shell, and client data table. Build, strict type checks, lint, token tests, nine browser journeys, and independent packed Next/Vite consumers were verified. Review fixes covered numeric alignment and the embedded skip link. See `SESSION_HANDOFF.md` for exact verification state and remaining product-adoption work.

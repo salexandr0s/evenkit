@@ -1,8 +1,7 @@
-import { copyFile, mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 await mkdir(new URL("../dist/", import.meta.url), { recursive: true });
-await copyFile(
-  new URL("../src/styles.css", import.meta.url),
-  new URL("../dist/styles.css", import.meta.url),
-);
+const sources = ["icons.css", "styles.css", "admin-shell.css", "data-table.css"];
+const styles = await Promise.all(sources.map(file => readFile(new URL(`../src/${file}`, import.meta.url), "utf8")));
+await writeFile(new URL("../dist/styles.css", import.meta.url), styles.join("\n"));
 await writeFile(new URL("../dist/styles.d.ts", import.meta.url), "export {};\n");

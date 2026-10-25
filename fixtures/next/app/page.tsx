@@ -1,5 +1,6 @@
 import { Badge, Button, Select, TextField } from "@project-kit/ui";
 import { PreviewDialog } from "./preview-dialog";
+import { PreviewAdmin } from "./preview-admin";
 
 export default function Page() {
   return <main>
@@ -9,5 +10,6 @@ export default function Page() {
     <Select aria-label="Visibility" name="visibility" defaultValue="private" options={[{ value: "private", label: "Private" }, { value: "team", label: "Team" }]} />
     <Button>Native button</Button>
     <PreviewDialog />
+    <PreviewAdmin />
   </main>;
 }

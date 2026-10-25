@@ -5,6 +5,7 @@ import { foundation } from "@project-kit/tokens";
 import { forwardRef, type ComponentPropsWithoutRef } from "react";
 import { classes } from "./classes.js";
 import type { ControlSize } from "./button.js";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "./icons.js";
 
 export interface SelectOption {
   value: string;
@@ -44,7 +45,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
       <SelectPrimitive.Trigger {...props} ref={ref} type="button" className={classes("pk-select", className)} data-size={controlSize}>
         <span className="pk-select-value"><SelectPrimitive.Value placeholder={placeholder} /></span>
         <SelectPrimitive.Icon className="pk-select-chevron" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+          <ChevronDownIcon />
         </SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Portal container={container}>
@@ -56,20 +57,20 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
           collisionPadding={Number.parseFloat(foundation.space["3"])}
         >
           <SelectPrimitive.ScrollUpButton className="pk-select-scroll" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 15 6-6 6 6" /></svg>
+            <ChevronUpIcon />
           </SelectPrimitive.ScrollUpButton>
           <SelectPrimitive.Viewport className="pk-select-viewport">
             {options.map((option) => (
               <SelectPrimitive.Item key={option.value} className="pk-select-item" value={option.value} disabled={option.disabled ?? false} textValue={option.label}>
                 <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
                 <SelectPrimitive.ItemIndicator className="pk-select-indicator" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4 4L19 6" /></svg>
+                  <CheckIcon />
                 </SelectPrimitive.ItemIndicator>
               </SelectPrimitive.Item>
             ))}
           </SelectPrimitive.Viewport>
           <SelectPrimitive.ScrollDownButton className="pk-select-scroll" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+            <ChevronDownIcon />
           </SelectPrimitive.ScrollDownButton>
         </SelectPrimitive.Content>
       </SelectPrimitive.Portal>

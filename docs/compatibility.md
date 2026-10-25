@@ -1,6 +1,6 @@
 # Tested compatibility
 
-Foundation phase, 25 October 2026. These packages are local pilots; no production application has adopted them yet.
+Foundation and admin/table phases, 25 October 2026. These packages are local pilots; no production application has adopted them yet.
 
 | Area | Version/environment exercised | Evidence |
 |---|---|---|
@@ -10,10 +10,13 @@ Foundation phase, 25 October 2026. These packages are local pilots; no productio
 | Validation | Zod 4.6.7 | Seven schema, contrast, and output tests |
 | Dialog | Radix Dialog 1.3.1 | Focus containment, Escape, restoration, inherited theme |
 | Custom dropdown | Radix Select 2.4.1 | Keyboard/typeahead, form value, disabled state, popup-over-dialog layer, and inset chevron |
+| Icons | Lucide React 1.61.0 | Named wrappers, token sizes, decorative/labelled semantics; catalog search and icon action inspected |
+| Table engine | TanStack React Table 9.3.1 | Numeric sorting, search/page reset, stable ID selection, page selection, state recovery, mobile overflow |
+| Admin shell | Kit composition with Radix Dialog | Container-responsive navigation, focus containment/restoration, Escape/outside/navigation dismissal, resize cleanup, skip link |
 | Vite | 8.3.5 | Catalog build and packed-package consumer build/HTTP smoke |
 | Next.js | 16.4.3, App Router | Independent packed-package build, server render, CSS HTTP smoke |
-| Browser | Chromium through Playwright 1.64.1 | Six catalog journeys |
-| Layout widths | 360, 768, 1024, 1440 CSS pixels | Overflow checks; small-screen navigation and control sizing |
+| Browser | Chromium through Playwright 1.64.1 | Nine catalog journeys, with a focused final shell rerun |
+| Layout widths | 360, 768, 1024, 1440, 1700 CSS pixels | Overflow checks, touch targets, container navigation, resize cleanup |
 | Themes | Neutral and Grove; light, dark, and system | Token contrast validation plus browser mode-precedence checks |
 
 The declared Node minimum is 22.12.0; the current verification ran on Node 26.12.1. TypeScript 6.0.3 was selected because the installed lint parser's supported range excludes TypeScript 7. The lockfile records the actual development dependency graph.
@@ -25,6 +28,8 @@ The declared Node minimum is 22.12.0; the current verification ran on Node 26.12
 - React is a peer dependency. Interactive modules retain `"use client"` in emitted JavaScript.
 - Custom brands accept complete semantic light/dark colors, bounded radii, and a deliberately restricted valid font-family syntax. Validation checks the color pairs used by current controls; it does not certify arbitrary application CSS or imagery.
 - Source packages export built artifacts, CSS declarations, and token JSON. Packed consumers do not read workspace source or the original `ai-config` repository.
+- Tables process the entire supplied client dataset. Selection is controlled using stable IDs; consumers must remove deleted records' IDs. The header checkbox selects the current page. Backend processing and virtualization are outside this phase.
+- Admin navigation adapts at the 768px container breakpoint. The shell uses CSS container queries and ResizeObserver, so embedded panes can collapse independently of the viewport. Custom router links must preserve supplied navigation props.
 
 ## Limits
 
@@ -32,4 +37,6 @@ Firefox, Safari, older React versions, other frameworks, and production deployme
 
 The first code review found and resolved a missing custom hover-contrast pair and malformed font-family acceptance. Packaging checks found and resolved strict TypeScript CSS-import declarations. Visual review found and resolved toolbar labels shrinking inside words. The focused checks cover the resulting behavior.
 
-Before upgrading a dependency or adopting a new consumer, run the checks for the affected package/interface and record the new evidence. Later auth, admin, and upload modules need their own server and data-boundary verification.
+The admin/table review resolved numeric alignment in wide cells and a skip link visible above an embedded shell. Dropdown options were reduced from 52px to 36px desktop rows through border-box sizing; browser checks also confirm 44px mobile rows. The shell test awaits Radix's actual initial close-button focus and uses an actionable overlay click before checking dismissal.
+
+Before upgrading a dependency or adopting a new consumer, run the checks for the affected package/interface and record the new evidence. Later auth, server-table, and upload modules need their own server and data-boundary verification.

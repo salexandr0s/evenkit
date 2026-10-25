@@ -125,6 +125,7 @@ test("custom select supports keyboard, form values, disabled state, and an inset
   await trigger.press("ArrowDown");
   await expect(page.getByRole("listbox")).toBeVisible();
   await expect(page.getByRole("option", { name: "Private", exact: true })).toBeFocused();
+  expect((await page.getByRole("option", { name: "Private", exact: true }).boundingBox())?.height).toBe(36);
   await page.keyboard.press("ArrowDown");
   // Radix schedules navigation focus; Enter acts on the currently focused item.
   await expect(page.getByRole("option", { name: "Team", exact: true })).toBeFocused();
@@ -138,6 +139,7 @@ test("custom select supports keyboard, form values, disabled state, and an inset
   await expect(popup).toBeVisible();
   await expect(page.getByRole("option", { name: "Team", exact: true })).toBeFocused();
   const popupBox = await popup.boundingBox();
+  expect((await page.getByRole("option", { name: "Team", exact: true }).boundingBox())?.height).toBe(44);
   expect(popupBox).not.toBeNull();
   if (!popupBox) throw new Error("Missing dropdown popup.");
   expect(popupBox.x).toBeGreaterThanOrEqual(0);

@@ -1,0 +1,89 @@
+import { expect, test, type Page } from "@playwright/test";
+
+async function choose(page: Page, label: string, value: string) {
+  await page.getByRole("combobox", { name: label, exact: true }).click();
+  await page.getByRole("option", { name: value, exact: true }).click();
+}
+
+test("table keeps selection with IDs through numeric sorting, search, and pagination", async ({ page }) => {
+  await page.goto("/#data-table");
+  const table = page.locator(".pk-data-table");
+  const search = table.getByRole("searchbox", { name: "Search projects" });
+  await table.getByRole("checkbox", { name: "Select Spring launch", exact: true }).check();
+  await table.getByRole("button", { name: "Sort by Members", exact: true }).click();
+  await expect(table.locator("tbody tr").first()).toContainText("Product notes");
+  await expect(table.getByRole("columnheader", { name: "Sort by Members" })).toHaveAttribute("aria-sort", "ascending");
+  await table.getByRole("button", { name: "Next page", exact: true }).click();
+  await expect(table.getByRole("checkbox", { name: "Select Spring launch", exact: true })).toBeChecked();
+  await search.fill("Spring launch");
+  await expect(table.getByText("Page 1 of 1", { exact: true })).toBeVisible();
+  await expect(table.getByRole("checkbox", { name: "Select Spring launch", exact: true })).toBeChecked();
+  await search.fill("missing-project");
+  await expect(table.getByText("No matching records", { exact: true })).toBeVisible();
+  await table.getByRole("button", { name: "Clear search", exact: true }).click();
+  await expect(table.getByText("Page 1 of 3", { exact: true })).toBeVisible();
+  await table.getByRole("checkbox", { name: "Select all rows on this page", exact: true }).check();
+  await expect(table.getByText("12 records · 6 selected", { exact: true })).toBeVisible();
+  await table.getByRole("checkbox", { name: "Select all rows on this page", exact: true }).uncheck();
+  await expect(table.getByText("12 records · 1 selected", { exact: true })).toBeVisible();
+  await table.getByRole("button", { name: "Sort by Members", exact: true }).click();
+  await expect(table.locator("tbody tr").first()).toContainText("Client portal");
+});
+
+test("table states recover and narrow layouts confine horizontal scrolling", async ({ page }) => {
+  await page.goto("/#data-table");
+  const table = page.locator(".pk-data-table");
+  await choose(page, "Preview state", "Loading");
+  await expect(table).toHaveAttribute("aria-busy", "true");
+  await expect(table.getByRole("searchbox", { name: "Search projects" })).toBeDisabled();
+  await expect(table.getByRole("button", { name: "Sort by Project", exact: true })).toBeDisabled();
+  await choose(page, "Preview state", "Error");
+  await expect(table.getByRole("alert")).toContainText("projects could not be loaded");
+  await table.getByRole("button", { name: "Try again", exact: true }).click();
+  await expect(table.getByRole("checkbox", { name: "Select Spring launch", exact: true })).toBeVisible();
+  await choose(page, "Preview state", "Empty");
+  await expect(table.getByText("No projects in this preview", { exact: true })).toBeVisible();
+  await choose(page, "Preview state", "Ready");
+  await choose(page, "Table density", "Compact");
+  expect((await table.locator("tbody tr").first().boundingBox())?.height).toBe(36);
+  await page.setViewportSize({ width: 360, height: 800 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(await table.locator(".pk-data-table-scroll").evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
+  expect((await table.locator("tbody tr").first().boundingBox())?.height).toBeGreaterThanOrEqual(44);
+});
+
+test("shell drawer closes on navigation, Escape, outside click, and container growth", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/#admin-shell");
+  const trigger = page.getByRole("button", { name: "Open navigation", exact: true });
+  const drawer = page.getByRole("dialog", { name: "Demo workspace navigation", exact: true });
+  await trigger.click();
+  await expect(drawer).toBeVisible();
+  for (let index = 0; index < 6; index += 1) {
+    await page.keyboard.press("Tab");
+    expect(await drawer.evaluate(element => element.contains(document.activeElement))).toBe(true);
+  }
+  await page.keyboard.press("Escape");
+  await expect(drawer).not.toBeVisible();
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await drawer.getByRole("link", { name: "Team", exact: true }).click();
+  await expect(drawer).not.toBeVisible();
+  await expect(page.getByRole("heading", { name: "Workspace team", exact: true })).toBeVisible();
+  await trigger.click();
+  await expect(drawer.getByRole("button", { name: "Close navigation", exact: true })).toBeFocused();
+  await page.locator(".pk-dialog-overlay").click({ position: { x: 350, y: 400 } });
+  await expect(drawer).not.toBeVisible();
+  await trigger.click();
+  await expect(drawer.getByRole("button", { name: "Close navigation", exact: true })).toBeFocused();
+  await page.setViewportSize({ width: 1700, height: 1000 });
+  await expect(drawer).not.toBeVisible();
+  await expect(trigger).not.toBeVisible();
+  await expect(page.locator("#admin-preview-content")).toBeFocused();
+  await expect(page.locator("body")).not.toHaveAttribute("data-scroll-locked");
+  await expect(page.getByRole("navigation", { name: "Demo workspace navigation", exact: true }).getByRole("link", { name: "Team", exact: true })).toHaveAttribute("aria-current", "page");
+  const skip = page.getByRole("link", { name: "Skip to main content", exact: true });
+  await skip.focus();
+  await skip.press("Enter");
+  await expect(page.locator("#admin-preview-content")).toBeFocused();
+});

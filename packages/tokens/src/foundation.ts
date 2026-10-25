@@ -220,7 +220,8 @@ export const foundation = {
       "sm": "12px",
       "md": "16px",
       "lg": "20px"
-    }
+    },
+    "optionHeight": "36px"
   },
   "layout": {
     "sidebar": "260px",
@@ -230,7 +231,23 @@ export const foundation = {
     "dialog": "560px",
     "touch": "44px",
     "icon": "20px",
-    "prose": "65ch"
+    "prose": "65ch",
+    "header": "56px",
+    "headerMobile": "52px"
+  },
+  "icon": {
+    "size": {
+      "sm": "16px",
+      "md": "20px",
+      "lg": "24px"
+    },
+    "strokeWidth": 2
+  },
+  "table": {
+    "rowHeight": {
+      "compact": "36px",
+      "default": "44px"
+    }
   },
   "opacity": {
     "disabled": 0.55,

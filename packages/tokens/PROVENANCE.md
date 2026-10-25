@@ -13,5 +13,6 @@ The inherited contract is internal source material. Package metadata remains `UN
 - Grove is a fictional theme composed from the inherited green and neutral palettes. It introduces no real client identity.
 - Kit additions are layout widths for sidebar/content/reading/form/dialog, a 44px touch target, a 20px icon, a 16px spinner, 800ms spinner duration, disabled/skeleton opacity, and a 65ch prose width. Layout values become explicit tokens rather than control-local constants.
 - The popover layer is 85, above modal content at 80 and below toast feedback at 90. This lets portalled dropdowns remain visible when opened from a dialog without changing the inherited dropdown layer.
+- The admin foundation adds icon sizes of 16/20/24px with a unitless stroke width of 2, header heights of 56px (desktop) and 52px (mobile), a 36px dropdown option height, and compact/default table row heights of 36/44px. The compact dropdown and table values reflect the user's density feedback. Existing control heights (32/40/48px), the 44px touch target, and 260px sidebar remain unchanged.
 
 Semantic colors, typography overrides, and radius overrides are emitted from the typed source and validation layer. CSS and JSON are generated artifacts and should not be edited directly.

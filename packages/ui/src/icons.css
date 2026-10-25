@@ -1,0 +1,14 @@
+/* The package build combines this with the other kit stylesheets. */
+.pk-icon {
+  box-sizing: border-box;
+  display: inline-block;
+  flex: none;
+  width: var(--pk-icon-size-md);
+  height: var(--pk-icon-size-md);
+  color: inherit;
+  stroke-width: var(--pk-icon-stroke-width);
+  vertical-align: middle;
+}
+
+.pk-icon[data-size="sm"] { width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); }
+.pk-icon[data-size="lg"] { width: var(--pk-icon-size-lg); height: var(--pk-icon-size-lg); }

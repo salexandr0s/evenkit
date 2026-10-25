@@ -3,6 +3,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { forwardRef, type ComponentPropsWithoutRef, type ComponentRef } from "react";
 import { classes } from "./classes.js";
+import { XIcon } from "./icons.js";
 
 export const Dialog = DialogPrimitive.Root;
 export const DialogTrigger = DialogPrimitive.Trigger;
@@ -25,9 +26,7 @@ export const DialogContent = forwardRef<ComponentRef<typeof DialogPrimitive.Cont
         {children}
         {showCloseButton ? (
           <DialogPrimitive.Close className="pk-dialog-close" aria-label={closeLabel}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <path d="m6 6 12 12M6 18 18 6" />
-            </svg>
+            <XIcon />
           </DialogPrimitive.Close>
         ) : null}
       </DialogPrimitive.Content>

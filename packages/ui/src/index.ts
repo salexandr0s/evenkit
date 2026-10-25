@@ -5,3 +5,13 @@ export { Input, Textarea, Label, TextField, type InputProps, type TextareaProps,
 export { Select, type SelectProps, type SelectOption } from "./select.js";
 export { Dialog, DialogTrigger, DialogClose, DialogContent, DialogTitle, DialogDescription, DialogFooter, type DialogContentProps } from "./dialog.js";
 export { Badge, Spinner, Skeleton, EmptyState, ActionMessage, type BadgeProps, type SpinnerProps, type EmptyStateProps, type ActionMessageProps } from "./feedback.js";
+export {
+  ActivityIcon, ArrowDownIcon, ArrowUpIcon, ArrowUpDownIcon, ArrowLeftIcon, ArrowRightIcon,
+  CheckIcon, ChevronDownIcon, ChevronUpIcon, ChevronLeftIcon, ChevronRightIcon,
+  CircleAlertIcon, CircleHelpIcon, DownloadIcon, ExternalLinkIcon, FileTextIcon, FolderIcon,
+  LayoutDashboardIcon, LogOutIcon, MailIcon, MenuIcon, MoreHorizontalIcon, PlusIcon,
+  SearchIcon, SettingsIcon, ShieldIcon, TrashIcon, UsersIcon, XIcon, SunIcon, MoonIcon,
+  type IconProps, type IconSize,
+} from "./icons.js";
+export { AdminShell, type AdminShellProps, type AdminNavGroup, type AdminNavItem, type AdminLinkProps } from "./admin-shell.js";
+export { DataTable, type DataTableProps, type DataTableColumn, type DataTableSelection } from "./data-table.js";

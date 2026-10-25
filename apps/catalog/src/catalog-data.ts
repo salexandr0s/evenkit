@@ -1,7 +1,7 @@
 export interface CatalogEntry {
   id: string;
   name: string;
-  group: "Foundations" | "Controls" | "Feedback";
+  group: "Foundations" | "Controls" | "Compositions" | "Feedback";
   description: string;
   tags: readonly string[];
   source: string;
@@ -19,6 +19,16 @@ export const entries: readonly CatalogEntry[] = [
     source: "Internal UI contract · adapted semantic colors",
     sourceUrl: "https://ui.shadcn.com/docs/theming",
     usage: 'import "@project-kit/tokens/css";\n\ndocument.documentElement.dataset.kitTheme = "grove";\ndocument.documentElement.dataset.kitMode = "dark";\n// Remove data-kit-mode to follow the system.'
+  },
+  {
+    id: "icons",
+    name: "Icons",
+    group: "Foundations",
+    description: "A curated set of named icons with shared sizes, stroke weight, and accessible labeling patterns.",
+    tags: ["icon", "lucide", "search", "folder", "navigation", "arrow", "glyph", "svg"],
+    source: "Lucide React · named kit wrappers",
+    sourceUrl: "https://lucide.dev/guide/packages/lucide-react",
+    usage: 'import { Button, PlusIcon, SearchIcon } from "@project-kit/ui";\n\n// Decorative beside visible button text.\n<Button><PlusIcon />Add project</Button>\n\n// Label an icon-only action on the button.\n<Button aria-label="Add project"><PlusIcon /></Button>\n\n// A standalone icon supplies its own label.\n<SearchIcon size="lg" label="Search projects" />'
   },
   {
     id: "buttons",
@@ -61,6 +71,26 @@ export const entries: readonly CatalogEntry[] = [
     usage: 'import {\n  Button, Dialog, DialogTrigger, DialogContent,\n  DialogTitle, DialogDescription, DialogClose\n} from "@project-kit/ui";\n\n<Dialog>\n  <DialogTrigger asChild><Button>Edit project</Button></DialogTrigger>\n  <DialogContent>\n    <DialogTitle>Edit project</DialogTitle>\n    <DialogDescription>Update this preview.</DialogDescription>\n    <DialogClose asChild><Button>Done</Button></DialogClose>\n  </DialogContent>\n</Dialog>'
   },
   {
+    id: "admin-shell",
+    name: "Admin shell",
+    group: "Compositions",
+    description: "A responsive application frame with grouped navigation, header slots, and a mobile drawer. Routing stays in your app.",
+    tags: ["admin", "shell", "dashboard", "sidebar", "navigation", "layout", "mobile", "drawer", "composition"],
+    source: "Original kit composition · Radix mobile drawer",
+    sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dialog",
+    usage: 'import { AdminShell, FolderIcon } from "@project-kit/ui";\n\n<AdminShell\n  brand={<strong>Demo workspace</strong>}\n  navigation={[{ label: "Workspace", items: [{\n    id: "projects", label: "Projects", href: "/projects",\n    icon: <FolderIcon />\n  }] }]}\n  activeItemId="projects"\n  header={<strong>Projects</strong>}\n>\n  <h1>Your projects</h1>\n</AdminShell>\n\n// When embedding inside an existing main, set contentAs="section".\n// Supply renderLink to connect your application router.'
+  },
+  {
+    id: "data-table",
+    name: "Data table",
+    group: "Compositions",
+    description: "Client-side sorting, search, pagination, and selection with stable row IDs and explicit loading, error, and empty states.",
+    tags: ["table", "data", "list", "sort", "search", "pagination", "select", "rows", "loading", "error", "empty", "composition"],
+    source: "TanStack Table · original kit rendering",
+    sourceUrl: "https://tanstack.com/table/latest/docs/introduction",
+    usage: 'import { DataTable, type DataTableColumn } from "@project-kit/ui";\n\ninterface Project { id: string; name: string }\nconst columns: readonly DataTableColumn<Project>[] = [\n  { id: "name", header: "Project", accessor: (row) => row.name }\n];\nconst rows = [{ id: "project-01", name: "Spring launch" }];\n\n<DataTable\n  columns={columns}\n  data={rows}\n  getRowId={(row) => row.id}\n  caption="Projects"\n  searchLabel="Search projects"\n  initialPageSize={5}\n  pageSizeOptions={[5, 10, 25]}\n/>\n\n// Applications supply records, permissions, and persistence.'
+  },
+  {
     id: "status",
     name: "Status",
     group: "Feedback",
@@ -92,4 +122,4 @@ export const entries: readonly CatalogEntry[] = [
   }
 ];
 
-export const groups = ["Foundations", "Controls", "Feedback"] as const;
+export const groups = ["Foundations", "Controls", "Compositions", "Feedback"] as const;
