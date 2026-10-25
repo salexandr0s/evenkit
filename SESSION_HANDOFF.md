@@ -61,6 +61,13 @@ documents application ownership and copyable usage. Evidence is in
 `.artifacts/document-library/`. Local preview: `http://127.0.0.1:5497/#document-library`.
 Resume with `git status --short` and `git log --oneline b588b1b..codex/document-library`
 from the current worktree. Previous integration history follows.
+## Notification family: 25 October 2026
+
+Current isolated worktree: `/Users/nationalbank/.codex/worktrees/notifications/design-tokens`, branch `codex/notifications`, feature commit `b3ca9c7`. The [notification integration handoff](docs/notifications-handoff.md) records O08/M06/H10/G03/G06, contracts, shared integration points and verification evidence. Build/type/lint, 23 unit tests, 91 copyable examples, 77 inventory mappings, 13 Chromium behavior cases plus the theme/layout matrix, and independent packed Next/Vite consumers passed. No push, publication or deployment occurred.
+
+The earlier base-branch session history below is preserved for context.
+
+Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
 ## Component accent details: 25 October 2026
 
