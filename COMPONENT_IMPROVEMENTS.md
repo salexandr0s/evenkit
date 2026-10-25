@@ -11,7 +11,7 @@ Keep the existing public API compatible. Preserve the Neutral and Grove themes, 
 | 1 | Design tokens | Search every resolved CSS variable, copy its usage, inspect visual scales and defined contrast pairs for the current theme. | Complete |
 | 2 | Icons: all named wrappers | Search categories and aliases, select preview size, copy named imports, and demonstrate decorative, labelled, and action use. | Complete |
 | 3 | Button, ButtonLink | Icon-only sizing, leading/trailing icons, full-width layout, clearer variant hierarchy, and a working asynchronous loading example. | Complete |
-| 4 | Label, Input, Textarea, TextField | Shared field composition, textarea field, required/optional cues, adornments, read-only styling, and validation focus recovery. | Pending |
+| 4 | Label, Input, Textarea, TextField, TextareaField | Shared field composition, textarea field, required/optional cues, adornments, read-only styling, and validation focus recovery. | Complete |
 | 5 | Select | Grouped and described options, empty-options feedback, shared field composition, and long-label handling while preserving compact rows. | Pending |
 | 6 | Dialog, DialogTrigger, DialogClose, DialogContent, DialogTitle, DialogDescription, DialogFooter | Size and layout composition, long-content scrolling, reachable actions, mobile presentation, and logical RTL positioning. | Pending |
 | 7 | Badge, ActionMessage | Status icons, wrapping labels, message titles/actions, warning feedback, and a retry/dismiss example. | Pending |
@@ -55,4 +55,12 @@ The catalog demonstrates asynchronous saving, toggle state, icon actions, native
 
 Plan and implementation reviews passed. Production build, workspace/test type checks, ESLint, seven token tests, and all 13 Chromium journeys passed. Two new button journeys cover loading dimensions and names, duplicate prevention, pressed/busy semantics, decorative slots, desktop/narrow/coarse-pointer sizing, icon/full-width precedence, wrapping, and keyboard link navigation. Independent packed Vite and Next consumers built and passed HTTP/stylesheet checks; their temporary directories and server processes were removed. Light and dark views were inspected. Screenshot: `.artifacts/button-reference.png`.
 
-Next: Fields. The goal remains active; items 4–11 and final integration review are unfinished.
+### 4. Fields
+
+TextField and the new TextareaField share one internal frame for labels, hints, errors, IDs, and description associations. Label supports required/optional cues; native required semantics remain on the control. Input accepts leading and trailing text, icons, and independently labelled actions. A stable wrapper preserves the native node and focus when slots appear or disappear. Read-only controls remain selectable and have a distinct surface. Sizes are 32/40/48px with 44/44/48px narrow and coarse-pointer targets. Textarea keeps native resizing and rows.
+
+The form preview demonstrates optional multiline notes, a character counter linked through an external description ID, live correction after submission, first-invalid focus, and reset/focus recovery. Other examples cover clear actions, text suffixes, long paired adornments, RTL layout, and read-only/disabled/error states. Documentation explains the wrapper's effect on direct-child selectors and caller responsibility for custom action states. Packed fixtures import TextareaField and its public props type.
+
+Plan, implementation, and test/documentation reviews passed. Review found and resolved long adornment overflow and missing wrapper direction; visual inspection also improved the space available to short suffixes. Production build, workspace/test type checks, ESLint, seven token tests, all 14 Chromium journeys, and independent packed Vite/Next consumers passed. After the final CSS spacing refinement, UI/catalog builds and all seven field/catalog journeys passed again. Coverage includes external descriptions, native FormData, validation/reset focus, input identity through conditional slots, enabled read-only controls, touch sizes, long-slot geometry, RTL order, and overflow at 360/768/1024/1440px. Package verification cleaned its own servers and temporary directory. Light and dark views were inspected. Screenshot: `.artifacts/field-reference.png`.
+
+Next: Select. The goal remains active; items 5–11 and final integration review are unfinished.

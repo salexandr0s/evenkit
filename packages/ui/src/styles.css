@@ -1,5 +1,6 @@
 /* Import @project-kit/tokens/css before this stylesheet. No global element reset. */
 .pk-button,
+.pk-input-container,
 .pk-input,
 .pk-textarea,
 .pk-select,
@@ -96,7 +97,31 @@
 .pk-input:focus-visible, .pk-textarea:focus-visible, .pk-select:focus-visible { border-color: var(--pk-color-ring); }
 .pk-input:disabled, .pk-textarea:disabled, .pk-select:disabled { opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
 .pk-input[aria-invalid="true"], .pk-textarea[aria-invalid="true"], .pk-select[aria-invalid="true"] { border-color: var(--pk-color-danger); }
+.pk-input, .pk-textarea, .pk-input-container { --pk-field-height: var(--pk-control-height-md); }
+.pk-input[data-size="sm"], .pk-textarea[data-size="sm"], .pk-input-container[data-size="sm"] { --pk-field-height: var(--pk-control-height-sm); }
+.pk-input[data-size="lg"], .pk-textarea[data-size="lg"], .pk-input-container[data-size="lg"] { --pk-field-height: var(--pk-control-height-lg); }
+.pk-input[data-size="lg"], .pk-textarea[data-size="lg"] { padding-block: var(--pk-space-2); }
+.pk-input[readonly], .pk-textarea[readonly] { background: var(--pk-color-bg-muted); }
 .pk-textarea { resize: vertical; }
+.pk-input-container { display: contents; }
+.pk-input-container[data-adorned] { --pk-input-min-width: min(50%, calc(var(--pk-space-16) + var(--pk-space-8))); display: flex; align-items: center; width: 100%; min-width: 0; min-height: var(--pk-field-height); border: var(--pk-border-width-hairline) solid var(--pk-color-border-strong); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); transition: border-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
+.pk-input-container[data-adorned][data-size="sm"] { border-radius: var(--pk-radius-sm); }
+.pk-input-container[data-adorned] > .pk-input { flex: 1; min-width: var(--pk-input-min-width); min-height: calc(var(--pk-field-height) - var(--pk-border-width-hairline) * 2); border: 0; background: transparent; }
+.pk-input-container[data-adorned] > .pk-input:focus-visible { outline: none; }
+.pk-input-container[data-adorned]:hover:not(:has(> .pk-input:disabled)) { border-color: var(--pk-color-fg-muted); }
+.pk-input-container[data-adorned]:focus-within { border-color: var(--pk-color-ring); }
+.pk-input-container[data-adorned]:has(> .pk-input:focus-visible) { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
+.pk-input-container[data-adorned][data-invalid] { border-color: var(--pk-color-danger); }
+.pk-input-container[data-adorned]:has(> .pk-input:disabled) { opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
+.pk-input-container[data-adorned] > .pk-input:disabled { opacity: 1; }
+.pk-input-container[data-adorned]:has(> .pk-input[readonly]) { background: var(--pk-color-bg-muted); }
+.pk-input-adornment { box-sizing: border-box; display: inline-flex; flex: 0 1 auto; align-items: center; min-width: 0; max-width: calc(100% - var(--pk-input-min-width)); color: var(--pk-color-fg-muted); overflow-wrap: anywhere; }
+.pk-input-adornment > :not(button):not(a) { min-width: 0; }
+.pk-input-adornment:has(> button), .pk-input-adornment:has(> a) { flex: none; max-width: none; }
+.pk-input-adornment[data-side="start"] { padding-inline-start: var(--pk-space-3); }
+.pk-input-adornment[data-side="end"] { padding-inline-end: var(--pk-space-3); }
+.pk-input-container:has(> .pk-input-adornment[data-side="start"]) > .pk-input { padding-inline-start: var(--pk-space-2); }
+.pk-input-container:has(> .pk-input-adornment[data-side="end"]) > .pk-input { padding-inline-end: var(--pk-space-2); }
 .pk-select { position: relative; display: inline-flex; align-items: center; justify-content: flex-start; cursor: pointer; text-align: start; }
 .pk-select-value, .pk-select-chevron, .pk-select-viewport, .pk-select-item, .pk-select-indicator, .pk-select-scroll { box-sizing: border-box; }
 .pk-select[data-size] { padding-inline-end: calc(var(--pk-space-3) + var(--pk-layout-icon) + var(--pk-space-2)); }
@@ -115,10 +140,14 @@
 .pk-select-scroll { display: flex; align-items: center; justify-content: center; height: var(--pk-space-6); color: var(--pk-color-fg-muted); background: var(--pk-color-surface-elevated); }
 .pk-select-scroll svg { width: var(--pk-layout-icon); height: var(--pk-layout-icon); }
 .pk-label { display: block; color: var(--pk-color-fg); font-weight: var(--pk-font-weight-medium); overflow-wrap: anywhere; }
+.pk-label-cue { margin-inline-start: var(--pk-space-2); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-regular); }
 .pk-field { display: grid; gap: var(--pk-space-2); min-width: 0; }
 .pk-field-hint, .pk-field-error { margin: 0; font-size: var(--pk-font-size-sm); overflow-wrap: anywhere; }
 .pk-field-hint { color: var(--pk-color-fg-muted); }
 .pk-field-error { display: flex; align-items: baseline; gap: var(--pk-space-2); color: var(--pk-color-danger); }
+.pk-field-error > div { min-width: 0; }
+.pk-field-hint > :first-child, .pk-field-error > div > :first-child { margin-top: 0; }
+.pk-field-hint > :last-child, .pk-field-error > div > :last-child { margin-bottom: 0; }
 .pk-feedback-symbol { display: inline-flex; flex: none; align-items: center; justify-content: center; min-width: var(--pk-layout-icon); font-weight: var(--pk-font-weight-semibold); }
 
 .pk-badge { display: inline-flex; align-items: center; max-width: 100%; padding: var(--pk-space-0-5) var(--pk-space-2); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-full); background: var(--pk-color-bg-muted); color: var(--pk-color-fg); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-medium); white-space: nowrap; }
@@ -152,7 +181,7 @@
 
 /* 640px is breakpoint.sm in the inherited token contract; CSS variables cannot drive media queries. */
 @media (max-width: 640px) {
-  .pk-input[data-size], .pk-select[data-size], .pk-dialog-close { min-height: var(--pk-layout-touch); }
+  .pk-select[data-size], .pk-dialog-close { min-height: var(--pk-layout-touch); }
   .pk-select-item { min-height: var(--pk-layout-touch); }
   .pk-input, .pk-textarea, .pk-select { font-size: var(--pk-font-size-base); }
   .pk-dialog-close { min-width: var(--pk-layout-touch); }
@@ -160,11 +189,13 @@
 }
 
 @media (max-width: 640px), (pointer: coarse) {
+  .pk-input[data-size], .pk-textarea[data-size], .pk-input-container[data-adorned] { min-height: max(var(--pk-layout-touch), var(--pk-field-height)); }
+  .pk-input-container[data-adorned] > .pk-input { min-height: calc(max(var(--pk-layout-touch), var(--pk-field-height)) - var(--pk-border-width-hairline) * 2); }
   .pk-button[data-size] { min-height: max(var(--pk-layout-touch), var(--pk-button-height)); min-width: var(--pk-layout-touch); }
   .pk-button[data-shape="icon"] { width: max(var(--pk-layout-touch), var(--pk-button-height)); min-width: max(var(--pk-layout-touch), var(--pk-button-height)); height: max(var(--pk-layout-touch), var(--pk-button-height)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pk-button, .pk-input, .pk-textarea, .pk-select { transition: none; }
+  .pk-button, .pk-input-container[data-adorned], .pk-input, .pk-textarea, .pk-select { transition: none; }
   .pk-spinner, .pk-dialog-overlay, .pk-dialog-content, .pk-select-content { animation: none; }
 }

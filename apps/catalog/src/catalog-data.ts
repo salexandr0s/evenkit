@@ -44,11 +44,11 @@ export const entries: readonly CatalogEntry[] = [
     id: "fields",
     name: "Fields",
     group: "Controls",
-    description: "Labeled inputs with associated help and error messages. Compose a form from native controls.",
-    tags: ["input", "field", "form", "label", "validation", "error", "textarea", "disabled"],
+    description: "Inputs and textareas with labels, required cues, adornments, and associated help and errors.",
+    tags: ["input", "field", "form", "label", "validation", "error", "textarea", "disabled", "read only", "required", "optional", "adornment"],
     source: "Original implementation · internal field requirements",
     sourceUrl: "https://ui.shadcn.com/docs/components/radix/input",
-    usage: 'import { TextField } from "@project-kit/ui";\n\n<TextField\n  label="Project name"\n  name="projectName"\n  hint="Use a name your team recognises."\n  error={errors.projectName}\n  value={projectName}\n  onChange={(event) => setProjectName(event.target.value)}\n/>'
+    usage: 'import { MailIcon, TextField, TextareaField } from "@project-kit/ui";\n\n<TextField\n  label="Contact email"\n  type="email"\n  name="email"\n  required\n  startAdornment={<MailIcon />}\n  hint="Use the address your team can reach."\n  error={errors.email}\n/>\n<TextareaField\n  label="Notes"\n  name="notes"\n  optional\n  rows={4}\n  hint="Add context for your team."\n  error={errors.notes}\n/>\n\n// Native props and refs pass through to the input or textarea.'
   },
   {
     id: "select",

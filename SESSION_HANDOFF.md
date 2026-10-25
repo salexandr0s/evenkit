@@ -2,53 +2,46 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
-The user requested an active goal to improve every component one by one. The goal remains active. Three of eleven component areas are complete: Tokens, Icons, and Buttons. The complete queue and evidence are in `COMPONENT_IMPROVEMENTS.md`; every remaining area and the final integration review still need completion.
+The user's active goal is to substantially improve every component one by one. Four of eleven areas are complete: Tokens, Icons, Buttons, and Fields. The goal remains active; the full queue and evidence are in `COMPONENT_IMPROVEMENTS.md`. Items 5–11 and the final integration review remain unfinished.
 
 ## Completed
 
-- Audited all public components and mapped them to eleven ordered areas.
-- Tokens: searchable reference for all 199 resolved variables, copyable CSS expressions, visual specimens, 33 defined contrast pairs, theme updates, and filter reset/focus recovery. Committed as `ea8bacc`.
-- Icons: all 31 public wrappers, semantic category and alias search, 16/20/24px previews, named-import copying with denial recovery, and accessible usage examples. Committed as `f3b69f9`.
-- Buttons: shared icon shape, leading/trailing icon slots, full-width layout, pressed styling, loading with stable dimensions/name, preserved caller busy state, and coarse-pointer targets. The catalog has working save, toggle, icon, link, and long-label examples. The button commit includes this handoff.
-- Updated public usage documentation and both packed consumer fixtures for the new button API.
+- Tokens (`ea8bacc`): searchable reference for 199 variables, copying, visual specimens, and 33 contrast pairs.
+- Icons (`f3b69f9`): all 31 wrappers, alias/category search, size previews, import copying, and accessible examples.
+- Buttons (`829c1a2`): shared icon shape and slots, full width, pressed state, stable loading, touch targets, and working examples.
+- Fields (commit includes this handoff): reusable internal frame and description helper; new public TextareaField and LabelProps; required/optional cues; Input adornments; read-only presentation; corrected sizes; validation, counter, reset, and ref-based focus examples.
+- Resolved two review findings: long text adornments crowded the input and overflowed, and native dir did not reach the wrapper. A final CSS refinement lets short suffixes use free space while long paired slots shrink around a protected input width.
 
-## Key files changed
+## Key files changed in the Fields step
 
-- `packages/ui/src/button.tsx`, `styles.css`, and `index.ts`: shared appearance props, layout/state styling, and the public `ButtonShape` type.
-- `apps/catalog/src/button-preview.tsx` and `button-preview.css`: interactive button examples.
-- `apps/catalog/src/icon-preview.tsx`, `icon-preview.css`, and `icon-data.ts`: searchable icon reference and metadata.
-- `apps/catalog/src/catalog.tsx`, `catalog-data.ts`, `control-previews.tsx`, and `catalog.css`: preview wiring, usage snippets, and removal of superseded code/styles.
-- `tests/browser/button.spec.ts` and `icon-reference.spec.ts`: behavior and accessibility regression journeys.
-- `README.md`, `docs/icons.md`, `fixtures/vite/src.tsx`, and `fixtures/next/app/page.tsx`: documented usage and independent consumers.
-- `COMPONENT_IMPROVEMENTS.md`: ordered queue and verification evidence.
+- `packages/ui/src/field.tsx`: native Input/Textarea and composed TextField/TextareaField; refs/native props preserved.
+- `packages/ui/src/field-frame.tsx`: internal description IDs and reusable frame; owns Label to avoid a module cycle.
+- `packages/ui/src/styles.css`: field cues, adornment layout/states, read-only surfaces, and touch sizes.
+- `packages/ui/src/index.ts`: additive TextareaField, TextareaFieldProps, and LabelProps exports.
+- `apps/catalog/src/field-preview.tsx` and `field-preview.css`: interactive form and composition/state examples.
+- `tests/browser/catalog.spec.ts`: extended form journey for textarea descriptions, FormData, error recovery, first-invalid focus, and reset.
+- `tests/browser/field.spec.ts`: conditional slot identity/focus, keyboard clear action, read-only/disabled behavior, desktop/touch sizes, long slots, RTL geometry, and responsive overflow.
+- `README.md`, `apps/catalog/src/catalog-data.ts`, and both `fixtures` entry points: usage docs and public package consumers.
 
 ## Verification state
 
-Passed for the current button implementation: `npm run build`, `npm run typecheck`, `npm run lint`, all seven token tests from `npm test`, and all 13 Chromium journeys from `npm run test:browser`.
+Passed: `npm run build`, `npm run typecheck`, `npm run lint`, seven token tests, and all 14 Chromium journeys. `npm run verify:packages` passed independent Vite/Next builds plus HTTP/stylesheet smoke checks. Its report confirms owned server cleanup and temporary-directory removal.
 
-The new button journeys cover loading/name/size stability, duplicate prevention, keyboard toggle behavior, independent busy state, decorative icon semantics, shape/full-width precedence, responsive wrapping, coarse-pointer sizes, and native link navigation. Icon coverage checks public-export completeness, aliases/categories, copy success/denial, reset focus, size selection, names, and narrow layout.
-
-`npm run verify:packages` passed independent Vite and Next production builds and HTTP/stylesheet checks. `.artifacts/package-verification.json` reports both owned server processes cleaned and its temporary directory removed. Manual app-browser inspection covered light and dark views for icons and buttons. Plan and implementation reviews found no actionable issues. Firefox and Safari remain untested.
+After the final CSS-only slot allocation refinement, the UI and catalog were rebuilt, and all seven journeys in `tests/browser/field.spec.ts` plus `tests/browser/catalog.spec.ts` passed again. Isolated browser geometry at 270px confirms single suffixes stay on one line, paired long slots wrap without overflow and retain a 96px input, and short RTL pairs fit on one line. Root visually inspected the final dark composition layout and earlier light/dark validation layouts. Source/test/documentation reviews passed; identified defects were fixed. Firefox and Safari remain untested.
 
 ## Remaining work
 
-Continue with Fields, then Select, Dialog, Status, Loading, EmptyState, AdminShell, and DataTable. Each needs a concrete plan, implementation, relevant checks, source review, and a logical local commit. Keep shared-file ownership sequential.
+Continue with Select, then Dialog, Status, Loading, EmptyState, AdminShell, and DataTable. Keep the sequential order, concrete plan, independent review, relevant checks, and logical local commit per area. Keep shared-file ownership sequential.
 
-The Fields plan covers Label, Input, Textarea, and TextField: shared composition, a textarea field, required/optional cues, adornments, read-only styling, multiline help/errors, and validation focus recovery. Inspect the existing APIs/tests and the local input contract before settling the API.
+For Select, inspect `packages/ui/src/select.tsx`, its styles, `apps/catalog/src/control-previews.tsx`, and the existing keyboard/form journey. Add grouped/described options, empty-options feedback, and field composition that reuses `field-frame.tsx`. Preserve the current options API, compact 36px desktop/44px touch rows, inset chevron, disabled items, keyboard navigation, and native form value behavior. Do not increase standard option density just to support descriptions.
 
-Known audit findings for later steps:
-
-- Dialog positioning uses physical right properties and needs logical properties for RTL.
-- Long badges cannot wrap and may overflow.
-- Table cells are forcibly truncated, which can clip custom controls and focus rings.
-
-After the queue, check the catalog frame, examples, exports, documentation, and packed Next/Vite consumers together. Preserve token dimensions, Neutral/Grove themes, compact Select rows (36px desktop, 44px touch), inset chevrons, stable table selection IDs, and explicit client boundaries. No component area should be skipped because earlier checks passed.
+Known later findings: Dialog uses physical right positioning; badges cannot wrap; table cells truncate arbitrary controls and can clip focus rings. Resolve each in its scheduled area. After the queue, review the catalog frame, examples, public exports, documentation, and packed consumers together.
 
 ## Local preview
 
-The pre-existing production preview at `http://127.0.0.1:5173/#buttons` serves the rebuilt catalog. Its ownership was previously recorded as Node PID 34531; recheck before stopping it. The app browser tab is retained as a deliverable. Screenshots: `.artifacts/token-reference.png`, `.artifacts/icon-reference.png`, and `.artifacts/button-reference.png`.
+The pre-existing production preview at `http://127.0.0.1:5173/#fields` serves the rebuilt catalog. Ownership was previously recorded as Node PID 34531; recheck before stopping it. The app browser tab is retained as a deliverable in dark appearance. Screenshot: `.artifacts/field-reference.png`; earlier token, icon, and button screenshots remain beside it.
 
-Generated artifacts are ignored. Packages remain local unpublished pilots; no deployment, publication, or application migration occurred.
+Generated artifacts are ignored. Packages remain local unpublished pilots. No deployment, publication, or application migration occurred.
 
 ## Resume commands
 
@@ -56,14 +49,17 @@ Generated artifacts are ignored. Packages remain local unpublished pilots; no de
 git status --short
 git log --oneline -5
 cat COMPONENT_IMPROVEMENTS.md
-rg --files packages/ui/src apps/catalog/src tests/browser
+cat packages/ui/src/select.tsx
+cat packages/ui/src/field-frame.tsx
 ```
 
-Read the field sources, existing preview/tests, and `~/.claude/uiux-contract/components/input.yaml`. Build packages after public source changes and rebuild the catalog before checking the production preview.
+Read applicable UI contract specs before further component work. Build packages after public source changes, and rebuild the catalog before checking the production preview.
 
 ## Decisions and workflow
 
-- Additive APIs preserve current native semantics, refs, and inline children. Icon shape explicitly takes precedence over full width so action buttons stay square.
-- Loading retains the original content in layout while a decorative spinner is shown. This prevents movement and keeps the accessible name stable.
-- The workspace `AGENTS.md` requires specialist review and the `avoid-ai-writing` skill. Both were applied. Configured specialist roles use an unavailable model, so agents used the inherited parent model with explicit implementation and review assignments.
-- Developer instructions authorize the reversible work in this queue without repeated approval requests. The active goal must remain open until the entire queue and integration review are verified.
+- Input always has a stable span wrapper. Without adornments it uses display:contents; className/style/events/ref remain on the native input. Consumers should not depend on direct-child selectors.
+- Adornments retain their own semantics. Custom actions need accessible names and caller-owned disabled/read-only behavior. Text slots shrink; direct button/link slots preserve their target.
+- Required/optional label cues are visual; native required carries required semantics. Error presence overrides aria-invalid; otherwise the caller's value survives. External description IDs stay first and are deduplicated.
+- Field-frame helpers are internal and reusable for Select; public API additions are limited to the composed textarea and field/label props.
+- Workspace instructions require delegated implementation and review plus avoid-ai-writing. Configured specialist roles use an unavailable model, so inherited-model agents with explicit assignments were used. Developer authorization covers the reversible queue work without repeated approvals.
+- Do not mark the goal complete until every queue item and integration review is verified.

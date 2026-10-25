@@ -39,16 +39,46 @@ test("explicit appearance overrides the system and theme selection changes actua
   await expect(appearance).toHaveText("System");
 });
 
-test("form errors are associated with their input and a valid preview recovers", async ({ page }) => {
+test("field validation associates descriptions, focuses the first error, and resets", async ({ page }) => {
   await page.goto("/#fields");
   const name = page.getByRole("textbox", { name: "Project name", exact: true });
+  const notes = page.getByRole("textbox", { name: "Notes", exact: true });
+  const success = page.getByText("Preview submitted. No data was sent or stored.", { exact: true });
+  await expect(name).toHaveAttribute("required", "");
+  await expect(notes).not.toHaveAttribute("required");
+  await notes.fill("Short");
   await page.getByRole("button", { name: "Submit preview" }).click();
   await expect(name).toHaveAttribute("aria-invalid", "true");
+  await expect(name).toBeFocused();
   await expect(name).toHaveAccessibleDescription(/Use a name your team recognises.*at least two characters/);
+  await expect(notes).toHaveAttribute("aria-invalid", "true");
+  const descriptions = (await notes.getAttribute("aria-describedby"))?.split(/\s+/) ?? [];
+  expect(descriptions).toContain("preview-notes-count");
+  expect(new Set(descriptions).size).toBe(descriptions.length);
+  for (const id of descriptions) await expect(page.locator(`[id="${id}"]`)).toBeVisible();
+  await expect(notes).toHaveAccessibleDescription(/Add at least 12 characters, or leave notes empty/);
   await name.fill("Autumn project");
-  await page.getByRole("button", { name: "Submit preview" }).click();
   await expect(name).not.toHaveAttribute("aria-invalid", "true");
-  await expect(page.getByText("Preview submitted. No data was sent or stored.", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Submit preview" }).click();
+  await expect(notes).toBeFocused();
+  const value = "Plan the release.\nConfirm the launch date with the team.";
+  await notes.fill(value);
+  await expect(notes).not.toHaveAttribute("aria-invalid", "true");
+  await expect(notes).toHaveAttribute("maxlength", "240");
+  expect((await notes.getAttribute("aria-describedby"))?.split(/\s+/)).not.toContain("preview-notes-error");
+  const formData = await name.evaluate(element => Object.fromEntries(new FormData((element as HTMLInputElement).form!)));
+  expect(formData).toMatchObject({ projectName: "Autumn project", notes: value });
+  await page.getByRole("button", { name: "Submit preview" }).click();
+  await expect(success).toBeVisible();
+  await page.getByRole("button", { name: "Reset preview" }).click();
+  await expect(name).toHaveValue("");
+  await expect(notes).toHaveValue("");
+  await expect(name).toBeFocused();
+  await expect(success).not.toBeVisible();
+  await expect(notes).not.toHaveAttribute("aria-invalid", "true");
+  await name.fill("Name only");
+  await page.getByRole("button", { name: "Submit preview" }).click();
+  await expect(success).toBeVisible();
 });
 
 test("dialog contains focus, inherits the theme, closes with Escape and restores focus", async ({ page }) => {

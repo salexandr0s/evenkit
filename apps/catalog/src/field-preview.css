@@ -1,0 +1,12 @@
+.field-workbench { display: grid; gap: var(--pk-space-8); min-width: 0; }
+.field-workbench h3 { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-lg); line-height: var(--pk-font-line-height-snug); font-weight: var(--pk-font-weight-semibold); }
+.field-section { display: grid; gap: var(--pk-space-5); min-width: 0; }
+.field-section + .field-section { padding-top: var(--pk-space-6); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.field-section-heading { display: grid; gap: var(--pk-space-2); max-width: var(--pk-layout-reading); }
+.field-section-heading > p { color: var(--pk-color-fg-muted); }
+.field-preview-form { display: grid; gap: var(--pk-space-5); width: 100%; max-width: var(--pk-layout-form); padding: var(--pk-space-5); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-bg-muted); }
+.field-notes-example { display: grid; gap: var(--pk-space-2); min-width: 0; }
+.field-workbench .field-character-count { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); text-align: end; font-variant-numeric: tabular-nums; }
+.field-workbench .field-caption { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); line-height: var(--pk-font-line-height-relaxed); }
+.field-example-grid, .field-size-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--pk-space-16) * 3 + var(--pk-space-8))), 1fr)); align-items: start; gap: var(--pk-space-5); }
+.field-size-grid { align-items: end; }

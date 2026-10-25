@@ -56,7 +56,7 @@ export function ProjectForm() {
 }
 ```
 
-Provide your own submit handler and data storage. A TextField associates its label, hint, and error with the input and preserves additional `aria-describedby` IDs. A loading Button preserves its accessible name and width while disabling interaction. Use ButtonLink for navigation and keep ordinary button semantics for actions.
+Provide your own submit handler and data storage. TextField and TextareaField associate labels, hints, and errors with their native controls and preserve additional `aria-describedby` IDs. A loading Button preserves its accessible name and width while disabling interaction. Use ButtonLink for navigation and keep ordinary button semantics for actions.
 
 Button and ButtonLink accept `startIcon` and `endIcon` for decorative icons beside a wrapping label, and `fullWidth` to fill their container. Use `shape="icon"` with one glyph child and an `aria-label` or `aria-labelledby` for a square control. Icon shape takes precedence over `fullWidth`. Icon controls use the selected 32/40/48px size on desktop and at least 44px on narrow or coarse-pointer screens. Pass `aria-pressed` and your own state handler for toggle actions. A caller-provided `aria-busy` is preserved; `loading` also disables a Button and displays its spinner.
 
@@ -69,6 +69,23 @@ Set theme attributes on the document root:
 Omit `data-kit-mode` to follow the system. Neutral is the default theme. This release supports document-level themes; nested scopes are not supported for body-mounted dialog portals. Custom brands use the same validated model and contrast checks; see [token usage](packages/tokens/README.md).
 
 For Next.js, import CSS in the root layout. Interactive UI exports retain their `"use client"` boundary. Server components may render controls with serializable props; handlers and client state belong in a client component. A dialog needs its Title and Description, with a trigger and a clear dismissal action.
+
+## Fields
+
+Use TextField for an input and TextareaField for multiline text. Both accept native control props and refs, plus `label`, `hint`, `error`, `optional`, and `fieldClassName`. Required controls show a required cue; `optional` shows an optional cue when the control is not required. Label also supports these cues when composing a field manually. Native `required` belongs on the control. An error sets `aria-invalid`; without an error, a caller-provided invalid state is preserved.
+
+```tsx
+import { MailIcon, TextareaField, TextField } from "@project-kit/ui";
+
+<TextField label="Contact email" type="email" name="email" required
+  startAdornment={<MailIcon />} error={errors.email} />
+<TextareaField label="Notes" name="notes" optional rows={4}
+  hint="Add context for your team." error={errors.notes} />
+```
+
+Input and TextField accept `startAdornment` and `endAdornment` for icons, text, or labelled actions. Include meaningful prefixes or units in the label or hint; adornments are not part of the native value. Custom actions need their own accessible name and disabled behavior. Set those explicitly when the field is disabled or read-only. A read-only control remains focusable and selectable; a disabled control uses native disabled behavior.
+
+Input always renders a stable wrapper so changing adornments preserves the native input, its value, and focus. The wrapper uses `display: contents` when empty of adornments. `className`, `style`, events, and refs remain on the native input; consumer CSS should not rely on the input being a direct child of the field. Textarea retains native vertical resizing. Use refs to focus the first invalid control on submission, as the catalog form demonstrates. Validation rules and character counters belong to the consuming form.
 
 ## Admin shell and tables
 
