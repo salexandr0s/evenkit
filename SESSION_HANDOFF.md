@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Shared dialog design: 25 October 2026
+
+Dialogs now share an elevated frame, more space between sections, an inset close control and a separated action footer. Shared surface/backdrop motion opens in 160ms and closes in 120ms. ChatWidget now uses the same Dialog wrapper as the catalog and AdminShell drawers, retaining its compact/maximized viewport layout and Escape order. Drawer motion uses logical direction with build-safe RTL selectors. All visual values reuse existing tokens.
+
+Closing controls block keyboard and pointer activation. Rapid reopening restores focus inside the retained content without remounting or losing drafts, while honoring caller autofocus cancellation and forwarded refs. Reduced motion uses zero-duration animations with stable names so changing the preference during exit still lets Radix Presence release focus/scroll locks. Core changes: `packages/ui/src/dialog.tsx`, shared dialog styles, chat composition/styles, and drawer motion rules. README/UI provenance describe the design; two existing browser specs cover lifecycle and settled geometry.
+
+Source review and manual light/dark inspection passed. An isolated snapshot of HEAD `95ea8cf` plus only these dialog changes passed production build, configured typecheck, full ESLint, eight token tests, all 44 Chromium journeys, and packed Vite/Next production builds with HTTP/stylesheet smoke checks. Logs and screenshots are in `.artifacts/dialog-design/`: `isolated-*.log`, `package-verification.json`, `dark.png`, and `light.png`. The isolated check was necessary because other component implementation was changing the same checkout; the mixed checkout run passed dialog/chat/drawer journeys but had three table-related failures and catalog import type errors from that other work. Those files were preserved.
+
+No required work remains for this dialog request. Firefox and Safari were not tested. Temporary verification tabs and owned preview servers on ports 5303/5305 are closed; the existing preview on 5173 was preserved. Concurrent Hallmark, field-error, inventory and new-component changes remain outside this commit. Resume with `git status --short` and this handoff; do not assume the ongoing broader working tree is fully verified by this dialog check.
+
 ## Shared dropdown design: 25 October 2026
 
 Updated the shared Select/SelectField design used by all 15 direct catalog dropdowns and DataTable pagination. Popups have 6px padding and trigger spacing, layered shadows, trailing selected checkmarks, distinct selected and highlighted rows, and a rotating chevron. Existing tokens provide every visual value. Opening fades with 4px directional movement over 160ms; closing uses 120ms. Reduced motion removes popup and chevron motion. Public props, grouped descriptions, form integration, long-label wrapping, RTL and 36px desktop / 44px touch rows remain intact.

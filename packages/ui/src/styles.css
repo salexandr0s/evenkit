@@ -220,8 +220,14 @@
 .pk-action-message[data-tone="error"] { --pk-action-message-tone: var(--pk-color-danger); --pk-action-message-icon-bg: var(--pk-color-danger-bg); }
 .pk-action-message[data-tone="warning"] { --pk-action-message-tone: var(--pk-color-warning); --pk-action-message-icon-bg: var(--pk-color-warning-bg); }
 
-.pk-dialog-overlay { position: fixed; inset: 0; z-index: var(--pk-z-index-overlay); background: var(--pk-color-overlay); animation: pk-fade-in var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
-.pk-dialog-content { --pk-dialog-width: var(--pk-layout-dialog); position: fixed; top: 50%; left: 50%; z-index: var(--pk-z-index-modal); display: grid; gap: var(--pk-space-4); width: min(var(--pk-dialog-width), calc(100% - var(--pk-space-6) * 2)); max-height: calc(100dvh - var(--pk-space-6) * 2); overflow-y: auto; padding: var(--pk-space-6); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface-elevated); color: var(--pk-color-fg); box-shadow: var(--pk-shadow-lg); transform: translate(-50%, -50%); animation: pk-fade-in var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
+.pk-dialog-overlay { position: fixed; inset: 0; z-index: var(--pk-z-index-overlay); background: var(--pk-color-overlay); }
+.pk-dialog-overlay[data-state="open"] { animation: pk-dialog-backdrop-in var(--pk-motion-duration-base) var(--pk-motion-easing-standard) both; }
+.pk-dialog-overlay[data-state="closed"] { animation: pk-dialog-backdrop-out var(--pk-motion-duration-fast) var(--pk-motion-easing-standard) both; }
+.pk-dialog-content { --pk-dialog-width: var(--pk-layout-dialog); --pk-dialog-gutter: var(--pk-space-6); --pk-dialog-shift-x: 0px; --pk-dialog-shift-y: var(--pk-space-2); position: fixed; top: 50%; left: 50%; z-index: var(--pk-z-index-modal); display: grid; gap: var(--pk-space-6); width: min(var(--pk-dialog-width), calc(100% - var(--pk-space-6) * 2)); max-height: calc(100dvh - var(--pk-space-6) * 2); overflow-y: auto; overscroll-behavior: contain; padding: var(--pk-dialog-gutter); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface-elevated); color: var(--pk-color-fg); box-shadow: var(--pk-shadow-lg), var(--pk-shadow-xs); transform: translate(-50%, -50%); }
+.pk-dialog-content[data-state="open"] { animation: pk-dialog-in var(--pk-motion-duration-base) var(--pk-motion-easing-standard) both; }
+.pk-dialog-content[data-state="closed"] { animation: pk-dialog-out var(--pk-motion-duration-fast) var(--pk-motion-easing-standard) both; }
+/* Radix retains both surfaces during exit and sets pointer events inline. */
+.pk-dialog-overlay[data-state="closed"], .pk-dialog-content[data-state="closed"] { pointer-events: none !important; }
 .pk-dialog-content[data-size="sm"] { --pk-dialog-width: var(--pk-layout-dialog-sm); }
 .pk-dialog-content[data-size="lg"] { --pk-dialog-width: var(--pk-layout-dialog-lg); }
 .pk-dialog-content[data-scroll="body"] { display: flex; flex-direction: column; overflow: hidden; }
@@ -231,21 +237,26 @@
 .pk-dialog-body { min-width: 0; padding: var(--pk-space-1); margin: calc(var(--pk-space-1) * -1); }
 .pk-dialog-title { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-xl); line-height: var(--pk-font-line-height-snug); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
 :where(.pk-dialog-content[data-close-button]) .pk-dialog-title { padding-inline-end: var(--pk-space-8); }
-.pk-dialog-description { margin: 0; color: var(--pk-color-fg-muted); overflow-wrap: anywhere; }
-.pk-dialog-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--pk-space-3); min-width: 0; }
-.pk-dialog-close { position: absolute; inset-block-start: var(--pk-space-3); inset-inline-end: var(--pk-space-3); display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: var(--pk-control-height-md); min-height: var(--pk-control-height-md); padding: var(--pk-space-2); border: var(--pk-border-width-hairline) solid transparent; border-radius: var(--pk-radius-sm); background: transparent; color: var(--pk-color-fg-muted); cursor: pointer; }
+.pk-dialog-description { margin: 0; color: var(--pk-color-fg-muted); line-height: var(--pk-font-line-height-relaxed); overflow-wrap: anywhere; }
+.pk-dialog-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--pk-space-3); min-width: 0; }
+.pk-dialog-content > .pk-dialog-footer { margin-inline: calc(var(--pk-dialog-gutter) * -1); margin-block-end: calc(var(--pk-dialog-gutter) * -1); padding: var(--pk-space-4) var(--pk-dialog-gutter); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); background: var(--pk-color-bg-muted); }
+.pk-dialog-close { position: absolute; inset-block-start: var(--pk-space-3); inset-inline-end: var(--pk-space-3); display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: var(--pk-control-height-md); min-height: var(--pk-control-height-md); padding: var(--pk-space-2); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-surface-elevated); color: var(--pk-color-fg-muted); cursor: pointer; transition: background-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), border-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
 .pk-dialog-close svg { width: var(--pk-layout-icon); height: var(--pk-layout-icon); }
-.pk-dialog-close:hover { background: var(--pk-color-bg-muted); color: var(--pk-color-fg); }
+.pk-dialog-close:hover { border-color: var(--pk-color-border-strong); background: var(--pk-color-bg-muted); color: var(--pk-color-fg); }
 
 @keyframes pk-spin { to { transform: rotate(1turn); } }
-@keyframes pk-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pk-dialog-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pk-dialog-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+/* Independent translation keeps centered, drawer and floating-window placement intact. */
+@keyframes pk-dialog-in { from { opacity: 0; translate: var(--pk-dialog-shift-x) var(--pk-dialog-shift-y); } to { opacity: 1; translate: 0 0; } }
+@keyframes pk-dialog-out { from { opacity: 1; translate: 0 0; } to { opacity: 0; translate: var(--pk-dialog-shift-x) var(--pk-dialog-shift-y); } }
 @keyframes pk-select-in { from { opacity: 0; transform: translate(var(--pk-select-shift-x), var(--pk-select-shift-y)); } to { opacity: 1; transform: translate(0, 0); } }
 @keyframes pk-select-out { from { opacity: 1; transform: translate(0, 0); } to { opacity: 0; transform: translate(var(--pk-select-shift-x), var(--pk-select-shift-y)); } }
 
 /* 640px is breakpoint.sm in the inherited token contract; CSS variables cannot drive media queries. */
 @media (max-width: 640px) {
   .pk-input, .pk-textarea, .pk-select { font-size: var(--pk-font-size-base); }
-  .pk-dialog-content { width: min(var(--pk-dialog-width), calc(100% - var(--pk-space-4) * 2)); padding: var(--pk-space-5); }
+  .pk-dialog-content { --pk-dialog-gutter: var(--pk-space-5); width: min(var(--pk-dialog-width), calc(100% - var(--pk-space-4) * 2)); }
 }
 
 @media (max-width: 640px), (pointer: coarse) {
@@ -266,6 +277,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pk-button, .pk-input-container[data-adorned], .pk-input, .pk-textarea, .pk-select, .pk-select-chevron { transition: none; }
-  .pk-spinner, .pk-dialog-overlay, .pk-dialog-content, .pk-select-content[data-state] { animation: none; }
+  .pk-button, .pk-input-container[data-adorned], .pk-input, .pk-textarea, .pk-select, .pk-select-chevron, .pk-dialog-close { transition: none; }
+  .pk-spinner, .pk-select-content[data-state] { animation: none; }
+  /* Keep the name so Presence can finish an exit if this preference changes mid-animation. */
+  .pk-dialog-overlay[data-state], .pk-dialog-content[data-state] { animation-duration: 0s; }
 }

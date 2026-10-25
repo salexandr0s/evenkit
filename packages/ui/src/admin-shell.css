@@ -57,7 +57,11 @@
 .pk-admin-resize:focus-visible,
 .pk-admin-skip:focus-visible,
 .pk-admin-content:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
-.pk-admin-drawer.pk-dialog-content { top: 0; left: auto; inset-inline-start: 0; display: flex; flex-direction: column; gap: 0; width: min(var(--pk-layout-sidebar), calc(100% - var(--pk-space-12))); height: 100dvh; max-height: 100dvh; padding: 0; border-block: 0; border-inline-start: 0; border-radius: 0; transform: none; }
+.pk-admin-drawer.pk-dialog-content { --pk-dialog-shift-x: calc(var(--pk-space-4) * -1); --pk-dialog-shift-y: var(--pk-space-0); top: 0; left: auto; inset-inline-start: 0; display: flex; flex-direction: column; gap: 0; width: min(var(--pk-layout-sidebar), calc(100% - var(--pk-space-12))); height: 100dvh; max-height: 100dvh; padding: 0; border-block: 0; border-inline-start: 0; border-radius: 0; transform: none; }
+/* Attribute selectors survive CSS builds that lower :dir() to language selectors. */
+:where([dir="rtl"]) .pk-admin-drawer.pk-dialog-content,
+.pk-admin-drawer.pk-dialog-content[dir="rtl"] { --pk-dialog-shift-x: var(--pk-space-4); }
+.pk-admin-drawer.pk-dialog-content[dir="ltr"] { --pk-dialog-shift-x: calc(var(--pk-space-4) * -1); }
 .pk-admin-drawer-title.pk-dialog-title { padding-block: var(--pk-space-4) var(--pk-space-2); padding-inline: var(--pk-space-6) var(--pk-space-16); font-size: var(--pk-font-size-sm); }
 .pk-admin-drawer-brand { min-height: 0; padding-top: var(--pk-space-2); padding-bottom: var(--pk-space-4); }
 .pk-admin-drawer .pk-admin-nav-link { min-height: var(--pk-layout-touch); }

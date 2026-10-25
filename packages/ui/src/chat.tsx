@@ -1,6 +1,5 @@
 "use client";
 
-import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { foundation } from "@project-kit/tokens";
 import { forwardRef, useCallback, useId, useImperativeHandle, useLayoutEffect, useRef, useState, type Ref } from "react";
 import { Button } from "./button.js";
@@ -9,6 +8,7 @@ import { ChatComposer } from "./chat-composer.js";
 import { ChatHistory } from "./chat-history.js";
 import { ChatMessages } from "./chat-messages.js";
 import { defaultChatLabels, type ChatPanelProps, type ChatWidgetProps } from "./chat-types.js";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "./dialog.js";
 import { MaximizeIcon, MessageSquareIcon, MinimizeIcon, PanelLeftIcon, PlusIcon, XIcon } from "./icons.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
@@ -101,8 +101,8 @@ const ChatSurface = forwardRef<ChatSurfaceHandle, ChatSurfaceProps>(function Cha
     requestAnimationFrame(focusComposer);
   }
 
-  const Title = dialog ? DialogPrimitive.Title : "h2";
-  const Description = dialog ? DialogPrimitive.Description : "p";
+  const Title = dialog ? DialogTitle : "h2";
+  const Description = dialog ? DialogDescription : "p";
   return <div {...props} ref={setElement} className={classes("pk-chat-panel", className)} data-mode={expanded ? "expanded" : "compact"} data-wide={wide} data-history={historyOpen} onKeyDown={event => {
     onKeyDown?.(event);
     if (!dialog && !event.defaultPrevented && event.key === "Escape" && closeHistory()) event.preventDefault();
@@ -186,18 +186,16 @@ export function ChatWidget({
     return () => { visual.removeEventListener("resize", update); visual.removeEventListener("scroll", update); };
   }, [open, viewportNode]);
 
-  return <TooltipProvider><DialogPrimitive.Root open={open} onOpenChange={setOpen}>
-    <DialogPrimitive.Trigger asChild><Button className="pk-chat-launcher" size="lg" dir={dir} data-open={open || undefined} startIcon={launcherIcon ?? <MessageSquareIcon />}>{launcherLabel}</Button></DialogPrimitive.Trigger>
-    <DialogPrimitive.Portal container={container}>
-      <DialogPrimitive.Overlay className="pk-chat-overlay" />
-      <DialogPrimitive.Content ref={setViewportNode} dir={dir} className="pk-chat-widget" data-maximized={maximized} {...(props.description ? {} : { "aria-describedby": undefined })}
-        onOpenAutoFocus={event => { event.preventDefault(); surface.current?.focusComposer(); }}
-        onEscapeKeyDown={event => {
-          if (surface.current?.closeHistory()) event.preventDefault();
-          else if (maximized) { event.preventDefault(); setMaximized(false); }
-        }}>
-        <ChatSurface {...props} dir={dir} ref={surface} dialog expanded={maximized} onMaximize={() => setMaximized(!maximized)} onClose={() => setOpen(false)} />
-      </DialogPrimitive.Content>
-    </DialogPrimitive.Portal>
-  </DialogPrimitive.Root></TooltipProvider>;
+  return <TooltipProvider><Dialog open={open} onOpenChange={setOpen}>
+    <DialogTrigger asChild><Button className="pk-chat-launcher" size="lg" dir={dir} data-open={open || undefined} startIcon={launcherIcon ?? <MessageSquareIcon />}>{launcherLabel}</Button></DialogTrigger>
+    <DialogContent ref={setViewportNode} container={container} showCloseButton={false} dir={dir} className="pk-chat-widget" data-maximized={maximized} {...(props.description ? {} : { "aria-describedby": undefined })}
+      onOpenAutoFocus={event => { event.preventDefault(); surface.current?.focusComposer(); }}
+      onEscapeKeyDown={event => {
+        if (!open) { event.preventDefault(); return; }
+        if (surface.current?.closeHistory()) event.preventDefault();
+        else if (maximized) { event.preventDefault(); setMaximized(false); }
+      }}>
+      <ChatSurface {...props} dir={dir} ref={surface} dialog expanded={maximized} onMaximize={() => setMaximized(!maximized)} onClose={() => setOpen(false)} />
+    </DialogContent>
+  </Dialog></TooltipProvider>;
 }

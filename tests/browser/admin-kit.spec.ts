@@ -123,6 +123,7 @@ test("shell drawer closes on navigation, Escape, outside click, and container gr
   await trigger.click();
   await expect(drawer).toBeVisible();
   expect(await menuTip.count()).toBe(0);
+  await drawer.evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)));
   const rtl = await drawer.evaluate(element => {
     const close = element.querySelector(".pk-dialog-close")!.getBoundingClientRect();
     const title = element.querySelector(".pk-dialog-title")!;

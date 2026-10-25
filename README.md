@@ -179,6 +179,8 @@ Disabling Select closes an open popup; re-enabling it keeps the popup closed. If
 
 DialogContent accepts `size="sm" | "md" | "lg"` (420/560/720px, constrained to the viewport) and `scroll="content" | "body"`. Defaults preserve the original medium dialog with whole-content scrolling. Use DialogHeader, DialogBody, and DialogFooter as direct children with `scroll="body"` to keep the heading and actions visible while long content scrolls. At viewport heights of 640px or less, the entire dialog scrolls so every section remains reachable.
 
+Dialogs share an elevated surface, an inset close control, and a separated action footer. The surface and backdrop open in 160ms and close in 120ms; a small directional movement accompanies the fade. Closing controls stop accepting input immediately. Reduced motion removes the animations. Catalog dialogs, navigation drawers, and the chat window use this same component, with positioning suited to each surface.
+
 ```tsx
 import {
   Button, Dialog, DialogTrigger, DialogContent, DialogHeader,
