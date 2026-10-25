@@ -1,5 +1,73 @@
 # Session handoff: 25 October 2026
 
+## Reporting implementation completed
+
+Status: DONE. Worktree: `/Users/nationalbank/.codex/worktrees/reporting/design-tokens`. Branch: `codex/reporting`. Started from local `codex/component-improvements` at `b588b1b1964ba2b26ee8453606f354f2c33eb10d`, seven commits ahead of the fetched remote at the start. The original checkout and concurrent worktrees were preserved. No publishing, deployment, push or existing application change was performed.
+
+Local implementation commits:
+
+- `6f084ef4334fcc2bec576b9f8e35e59c92199acb` — `feat(tokens): add validated chart series palette`
+- `bd3023ef5b1e0499633aef4adaca91250c9d2a8a` — `feat(reporting): add accessible charts and dashboard blocks`
+
+### APIs and ownership
+
+| Inventory | Public surface | Contract |
+| --- | --- | --- |
+| H05 | `Statistic`, `StatisticProps`, `StatisticComparison` | Values, units, periods, explicit trend text and independent direction/tone; zero, missing, loading and error states. |
+| K01 | `ChartFrame`, `ChartLegend`, `ChartTooltip`, `ChartDataTable`, shared chart types | Stable row/series IDs, six color slots, named figure, state recovery, keyboard/pointer inspection and semantic table. |
+| K02 | `LineChart`, `AreaChart` | Ordered categories with missing-value gaps and explicit period/aggregation/unit context. |
+| K03 | `BarChart` | Horizontal/vertical grouped or signed stacked bars, matching patterned legends and full labels in the inspector/table. |
+| K07 | `ReportingControls`, `ExportAction`, `ExportState` | Controlled period/comparison/unit/filter fields and idle/preparing/progress/ready/error export states; retry/cancel and focus recovery. |
+| O01 | `DashboardBlock` in `registry/blocks/dashboard.tsx` | Copy and edit the source; supply statistics, controls and optional chart, activity, export action and data section. |
+
+Applications own queries, metric definitions, comparison arithmetic, time aggregation, permissions, export jobs, file generation and download URL lifetime. The catalog uses fictional data and an existing CSV fixture. See [reporting APIs and examples](docs/reporting.md), [dependency decision](docs/chart-dependency.md), [UI provenance](packages/ui/PROVENANCE.md) and [token provenance](packages/tokens/PROVENANCE.md).
+
+Charts use pinned `d3-shape` 3.2.0 for line/area paths, with `d3-path` 3.1.0 resolved in the lockfile; development types are `@types/d3-shape` 3.2.0. Official D3 and Recharts documentation informed the bounded dependency evaluation. React owns rendering, interactions and accessibility. ISC/MIT notices are retained under `packages/ui/licenses`.
+
+The six required mode roles `chart-series-1` through `chart-series-6` emit `--pk-chart-series-1` through `--pk-chart-series-6`; series 1 follows each theme accent. `--pk-chart-area-opacity` controls supplementary area fill. Existing neutral surfaces remain unchanged. Custom brands must now provide all six chart roles in both modes or extend built-in modes. Validation checks all 384 series/background pairs across eight themes and two modes; the lowest built-in ratio is 4.48:1 against a 3:1 graphics threshold. Series colors do not promise pairwise distinguishability; labels, dashes, markers, patterns and table values provide additional cues.
+
+### Verification evidence
+
+All required checks passed. Logs and screenshots are local ignored artifacts under `.artifacts/reporting/`.
+
+| Check | Result / evidence |
+| --- | --- |
+| `npm run build` | Package declarations/CSS and catalog production build passed; `build.log`. |
+| `npm run typecheck` / `npm run lint` | Configured workspace checks passed; `typecheck.log`, `lint.log`. |
+| `npm test` | 33 tests in six files passed, including five chart geometry, four reporting and ten token tests; `unit.log`. |
+| Reporting, theme and token browser checks | Ten Chromium journeys passed; `browser.log`. Includes zero/missing values, signed stacks, table data, keyboard inspection, retry/table/export focus recovery and prepared-file invalidation. |
+| Six requested catalog routes | Six journeys passed across eight themes, light/dark and 360/768/1024/1440px: 384 combinations; `catalog-matrix.log`. |
+| Supplemental chart matrix | 192 combinations covering eight themes, both modes/directions and 360/1440px, reduced motion, neutral surfaces, series paint and visible focus; included in `browser.log`. |
+| `npm run verify:examples` | All 92 copied catalog examples and 78 inventory mappings passed, including custom ChartFrame and copied DashboardBlock; `examples.log`, `.artifacts/catalog-examples.json`. |
+| `npm run verify:packages` | Independent packed Vite and Next production builds, HTTP/CSS checks, Next server rendering, copied dashboard and retained D3 notices passed; `packages.log`, `.artifacts/package-verification.json`. Temporary consumers and servers were removed. |
+| Visual and CSS review | Ten desktop/narrow light/dark captures, no overflow/runtime errors, no undefined CSS variables; `visuals.json`, `css-token-audit.json`, PNGs. Independent source/visual review found no remaining actionable issue. |
+
+Visual review corrected narrow line-label fragmentation: charts below the container threshold show readable endpoint labels, while all categories remain available in the inspector and table. The final CSS and documentation change was followed by another production build, all 16 affected browser journeys and packed-consumer verification. TypeScript, lint, unit and copied-example inputs were unchanged by that CSS-only correction. `final-inputs.json` records final implementation hashes. Screenshot capture temporarily made the catalog header static to avoid occluding the component; production CSS was not changed for capture. The owned preview on port 49234 was stopped; other agents' previews were preserved.
+
+### Limits and remaining work
+
+No required reporting work remains. Charts support up to six series, finite values bounded by `Number.MAX_SAFE_INTEGER / 6`, and ordered categorical/time buckets. They do not infer elapsed time, timezones or missing dates. Large datasets need host aggregation; continuous time scales, zoom, virtualization and export generation are outside this adapter. Area series overlap rather than stack. Firefox, Safari, assistive-technology application testing and physical touch devices were not tested; Chromium covers the required keyboard, RTL, theme, layout and motion contracts.
+
+### Resume commands
+
+```sh
+cd /Users/nationalbank/.codex/worktrees/reporting/design-tokens
+git status --short
+git log -4 --oneline
+npm run build
+npm run typecheck
+npm run lint
+npm test
+npm run verify:examples
+npm run verify:packages
+KIT_CATALOG_PORT=5397 npx playwright test tests/browser/reporting.spec.ts tests/browser/reporting-matrix.spec.ts tests/browser/token-reference.spec.ts tests/browser/themes.spec.ts --workers=1
+KIT_CATALOG_PORT=5397 npx playwright test tests/browser/priority-catalog.spec.ts --grep '(Statistic / KPI|Chart frame and data|Line and area charts|Bar charts|Reporting controls and export|Dashboard block) loads' --workers=1
+```
+
+Use an available test port if 5397 is occupied. The reporting worktree remains attached for review. Earlier session history follows.
+
+## Previous component-improvements work
+
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
 ## Component accent details: 25 October 2026
