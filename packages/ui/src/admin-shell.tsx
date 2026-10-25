@@ -1,12 +1,13 @@
 "use client";
 
-import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, type AnchorHTMLAttributes, type FocusEvent, type MouseEventHandler, type ReactNode, type Ref } from "react";
+import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, type AnchorHTMLAttributes, type CSSProperties, type FocusEvent, type MouseEventHandler, type ReactNode, type Ref } from "react";
 import { foundation } from "@project-kit/tokens";
 import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "./dialog.js";
 import { CircleIcon, LayoutDashboardIcon, MenuIcon, PanelLeftCloseIcon, PanelLeftIcon, PanelLeftOpenIcon } from "./icons.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
+import { sidebarWidths, useAdminSidebarDrag } from "./use-admin-sidebar-drag.js";
 
 export type AdminSidebarState = "expanded" | "collapsed" | "hidden";
 
@@ -58,6 +59,7 @@ interface NavigationProps {
   onNavigate?: () => void;
   collapsed?: boolean;
   tooltipsEnabled?: boolean;
+  suppressTooltips?: boolean;
 }
 
 interface NavLinkProps extends Omit<AdminLinkProps, "ref"> {
@@ -68,7 +70,7 @@ const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(function NavLink({ r
   return renderLink ? renderLink({ ...props, ref }) : <a {...props} ref={ref} />;
 });
 
-function Navigation({ groups, activeItemId, label, renderLink, onNavigate, collapsed = false, tooltipsEnabled = true }: NavigationProps) {
+function Navigation({ groups, activeItemId, label, renderLink, onNavigate, collapsed = false, tooltipsEnabled = true, suppressTooltips = false }: NavigationProps) {
   const navigationRef = useRef<HTMLElement>(null);
   const [tooltipSide, setTooltipSide] = useState<"left" | "right">("right");
   const [openItemId, setOpenItemId] = useState<string | null>(null);
@@ -78,11 +80,11 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
 
   useEffect(() => {
     // A new desktop focus can arrive before the observer's width update commits.
-    if (!collapsed || (!tooltipsEnabled && navigationRef.current?.getClientRects().length === 0)) setOpenItemId(null);
-  }, [collapsed, tooltipsEnabled]);
+    if (suppressTooltips || !collapsed || (!tooltipsEnabled && navigationRef.current?.getClientRects().length === 0)) setOpenItemId(null);
+  }, [collapsed, tooltipsEnabled, suppressTooltips]);
 
   function changeTooltipOpen(itemId: string, open: boolean) {
-    if (!collapsed || (open && navigationRef.current?.getClientRects().length === 0)) return;
+    if (suppressTooltips || !collapsed || (open && navigationRef.current?.getClientRects().length === 0)) return;
     if (open && navigationRef.current) setTooltipSide(window.getComputedStyle(navigationRef.current).direction === "rtl" ? "left" : "right");
     setOpenItemId((current) => open ? itemId : current === itemId ? null : current);
   }
@@ -102,7 +104,7 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
                 onClick: navigate,
                 children: <><span className="pk-admin-nav-icon" aria-hidden="true">{item.icon ?? <CircleIcon />}</span><span className="pk-admin-nav-text">{item.label}</span>{item.end !== undefined && item.end !== null ? <span className="pk-admin-nav-end">{item.end}</span> : null}</>,
               };
-              return <li key={item.id}><Tooltip open={collapsed && tooltipsEnabled && openItemId === item.id} onOpenChange={(open) => changeTooltipOpen(item.id, open)}><TooltipTrigger asChild><NavLink {...linkProps} renderLink={renderLink} /></TooltipTrigger>{collapsed && tooltipsEnabled ? <TooltipContent side={tooltipSide}>{item.label}</TooltipContent> : null}</Tooltip></li>;
+              return <li key={item.id}><Tooltip open={collapsed && tooltipsEnabled && !suppressTooltips && openItemId === item.id} onOpenChange={(open) => changeTooltipOpen(item.id, open)}><TooltipTrigger asChild><NavLink {...linkProps} renderLink={renderLink} /></TooltipTrigger>{collapsed && tooltipsEnabled && !suppressTooltips ? <TooltipContent side={tooltipSide}>{item.label}</TooltipContent> : null}</Tooltip></li>;
             })}
           </ul>
         </div>
@@ -114,25 +116,40 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
 export function AdminShell({ brand, compactBrand, navigation, header, children, activeItemId, actions, footer, compactFooter, sidebarState: controlledSidebarState, defaultSidebarState = "expanded", onSidebarStateChange, contentId, navLabel = "Main navigation", className, contentAs: Content = "main", renderLink }: AdminShellProps) {
   const generatedId = useId();
   const mainId = contentId ?? `pk-admin-content-${generatedId}`;
+  const sidebarId = `pk-admin-sidebar-${generatedId}`;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [wideLayout, setWideLayout] = useState(true);
-  const [openControl, setOpenControl] = useState<AdminSidebarState | null>(null);
+  const [openControl, setOpenControl] = useState(false);
   const [internalSidebarState, setInternalSidebarState] = useState(defaultSidebarState);
   const sidebarState = controlledSidebarState ?? internalSidebarState;
   const shellRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
-  const expandRef = useRef<HTMLButtonElement>(null);
+  const cycleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLElement>(null);
+  const sidebarFocusRef = useRef<HTMLElement | null>(null);
 
   function changeSidebarState(nextState: AdminSidebarState) {
+    if (nextState === sidebarState) return;
+    setOpenControl(false);
     if (controlledSidebarState === undefined) setInternalSidebarState(nextState);
     onSidebarStateChange?.(nextState);
   }
 
-  function changeControlTooltip(state: AdminSidebarState, open: boolean) {
-    if (open && expandRef.current?.getClientRects().length === 0) return;
-    setOpenControl((current) => open ? state : current === state ? null : current);
+  const drag = useAdminSidebarDrag({ state: sidebarState, wideLayout, frameRef, sidebarRef, onChange: changeSidebarState });
+  const cycle = sidebarState === "expanded"
+    ? { state: "collapsed" as const, label: "Minimise sidebar", icon: <PanelLeftCloseIcon /> }
+    : sidebarState === "collapsed"
+      ? { state: "hidden" as const, label: "Hide sidebar", icon: <PanelLeftIcon /> }
+      : { state: "expanded" as const, label: "Expand sidebar", icon: <PanelLeftOpenIcon /> };
+  const sidebarView = drag.width === null ? sidebarState === "expanded" ? "expanded" : "collapsed"
+    : drag.width < (sidebarWidths.collapsed + sidebarWidths.expanded) / 2 ? "collapsed" : "expanded";
+  const frameStyle: CSSProperties & { "--pk-admin-sidebar-width"?: string } = drag.width === null ? {} : { "--pk-admin-sidebar-width": `${drag.width}px` };
+
+  function changeControlTooltip(open: boolean) {
+    if (drag.dragging || (open && cycleRef.current?.getClientRects().length === 0)) return;
+    setOpenControl(open);
   }
 
   function restoreMobileFocus(event: FocusEvent<HTMLElement>) {
@@ -141,12 +158,20 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
     if (event.relatedTarget === null && event.target.getClientRects().length === 0 && menu && menu.getClientRects().length > 0) menu.focus();
   }
 
+  function sidebarBlur(event: FocusEvent<HTMLElement>) {
+    restoreMobileFocus(event);
+    if (event.relatedTarget !== null || !sidebarRef.current?.inert) sidebarFocusRef.current = null;
+  }
+
   useLayoutEffect(() => {
-    if (sidebarState !== "hidden" || !sidebarRef.current?.contains(document.activeElement)) return;
-    const restore = expandRef.current;
+    if (sidebarState !== "hidden" || (!sidebarRef.current?.contains(document.activeElement) && !(sidebarFocusRef.current && document.activeElement === document.body))) return;
+    const restore = cycleRef.current;
     if (restore && restore.getClientRects().length > 0) restore.focus();
     else contentRef.current?.focus();
+    sidebarFocusRef.current = null;
   }, [sidebarState]);
+
+  useEffect(() => { if (drag.dragging) setOpenControl(false); }, [drag.dragging]);
 
   useEffect(() => {
     const shell = shellRef.current;
@@ -158,24 +183,30 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
       const wide = entry.contentRect.width > breakpoint;
       setWideLayout(wide);
       if (wide) setDrawerOpen(false);
-      else if (expandRef.current?.getClientRects().length === 0) setOpenControl(null);
+      else {
+        drag.cancel();
+        if (cycleRef.current?.getClientRects().length === 0) setOpenControl(false);
+      }
     });
     observer.observe(shell);
     return () => observer.disconnect();
-  }, []);
+  }, [drag.cancel]);
 
   const navProps: NavigationProps = { groups: navigation, activeItemId, label: navLabel, renderLink };
 
   return (
     <TooltipProvider><div className={classes("pk-admin-shell", className)} ref={shellRef}>
       <a className="pk-admin-skip" href={`#${mainId}`}>Skip to main content</a>
-      <div className="pk-admin-frame" data-sidebar-state={sidebarState}>
-        <aside ref={sidebarRef} onBlurCapture={restoreMobileFocus} className="pk-admin-sidebar" data-sidebar-state={sidebarState} aria-label="Application sidebar">
+      <div ref={frameRef} style={frameStyle} className="pk-admin-frame" data-sidebar-state={sidebarState} data-dragging={drag.dragging || undefined}>
+        <aside ref={sidebarRef} id={sidebarId} onFocusCapture={(event) => { sidebarFocusRef.current = event.target; }} onBlurCapture={sidebarBlur} className="pk-admin-sidebar" data-sidebar-state={sidebarState} data-sidebar-view={sidebarView} aria-label="Application sidebar" aria-hidden={sidebarState === "hidden" || undefined} inert={sidebarState === "hidden"}>
+          <div className="pk-admin-sidebar-inner">
           <div className="pk-admin-brand"><div className="pk-admin-full-brand">{brand}</div><div className="pk-admin-compact-brand">{compactBrand ?? <LayoutDashboardIcon />}</div></div>
-          <Navigation {...navProps} collapsed={sidebarState === "collapsed"} tooltipsEnabled={wideLayout} />
+          <Navigation {...navProps} collapsed={sidebarState === "collapsed"} tooltipsEnabled={wideLayout} suppressTooltips={drag.dragging} />
           {footer ? <div className="pk-admin-sidebar-footer pk-admin-full-footer">{footer}</div> : null}
           {compactFooter ? <div className="pk-admin-sidebar-footer pk-admin-compact-footer">{compactFooter}</div> : null}
+          </div>
         </aside>
+        <div {...drag.handleProps} onBlurCapture={restoreMobileFocus} className="pk-admin-resize" role="separator" tabIndex={0} aria-label="Resize sidebar" aria-orientation="vertical" aria-controls={sidebarId} aria-valuemin={0} aria-valuemax={sidebarWidths.expanded} aria-valuenow={Math.round(drag.width ?? sidebarWidths[sidebarState])} aria-valuetext={`${sidebarState[0]?.toUpperCase()}${sidebarState.slice(1)}`} />
         <div className="pk-admin-workspace">
           <header className="pk-admin-header">
             <Dialog open={drawerOpen} onOpenChange={setDrawerOpen}>
@@ -202,9 +233,7 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
               </DialogContent>
             </Dialog>
             <div className="pk-admin-sidebar-controls" role="group" aria-label="Sidebar display" onBlurCapture={restoreMobileFocus}>
-              <Tooltip open={wideLayout && openControl === "expanded"} onOpenChange={(nextOpen) => changeControlTooltip("expanded", nextOpen)}><TooltipTrigger asChild><Button ref={expandRef} variant="ghost" shape="icon" size="sm" aria-label="Expand sidebar" aria-pressed={sidebarState === "expanded"} onClick={() => changeSidebarState("expanded")}><PanelLeftOpenIcon /></Button></TooltipTrigger><TooltipContent side="bottom">Expand sidebar</TooltipContent></Tooltip>
-              <Tooltip open={wideLayout && openControl === "collapsed"} onOpenChange={(nextOpen) => changeControlTooltip("collapsed", nextOpen)}><TooltipTrigger asChild><Button variant="ghost" shape="icon" size="sm" aria-label="Minimise sidebar" aria-pressed={sidebarState === "collapsed"} onClick={() => changeSidebarState("collapsed")}><PanelLeftCloseIcon /></Button></TooltipTrigger><TooltipContent side="bottom">Minimise sidebar</TooltipContent></Tooltip>
-              <Tooltip open={wideLayout && openControl === "hidden"} onOpenChange={(nextOpen) => changeControlTooltip("hidden", nextOpen)}><TooltipTrigger asChild><Button variant="ghost" shape="icon" size="sm" aria-label="Hide sidebar" aria-pressed={sidebarState === "hidden"} onClick={() => changeSidebarState("hidden")}><PanelLeftIcon /></Button></TooltipTrigger><TooltipContent side="bottom">Hide sidebar</TooltipContent></Tooltip>
+              <Tooltip open={wideLayout && !drag.dragging && openControl} onOpenChange={changeControlTooltip}><TooltipTrigger asChild><Button ref={cycleRef} variant="ghost" shape="icon" size="sm" aria-label={cycle.label} onClick={() => { drag.cancel(); changeSidebarState(cycle.state); }}>{cycle.icon}</Button></TooltipTrigger>{!drag.dragging ? <TooltipContent side="bottom">{cycle.label}</TooltipContent> : null}</Tooltip>
             </div>
             <div className="pk-admin-header-content">{header}</div>
             {actions ? <div className="pk-admin-actions">{actions}</div> : null}

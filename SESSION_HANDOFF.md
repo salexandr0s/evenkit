@@ -7,16 +7,19 @@ The user's active goal is to substantially improve every component one by one. E
 ## Completed
 
 - Tokens (`ea8bacc`): searchable variable reference, copying, specimens, and 33 contrast pairs. Subsequent Dialog/Tooltip/AdminShell additions bring the reference to 204 variables.
-- Icons (`f3b69f9`, expanded in this commit): search, categories/aliases, sizes, named imports, accessible examples. Now 53 wrappers, including distinct UserIcon and UsersIcon.
+- Icons (`f3b69f9`, expanded in `a5d173a`): search, categories/aliases, sizes, named imports, accessible examples. Sidebar work brought the set to 53 wrappers, including distinct UserIcon and UsersIcon; concurrent chat work adds more.
 - Buttons (`829c1a2`): icon shape/slots, full width, pressed state, stable loading, touch targets.
 - Fields (`edc880b`): shared frame, TextareaField, label cues, stable adornments, native refs/descriptions, RTL/wrapping, validation/reset focus, read-only states.
 - Select (`1dfd7f9`): grouped/described options, SelectField, empty-menu focus/recovery, intrinsic popup sizing, touch/RTL layout, validation/form examples.
 - Dialog (`3030904`): three widths, header/body/footer composition, optional body scrolling, short-window fallback, logical close/title spacing, edit/brief/RTL examples.
-- Tooltips and AdminShell (commit includes this handoff): reusable custom tooltips, three sidebar display modes, mobile/focus recovery, icon expansion.
+- Tooltips and AdminShell (`a5d173a`): reusable custom tooltips, three sidebar display modes, mobile/focus recovery, icon expansion.
+- Sidebar drag refinement (commit includes this handoff): magnetic edge dragging, 160ms transitions, one changing cycle button, keyboard resizing, cancellation, and reduced motion.
 
 ## Sidebar and tooltip implementation
 
-- `packages/ui/src/admin-shell.tsx/css`: exported AdminSidebarState=`expanded|collapsed|hidden`; controlled sidebarState/onSidebarStateChange or uncontrolled defaultSidebarState. Widths 260/72/0; permanent desktop header controls restore any mode. compactBrand/compactFooter and AdminNavItem.end are additive. Legacy missing icons get CircleIcon. Active links use the accent surface and logical inset indicator.
+- `packages/ui/src/admin-shell.tsx/css`: exported AdminSidebarState=`expanded|collapsed|hidden`; controlled sidebarState/onSidebarStateChange or uncontrolled defaultSidebarState. Widths 260/72/0 in a stable animated two-column grid. One stable header button cycles expanded→collapsed→hidden→expanded; icon/name/tooltip describe the next action. compactBrand/compactFooter and AdminNavItem.end are additive. Legacy missing icons get CircleIcon. Active links use the accent surface and logical inset indicator.
+- Internal `use-admin-sidebar-drag.ts` tracks a temporary width from the actual rendered start width, with 24px magnetic attraction, pointer capture, and nearest-mode release. Callbacks fire only on changed-mode commits. Escape, pointercancel/lost capture, external state changes, unmount, and mobile resize clean up. Live frame width/handle visibility guard move and release against observer lag. No animation while dragging; normal settle is 160ms, reduced motion disables it.
+- The separator stays outside the inert/clipped sidebar and remains reachable at width0; it has a visible grip, 44px coarse-pointer hit area, keyboard arrows with RTL direction, Home/End, numeric values/state text, and an aside ID association. Fixed inner widths prevent label reflow during movement. Sidebar focus tracking handles inert blur without stealing separator focus.
 - Custom renderLink retains its ReactNode return API through an internal forwarded NavLink. Consumers must spread supplied native props, events, ARIA attributes, and anchor ref. Collapsed links have accessible names independently of tooltips.
 - Navigation receives actual collapsed mode separately from tooltipsEnabled=wideLayout. Visible focus/hover intent is retained before the ResizeObserver state commits; rendering is gated by wideLayout. Narrow cleanup checks actual visibility to avoid erasing new desktop intent. Header tooltips use the same visibility rule. Existing mobile drawer closes on route selection, Escape, outside click, and container growth.
 - Guarded onBlurCapture on sidebar and desktop controls recovers focus to the visible mobile menu when CSS hides the focused target. Controlled hiding uses a layout effect to focus Expand sidebar. No global focus tracker.
@@ -24,13 +27,17 @@ The user's active goal is to substantially improve every component one by one. E
 - `packages/tokens/src/foundation.ts`: layout.sidebarCollapsed=72px, layout.tooltip=280px, motion.delay.tooltip=400ms, with provenance. All 204 resolved variables appear in the existing reference.
 - `packages/ui/src/icons.tsx`, catalog metadata, public exports, and docs add 22 wrappers (53 total). UserIcon is the individual-person glyph, UsersIcon the team glyph. Static wrappers preserve accessibility, refs, token sizes, and tree shaking.
 - Catalog has a new Tooltips entry (12 entries total), bookmark/help/placement examples, controlled shell preview, navigation counts, and single-person team rows. README and both packed consumer fixtures cover the public additions.
-- `tests/browser/sidebar-tooltip.spec.ts`: four journeys covering modes/space, icons, tooltip hover/focus/dismissal, mobile state and focus, immediate desktop focus after resize, inherited RTL, controlled hiding, composed descriptions, long text, viewport bounds, and reduced motion.
+- `tests/browser/sidebar-tooltip.spec.ts`: six journeys covering the single cycle control, modes/space, pointer tracking and snapping, hidden restoration, Escape/mobile cancellation, separator keyboard/RTL and values, reduced motion, icons, tooltips, mobile focus, immediate focus after resize, controlled hiding, and viewport bounds.
 
 ## Verification
 
 Production build, workspace/test type checks, ESLint, seven token tests, all 23 Chromium journeys, and packed Vite/Next consumers passed during this update. Independent consumers built and passed HTTP/stylesheet checks; their owned servers and temporary directory were removed. After the final focus/resize fixes, UI/catalog builds, type checks, lint, and all seven affected sidebar/tooltip/admin journeys passed again. No remaining review findings.
 
-Root inspected light expanded, hidden, and collapsed states and the custom tooltip, plus dark views. Screenshot `.artifacts/sidebar-reference.png` shows the collapsed Team icon, tooltip, and distinct person icons. Firefox and Safari remain untested.
+The later drag/single-button refinement passed build, types, lint, nine affected Chromium journeys, and independent packed Vite/Next builds plus HTTP/CSS checks in an isolated copy of `a5d173a` plus only the sidebar source/test changes. Its first pointer test caught a release-before-observer race, fixed with live geometry checks. The shared workspace build also passed after concurrent chat files landed. Source review has no remaining findings. The isolated preview was stopped and its verification directory moved to Trash; its package report is saved in `.artifacts/sidebar-package-verification.json`.
+
+Root inspected dark dragging, the single changing icon, and restoration from hidden. Screenshot `.artifacts/sidebar-drag-reference.png` records the refinement; `.artifacts/sidebar-reference.png` records the prior tooltip work. Firefox and Safari remain untested.
+
+Unrelated chat-component work is occurring concurrently in this same checkout, including shared README/catalog files and UI exports/icons/bundling. Preserve it. Stage only the sidebar hunks in shared files; do not include or revert other work. Integrate newly added components into the final goal review once that work is complete.
 
 ## Remaining work
 

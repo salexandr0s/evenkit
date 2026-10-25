@@ -84,8 +84,8 @@ export const entries: readonly CatalogEntry[] = [
     id: "admin-shell",
     name: "Admin shell",
     group: "Compositions",
-    description: "An application frame with expanded, icon-only, and hidden sidebar modes. Custom tooltips label the icon rail; narrow screens use a drawer.",
-    tags: ["admin", "shell", "dashboard", "sidebar", "navigation", "layout", "mobile", "drawer", "composition", "collapse", "hide", "tooltip"],
+    description: "Drag the sidebar edge to snap between expanded, icon-only, and hidden modes, or use the single display control. Custom tooltips label the icon rail; narrow screens use a drawer.",
+    tags: ["admin", "shell", "dashboard", "sidebar", "navigation", "layout", "mobile", "drawer", "composition", "collapse", "hide", "tooltip", "drag", "resize", "snap"],
     source: "Original kit composition · Radix mobile drawer",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dialog",
     usage: 'import { useState } from "react";\nimport { AdminShell, FolderIcon, LayoutDashboardIcon,\n  type AdminSidebarState } from "@project-kit/ui";\n\nconst [sidebar, setSidebar] = useState<AdminSidebarState>("expanded");\n\n<AdminShell\n  brand="Demo workspace"\n  compactBrand={<LayoutDashboardIcon />}\n  sidebarState={sidebar}\n  onSidebarStateChange={setSidebar}\n  navigation={[{ label: "Workspace", items: [{\n    id: "projects", label: "Projects", href: "/projects",\n    icon: <FolderIcon />\n  }] }]}\n  activeItemId="projects"\n  header="Projects"\n>\n  <h1>Your projects</h1>\n</AdminShell>\n\n// States: expanded | collapsed | hidden\n// Or use defaultSidebarState for an uncontrolled shell.\n// Custom renderLink must forward supplied props and the anchor ref.\n// Use contentAs="section" inside an existing main.'

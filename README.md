@@ -162,7 +162,9 @@ TooltipContent includes the styled surface, text wrapper, and arrow. It supports
 
 ## Admin shell and tables
 
-`AdminShell` provides expanded (260px), collapsed (72px icon rail), and hidden desktop sidebar states. Header controls stay available when hidden so the sidebar can be restored. Use `defaultSidebarState` for an uncontrolled shell, or `sidebarState` and `onSidebarStateChange` for application state. The shell keeps that desktop choice while narrow containers use a full-label drawer.
+`AdminShell` provides expanded (260px), collapsed (72px icon rail), and hidden desktop sidebar states. One header button cycles through these modes; its icon, label, and tooltip describe the next action. Use `defaultSidebarState` for an uncontrolled shell, or `sidebarState` and `onSidebarStateChange` for application state. The shell keeps that desktop choice while narrow containers use a full-label drawer.
+
+Drag the sidebar's outer edge to resize it. The edge attracts gently toward each mode and snaps to the nearest one on release. A grip remains available when hidden. Dragging follows the pointer directly; buttons and release use a short eased transition, disabled for reduced motion. The separator also supports Left/Right arrows, Home to hide, and End to expand, with direction-aware arrows in RTL. Escape cancels a drag. The change callback runs when a new mode is committed, not on each pointer move.
 
 ```tsx
 import { useState } from "react";
