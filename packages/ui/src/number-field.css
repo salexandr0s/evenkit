@@ -1,0 +1,6 @@
+.pk-number-field { min-width: 0; }
+.pk-number-field .pk-input { font-variant-numeric: tabular-nums; }
+.pk-number-field .pk-input-adornment[data-side="end"] { padding-inline-end: var(--pk-space-1); gap: var(--pk-space-2); }
+.pk-number-steppers { display: inline-flex; flex: none; align-items: center; gap: var(--pk-space-0-5); padding-inline-start: var(--pk-space-1); border-inline-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.pk-number-unit { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-medium); overflow-wrap: anywhere; }
+@media (max-width: 639px), (pointer: coarse) { .pk-number-steppers > button { min-width: var(--pk-layout-touch); min-height: var(--pk-layout-touch); } }

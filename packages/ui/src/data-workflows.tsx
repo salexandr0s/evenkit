@@ -4,6 +4,7 @@ import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, type C
 import { Button, ButtonLink } from "./button.js";
 import { classes } from "./classes.js";
 import { Spinner } from "./feedback.js";
+import { formatFileSize } from "./formatting.js";
 import { CircleAlertIcon, CircleCheckIcon, DownloadIcon, ExternalLinkIcon, FileTextIcon, RotateCcwIcon, TrashIcon, UploadIcon, XIcon } from "./icons.js";
 import { Progress } from "./selection-controls.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
@@ -188,7 +189,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(function F
   </div>;
 });
 
-export type FileRowState = "ready" | "uploading" | "complete" | "error";
+export type FileRowState = "ready" | "queued" | "uploading" | "complete" | "error" | "cancelled";
 export interface FileRowProps extends Omit<ComponentPropsWithoutRef<"li">, "title"> {
   name: string;
   sizeBytes?: number;
@@ -196,6 +197,8 @@ export interface FileRowProps extends Omit<ComponentPropsWithoutRef<"li">, "titl
   state?: FileRowState;
   progress?: number;
   message?: ReactNode;
+  /** A decorative thumbnail or other leading preview. */
+  preview?: ReactNode;
   href?: string;
   downloadHref?: string;
   onRemove?: () => void;
@@ -203,12 +206,12 @@ export interface FileRowProps extends Omit<ComponentPropsWithoutRef<"li">, "titl
   onCancel?: () => void;
   locale?: string;
 }
-export const FileRow = forwardRef<HTMLLIElement, FileRowProps>(function FileRow({ className, name, sizeBytes, fileType, state = "ready", progress, message, href, downloadHref, onRemove, onRetry, onCancel, locale, ...props }, ref) {
-  const formattedSize = sizeBytes === undefined ? undefined : sizeBytes < 1024 ? `${new Intl.NumberFormat(locale).format(sizeBytes)} B` : `${new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(sizeBytes / 1024)} KB`;
+export const FileRow = forwardRef<HTMLLIElement, FileRowProps>(function FileRow({ className, name, sizeBytes, fileType, state = "ready", progress, message, preview, href, downloadHref, onRemove, onRetry, onCancel, locale, ...props }, ref) {
+  const formattedSize = sizeBytes === undefined ? undefined : formatFileSize(sizeBytes, { ...(locale ? { locale } : {}), base: 1024 });
   const metadata = [fileType, formattedSize].filter(Boolean).join(" · ");
-  const stateLabel = { ready: "Ready", uploading: "Uploading", complete: "Complete", error: "Failed" }[state];
+  const stateLabel = { ready: "Ready", queued: "Queued", uploading: "Uploading", complete: "Complete", error: "Failed", cancelled: "Cancelled" }[state];
   return <li {...props} ref={ref} className={classes("pk-file-row", className)} data-state={state}>
-    <span className="pk-file-row-icon" aria-hidden="true"><FileTextIcon /></span>
+    <span className="pk-file-row-icon" aria-hidden="true">{preview ?? <FileTextIcon />}</span>
     <div className="pk-file-row-content">
       <span className="pk-file-name">{name}</span>
       <span className="pk-file-metadata">{metadata ? <span>{metadata}</span> : null}<span className="pk-file-state">{state === "uploading" ? <Spinner size="sm" aria-hidden="true" /> : state === "complete" ? <CircleCheckIcon size="sm" aria-hidden="true" /> : state === "error" ? <CircleAlertIcon size="sm" aria-hidden="true" /> : null}{stateLabel}</span></span>
@@ -218,8 +221,8 @@ export const FileRow = forwardRef<HTMLLIElement, FileRowProps>(function FileRow(
     <TooltipProvider><div className="pk-file-actions">
       {href ? <Tooltip><TooltipTrigger asChild><ButtonLink href={href} size="xs" variant="ghost" shape="icon" aria-label={`Open ${name}`}><ExternalLinkIcon size="sm" /></ButtonLink></TooltipTrigger><TooltipContent>{`Open ${name}`}</TooltipContent></Tooltip> : null}
       {downloadHref ? <Tooltip><TooltipTrigger asChild><ButtonLink href={downloadHref} download={name} size="xs" variant="ghost" shape="icon" aria-label={`Download ${name}`}><DownloadIcon size="sm" /></ButtonLink></TooltipTrigger><TooltipContent>{`Download ${name}`}</TooltipContent></Tooltip> : null}
-      {state === "error" && onRetry ? <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Retry ${name}`} onClick={onRetry}><RotateCcwIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Retry ${name}`}</TooltipContent></Tooltip> : null}
-      {state === "uploading" && onCancel ? <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Cancel ${name}`} onClick={onCancel}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Cancel ${name}`}</TooltipContent></Tooltip> : onRemove ? <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Remove ${name}`} onClick={onRemove}><TrashIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Remove ${name}`}</TooltipContent></Tooltip> : null}
+      {(state === "error" || state === "cancelled") && onRetry ? <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Retry ${name}`} onClick={onRetry}><RotateCcwIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Retry ${name}`}</TooltipContent></Tooltip> : null}
+      {(state === "uploading" || state === "queued") && onCancel ? <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Cancel ${name}`} onClick={onCancel}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Cancel ${name}`}</TooltipContent></Tooltip> : onRemove ? <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Remove ${name}`} onClick={onRemove}><TrashIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Remove ${name}`}</TooltipContent></Tooltip> : null}
     </div></TooltipProvider>
   </li>;
 });

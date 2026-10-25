@@ -14,6 +14,11 @@ export interface RecordWorkflowProps {
   error?: ReactNode;
   onRetry?: () => void;
   initialEditId?: string;
+  /** Show record details when its name is activated; routing stays with the host. */
+  onOpenRecord?: (record: WorkflowRecord) => void;
+  /** Mount the existing editor without its list, using initialEditId. */
+  editorOnly?: boolean;
+  onEditorClose?: () => void;
 }
 interface Editor { original: WorkflowDraft; draft: WorkflowDraft }
 const statusOptions = [{ value: "draft", label: "Draft" }, { value: "active", label: "Active" }];
@@ -21,7 +26,7 @@ const blank: WorkflowDraft = { name: "", notes: "", status: "draft" };
 function sameDraft(left: WorkflowDraft, right: WorkflowDraft) { return left.name === right.name && left.notes === right.notes && left.status === right.status; }
 
 /** Editable application block. The host owns records, persistence, IDs and authorization. */
-export function RecordWorkflow({ records, onSave, title = "Projects", description = "Review and update projects.", loading = false, error, onRetry, initialEditId }: RecordWorkflowProps) {
+export function RecordWorkflow({ records, onSave, title = "Projects", description = "Review and update projects.", loading = false, error, onRetry, initialEditId, onOpenRecord, editorOnly = false, onEditorClose }: RecordWorkflowProps) {
   const initial = records.find(record => record.id === initialEditId);
   const [editor, setEditor] = useState<Editor | null>(() => initial ? { original: { ...initial }, draft: { ...initial } } : null);
   const [query, setQuery] = useState("");
@@ -54,6 +59,7 @@ export function RecordWorkflow({ records, onSave, title = "Projects", descriptio
   }
   function closeEditor() {
     request.current?.abort(); request.current = null; setPending(false); setConfirmDiscard(false); setEditor(null); setSaveError(""); setSaveNote("");
+    onEditorClose?.();
   }
   function requestClose() {
     request.current?.abort(); request.current = null; setPending(false);
@@ -92,12 +98,13 @@ export function RecordWorkflow({ records, onSave, title = "Projects", descriptio
   }
   function clearFilters() { setQuery(""); setAppliedQuery(""); setStatus("all"); setAppliedStatus("all"); }
   const columns: readonly DataTableColumn<WorkflowRecord>[] = [
-    { id: "name", header: "Project", accessor: record => record.name, overflow: "wrap" },
+    { id: "name", header: "Project", accessor: record => record.name, overflow: "wrap", ...(onOpenRecord ? { cell: (record: WorkflowRecord) => <Button variant="link" size="sm" aria-label={`View ${record.name}`} onClick={() => onOpenRecord(record)}>{record.name}</Button> } : {}) },
     { id: "status", header: "Status", accessor: record => record.status === "active" ? "Active" : "Draft", cell: record => <Badge size="sm" tone={record.status === "active" ? "success" : "neutral"} dot>{record.status === "active" ? "Active" : "Draft"}</Badge> },
     { id: "notes", header: "Notes", accessor: record => record.notes || "No notes", overflow: "wrap", cell: record => <span style={{ display: "block", minWidth: "var(--pk-layout-sidebar)" }}>{record.notes || "No notes"}</span> },
     { id: "actions", header: "Actions", accessor: () => "", sortable: false, searchable: false, cell: record => <Button variant="ghost" size="sm" aria-label={`Edit ${record.name}`} onClick={event => openEditor(record, event.currentTarget)}>Edit</Button> },
   ];
   return <section className="pk-record-workflow" aria-label={`${title} workflow`}>
+    {!editorOnly ? <>
     <header><PageHeader headingAs="h2" title={title} description={description} metadata={`${records.length} ${records.length === 1 ? "project" : "projects"} in total`} actions={<Button ref={createButton} startIcon={<PlusIcon size="sm" />} onClick={event => openEditor(null, event.currentTarget)}>Create project</Button>} /></header>
     <Stack gap="3">
       <FilterBar aria-label="Project filters" dirty={dirtyFilters} busy={loading} status={`${filtered.length} matching ${filtered.length === 1 ? "project" : "projects"}.`} onApply={() => { setAppliedQuery(query.trim()); setQuery(query.trim()); setAppliedStatus(status); }} onClear={clearFilters}>
@@ -108,6 +115,7 @@ export function RecordWorkflow({ records, onSave, title = "Projects", descriptio
     </Stack>
     <DataTable caption="Project records" data={filtered} columns={columns} getRowId={record => record.id} searchable={false} initialPageSize={3} pageSizeOptions={[3, 5, 10]} loading={loading} {...(error === undefined ? {} : { error })} {...(onRetry ? { onRetry } : {})} emptyTitle={records.length ? "No projects match these filters" : "No projects yet"} emptyDescription={records.length ? "Clear the applied filters to see your projects." : "Create a project to start this list."} emptyAction={records.length ? <Button onClick={() => { clearFilters(); searchInput.current?.focus(); }}>Clear filters</Button> : <Button onClick={event => openEditor(null, event.currentTarget)}>Create your first project</Button>} />
     <Inline className="pk-record-result" role="status" gap="2">{result ? <CircleCheckIcon size="sm" /> : null}{result}</Inline>
+    </> : null}
     <Dialog open={editor !== null} onOpenChange={open => { if (!open) requestClose(); }}>
       <DialogContent showCloseButton={false} scroll="body" onCloseAutoFocus={event => { event.preventDefault(); (returnTarget.current?.isConnected ? returnTarget.current : createButton.current)?.focus(); }} onEscapeKeyDown={event => { event.preventDefault(); if (confirmDiscard) { setConfirmDiscard(false); queueMicrotask(() => nameInput.current?.focus()); } else requestClose(); }} onPointerDownOutside={event => { event.preventDefault(); if (!confirmDiscard) requestClose(); }}>
         {confirmDiscard ? <><DialogHeader><DialogTitle>Discard changes?</DialogTitle><DialogDescription>Your unsaved changes will be removed.</DialogDescription></DialogHeader><DialogBody><p>Keep editing to return to this draft, or discard it and return to the list.</p></DialogBody><DialogFooter><Button ref={keepEditing} variant="outline" onClick={() => { setConfirmDiscard(false); queueMicrotask(() => nameInput.current?.focus()); }}>Keep editing</Button><Button variant="destructive" onClick={closeEditor}>Discard changes</Button></DialogFooter></> : <>

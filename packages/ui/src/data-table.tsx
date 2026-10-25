@@ -17,6 +17,8 @@ import { Pagination } from "./navigation.js";
 import { Checkbox } from "./selection-controls.js";
 import { Select } from "./select.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
+import { BulkActionBar } from "./table-controls.js";
+import type { DataTableRemote } from "./remote-table.js";
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -44,6 +46,8 @@ export interface DataTableColumn<T extends object> {
   align?: "start" | "end";
   sortable?: boolean;
   searchable?: boolean;
+  /** Set false for identifying columns that must remain visible. */
+  hideable?: boolean;
   /** Applies to primitive accessor cells. Custom cell renderers own their content. */
   overflow?: DataTableCellOverflow;
 }
@@ -53,9 +57,11 @@ export interface DataTableSelection<T extends object> {
   onSelectionChange: (ids: readonly string[]) => void;
   getRowLabel?: (row: T) => string;
   actions?: ReactNode;
+  /** Supplying a scope label uses the reusable bulk bar. Selection always contains explicit IDs. */
+  scopeLabel?: string;
 }
 
-/** Client-side processing of the complete supplied dataset. Fetching stays in the host. */
+/** Client processing by default. In remote mode the host supplies an already processed page. */
 export interface DataTableProps<T extends object> {
   data: readonly T[];
   columns: readonly DataTableColumn<T>[];
@@ -75,13 +81,15 @@ export interface DataTableProps<T extends object> {
   emptyAction?: ReactNode;
   toolbar?: ReactNode;
   className?: string;
+  remote?: DataTableRemote;
+  hiddenColumnIds?: readonly string[];
 }
 
 export function DataTable<T extends object>({
   data, columns, getRowId, caption, density = "default", searchable = true,
   searchLabel = "Search records", initialPageSize = 10, pageSizeOptions = defaultPageSizes,
   selection, loading = false, error, onRetry, emptyTitle = "No records yet",
-  emptyDescription = "Add a record to get started.", emptyAction, toolbar, className,
+  emptyDescription = "Add a record to get started.", emptyAction, toolbar, className, remote, hiddenColumnIds,
 }: DataTableProps<T>) {
   const id = useId();
   const searchRef = useRef<HTMLInputElement>(null);
@@ -91,7 +99,12 @@ export function DataTable<T extends object>({
   const pageSizeRef = useRef<HTMLButtonElement>(null);
   const focusedControlRef = useRef<HTMLElement | null>(null);
   const focusedPageSizePopupRef = useRef(false);
-  const firstPageSize = Number.isInteger(initialPageSize) && initialPageSize > 0 ? initialPageSize : 10;
+  const visibleColumns = useMemo(() => {
+    const visible = columns.filter(column => column.hideable === false || !hiddenColumnIds?.includes(column.id));
+    return visible.length > 0 ? visible : columns.slice(0, 1);
+  }, [columns, hiddenColumnIds]);
+  const requestedPageSize = remote?.query.pageSize ?? initialPageSize;
+  const firstPageSize = Number.isInteger(requestedPageSize) && requestedPageSize > 0 ? requestedPageSize : 10;
   const sizes = useMemo(() => [...new Set([firstPageSize, ...pageSizeOptions.filter((size) => Number.isInteger(size) && size > 0)])].sort((a, b) => a - b), [firstPageSize, pageSizeOptions]);
   const sizeOptions = useMemo(() => sizes.map((size) => ({ value: String(size), label: String(size) })), [sizes]);
   const engineColumns = useMemo(() => columns.map((column) => ({
@@ -102,7 +115,10 @@ export function DataTable<T extends object>({
   const table = useTable({
     features, data, columns: engineColumns, getRowId,
     initialState: { pagination: { pageIndex: 0, pageSize: firstPageSize } },
-    state: { rowSelection: selected },
+    state: { rowSelection: selected, ...(remote ? { pagination: { pageIndex: remote.query.pageIndex, pageSize: remote.query.pageSize }, globalFilter: remote.query.search, sorting: remote.query.sort ? [{ id: remote.query.sort.id, desc: remote.query.sort.direction === "desc" }] : [] } : {}) },
+    ...(remote ? {
+      manualPagination: true, manualSorting: true, manualFiltering: true, rowCount: remote.total,
+    } : {}),
     onRowSelectionChange: (updater) => {
       const next = typeof updater === "function" ? updater(selected) : updater;
       selection?.onSelectionChange(Object.keys(next).filter((key) => next[key]));
@@ -111,7 +127,7 @@ export function DataTable<T extends object>({
     enableSubRowSelection: false,
     enableRowRangeSelection: false,
     enableMultiSort: false,
-    autoResetPageIndex: true,
+    autoResetPageIndex: remote === undefined,
     globalFilterFn: "includesString",
   });
   const rows = table.getRowModel().rows;
@@ -120,13 +136,23 @@ export function DataTable<T extends object>({
   const search = typeof table.state.globalFilter === "string" ? table.state.globalFilter : "";
   const hasError = error !== undefined && error !== null && error !== false;
   const unavailable = loading || hasError;
+  const filteredEmpty = remote ? search.length > 0 : data.length > 0;
   // TanStack resets an out-of-range page after a dataset change. Do not briefly
   // report no matches or an impossible range before that reset completes.
-  const pageResetPending = !unavailable && total > 0 && rows.length === 0;
+  const lastPage = Math.max(0, Math.ceil(total / pageSize) - 1);
+  const pageResetPending = !unavailable && (remote ? pageIndex > lastPage : total > 0 && rows.length === 0);
   const controlsDisabled = unavailable || pageResetPending;
   const selectedCount = Object.keys(selected).length;
-  const columnCount = columns.length + (selection ? 1 : 0);
-  const resetSearch = () => { searchRef.current?.focus(); table.setGlobalFilter(""); table.firstPage(); };
+  const columnCount = visibleColumns.length + (selection ? 1 : 0);
+  function changeSearch(value: string) {
+    if (remote) remote.onQueryChange({ ...remote.query, search: value, pageIndex: 0 });
+    else { table.setGlobalFilter(value); table.firstPage(); }
+  }
+  const resetSearch = () => { searchRef.current?.focus(); changeSearch(""); };
+  useLayoutEffect(() => {
+    if (!remote || unavailable) return;
+    if (remote.query.pageIndex > lastPage) remote.onQueryChange({ ...remote.query, pageIndex: lastPage });
+  }, [remote, unavailable, lastPage]);
   const range = total === 0 ? "0 records" : `${pageIndex * pageSize + 1}–${pageIndex * pageSize + rows.length} of ${total} ${total === 1 ? "record" : "records"}`;
   const status = loading ? "Loading records…" : hasError ? "Records unavailable" : pageResetPending ? "Updating records…" : `${range}${selection ? ` · ${selectedCount} selected` : ""}`;
 
@@ -134,7 +160,7 @@ export function DataTable<T extends object>({
     const target = event.target;
     const popupId = pageSizeRef.current?.getAttribute("aria-controls");
     const inPageSizePopup = popupId ? document.getElementById(popupId)?.contains(target) === true : false;
-    const owned = inPageSizePopup || searchAreaRef.current?.contains(target) || scrollRef.current?.contains(target) || paginationRef.current?.contains(target) || target.dataset.tableControl === "clear-selection";
+    const owned = inPageSizePopup || searchAreaRef.current?.contains(target) || scrollRef.current?.contains(target) || paginationRef.current?.contains(target) || target.dataset.tableControl === "clear-selection" || target.closest(".pk-bulk-action-bar") !== null;
     focusedControlRef.current = owned ? target : null;
     focusedPageSizePopupRef.current = inPageSizePopup;
   }
@@ -168,36 +194,39 @@ export function DataTable<T extends object>({
   }, [controlsDisabled, hasError, loading]);
 
   return (
-    <TooltipProvider><div className={classes("pk-data-table", className)} data-density={density} onFocusCapture={trackFocus} onBlurCapture={releaseFocus}>
+    <TooltipProvider><div className={classes("pk-data-table", className)} data-density={density} data-remote={remote ? true : undefined} onFocusCapture={trackFocus} onBlurCapture={releaseFocus}>
       {searchable || toolbar ? (
         <div className="pk-data-table-toolbar">
-          {searchable ? <div ref={searchAreaRef} className="pk-data-table-search"><Label htmlFor={`${id}-search`}>{searchLabel}</Label><Input ref={searchRef} id={`${id}-search`} type="search" controlSize="sm" value={search} disabled={controlsDisabled} placeholder="Search…" startAdornment={<SearchIcon size="sm" />} endAdornment={search && rows.length > 0 ? <Tooltip><TooltipTrigger asChild><Button size="sm" shape="icon" variant="ghost" aria-label="Clear search" disabled={controlsDisabled} onClick={resetSearch}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Clear search</TooltipContent></Tooltip> : undefined} onChange={(event) => { table.setGlobalFilter(event.target.value); table.firstPage(); }} /></div> : null}
+          {searchable ? <div ref={searchAreaRef} className="pk-data-table-search"><Label htmlFor={`${id}-search`}>{searchLabel}</Label><Input ref={searchRef} id={`${id}-search`} type="search" controlSize="sm" value={search} disabled={!remote && controlsDisabled} placeholder="Search…" startAdornment={<SearchIcon size="sm" />} endAdornment={search && (remote || rows.length > 0) ? <Tooltip><TooltipTrigger asChild><Button size="sm" shape="icon" variant="ghost" aria-label="Clear search" disabled={!remote && controlsDisabled} onClick={resetSearch}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Clear search</TooltipContent></Tooltip> : undefined} onChange={(event) => changeSearch(event.target.value)} /></div> : null}
           {toolbar ? <div className="pk-data-table-actions">{toolbar}</div> : null}
         </div>
       ) : null}
-      {selection && selectedCount > 0 ? <div className="pk-data-table-selection-bar" role="group" aria-label="Selected records"><p>{selectedCount} selected</p><div className="pk-data-table-selection-actions">{selection.actions}<Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label="Clear selection" data-table-control="clear-selection" disabled={controlsDisabled} onClick={() => { scrollRef.current?.focus(); selection.onSelectionChange([]); }}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Clear selection</TooltipContent></Tooltip></div></div> : null}
+      {selection && selectedCount > 0 ? selection.scopeLabel ? <BulkActionBar count={selectedCount} scopeLabel={selection.scopeLabel} disabled={controlsDisabled} onClear={() => { scrollRef.current?.focus(); selection.onSelectionChange([]); }}>{selection.actions}</BulkActionBar> : <div className="pk-data-table-selection-bar" role="group" aria-label="Selected records"><p>{selectedCount} selected</p><div className="pk-data-table-selection-actions">{selection.actions}<Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label="Clear selection" data-table-control="clear-selection" disabled={controlsDisabled} onClick={() => { scrollRef.current?.focus(); selection.onSelectionChange([]); }}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Clear selection</TooltipContent></Tooltip></div></div> : null}
       <div ref={scrollRef} className="pk-data-table-scroll" tabIndex={0} role="region" aria-label={`${caption} table`} aria-busy={loading || undefined}>
         <table>
           <caption>{caption}</caption>
           <thead><tr>
             {selection ? <th scope="col" className="pk-data-table-selection"><Checkbox className="pk-data-table-checkbox" aria-label="Select all rows on this page" checked={table.getIsAllPageRowsSelected() ? true : table.getIsSomePageRowsSelected() ? "indeterminate" : false} onCheckedChange={checked => table.toggleAllPageRowsSelected(checked === true)} disabled={controlsDisabled || rows.length === 0} /></th> : null}
-            {columns.map((column) => {
+            {visibleColumns.map((column) => {
               const engineColumn = table.getColumn(column.id);
               const sorted = engineColumn?.getIsSorted() ?? false;
               const sortable = engineColumn?.getCanSort() ?? false;
               const SortIcon = sorted === "asc" ? ArrowUpIcon : sorted === "desc" ? ArrowDownIcon : ArrowUpDownIcon;
               return <th key={column.id} scope="col" data-align={column.align ?? "start"} aria-sort={sortable ? sorted === "asc" ? "ascending" : sorted === "desc" ? "descending" : "none" : undefined}>
-                {sortable ? <button className="pk-data-table-sort" type="button" disabled={controlsDisabled} aria-label={`Sort by ${column.header}`} onClick={() => { engineColumn?.toggleSorting(); table.firstPage(); }}><span>{column.header}</span><SortIcon size="sm" /></button> : column.header}
+                {sortable ? <button className="pk-data-table-sort" type="button" disabled={controlsDisabled} aria-label={`Sort by ${column.header}`} onClick={() => {
+                  if (remote) remote.onQueryChange({ ...remote.query, pageIndex: 0, sort: sorted === "asc" ? { id: column.id, direction: "desc" } : sorted === "desc" ? null : { id: column.id, direction: "asc" } });
+                  else { engineColumn?.toggleSorting(); table.firstPage(); }
+                }}><span>{column.header}</span><SortIcon size="sm" /></button> : column.header}
               </th>;
             })}
           </tr></thead>
           <tbody>
             {loading || pageResetPending ? <tr><td colSpan={columnCount}><div className="pk-data-table-state" aria-hidden="true"><Spinner aria-hidden="true" />{loading ? "Loading records…" : "Updating records…"}</div></td></tr>
               : hasError ? <tr><td colSpan={columnCount}><div role="alert"><EmptyState size="sm" icon={<CircleAlertIcon />} title="Records could not be loaded" description={error} action={onRetry ? <Button size="sm" variant="outline" onClick={() => { scrollRef.current?.focus(); onRetry(); }}>Try again</Button> : undefined} /></div></td></tr>
-                : total === 0 ? <tr><td colSpan={columnCount}><EmptyState size="sm" icon={data.length === 0 ? <InboxIcon /> : <SearchIcon />} title={data.length === 0 ? emptyTitle : "No matching records"} description={data.length === 0 ? emptyDescription : "Try a different search or clear the current search."} action={data.length === 0 ? emptyAction : <Button size="sm" variant="outline" onClick={resetSearch}>Clear search</Button>} /></td></tr>
+                : total === 0 ? <tr><td colSpan={columnCount}><EmptyState size="sm" icon={filteredEmpty ? <SearchIcon /> : <InboxIcon />} title={filteredEmpty ? "No matching records" : emptyTitle} description={filteredEmpty ? "Try a different search or clear the current search." : emptyDescription} action={filteredEmpty ? <Button size="sm" variant="outline" onClick={resetSearch}>Clear search</Button> : emptyAction} /></td></tr>
                   : rows.map((row) => <tr key={row.id} data-selected={row.getIsSelected() || undefined}>
                     {selection ? <td className="pk-data-table-selection"><Checkbox className="pk-data-table-checkbox" aria-label={`Select ${selection.getRowLabel?.(row.original) ?? String(columns[0]?.accessor(row.original) ?? row.id)}`} checked={row.getIsSelected()} onCheckedChange={checked => row.toggleSelected(checked === true)} /></td> : null}
-                    {columns.map((column) => <td key={column.id} data-align={column.align ?? "start"}>{column.cell ? <div className="pk-data-table-cell" data-overflow="custom">{column.cell(row.original)}</div> : <DataTableCell value={column.accessor(row.original)} overflow={column.overflow ?? "truncate"} />}</td>)}
+                    {visibleColumns.map((column) => <td key={column.id} data-align={column.align ?? "start"}>{column.cell ? <div className="pk-data-table-cell" data-overflow="custom">{column.cell(row.original)}</div> : <DataTableCell value={column.accessor(row.original)} overflow={column.overflow ?? "truncate"} />}</td>)}
                   </tr>)}
           </tbody>
         </table>
@@ -205,10 +234,10 @@ export function DataTable<T extends object>({
       <div className="pk-data-table-footer">
         <p role="status" aria-atomic="true">{status}</p>
         <div ref={paginationRef} className="pk-data-table-pagination">
-          <div className="pk-data-table-page-size"><Label htmlFor={`${id}-size`}>Rows per page</Label><Select ref={pageSizeRef} id={`${id}-size`} controlSize="sm" value={String(pageSize)} options={sizeOptions} disabled={controlsDisabled} onValueChange={(value) => { table.setPageSize(Number(value)); table.firstPage(); }} /></div>
+          <div className="pk-data-table-page-size"><Label htmlFor={`${id}-size`}>Rows per page</Label><Select ref={pageSizeRef} id={`${id}-size`} controlSize="sm" value={String(pageSize)} options={sizeOptions} disabled={controlsDisabled} onValueChange={(value) => { if (remote) remote.onQueryChange({ ...remote.query, pageSize: Number(value), pageIndex: 0 }); else { table.setPageSize(Number(value)); table.firstPage(); } }} /></div>
           <span>{unavailable ? "Page unavailable" : pageResetPending ? "Updating page" : `Page ${Math.min(pageIndex + 1, Math.max(1, table.getPageCount()))} of ${Math.max(1, table.getPageCount())}`}</span>
           <Pagination compact showStatus={false} page={pageIndex + 1} pageCount={Math.max(1, table.getPageCount())} disabled={controlsDisabled}
-            onPageChange={page => table.setPageIndex(page - 1)} />
+            onPageChange={page => { if (remote) remote.onQueryChange({ ...remote.query, pageIndex: page - 1 }); else table.setPageIndex(page - 1); }} />
         </div>
       </div>
     </div></TooltipProvider>
