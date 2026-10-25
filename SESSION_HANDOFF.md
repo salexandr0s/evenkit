@@ -1,8 +1,8 @@
 # Session handoff: 25 October 2026
 
-Project: shared project kit. Auth worktree: `/Users/nationalbank/.codex/worktrees/auth-pages/design-tokens`. Branch: `codex/auth-pages`, based on `1dfd7f9` from `codex/component-improvements`.
+Project: shared project kit. Worktree: `/Users/nationalbank/.codex/worktrees/auth-pages/design-tokens`. Current branch: `main`. The preserved `codex/auth-pages` branch ends at `e81afc0`, based on `1dfd7f9` from `codex/component-improvements`.
 
-Latest work: the user noticed the password fields lacked a leading icon after the design pass in `0a93d90`.
+Latest work: the user authorized merging the completed auth branch into `main`. Local `main` fast-forwarded from `d1a9799` to `e81afc0` without conflicts. There is no configured Git remote, so no push was possible.
 
 ## Completed
 
@@ -28,6 +28,8 @@ Latest work: the user noticed the password fields lacked a leading icon after th
 - `AUTH_PAGES_PLAN.md`, `docs/authentication.md`, `docs/compatibility.md`, README, and UI provenance.
 
 ## Verification
+
+Merge verification: `codex/auth-pages` is an ancestor of `main`, and the fast-forward retained the previously verified source tree exactly. Existing applicable checks were reused; no code changed during the merge. The primary checkout remains on `codex/component-improvements` with its existing edits to `feedback.tsx` and `styles.css`.
 
 Password-icon correction: production build, workspace/test type checks, ESLint, all seven existing auth Chromium journeys, and the icon-reference Chromium journey passed. The icon-reference check initially used a catalog build created before the inventory edit; rebuilding the catalog resolved the mismatch without changing the test. Independent review found no actionable concerns. The refreshed retained preview visibly shows the lock icon beside the password input; `.artifacts/auth-audit/password-lock-icon.png` records it. No new dependency or test was added for this visual change.
 
@@ -61,7 +63,7 @@ Local token/UI package tarballs can be regenerated with `npm pack --workspace @p
 
 ## Isolation and remaining work
 
-The primary `/Users/nationalbank/GitHub/design-tokens` checkout had concurrent Dialog/component work, so this phase was moved into an attached worktree before auth source was written. The primary checkout was not merged, reset, or staged. Auth changes are confined to `codex/auth-pages`; retain this worktree for review and later integration.
+The primary `/Users/nationalbank/GitHub/design-tokens` checkout has concurrent component work, so the merge was performed from this attached worktree. The primary checkout was not switched, reset, or staged. This worktree now holds `main`; the auth branch remains available at `e81afc0`.
 
 The earlier component-refinement queue is separate. At this branch's base, Tokens, Icons, Buttons, Fields, and Select were completed; Dialog and later areas remained in `COMPONENT_IMPROVEMENTS.md`. Check the primary checkout's current status before integrating, because that work may have advanced independently. This auth phase does not complete or overwrite that queue.
 
@@ -77,4 +79,4 @@ npm run build
 npm run preview --workspace @project-kit/catalog -- --port 5174 --strictPort
 ```
 
-Keep source changes in this worktree until integration with the concurrently edited primary branch is safe. The authentication goal is separate from the component-refinement queue.
+The auth work is merged into local `main`. Later component-refinement commits and uncommitted primary-checkout edits remain separate; inspect that branch before any further integration.
