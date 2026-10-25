@@ -26,6 +26,7 @@ import { overlaysEntries } from "./overlays-entries";
 import { workflowsEntries } from "./workflows-entries";
 import { roadmapEntries } from "./roadmap-entries";
 import { authEntries } from "./auth-data";
+import { websiteEntries } from "./website-entries";
 import { CodeExample } from "./code-example";
 import { FieldPreview } from "./field-preview";
 import { EmptyPreview } from "./empty-preview";
@@ -50,6 +51,7 @@ const NavigationPreview = lazy(() => import("./navigation-preview").then((module
 const OverlaysPreview = lazy(() => import("./overlays-preview").then((module) => ({ default: module.OverlaysPreview })));
 const WorkflowsPreview = lazy(() => import("./workflows-preview").then((module) => ({ default: module.WorkflowsPreview })));
 const RoadmapPreview = lazy(() => import("./roadmap-preview").then((module) => ({ default: module.RoadmapPreview })));
+const WebsitePreview = lazy(() => import("./website-preview").then((module) => ({ default: module.WebsitePreview })));
 
 const AuthPreview = lazy(() => import("./auth-preview").then(module => ({ default: module.AuthPreview })));
 
@@ -89,6 +91,10 @@ const navigationIcons: Record<string, ReactNode> = {
   image: <CameraIcon />, "command-palette": <SearchIcon />, "step-indicator": <ListChecksIcon />,
   "onboarding-wizard": <PanelsTopLeftIcon />,
   "avatar-upload": <UserIcon />, "file-preview": <CameraIcon />, "document-library": <FileTextIcon />,
+  "website-shell": <PanelTopIcon />, "website-heroes": <HeadingIcon />,
+  "website-features": <LayoutGridIcon />, "website-cta": <SquareIcon />,
+  "website-faq": <CircleHelpIcon />, "website-forms": <ContactRoundIcon />,
+  "website-article": <FileTextIcon />,
 };
 
 function selectedFromHash() {
@@ -98,6 +104,7 @@ function selectedFromHash() {
 
 function Preview({ id, theme, mode, onThemeChange }: { id: string; theme: ThemeName; mode: ColorMode; onThemeChange: (theme: ThemeName) => void }) {
   if (authEntries.some(entry => entry.id === id) && (id === "login" || id === "signup" || id === "password-reset" || id === "new-password")) return <AuthPreview kind={id} />;
+  if (websiteEntries.some(entry => entry.id === id)) return <WebsitePreview key={id} id={id} />;
   if (roadmapEntries.some(entry => entry.id === id)) return <RoadmapPreview id={id} />;
   if (foundationsEntries.some(entry => entry.id === id)) return <FoundationsPreview id={id} />;
   if (selectionEntries.some(entry => entry.id === id)) return <SelectionPreview id={id} />;

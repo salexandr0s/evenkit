@@ -311,20 +311,20 @@ The stepped-form donor is Brainwave; review its full interface with a second con
 
 ## Website and marketing blocks
 
-The initial review identified Brainwave, savorg.xyz, and Ezio Barber as possible website consumers. The rows below are proposed structures; this pass did not audit their page implementations. Use real project assets and approved copy when adopted.
+The initial review identified Brainwave, savorg.xyz, and Ezio Barber as possible website consumers. P01–P06 and P10 are implemented as [editable website blocks](./website-blocks.md), with fictional examples and application-owned content, assets, routes, consent and submission. Other rows remain proposed structures. These blocks do not claim to reproduce the candidate projects' pages.
 
 | ID | Family | When / delivery | Scope |
 | --- | --- | --- | --- |
-| P01 | Website header and footer | Follow-up / Block | Public navigation, mobile menu, legal/contact and locale links. |
-| P02 | Hero and introduction | Follow-up / Block | Text-first and media-led layouts, clear action, restrained hierarchy. |
-| P03 | Feature/service sections | Follow-up / Block | List/grid, alternating text/media and comparison structures. |
-| P04 | Call-to-action section | Follow-up / Block | One primary next step and optional secondary link. |
-| P05 | FAQ section | Follow-up / Block | Compose Accordion with appropriate heading structure. |
-| P06 | Contact/inquiry and newsletter forms | Follow-up / Block | Required/optional fields, consent where relevant, sent/error recovery. |
+| P01 | Website header and footer | Built / Block | Public navigation, mobile menu, legal/contact and locale links. |
+| P02 | Hero and introduction | Built / Block | Text-first and media-led layouts, clear action, restrained hierarchy. |
+| P03 | Feature/service sections | Built / Block | List/grid, alternating text/media and comparison structures. |
+| P04 | Call-to-action section | Built / Block | One primary next step and optional secondary link. |
+| P05 | FAQ section | Built / Block | Compose Accordion with appropriate heading structure. |
+| P06 | Contact/inquiry and newsletter forms | Built / Block | Required/optional fields, consent where relevant, sent/error recovery. |
 | P07 | Pricing/comparison section | Optional / Block | Plans, billing period, features and actual project terms. |
 | P08 | Testimonials/logo strip | Optional / Block | Supplied, approved evidence and usable long names/quotes. |
 | P09 | Team/about section | Follow-up / Block | People, roles, accessible portraits and project content. |
-| P10 | Article/documentation layout | Follow-up / Block | Prose, metadata, contents, code/media and related content. |
+| P10 | Article/documentation layout | Built / Block | Prose, metadata, contents, code/media and related content. |
 | P11 | Article/resource/case-study index | Follow-up / Block | Filters, category/date/author metadata and pagination. |
 | P12 | Gallery/carousel | Optional / Block | Native grid first; explicit controls and accessible motion if sliding is needed. |
 | P13 | Legal and consent-preference layouts | Optional / Block | Application-provided text/preferences and provider integration boundary. |
