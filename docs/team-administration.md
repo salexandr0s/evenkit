@@ -117,3 +117,11 @@ KIT_CATALOG_PORT=5398 npx playwright test tests/browser/priority-catalog.spec.ts
 ```
 
 The editable blocks use the package's public API and require no provider configuration. For a local catalog preview, run `npm run preview --workspace @evenkit/catalog -- --port 5399 --strictPort` and open `http://127.0.0.1:5399/#team-members`.
+
+## Branch and commits
+
+Worktree: `/Users/nationalbank/.codex/worktrees/team-admin/design-tokens`. Branch: `codex/team-admin`. Base: `b588b1b1964ba2b26ee8453606f354f2c33eb10d`, the latest local `codex/component-improvements` commit when the isolated worktree was created, ahead of its fetched remote.
+
+Implementation commit: `3f591ea6fa13ffba7898c151caf3f158d2dc0774` (`feat(team-admin): add reusable administration screens and blocks`). It contains the modules, styles, public exports, editable blocks, catalog examples, behavior tests, package fixtures and this API guide. The subsequent documentation commit records this identifier and the session handoff.
+
+For integration, retain all four inventory mappings and append the exports/CSS/catalog entries alongside concurrent additions. The example verifier currently expects this branch's 90 entries and 76 mapped inventory items; reconcile those counts with other branches rather than dropping their mappings. Authentication integration remains with the integration agent. No changes were made on `codex/auth-pages`, and nothing was pushed.
