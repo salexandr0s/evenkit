@@ -33,14 +33,18 @@ Signup receives `{ email, password }`; password confirmation stays local. Its su
 
 `PasswordField` exposes a labelled show/hide action and forwards input props and refs. Passwords start concealed. The pages clear their password inputs after success and keep credentials out of persistence and logs.
 
+Use `showText` and `hideText` to customize the visible toggle captions, and `showLabel` and `hideLabel` for descriptive accessible names. The accessible name includes the visible caption so voice controls can match it. For example, a standalone German control can use `showText="Anzeigen"`, `hideText="Verbergen"`, `showLabel="Passwort anzeigen"`, and `hideLabel="Passwort verbergen"`. The page fields, submit actions, form names, and built-in validation messages remain in English; changing a page title does not translate the entire form.
+
 ## Password recovery
 
 `PasswordResetPage` receives `{ email }`. A successful request always shows the same neutral confirmation for matching and nonmatching accounts. The adapter should map those cases to the same successful result. Consistent service timing, rate limits, reset email delivery, and secure single-use tokens remain responsibilities of the authentication service. [OWASP password recovery guidance](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html).
 
 `NewPasswordPage` receives `{ password }`. Close over the validated recovery token or session in the application callback. Set `recoveryState` to `"expired"` or `"invalid"` when the service rejects the link, and provide `requestResetLink` to request another. Those states display recovery feedback and omit the password form. `"ready"` is the default UI state; it is not proof that a token is valid. The service must verify the recovery authorization when updating the password.
 
+When a live recovery-state change removes a focused form, focus moves to the recovery notice. Initial rendering does not autofocus, and a focused control elsewhere in the application keeps its focus. Change `recoveryState` directly; the page does not need a React key to reset its recovery state.
+
 ## Layout and navigation
 
 Pages accept branding, heading, description, footer, success-footer, and additional-method slots. Supply real links or router components; the kit does not infer route names. Additional authentication methods are application-owned actions. Use `contentAs="section"` and `headingAs="h2"` when placing a page inside an existing main landmark, as the catalog does. A standalone page uses a main landmark and h1 by default.
 
-The catalog provides local Success, Failure, Pending, and Rejected request examples. Pending requests finish through an explicit preview control. These examples do not contact an authentication service, send email, or create accounts.
+The catalog places the actual page before its demo controls and provides local Success, Failure, Pending, and Rejected request examples. Pending requests finish through an explicit preview control. The new-password example also simulates an expired link during submission. These examples do not contact an authentication service, send email, or create accounts.

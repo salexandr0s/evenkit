@@ -1,9 +1,10 @@
 "use client";
 
-import { LoginPage, NewPasswordPage, PasswordResetPage, SignupPage } from "@project-kit/ui";
+import { LoginPage, NewPasswordPage, PasswordField, PasswordResetPage, SignupPage } from "@project-kit/ui";
 
 export function PreviewAuth() {
   return <div aria-label="Packed authentication">
+    <PasswordField label="Beispielpasswort" showText="Anzeigen" hideText="Verbergen" showLabel="Passwort anzeigen" hideLabel="Passwort verbergen" />
     <LoginPage contentAs="section" headingAs="h2" title="Packed login"
       onSubmit={async () => ({ status: "success", message: "Package login callback completed." })} />
     <SignupPage contentAs="section" headingAs="h2" title="Packed signup"

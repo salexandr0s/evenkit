@@ -2,6 +2,8 @@
 
 Project: shared project kit. Auth worktree: `/Users/nationalbank/.codex/worktrees/auth-pages/design-tokens`. Branch: `codex/auth-pages`, based on `1dfd7f9` from `codex/component-improvements`.
 
+Latest work: the user requested a fresh implementation audit and design pass after auth implementation commit `6fc9302`.
+
 ## Completed
 
 - Added `LoginPage`, `SignupPage`, `PasswordResetPage`, and `NewPasswordPage` using shared controls, tokens, and icons.
@@ -11,23 +13,28 @@ Project: shared project kit. Auth worktree: `/Users/nationalbank/.codex/worktree
 - Reset requests show neutral confirmation. Expired/invalid new-password states omit the form and provide a consumer recovery action. Recovery authorization remains with the service.
 - Added four lazy catalog entries and local Success/Failure/Pending/Rejected request examples. Pending previews use an explicit completion control; restart/unmount settles owned promises without retaining credential values.
 - Added integration guidance and independent packed-package auth fixtures for Vite and Next.
+- Fixed keyboard focus loss when a live recovery-state change removes a focused form. Focus moves to the recovery notice only when it was lost from that form; initial and external-control focus remain intact.
+- Added visible `showText`/`hideText` password-toggle captions. Accessible names retain their visible captions; the docs state the English page-copy boundary.
+- Tightened auth spacing, icon size, and mobile card padding. Catalog controls now follow the page, with a compact preview caption and fewer nested frames. Embedded mobile form width increased from 218px to 252px.
 
 ## Key files
 
 - `packages/ui/src/auth-types.ts`, `auth-layout.tsx`, `password-field.tsx`, `use-auth-submission.ts`, four `*-page.tsx` modules, and `auth.css`.
 - `packages/ui/src/index.ts` and `packages/ui/scripts/copy-styles.mjs`: public exports and combined CSS.
 - `apps/catalog/src/auth-preview.tsx`, `auth-preview.css`, `auth-data.ts`, plus catalog registration.
-- `tests/browser/auth.spec.ts`: five meaningful auth journeys.
+- `tests/browser/auth.spec.ts`: seven auth journeys, including service-driven expiry without remounting and custom toggle captions.
 - `fixtures/vite/auth-preview.tsx`, `fixtures/next/app/preview-auth.tsx`, fixture entry points, and `scripts/verify-packages.mjs`.
 - `AUTH_PAGES_PLAN.md`, `docs/authentication.md`, `docs/compatibility.md`, README, and UI provenance.
 
 ## Verification
 
-Passed on the final implementation: production build, workspace/test type checks, ESLint, seven token tests, five auth Chromium journeys, and seventeen existing Chromium journeys. The auth and regression groups ran separately against the same final app build.
+Passed on the final audit revision: production build, workspace/test type checks, ESLint, seven token tests, seven auth Chromium journeys, and seventeen existing Chromium journeys. The auth and regression groups ran separately against the same final app build.
 
 The first auth batch stopped after locator failures. Required labels include an aria-hidden cue in DOM text, so exact getByLabel did not match despite correct accessible names. Independent review confirmed the harness issue. Email tests now use role/accessibility names; password inputs use their native names plus explicit accessible-name assertions. The corrected five journeys passed. No component labels or validation were weakened to accommodate the tests.
 
-Code review also corrected auth-slot anchor rules to exclude `.pk-button`, preserving ButtonLink contrast. Plan/source/documentation reviews found no remaining actionable findings. A login layout was visually inspected in the app browser.
+Code review also corrected auth-slot anchor rules to exclude `.pk-button`, preserving ButtonLink contrast. The follow-up audit used independent lifecycle and composition harnesses. They verified stale completion, fresh retry, whitespace preservation, confirmation omission, malformed signup-success recovery, and the focus fix. Source/design reviews found no remaining actionable findings.
+
+Visual audit: 17 native DPR1 captures and 14 geometry checks cover all four pages, light/dark, 360px mobile and desktop, doubled typography, long slots/captions, and RTL. No document overflow, clipped text, out-of-root elements, or browser errors were reported. The main browser's viewport override was reset. Transient audit servers on 5312/5313 and their browsers were closed.
 
 `npm run verify:packages` passed independent Vite and Next builds, all four auth-page exports, Next server rendering, and token/control/icon/shell/table/auth stylesheet HTTP checks. `.artifacts/package-verification.json` confirms both owned fixture servers stopped and its temporary directory was removed.
 
@@ -45,7 +52,7 @@ npm run verify:packages
 
 ## Preview and artifacts
 
-This worktree's retained production preview is `http://127.0.0.1:5174/#login`. Other new hashes are `/#signup`, `/#password-reset`, and `/#new-password`. At handoff the listener was owned Node PID `23460`, execution session `45664`; verify ownership before stopping it. Rebuild the catalog to refresh a production preview. Screenshot: `.artifacts/auth-login.png`.
+This worktree's retained production preview is `http://127.0.0.1:5174/#login`. Other new hashes are `/#signup`, `/#password-reset`, and `/#new-password`. The retained listener is owned Node PID `23460`, execution session `45664`; verify ownership before stopping it. Rebuild the catalog to refresh a production preview. Current screenshots and geometry report are in `.artifacts/auth-audit/`, especially `standalone-login-360-light.png`, `standalone-login-1280-dark.png`, and `report.json`. Earlier `.artifacts/auth-login.png` shows the pre-audit design.
 
 Local token/UI package tarballs can be regenerated with `npm pack --workspace @project-kit/tokens --workspace @project-kit/ui --pack-destination .artifacts`. Generated files are ignored.
 

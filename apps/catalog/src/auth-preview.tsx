@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  ActionMessage, Badge, Button, ButtonLink, Label, LayoutDashboardIcon,
-  LoginPage, NewPasswordPage, PasswordResetPage, Select, SignupPage,
+  Badge, Button, ButtonLink, Label, LayoutDashboardIcon,
+  LoginPage, NewPasswordPage, PasswordField, PasswordResetPage, Select, SignupPage,
   type AuthResult
 } from "@project-kit/ui";
 import type { AuthPreviewKind } from "./auth-data";
@@ -11,10 +11,10 @@ export type { AuthPreviewKind } from "./auth-data";
 
 type PreviewField = "email" | "password" | "confirmPassword";
 type PreviewResult = Extract<AuthResult<PreviewField>, { status: "error" }> | { status: "success"; message: string };
-type Outcome = "success" | "failure" | "pending" | "rejected";
+type Outcome = "success" | "failure" | "pending" | "rejected" | "expired";
 type RecoveryState = "ready" | "expired" | "invalid";
 
-const outcomeOptions = [
+const baseOutcomeOptions = [
   { value: "success", label: "Success" },
   { value: "failure", label: "Failure" },
   { value: "pending", label: "Pending" },
@@ -53,6 +53,9 @@ function failureResult(kind: AuthPreviewKind): PreviewResult {
 }
 
 function PreviewSession({ kind, onRestart }: { kind: AuthPreviewKind; onRestart: () => void }) {
+  const outcomeOptions = kind === "new-password"
+    ? [...baseOutcomeOptions, { value: "expired", label: "Expired link" } as const]
+    : baseOutcomeOptions;
   const [outcome, setOutcome] = useState<Outcome>("success");
   const [recoveryState, setRecoveryState] = useState<RecoveryState>("ready");
   const [requests, setRequests] = useState(0);
@@ -71,6 +74,10 @@ function PreviewSession({ kind, onRestart }: { kind: AuthPreviewKind; onRestart:
     setRequests((count) => count + 1);
     if (outcome === "rejected") {
       throw new Error("DEMO_AUTH_TRANSPORT_FAILURE: internal status 503; preview-only diagnostic.");
+    }
+    if (kind === "new-password" && outcome === "expired") {
+      setRecoveryState("expired");
+      return { status: "error", error: { message: "The preview recovery link expired. Request another reset to continue." } };
     }
     if (outcome === "failure") return failureResult(kind);
     if (outcome === "pending") {
@@ -99,7 +106,13 @@ function PreviewSession({ kind, onRestart }: { kind: AuthPreviewKind; onRestart:
 
   return (
     <div className="catalog-auth-demo">
-      <ActionMessage tone="info">Local form preview. Use fictional details; submissions do not contact an authentication service.</ActionMessage>
+      <p className="catalog-auth-help">Local form preview. Use fictional details; submissions do not contact an authentication service.</p>
+      <div className="catalog-auth-stage">
+        {kind === "login" && <LoginPage {...common} forgotPasswordLink={<ButtonLink href="#password-reset" variant="link">Forgot password?</ButtonLink>} footer={<span>Need an account? <a href="#signup">View signup</a></span>} />}
+        {kind === "signup" && <SignupPage {...common} validatePassword={validatePreviewPassword} passwordHint={passwordHint} footer={<span>Have an account? <a href="#login">View login</a></span>} />}
+        {kind === "password-reset" && <PasswordResetPage {...common} footer={<a href="#login">Back to login</a>} />}
+        {kind === "new-password" && <NewPasswordPage {...common} recoveryState={recoveryState} validatePassword={validatePreviewPassword} passwordHint={passwordHint} requestResetLink={<ButtonLink href="#password-reset" variant="outline">Request another reset</ButtonLink>} footer={<a href="#login">Back to login</a>} />}
+      </div>
       <div className="catalog-auth-controls">
         <div className="catalog-auth-control">
           <Label htmlFor={`${kind}-outcome`}>Submission outcome</Label>
@@ -116,12 +129,12 @@ function PreviewSession({ kind, onRestart }: { kind: AuthPreviewKind; onRestart:
         <p role="status">Preview requests: {requests}</p>
         {held && <Button variant="secondary" onClick={complete}>Complete preview request</Button>}
       </div>
-      <div className="catalog-auth-stage">
-        {kind === "login" && <LoginPage {...common} forgotPasswordLink={<ButtonLink href="#password-reset" variant="link">Forgot password?</ButtonLink>} footer={<span>Need an account? <a href="#signup">View signup</a></span>} />}
-        {kind === "signup" && <SignupPage {...common} validatePassword={validatePreviewPassword} passwordHint={passwordHint} footer={<span>Have an account? <a href="#login">View login</a></span>} />}
-        {kind === "password-reset" && <PasswordResetPage {...common} footer={<a href="#login">Back to login</a>} />}
-        {kind === "new-password" && <NewPasswordPage {...common} key={recoveryState} recoveryState={recoveryState} validatePassword={validatePreviewPassword} passwordHint={passwordHint} requestResetLink={<ButtonLink href="#password-reset" variant="outline">Request another reset</ButtonLink>} footer={<a href="#login">Back to login</a>} />}
-      </div>
+      {kind === "login" && <details className="catalog-auth-field-example">
+        <summary>Reusable password field</summary>
+        <div role="group" aria-label="Reusable password field">
+          <PasswordField label="Beispielpasswort" showText="Anzeigen" hideText="Verbergen" showLabel="Passwort anzeigen" hideLabel="Passwort verbergen" hint="Standalone control with German labels. The page above remains in English." />
+        </div>
+      </details>}
     </div>
   );
 }

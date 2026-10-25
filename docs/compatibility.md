@@ -16,7 +16,7 @@ Foundation, component refinement, and authentication-page phases, 25 October 202
 | Authentication pages | Kit controls, icons, and typed async callbacks | Validation/focus, visibility controls, pending guards, rejected-request recovery, neutral reset confirmation, recovery-link states |
 | Vite | 8.3.5 | Catalog build and packed-package consumer build/HTTP smoke |
 | Next.js | 16.4.3, App Router | Independent packed-package build, server render, CSS HTTP smoke |
-| Browser | Chromium through Playwright 1.64.1 | 22 journeys: five auth flows and 17 existing component regressions |
+| Browser | Chromium through Playwright 1.64.1 | 24 journeys: seven auth flows and 17 existing component regressions |
 | Layout widths | 360, 768, 1024, 1440, 1700 CSS pixels | Overflow checks, touch targets, container navigation, resize cleanup |
 | Themes | Neutral and Grove; light, dark, and system | Token contrast validation plus browser mode-precedence checks |
 
@@ -42,5 +42,7 @@ The first code review found and resolved a missing custom hover-contrast pair an
 The admin/table review resolved numeric alignment in wide cells and a skip link visible above an embedded shell. Dropdown options were reduced from 52px to 36px desktop rows through border-box sizing; browser checks also confirm 44px mobile rows. The shell test awaits Radix's actual initial close-button focus and uses an actionable overlay click before checking dismissal.
 
 Auth verification passed a synchronous duplicate-submit check, structured errors, rejected promises, password policy and confirmation, neutral reset copy, unusable recovery links, narrow layouts, and pending-preview cleanup. Independent Vite and Next consumers import all four pages; Next server-renders them and both deliver their CSS. Review corrected plain-anchor styles so they preserve ButtonLink contrast. The initial auth harness was corrected to use accessible-name locators for required email fields and native password names with separate accessible-name assertions.
+
+The follow-up audit added checks for service-driven link expiry while editing, focus recovery without remounting, and matching visible/accessibility toggle text. An independent lifecycle harness also verified stale completion, retry, whitespace preservation, confirmation omission, and rejected empty signup-success messages. The design pass tightened spacing and removed nested mobile framing. Standalone and embedded pages were inspected in light/dark modes, with large text and long content.
 
 Before upgrading a dependency or adopting a new consumer, run the checks for the affected package/interface and record the new evidence. Auth service adapters, server-table processing, and uploads need their own server and data-boundary verification.

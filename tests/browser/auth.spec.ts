@@ -137,3 +137,48 @@ test("auth pages fit small screens and discard an unmounted pending preview", as
   await expect(page.getByText("Preview requests: 0", { exact: true })).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test("service expiry moves lost form focus to recovery feedback without remounting", async ({ page }) => {
+  await page.goto("/#new-password");
+  const form = page.getByRole("form", { name: "Choose a new password", exact: true });
+  const password = form.locator('input[name="password"]');
+  await expect(password).not.toBeFocused();
+  await choose(page, "Submission outcome", "Expired link");
+  await password.fill("a new sample password");
+  const confirmation = form.locator('input[name="confirmPassword"]');
+  await confirmation.fill("a new sample password");
+  await confirmation.press("Enter");
+  const recovery = page.locator(".pk-auth-recovery");
+  await expect(form).not.toBeVisible();
+  await expect(recovery).toContainText("This reset link has expired.");
+  await expect(recovery).toBeFocused();
+  await expect(page.getByText("Preview requests: 1", { exact: true })).toBeVisible();
+  await choose(page, "Recovery link state", "Ready");
+  await expect(form).toBeVisible();
+  await expect(password).not.toBeFocused();
+  await choose(page, "Submission outcome", "Success");
+  await password.fill("another sample password");
+  await form.locator('input[name="confirmPassword"]').fill("another sample password");
+  await form.getByRole("button", { name: "Update password", exact: true }).click();
+  await expect(form).not.toBeVisible();
+  await expect(page.getByText("Preview requests: 2", { exact: true })).toBeVisible();
+});
+
+test("custom password captions remain visible in the accessible action names", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/#login");
+  await page.getByText("Reusable password field", { exact: true }).click();
+  const field = page.getByRole("group", { name: "Reusable password field", exact: true });
+  const password = field.locator("input");
+  await password.fill("ein beispielpasswort");
+  const show = field.getByRole("button", { name: "Passwort anzeigen", exact: true });
+  await expect(show).toHaveText("Anzeigen");
+  await show.click();
+  await expect(password).toHaveAttribute("type", "text");
+  await expect(password).toHaveValue("ein beispielpasswort");
+  const hide = field.getByRole("button", { name: "Passwort verbergen", exact: true });
+  await expect(hide).toHaveText("Verbergen");
+  await hide.click();
+  await expect(password).toHaveAttribute("type", "password");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});

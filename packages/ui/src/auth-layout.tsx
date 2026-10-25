@@ -24,7 +24,7 @@ export function AuthLayout({ brand, title, description, footer, children, conten
         {brand ? <div className="pk-auth-brand">{brand}</div> : null}
         <div className="pk-auth-card">
           <header className="pk-auth-header">
-            <span className="pk-auth-mark" aria-hidden="true"><ShieldIcon size="lg" /></span>
+            <span className="pk-auth-mark" aria-hidden="true"><ShieldIcon /></span>
             <Heading className="pk-auth-title" id={headingId}>{title}</Heading>
             {description ? <div className="pk-auth-description">{description}</div> : null}
           </header>
@@ -43,7 +43,7 @@ export const AuthErrorSummary = forwardRef<HTMLDivElement, { message: string }>(
 export const AuthSuccess = forwardRef<HTMLDivElement, { message: string; footer?: ReactNode }>(function AuthSuccess({ message, footer }, ref) {
   return (
     <div ref={ref} className="pk-auth-success" role="status" tabIndex={-1}>
-      <span className="pk-auth-success-mark" aria-hidden="true"><CheckIcon size="lg" /></span>
+      <span className="pk-auth-success-mark" aria-hidden="true"><CheckIcon /></span>
       <p>{message}</p>
       {footer ? <div className="pk-auth-success-footer">{footer}</div> : null}
     </div>
