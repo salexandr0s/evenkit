@@ -22,6 +22,8 @@ A date range is inclusive. The calendar first selects a start, then an end; choo
 
 Calendar keyboard movement follows the [WAI-ARIA date picker pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/): arrows move by day or week, Home/End move within a week, Page Up/Down change month, and Shift with Page Up/Down changes year. Dates outside bounds cannot be selected; unavailable dates remain discoverable by arrow navigation. Month navigation preserves the day when possible. Labels and dates localize separately: calendar dates use `locale`; typed date entry remains explicitly ISO. Supply `today` for stable server rendering and business-timezone behavior; otherwise today uses the runtime's local calendar date.
 
+The month heading leads a paired navigation control. Today has an outline and dot; selected dates use a filled circle. Inclusive ranges connect the endpoint centers with a continuous band, including in RTL layouts. The day grid is 308px wide at its natural size, with 44px targets; narrow containers can shrink it. Forced-color mode uses the user's system highlight for selected days and ranges. The standalone catalog example adds a framed selected-date summary and a matching-width language field; the public calendar stays unframed for use in popovers and other surfaces.
+
 ## Formatting
 
 `formatDateOnly(value, { locale, ...dateOptions })` and `<FormattedDate value options />` display a calendar date without changing the day. The component renders a semantic `time` element. The Gregorian calendar and UTC arithmetic container are fixed so display cannot shift to an adjacent day. Time-related options are rejected because a calendar date has no time of day.

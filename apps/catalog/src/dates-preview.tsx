@@ -5,11 +5,13 @@ import "./dates-preview.css";
 function CalendarExample() {
   const [date, setDate] = useState<string | null>("2026-10-26");
   const [locale, setLocale] = useState("en-GB");
-  return <div className="dates-preview-stack">
-    <header><h3>Choose a deadline</h3><p>October 27 is unavailable. Use the arrow keys to move through the month.</p></header>
+  return <div className="dates-preview-stack calendar-preview">
+    <header><h3>Choose a deadline</h3><p>October 27 is unavailable.</p></header>
+    <div className="calendar-preview-frame">
+      <div className="calendar-preview-calendar"><Calendar value={date} onValueChange={setDate} today="2026-10-25" min="2026-10-25" max="2026-12-31" locale={locale} dir={locale === "ar-EG" ? "rtl" : "ltr"} isDateUnavailable={day => day === "2026-10-27"} /></div>
+      <div className="calendar-preview-selection" role="status" aria-atomic="true"><span>Selected date</span>{date ? <FormattedDate value={date} options={{ locale, day: "numeric", month: "long", year: "numeric" }} /> : <span>Choose a deadline</span>}</div>
+    </div>
     <SelectField label="Calendar language" value={locale} onValueChange={setLocale} options={[{ value: "en-GB", label: "English" }, { value: "de-AT", label: "Deutsch" }, { value: "ar-EG", label: "العربية" }]} />
-    <Calendar value={date} onValueChange={setDate} today="2026-10-25" min="2026-10-25" max="2026-12-31" locale={locale} dir={locale === "ar-EG" ? "rtl" : "ltr"} isDateUnavailable={day => day === "2026-10-27"} />
-    <p role="status">{date ? <>Deadline: <FormattedDate value={date} options={{ locale }} /></> : "Choose a deadline."}</p>
   </div>;
 }
 function DateExample() {

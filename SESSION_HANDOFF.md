@@ -2,6 +2,14 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Calendar design refinement: 25 October 2026
+
+Completed the requested Calendar design pass. The month title now leads paired navigation arrows; selected days use filled circles, today uses an outline and dot, and range bands join endpoint centers in either direction. Shorter keyboard guidance aligns with Today. Forced-color mode uses system highlight colors for selection and hover. The standalone catalog example has one framed calendar with a localized selected-date summary and a matching-width language field below it. Existing props, date constraints, keyboard behavior and form contracts are preserved.
+
+Changed `packages/ui/src/date-calendar.tsx`, `date-controls.css`, `apps/catalog/src/dates-preview.tsx`, `dates-preview.css` and `docs/dates.md`. Verification passed: production builds, configured TypeScript, focused ESLint and all four existing date Chromium journeys. Thirty-two theme/mode/width combinations passed selected/hover contrast, focus, target-size and overflow checks. Before/after captures cover Calendar, DatePicker and DateRangePicker in light/dark at 360/1440px. Independent review confirmed 44×44 touch targets, RTL arrows and multi-row range continuity. Forced-color selection/hover and scroll access to presets passed at 360×700px. Firefox/Safari and physical touch were not tested.
+
+No required work remains. Evidence and the isolated patch are under `.artifacts/calendar-design/`. Preview: `http://127.0.0.1:5390/#calendar`; the existing preview server remains running. This pass is committed separately from the earlier application-component work. Pre-existing Navbar, Hallmark and other design edits remain untouched. Resume with `git log -1 --oneline`, `git status --short` and `cat docs/dates.md`.
+
 ## Application components and design pass: 25 October 2026
 
 Completed the requested nine groups covering 24 inventory additions: dates/time/formatting, MultiSelect/token input, locale numbers and unit recipes, remote tables and controls, record details/activity, workspace/settings/profile/appearance, upload queues/images, command search, and steps/onboarding. Public APIs and source blocks are in commit `907a53c`; catalog integration, browser coverage and completion records follow in a separate commit. Earlier Navbar, Hallmark and design edits remain in the working tree and were excluded through selective patches. No production deployment or package publication was performed for this work.

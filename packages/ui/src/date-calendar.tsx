@@ -80,9 +80,11 @@ export function Calendar({ value, onValueChange, range, defaultMonth, today = to
   };
   return <div ref={root} className={classes("pk-calendar", className)} dir={dir} data-disabled={disabled || undefined}>
     <div className="pk-calendar-header">
-      <Button variant="ghost" size="sm" shape="icon" aria-label={labels?.previousMonth ?? "Previous month"} disabled={disabled || month === "0001-01" || !!(min && month <= min.slice(0, 7))} onClick={() => changeMonth(-1)}><ChevronLeftIcon /></Button>
       <h3 id={headingId} aria-live="polite" aria-atomic="true">{monthLabel}</h3>
-      <Button variant="ghost" size="sm" shape="icon" aria-label={labels?.nextMonth ?? "Next month"} disabled={disabled || month === "9999-12" || !!(max && month >= max.slice(0, 7))} onClick={() => changeMonth(1)}><ChevronRightIcon /></Button>
+      <div className="pk-calendar-navigation">
+        <Button variant="ghost" size="sm" shape="icon" aria-label={labels?.previousMonth ?? "Previous month"} disabled={disabled || month === "0001-01" || !!(min && month <= min.slice(0, 7))} onClick={() => changeMonth(-1)}><ChevronLeftIcon size="sm" /></Button>
+        <Button variant="ghost" size="sm" shape="icon" aria-label={labels?.nextMonth ?? "Next month"} disabled={disabled || month === "9999-12" || !!(max && month >= max.slice(0, 7))} onClick={() => changeMonth(1)}><ChevronRightIcon size="sm" /></Button>
+      </div>
     </div>
     <table role="grid" aria-label={`${label}, ${monthLabel}`} aria-describedby={helpId} aria-readonly={readOnly || undefined} aria-multiselectable={range ? true : undefined}>
       <thead><tr>{Array.from({ length: 7 }, (_, index) => {
@@ -96,11 +98,11 @@ export function Calendar({ value, onValueChange, range, defaultMonth, today = to
         const date = `${month}-${String(day).padStart(2, "0")}`;
         const selected = range ? !!(range.start && date >= range.start && date <= (range.end ?? range.start)) : date === value;
         const blocked = unavailable(date);
-        return <td key={column} aria-selected={selected} data-in-range={range && selected || undefined} data-range-edge={range && (date === range.start || date === range.end) || undefined}>
+        return <td key={column} aria-selected={selected} data-in-range={range && selected || undefined} data-range-edge={range && (date === range.start || date === range.end) || undefined} data-range-start={range && date === range.start || undefined} data-range-end={range && date === (range.end ?? range.start) || undefined}>
           <button type="button" data-date={date} data-today={date === today || undefined} data-selected={selected || undefined} aria-label={formatDateOnly(date, { locale, weekday: "long", year: "numeric", month: "long", day: "numeric" })} aria-current={date === today ? "date" : undefined} aria-disabled={blocked || readOnly || undefined} disabled={disabled} tabIndex={date === focused ? 0 : -1} onFocus={() => setFocused(date)} onKeyDown={event => onKeyDown(event, date)} onClick={() => { if (!blocked && !readOnly) onValueChange?.(date); }}>{new Intl.NumberFormat(locale).format(day)}</button>
         </td>;
       })}</tr>)}</tbody>
     </table>
-    <div className="pk-calendar-footer"><Button size="sm" variant="ghost" disabled={disabled || unavailable(today)} onClick={() => moveFocus(today)}>{labels?.today ?? "Today"}</Button><p id={helpId}>{labels?.keyboardHelp ?? "Arrow keys move by day. Page Up and Page Down change month."}</p></div>
+    <div className="pk-calendar-footer"><Button size="sm" variant="ghost" disabled={disabled || unavailable(today)} onClick={() => moveFocus(today)}>{labels?.today ?? "Today"}</Button><p id={helpId}>{labels?.keyboardHelp ?? "Arrow keys to browse. Page Up / Down for months."}</p></div>
   </div>;
 }
