@@ -99,6 +99,7 @@ async function smoke(kind, directory) {
     if (kind === "next" && !html.includes("Package assistant")) throw new Error("Next server did not render the client chat fixture.");
     if (kind === "next" && !html.includes("Priority package controls")) throw new Error("Next server did not render the new priority control families.");
     if (kind === "next" && !html.includes("Roadmap package controls")) throw new Error("Next server did not render the roadmap controls and blocks.");
+    if (kind === "next" && !html.includes("Packed primary navigation")) throw new Error("Next server did not render the complete navbar fixture.");
     if (kind === "next" && !html.includes("Packed editable projects")) throw new Error("Next server did not render the independently copied page blocks.");
     if (kind === "vite" && !html.includes('id="root"')) throw new Error("Vite did not serve the package fixture.");
     const stylesheets = [...html.matchAll(/<link[^>]+href="([^"]+\.css[^"]*)"/g)].map(match => match[1]);
@@ -108,7 +109,7 @@ async function smoke(kind, directory) {
       return css.text();
     }));
     const css = styles.join("\n");
-    if (!["--pk-color-accent", ".pk-button", ".pk-icon", ".pk-tooltip-content", ".pk-admin-shell", ".pk-data-table", ".pk-chat", ".pk-card", ".pk-check-control", ".pk-combobox", ".pk-tabs", ".pk-menu", ".pk-filter-bar"].every(selector => css.includes(selector))) {
+    if (!["--pk-color-accent", ".pk-button", ".pk-icon", ".pk-tooltip-content", ".pk-admin-shell", ".pk-data-table", ".pk-chat", ".pk-card", ".pk-check-control", ".pk-combobox", ".pk-tabs", ".pk-menu", ".pk-filter-bar", ".pk-navbar"].every(selector => css.includes(selector))) {
       throw new Error(`${kind} fixture did not ship the existing and priority component styles.`);
     }
     const roadmapSelectors = [".pk-calendar", ".pk-date-range", ".pk-multi-field", ".pk-number-field", ".pk-sort-control", ".pk-activity-timeline", ".pk-settings-layout", ".pk-upload-queue", ".pk-image", ".pk-command", ".pk-step-indicator"];

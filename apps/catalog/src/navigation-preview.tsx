@@ -5,6 +5,7 @@ import {
   Heading, Inline, Navbar, Pagination, Stack, Tabs, TabsContent, TabsList, TabsTrigger, TextField,
   type NavigationLinkProps, type PaginationPageLinkProps,
 } from "@evenkit/ui";
+import { ApplicationNavbarExample, WebsiteNavbarExample } from "./navbar-preview.js";
 import "./navigation-preview.css";
 
 function TabsPreview() {
@@ -77,6 +78,9 @@ function NavbarPreview() {
     }} />;
   }
   return <div className="navigation-preview">
+    <WebsiteNavbarExample />
+    <ApplicationNavbarExample />
+    <div className="navbar-example-caption"><div><h3>Responsive behavior</h3><p>Existing action slots, unavailable destinations and right-to-left navigation.</p></div></div>
     <div className="navigation-preview-navbar-frame" data-narrow={narrow || undefined} dir={rtl ? "rtl" : "ltr"}>
       <Navbar brand={unavailable ? "Northstar" : <a href="#navbar-content">Northstar</a>} items={unavailable ? items.map(item => ({ ...item, disabled: true })) : items} activeItemId={active} contentId="navbar-content" dir={rtl ? "rtl" : "ltr"} navLabel="Preview navigation" renderLink={renderLink} actions={showAction ? <Button size="sm" onClick={() => setCreated(value => value + 1)}>Create project</Button> : null} />
       <section id="navbar-content" tabIndex={-1} className="navigation-preview-navbar-content"><div className="navigation-preview-intro"><Heading as="h3" size="3">{active === "projects" ? "Projects" : "Team"}</Heading><p className="pk-text-muted">{active === "projects" ? "Work in progress across the Studio workspace." : "The people responsible for the next step."}</p></div>{active === "projects" ? <ul className="navigation-preview-records"><li><div><strong>Website refresh</strong><span>Alex Morgan</span></div><Badge tone="accent">In review</Badge></li><li><div><strong>Research library</strong><span>Noor Aziz</span></div><Badge>In progress</Badge></li>{Array.from({ length: created }, (_, index) => <li key={index}><div><strong>Project draft {index + 1}</strong><span>Not assigned</span></div><Badge>Draft</Badge></li>)}</ul> : <ul className="navigation-preview-records">{["Alex Morgan", "Noor Aziz", "Sam Rivera"].map((person, index) => <li key={person}><Inline gap="3"><Avatar name={person} size="sm" decorative /><strong>{person}</strong></Inline><span className="pk-caption">{index === 0 ? "Workspace owner" : "Member"}</span></li>)}</ul>}<p role="status" className="navigation-preview-status">{created === 0 ? "Choose a destination or create a local project." : `${created} local ${created === 1 ? "project" : "projects"} created.`}</p></section>

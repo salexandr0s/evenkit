@@ -4,12 +4,16 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import { foundation } from "@evenkit/tokens";
-import { forwardRef, useLayoutEffect, useRef, useState, type AnchorHTMLAttributes, type ComponentPropsWithoutRef, type ComponentRef, type FocusEvent, type MouseEvent, type ReactNode, type Ref } from "react";
+import { forwardRef, useLayoutEffect, useRef, useState, type AnchorHTMLAttributes, type ComponentPropsWithoutRef, type ComponentRef, type FocusEvent, type ReactNode, type Ref } from "react";
 import { Button } from "./button.js";
 import { classes } from "./classes.js";
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "./dialog.js";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./dialog.js";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, MenuIcon } from "./icons.js";
+import { NavbarAccountControl, NavbarActionControl, ordinaryNavbarActivation as ordinaryActivation, type NavbarAccount, type NavbarAction } from "./navbar-parts.js";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./overlays.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
+
+export { NavbarBrand, type NavbarBrandProps, type NavbarAction, type NavbarAccount, type NavbarAccountItem } from "./navbar-parts.js";
 
 export interface TabsProps extends ComponentPropsWithoutRef<typeof TabsPrimitive.Root> {
   variant?: "underline" | "pills";
@@ -110,11 +114,20 @@ export interface NavbarItem {
   disabled?: boolean;
 }
 
+export interface NavbarGroup {
+  id: string;
+  label: string;
+  items: readonly NavbarItem[];
+  disabled?: boolean;
+}
+
 export interface NavbarProps extends Omit<ComponentPropsWithoutRef<"header">, "children"> {
   brand: ReactNode;
-  items: readonly NavbarItem[];
+  items: readonly (NavbarItem | NavbarGroup)[];
   activeItemId?: string;
   actions?: ReactNode;
+  account?: NavbarAccount;
+  contact?: NavbarAction;
   contentId?: string;
   skipLabel?: string;
   navLabel?: string;
@@ -124,21 +137,35 @@ export interface NavbarProps extends Omit<ComponentPropsWithoutRef<"header">, "c
   renderLink?: (props: NavigationLinkProps) => ReactNode;
 }
 
-function ordinaryActivation(event: MouseEvent<HTMLAnchorElement>) {
-  return !event.defaultPrevented && event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && !event.currentTarget.hasAttribute("download") && (!event.currentTarget.target || event.currentTarget.target === "_self");
+function navbarVisible(element: HTMLElement | null | undefined): element is HTMLElement {
+  return !!element && element.getClientRects().length > 0 && getComputedStyle(element).visibility !== "hidden";
 }
 
 export const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar(
-  { brand, items, activeItemId, actions, contentId, skipLabel = "Skip to content", navLabel = "Primary", menuLabel = "Open navigation", closeMenuLabel = "Close navigation", menuDescription = "Choose a destination.", renderLink, className, dir, ...props }, forwardedRef,
+  { brand, items, activeItemId, actions, account, contact, contentId, skipLabel = "Skip to content", navLabel = "Primary", menuLabel = "Open navigation", closeMenuLabel = "Close navigation", menuDescription = "Choose a destination.", renderLink, className, dir, ...props }, forwardedRef,
 ) {
   const rootRef = useRef<HTMLElement | null>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const brandRef = useRef<HTMLDivElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const accountRef = useRef<HTMLDivElement>(null);
+  const contactRef = useRef<HTMLDivElement>(null);
   const desktopRef = useRef<HTMLElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+  const [compact, setCompact] = useState<boolean>();
+  const [contactVisible, setContactVisible] = useState(true);
+  const contactVisibleRef = useRef(true);
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const openGroupRef = useRef(openGroup);
+  openGroupRef.current = openGroup;
   const compactRef = useRef(false);
   const openRef = useRef(open);
   openRef.current = open;
   const resizeClose = useRef(false);
+  const groupResizeClose = useRef(false);
+  const pendingAction = useRef<(() => void) | undefined>(undefined);
   // CSS can blur a hidden control before ResizeObserver runs. Retain only
   // navbar-owned focus intent; deliberate moves to other controls clear it.
   const desktopFocus = useRef<HTMLElement | null>(null);
@@ -146,22 +173,22 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar(
 
   function restoreMenuFocus() {
     const active = document.activeElement;
-    const lostDesktopFocus = active === document.body && desktopFocus.current && desktopFocus.current.getClientRects().length === 0;
+    const lostDesktopFocus = active === document.body && desktopFocus.current && !navbarVisible(desktopFocus.current);
     const trigger = triggerRef.current;
-    if (trigger && trigger.getClientRects().length > 0 && (desktopRef.current?.contains(active) || lostDesktopFocus)) {
+    if (navbarVisible(trigger) && (desktopRef.current?.contains(active) || contactRef.current?.contains(active) || lostDesktopFocus)) {
       desktopFocus.current = null;
       trigger.focus({ preventScroll: true });
     } else if (active !== document.body) desktopFocus.current = null;
   }
 
   function desktopBlur(event: FocusEvent<HTMLElement>) {
-    if (event.relatedTarget !== null || event.target.getClientRects().length > 0) desktopFocus.current = null;
+    if (event.relatedTarget !== null || navbarVisible(event.target)) desktopFocus.current = null;
     else restoreMenuFocus();
   }
 
   function menuBlur(event: FocusEvent<HTMLButtonElement>) {
-    if (event.relatedTarget !== null || event.target.getClientRects().length > 0) menuFocus.current = false;
-    else if (document.activeElement === document.body && desktopRef.current?.getClientRects().length) {
+    if (event.relatedTarget !== null || navbarVisible(event.target)) menuFocus.current = false;
+    else if (document.activeElement === document.body && navbarVisible(desktopRef.current)) {
       menuFocus.current = false;
       focusDesktop();
     }
@@ -172,27 +199,49 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar(
     if (!root) return;
     const candidates = [
       desktopRef.current?.querySelector<HTMLElement>('[aria-current="page"]:not([aria-disabled="true"])'),
-      ...root.querySelectorAll<HTMLElement>('.pk-navbar-desktop a[href], .pk-navbar-brand a[href], .pk-navbar-brand button, .pk-navbar-actions a[href], .pk-navbar-actions button, .pk-navbar-actions input, .pk-navbar-actions select, .pk-navbar-actions textarea, .pk-navbar-actions [tabindex]:not([tabindex="-1"])'),
+      ...root.querySelectorAll<HTMLElement>('.pk-navbar-desktop a[href], .pk-navbar-desktop button, .pk-navbar-brand a[href], .pk-navbar-brand button, .pk-navbar-actions a[href], .pk-navbar-actions button, .pk-navbar-actions input, .pk-navbar-actions select, .pk-navbar-actions textarea, .pk-navbar-actions [tabindex]:not([tabindex="-1"]), .pk-navbar-account a[href], .pk-navbar-account button, .pk-navbar-contact a[href], .pk-navbar-contact button'),
       root,
     ];
-    candidates.find(candidate => candidate && candidate.getClientRects().length > 0 && !candidate.matches(':disabled, [aria-disabled="true"]'))?.focus({ preventScroll: true });
+    candidates.find(candidate => navbarVisible(candidate) && !candidate.matches(':disabled, [aria-disabled="true"]'))?.focus({ preventScroll: true });
   }
 
   useLayoutEffect(() => {
     const root = rootRef.current;
-    if (!root) return;
+    const inner = innerRef.current;
+    if (!root || !inner) return;
     let frame = 0;
+    let disposed = false;
     const update = () => {
-      const compact = root.clientWidth < Number.parseFloat(foundation.breakpoint.md);
+      if (disposed) return;
+      const pieces = [brandRef.current, desktopRef.current, actionsRef.current, accountRef.current, contactRef.current].filter((node): node is HTMLElement => !!node);
+      const available = inner.clientWidth - Number.parseFloat(foundation.space["6"]) * 2;
+      const required = pieces.reduce((width, node) => width + node.scrollWidth, 0) + Math.max(0, pieces.length - 1) * Number.parseFloat(foundation.space["4"]);
+      const nextCompact = root.clientWidth < Number.parseFloat(foundation.breakpoint.md) || required > available;
+      const compactPieces = [brandRef.current, actionsRef.current, accountRef.current, contactRef.current].filter((node): node is HTMLDivElement => !!node);
+      const compactAvailable = inner.clientWidth - Number.parseFloat(foundation.space["4"]) * 2;
+      const compactRequired = compactPieces.reduce((width, node) => width + node.scrollWidth, 0) + Number.parseFloat(foundation.layout.touch) + compactPieces.length * Number.parseFloat(foundation.space["2"]);
+      const nextContactVisible = !nextCompact || (root.clientWidth >= Number.parseFloat(foundation.breakpoint.sm) && compactRequired <= compactAvailable);
       const previous = compactRef.current;
-      compactRef.current = compact;
-      if (!compact && openRef.current) {
+      const hidingContact = contactVisibleRef.current && !nextContactVisible;
+      const ownedFocusWillHide = (nextCompact && !previous && desktopRef.current?.contains(document.activeElement)) || (hidingContact && contactRef.current?.contains(document.activeElement));
+      compactRef.current = nextCompact;
+      contactVisibleRef.current = nextContactVisible;
+      // Visibility changes synchronously so focus recovery never targets the old layout.
+      root.dataset.compact = String(nextCompact);
+      root.dataset.contactVisible = String(nextContactVisible);
+      setCompact(nextCompact);
+      setContactVisible(nextContactVisible);
+      if (nextCompact && openGroupRef.current) {
+        groupResizeClose.current = true;
+        setOpenGroup(null);
+      }
+      if (!nextCompact && openRef.current) {
         resizeClose.current = true;
         setOpen(false);
-      } else if (compact && !previous && (desktopRef.current?.contains(document.activeElement) || (desktopFocus.current && document.activeElement === document.body))) {
+      } else if (nextCompact && (ownedFocusWillHide || (desktopFocus.current && !navbarVisible(desktopFocus.current) && document.activeElement === document.body))) {
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(restoreMenuFocus);
-      } else if (!compact && previous && (document.activeElement === triggerRef.current || (menuFocus.current && document.activeElement === document.body))) {
+      } else if (!nextCompact && previous && (document.activeElement === triggerRef.current || (menuFocus.current && document.activeElement === document.body))) {
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(() => {
           if (document.activeElement === triggerRef.current || (menuFocus.current && document.activeElement === document.body)) focusDesktop();
@@ -202,41 +251,70 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar(
     };
     update();
     const observer = new ResizeObserver(update);
-    observer.observe(root);
-    return () => { cancelAnimationFrame(frame); observer.disconnect(); };
-  }, []);
+    for (const node of [root, inner, brandRef.current, desktopRef.current?.firstElementChild, actionsRef.current, accountRef.current, contactRef.current?.firstElementChild]) if (node) observer.observe(node);
+    void document.fonts?.ready.then(update);
+    return () => { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); };
+  }, [brand, items, actions, account, contact]);
+
+  function renderItem(item: NavbarItem, mobile: boolean, inMenu = false) {
+    if (item.disabled) return <span role="link" aria-disabled="true" className="pk-navbar-link">{item.label}</span>;
+    const linkProps: NavigationLinkProps = {
+      href: item.href, className: inMenu ? "pk-navbar-menu-link" : "pk-navbar-link", children: item.label,
+      ...(activeItemId === item.id ? { "aria-current": "page" as const } : {}),
+      onClick: event => {
+        if (ordinaryActivation(event)) {
+          if (mobile) setOpen(false);
+          if (inMenu) setOpenGroup(null);
+        }
+      },
+    };
+    return renderLink ? renderLink(linkProps) : <a {...linkProps} />;
+  }
 
   function renderItems(mobile: boolean) {
     return <ul role="list" className="pk-navbar-list">{items.map(item => {
-      if (item.disabled) return <li key={item.id}><span role="link" aria-disabled="true" className="pk-navbar-link">{item.label}</span></li>;
-      const linkProps: NavigationLinkProps = {
-        href: item.href, className: "pk-navbar-link", children: item.label,
-        ...(activeItemId === item.id ? { "aria-current": "page" as const } : {}),
-        onClick: event => {
-          if (mobile && ordinaryActivation(event)) setOpen(false);
-        },
-      };
-      return <li key={item.id}>{renderLink ? renderLink(linkProps) : <a {...linkProps} />}</li>;
+      if (!("items" in item)) return <li key={item.id}>{renderItem(item, mobile)}</li>;
+      if (mobile) return <li key={item.id} className="pk-navbar-mobile-group"><span className="pk-navbar-group-label">{item.label}</span><ul role="list">{item.items.map(child => <li key={child.id}>{renderItem({ ...child, disabled: !!(item.disabled || child.disabled) }, true)}</li>)}</ul></li>;
+      return <li key={item.id}><DropdownMenu open={openGroup === item.id} onOpenChange={next => { groupResizeClose.current = false; setOpenGroup(next ? item.id : null); }} dir={dir === "rtl" ? "rtl" : "ltr"} modal={false}>
+        <DropdownMenuTrigger asChild><button type="button" className="pk-navbar-link pk-navbar-group-trigger" disabled={item.disabled} data-active={item.items.some(child => child.id === activeItemId) || undefined}>{item.label}<ChevronDownIcon size="sm" /></button></DropdownMenuTrigger>
+        <DropdownMenuContent className="pk-navbar-group-menu" align="start" sideOffset={Number.parseFloat(foundation.space["6"])} onCloseAutoFocus={event => {
+          if (groupResizeClose.current || compactRef.current) { event.preventDefault(); groupResizeClose.current = false; triggerRef.current?.focus({ preventScroll: true }); }
+        }}>
+          {item.items.map(child => <DropdownMenuItem key={child.id} asChild={!child.disabled} disabled={child.disabled} onSelect={event => event.preventDefault()}>{child.disabled ? child.label : renderItem(child, false, true)}</DropdownMenuItem>)}
+        </DropdownMenuContent>
+      </DropdownMenu></li>;
     })}</ul>;
   }
 
-  return <header {...props} tabIndex={props.tabIndex ?? -1} dir={dir} className={classes("pk-navbar", className)} ref={node => {
+  return <header {...props} tabIndex={props.tabIndex ?? -1} dir={dir} data-compact={compact} data-contact-visible={contactVisible} className={classes("pk-navbar", className)} ref={node => {
     rootRef.current = node;
     if (typeof forwardedRef === "function") return forwardedRef(node);
     if (forwardedRef) forwardedRef.current = node;
   }}>
     {contentId ? <a className="pk-navbar-skip" href={`#${contentId}`} onClick={() => document.getElementById(contentId)?.focus({ preventScroll: false })}>{skipLabel}</a> : null}
-    <div className="pk-navbar-inner">
-      <div className="pk-navbar-brand">{brand}</div>
-      <nav ref={desktopRef} className="pk-navbar-desktop" aria-label={navLabel} onFocusCapture={event => { desktopFocus.current = event.target; }} onBlurCapture={desktopBlur}>{renderItems(false)}</nav>
-      {actions ? <div className="pk-navbar-actions">{actions}</div> : null}
+    <div ref={innerRef} className="pk-navbar-inner">
+      <div ref={brandRef} className="pk-navbar-brand">{brand}</div>
+      <nav ref={desktopRef} className="pk-navbar-desktop" aria-label={navLabel} aria-hidden={compact || undefined} inert={compact || undefined} onFocusCapture={event => { desktopFocus.current = event.target; }} onBlurCapture={desktopBlur}>{renderItems(false)}</nav>
+      {actions ? <div ref={actionsRef} className="pk-navbar-actions">{actions}</div> : null}
+      {account ? <div ref={accountRef} className="pk-navbar-account"><NavbarAccountControl account={account} renderLink={renderLink} dir={dir === "rtl" ? "rtl" : "ltr"} /></div> : null}
+      {contact ? <div ref={contactRef} className="pk-navbar-contact" aria-hidden={!contactVisible || undefined} inert={!contactVisible || undefined} onFocusCapture={event => { desktopFocus.current = event.target; }} onBlurCapture={desktopBlur}><NavbarActionControl action={contact} renderLink={renderLink} /></div> : null}
       <Dialog open={open} onOpenChange={next => { resizeClose.current = false; setOpen(next); }}>
         <DialogTrigger asChild><Button ref={triggerRef} className="pk-navbar-mobile-trigger" variant="ghost" shape="icon" aria-label={menuLabel} onFocusCapture={() => { menuFocus.current = true; }} onBlurCapture={menuBlur}><MenuIcon /></Button></DialogTrigger>
-        <DialogContent dir={dir} className="pk-navbar-drawer" closeLabel={closeMenuLabel} onCloseAutoFocus={event => {
-          if (resizeClose.current || !compactRef.current) { event.preventDefault(); resizeClose.current = false; focusDesktop(); }
+        <DialogContent ref={drawerRef} dir={dir} className="pk-navbar-drawer" closeLabel={closeMenuLabel} onOpenAutoFocus={event => {
+          const destination = drawerRef.current?.querySelector<HTMLElement>('nav a[href][aria-current="page"]:not([aria-disabled="true"])') ?? drawerRef.current?.querySelector<HTMLElement>('nav a[href]:not([aria-disabled="true"])');
+          if (destination) { event.preventDefault(); destination.focus(); }
+        }} onCloseAutoFocus={event => {
+          if (pendingAction.current) {
+            event.preventDefault();
+            if (compactRef.current) triggerRef.current?.focus({ preventScroll: true }); else focusDesktop();
+            const callback = pendingAction.current;
+            pendingAction.current = undefined;
+            queueMicrotask(callback);
+          } else if (resizeClose.current || !compactRef.current) { event.preventDefault(); resizeClose.current = false; focusDesktop(); }
         }}>
-          <DialogTitle>{navLabel}</DialogTitle><DialogDescription>{menuDescription}</DialogDescription>
+          <DialogHeader><DialogTitle>{navLabel}</DialogTitle><DialogDescription>{menuDescription}</DialogDescription></DialogHeader>
           <nav aria-label={navLabel}>{renderItems(true)}</nav>
+          {contact ? <div className="pk-navbar-drawer-actions"><NavbarActionControl action={contact} renderLink={renderLink} onActivate={callback => { pendingAction.current = callback; setOpen(false); }} /></div> : null}
         </DialogContent>
       </Dialog>
     </div>

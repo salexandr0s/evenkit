@@ -105,31 +105,96 @@ export function ProjectPath() {
   },
   {
     id: "navbar", name: "Navbar", group: "Compositions", inventoryIds: ["E05"],
-    description: "Top navigation with active links, brand and action slots, a skip link, and a focus-safe mobile drawer.",
-    tags: ["navbar", "navigation", "header", "mobile", "drawer", "router", "skip link", "E05"],
+    description: "A complete website or application header with a linked logo, grouped navigation, account access, contact action, and a responsive mobile drawer.",
+    tags: ["navbar", "navigation", "header", "logo", "account", "login", "contact", "mobile", "drawer", "router", "sidebar", "skip link", "E05"],
     source: "Internal navbar.v1 · existing Radix Dialog composition",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dialog",
-    usage: `${imports}import { Navbar, Button } from "@evenkit/ui";
+    usage: `${imports}import type { ReactNode } from "react";
+import { AdminShell, Avatar, CompassIcon, FolderIcon, LayoutDashboardIcon,
+  Navbar, NavbarBrand, UsersIcon } from "@evenkit/ui";
 
-export function ProjectNavigation({ onCreate }: { onCreate: () => void }) {
+interface SessionUser { name: string; email: string }
+
+export function WebsiteLayout({ children, activeItemId, user, onSignIn, onSignOut }: {
+  children: ReactNode;
+  activeItemId: string;
+  user: SessionUser | null;
+  onSignIn: () => void;
+  onSignOut: () => void;
+}) {
   return (
     <>
       <Navbar
-        brand={<a href="/">Example workspace</a>}
+        brand={<NavbarBrand href="/" logo={<CompassIcon />}
+          description="Design & development">Northstar Studio</NavbarBrand>}
         items={[
-          { id: "projects", label: "Projects", href: "/projects" },
-          { id: "team", label: "Team", href: "/team" },
+          { id: "studio", label: "Studio", href: "/" },
+          { id: "work", label: "Work", items: [
+            { id: "websites", label: "Websites", href: "/work/websites" },
+            { id: "applications", label: "Applications", href: "/work/applications" },
+          ] },
+          { id: "about", label: "About", href: "/about" },
         ]}
-        activeItemId="projects" contentId="project-main"
-        actions={<Button size="sm" onClick={onCreate}>Create project</Button>}
+        activeItemId={activeItemId}
+        contentId="site-main"
+        navLabel="Studio navigation"
+        account={user ? {
+          label: "Your account", name: user.name, description: user.email,
+          icon: <Avatar name={user.name} size="sm" decorative />,
+          items: [
+            { id: "profile", label: "Your profile", href: "/account" },
+            { id: "sign-out", label: "Sign out", onSelect: onSignOut },
+          ],
+        } : { label: "Sign in", onSelect: onSignIn }}
+        contact={{ label: "Contact", href: "/contact" }}
       />
-      <main id="project-main" tabIndex={-1}>Project content belongs here.</main>
+      <main id="site-main" tabIndex={-1}>{children}</main>
     </>
   );
 }
 
-// Links collapse below 768px of available navbar width.
-// renderLink must forward the supplied ref, native events and ARIA props.
+export function WorkspaceLayout({ children, activeItemId, user, onSignOut }: {
+  children: ReactNode;
+  activeItemId: string;
+  user: SessionUser;
+  onSignOut: () => void;
+}) {
+  return (
+    <>
+      <Navbar
+        brand={<NavbarBrand href="/workspace" logo={<CompassIcon />}>Northstar</NavbarBrand>}
+        items={[
+          { id: "workspace", label: "Workspace", href: "/workspace" },
+          { id: "activity", label: "Activity", href: "/activity" },
+        ]}
+        activeItemId="workspace"
+        navLabel="Global navigation"
+        contentId="workspace-main"
+        account={{ label: "Your account", name: user.name, description: user.email,
+          items: [{ id: "sign-out", label: "Sign out", onSelect: onSignOut }] }}
+        contact={{ label: "Support", href: "/support" }}
+      />
+      <AdminShell
+        brand="Studio workspace"
+        compactBrand={<FolderIcon />}
+        header="Studio workspace"
+        contentId="workspace-main"
+        navLabel="Project navigation"
+        activeItemId={activeItemId}
+        navigation={[{ label: "Workspace", items: [
+          { id: "overview", label: "Overview", href: "/workspace", icon: <LayoutDashboardIcon /> },
+          { id: "projects", label: "Projects", href: "/workspace/projects", icon: <FolderIcon /> },
+          { id: "team", label: "Team", href: "/workspace/team", icon: <UsersIcon /> },
+        ] }]}
+      >{children}</AdminShell>
+    </>
+  );
+}
+
+// Supply authentication callbacks from your application.
+// contact also accepts { label: "Contact", onSelect: openContactDialog }.
+// renderLink must forward its ref, children, native events and ARIA props.
+// The Navbar sits above AdminShell; its header prop is for local page context.
 `,
   },
   {

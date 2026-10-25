@@ -10,7 +10,7 @@ const requiredExports: readonly (keyof typeof Kit)[] = [
   "Prose", "Container", "Stack", "Separator", "Card", "PageHeader", "ActionGroup", "VisuallyHidden",
   "Checkbox", "RadioGroup", "Switch", "Toggle", "ToggleGroup", "SegmentedControl", "ButtonGroup", "CopyAction",
   "Fieldset", "FormErrorSummary", "SearchField", "PasswordField", "Combobox", "FormActions", "SaveStatus",
-  "Tabs", "Accordion", "Collapsible", "Breadcrumbs", "Navbar", "Pagination",
+  "Tabs", "Accordion", "Collapsible", "Breadcrumbs", "Navbar", "NavbarBrand", "Pagination",
   "DropdownMenu", "Popover", "AlertDialog", "Sheet", "ToastProvider", "Progress", "Meter",
   "Avatar", "Tag", "DataList", "ListItem", "Kbd", "SemanticTable", "FilterBar", "AppliedFilters",
   "FileInput", "FileRow", "AccountMenu",
@@ -24,6 +24,22 @@ export function PriorityFixture() {
   for (const name of requiredExports) if (Kit[name] === undefined) throw new Error(`Missing packed export: ${name}`);
   return <section aria-label="Packed priority controls">
     <Kit.PageHeader headingAs="h2" title="Priority package controls" description="Public exports installed from packed artifacts." />
+    <Kit.Navbar
+      brand={<Kit.NavbarBrand href="#packed-navigation" logo={<Kit.ShapesIcon />} description="Package consumer">Packed navigation</Kit.NavbarBrand>}
+      navLabel="Packed primary navigation"
+      items={[
+        { id: "overview", label: "Overview", href: "#packed-navigation" },
+        { id: "resources", label: "Resources", items: [
+          { id: "guides", label: "Guides", href: "#packed-guides" },
+          { id: "support", label: "Support", href: "#packed-support" },
+        ] },
+      ]}
+      activeItemId="overview"
+      account={{ label: "Sign in to package preview", href: "#packed-account" }}
+      contact={{ label: "Contact", href: "#packed-contact" }}
+      contentId="packed-navigation"
+    />
+    <div id="packed-navigation" tabIndex={-1}>Packed header with grouped navigation and account actions.</div>
     <Kit.Card><Kit.CardHeader><h3>Packed foundations</h3></Kit.CardHeader><Kit.CardBody>
       <Kit.Avatar name="Alex Morgan" />
       <Kit.Tag>Package preview</Kit.Tag>
