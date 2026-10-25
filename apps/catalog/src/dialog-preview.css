@@ -1,10 +1,11 @@
+/* Hallmark · checked: 2026-10-25 · genre: modern-minimal · scope: app · built: the project · redesign: polish · v2.0.0 */
 .dialog-workbench { display: grid; gap: var(--pk-space-8); min-width: 0; }
 .dialog-preview-section { display: grid; gap: var(--pk-space-5); min-width: 0; }
 .dialog-preview-section + .dialog-preview-section { padding-top: var(--pk-space-6); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .dialog-preview-heading { display: grid; gap: var(--pk-space-2); max-width: var(--pk-layout-reading); }
 .dialog-preview-heading h3, .dialog-brief h3 { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-lg); line-height: var(--pk-font-line-height-snug); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
 .dialog-preview-heading > p, .dialog-project-summary > p { color: var(--pk-color-fg-muted); }
-.dialog-project-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-5); padding: var(--pk-space-5); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-bg-muted); }
+.dialog-project-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-5); padding-block: var(--pk-space-4); border-block: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .dialog-project-summary { display: grid; justify-items: start; gap: var(--pk-space-2); min-width: 0; }
 .dialog-project-summary > strong { font-size: var(--pk-font-size-lg); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
 .dialog-edit-form { display: grid; gap: var(--pk-space-5); min-width: 0; }

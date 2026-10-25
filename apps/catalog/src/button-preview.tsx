@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ActionMessage, ArrowRightIcon, Badge, Button, ButtonLink, CheckIcon, MailIcon, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipTrigger, type ButtonSize } from "@evenkit/ui";
+import { ActionMessage, ArrowRightIcon, Button, ButtonLink, CheckIcon, MailIcon, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipTrigger, type ButtonSize } from "@evenkit/ui";
 import "./button-preview.css";
 
 const buttonSizes: readonly { size: ButtonSize; label: string }[] = [
@@ -51,7 +51,7 @@ export function ButtonPreview() {
       </section>
 
       <section className="button-section button-save-example" aria-label="Saving example">
-        <div className="button-save-copy"><Badge tone="accent">Project settings</Badge><h3>Save without a second submission</h3><p>The label keeps its space while the spinner appears. Try saving with the keyboard.</p></div>
+        <div className="button-save-copy"><h3>Save without a second submission</h3><p>The label keeps its space while the spinner appears. Try saving with the keyboard.</p></div>
         <div className="button-save-control">
           <Button startIcon={<CheckIcon />} loading={saving} onClick={save}>Save changes</Button>
           <p className="button-caption" role="status">{saving ? "Saving changes in this preview…" : saves > 0 ? `Preview saved ${saves} ${saves === 1 ? "time" : "times"}.` : "Changes are saved in this preview only."}</p>

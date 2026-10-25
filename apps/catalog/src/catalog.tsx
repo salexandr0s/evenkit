@@ -244,20 +244,19 @@ export function Catalog() {
           {active ? (
             <article className="catalog-detail" data-composition={active.group === "Compositions" ? active.id : undefined} key={active.id}>
               <div className="catalog-detail-heading">
-                <div className="catalog-eyebrow">{active.group} <span aria-hidden="true">/</span> 0.1.0</div>
-                <div className="catalog-title-row"><h1>{active.name}</h1><Badge tone="accent">Pilot</Badge></div>
+                <div className="catalog-title-row"><h1>{active.name}</h1></div>
                 <p className="catalog-description">{active.description}</p>
               </div>
               <section className="catalog-preview" aria-label={`${active.name} live preview`}>
-                <div className="catalog-preview-header"><h2>Live preview</h2><span><span className="catalog-live-dot" aria-hidden="true" />{themes[theme].name} · {mode}</span></div>
+                <div className="catalog-preview-header"><h2>Live preview</h2><span>{themes[theme].name}<span className="catalog-preview-mode">{mode}</span></span></div>
                 <div className="catalog-preview-content"><Suspense fallback={<Spinner label="Loading component preview" />}><Preview id={active.id} theme={theme} mode={mode} onThemeChange={setTheme} /></Suspense></div>
               </section>
               <CodeExample code={active.usage} />
               <div className="catalog-information-grid">
-                <section className="catalog-info-panel"><h2>Component details</h2><dl><div><dt>Owner</dt><dd>Evenkit</dd></div><div><dt>Maturity</dt><dd>Pilot · ready for evaluation</dd></div><div><dt>Source</dt><dd>{active.source}</dd></div></dl><a href={active.sourceUrl} target="_blank" rel="noreferrer">Reference documentation <ExternalLinkIcon size="sm" /></a></section>
+                <section className="catalog-info-panel"><h2>Component details</h2><dl><div><dt>Owner</dt><dd>Evenkit</dd></div><div><dt>Maturity</dt><dd>Pilot, ready for evaluation</dd></div><div><dt>Source</dt><dd>{active.source}</dd></div></dl><a href={active.sourceUrl} target="_blank" rel="noreferrer">Reference documentation <ExternalLinkIcon size="sm" /></a></section>
                 <section className="catalog-info-panel"><h2>Use in a project</h2><p>Import the token stylesheet before the control stylesheet. Components ship ordinary CSS and do not require Tailwind.</p><pre tabIndex={0}><code>{'import "@evenkit/tokens/css";\nimport "@evenkit/ui/css";'}</code></pre><p>These local pilot packages have not been published. Build and pack them from this repository; installation steps are in the repository README.</p></section>
               </div>
-              <footer className="catalog-detail-footer"><span>React controls · document-level themes</span><span>Application state and callbacks stay in your project.</span></footer>
+              <footer className="catalog-detail-footer"><span>React controls with document-level themes</span><span>Application state and callbacks stay in your project.</span></footer>
             </article>
           ) : (
             <div className="catalog-no-results"><EmptyState icon={<SearchIcon />} titleAs="h1" title="No components match your search" description={`No results for “${query.trim()}”. Try a component name or a state such as loading.`} action={<Button onClick={clearCatalogSearch}>Clear search</Button>} /></div>

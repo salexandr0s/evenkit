@@ -1,3 +1,5 @@
+/* Hallmark · checked: 2026-10-25 · genre: modern-minimal · scope: app
+ * built: the project · redesign: polish · review: restrained navigation; requested resize motion retained · v2.0.0 */
 .pk-admin-shell,
 .pk-admin-shell *,
 .pk-admin-drawer,
@@ -35,7 +37,7 @@
 .pk-admin-nav-end { display: flex; align-items: center; justify-content: flex-end; flex: 0 1 auto; min-width: 0; max-width: 50%; overflow-wrap: anywhere; }
 .pk-admin-nav-end > * { min-width: 0; max-width: 100%; white-space: normal; }
 .pk-admin-nav-link:hover { color: var(--pk-color-fg); background: var(--pk-color-bg-muted); }
-.pk-admin-nav-link[aria-current="page"] { color: var(--pk-color-accent); background: var(--pk-color-accent-soft); font-weight: var(--pk-font-weight-medium); }
+.pk-admin-nav-link[aria-current="page"] { color: var(--pk-color-fg); background: var(--pk-color-bg-muted); font-weight: var(--pk-font-weight-semibold); }
 .pk-admin-nav-link[aria-current="page"]::before { content: ""; position: absolute; inset-block: var(--pk-space-2); inset-inline-start: 0; border-inline-start: var(--pk-border-width-thick) solid var(--pk-color-accent); border-radius: var(--pk-radius-full); }
 .pk-admin-sidebar[data-sidebar-view="collapsed"] .pk-admin-nav-link { justify-content: center; padding-inline: var(--pk-space-2); }
 .pk-admin-sidebar[data-sidebar-view="collapsed"] .pk-admin-nav-end { display: none; }

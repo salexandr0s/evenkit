@@ -1,3 +1,5 @@
+/* Hallmark · checked: 2026-10-25 · genre: modern-minimal · scope: app
+ * built: the project · redesign: polish · review: quieter containment; selection and data states retained · v2.0.0 */
 .pk-data-table,
 .pk-data-table *,
 .pk-data-table *::before,
@@ -8,9 +10,9 @@
 .pk-data-table-search .pk-input::-webkit-search-cancel-button { appearance: none; }
 .pk-data-table-actions, .pk-data-table-selection-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-2); min-width: 0; max-width: 100%; }
 .pk-data-table-actions > *, .pk-data-table-selection-actions > * { min-width: 0; max-width: 100%; }
-.pk-data-table-selection-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-3); min-width: 0; padding: var(--pk-space-3); margin-bottom: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-bg-muted); }
+.pk-data-table-selection-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-3); min-width: 0; padding: var(--pk-space-3); margin-bottom: var(--pk-space-4); border-radius: var(--pk-radius-sm); background: var(--pk-color-bg-muted); }
 .pk-data-table-selection-bar > p { margin: 0; font-weight: var(--pk-font-weight-medium); }
-.pk-data-table-scroll { width: 100%; max-width: 100%; overflow-x: auto; border: var(--pk-border-width-hairline) solid var(--pk-color-border-strong); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); }
+.pk-data-table-scroll { width: 100%; max-width: 100%; overflow-x: auto; border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); }
 .pk-data-table table { width: 100%; border-collapse: collapse; text-align: start; }
 .pk-data-table caption { padding: var(--pk-space-3) var(--pk-space-4); color: var(--pk-color-fg); font-weight: var(--pk-font-weight-semibold); text-align: start; border-bottom: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .pk-data-table th { padding: 0 var(--pk-space-4); height: var(--pk-table-row-height-default); background: var(--pk-color-bg-muted); color: var(--pk-color-fg); font-weight: var(--pk-font-weight-medium); text-align: start; white-space: nowrap; }

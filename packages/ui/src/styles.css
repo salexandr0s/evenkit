@@ -1,3 +1,4 @@
+/* Hallmark · checked: 2026-10-25 · genre: modern-minimal · scope: component · built: the project · redesign: polish · v2.0.0 */
 /* Import @evenkit/tokens/css before this stylesheet. No global element reset. */
 .pk-button,
 .pk-input-container,
@@ -49,14 +50,13 @@
 .pk-button[data-size="lg"] { --pk-button-height: var(--pk-control-height-lg); padding: var(--pk-space-3) var(--pk-control-padding-x-lg); font-size: var(--pk-font-size-base); }
 .pk-button[data-full-width] { width: 100%; }
 .pk-button[data-shape="icon"] { width: var(--pk-button-height); min-width: var(--pk-button-height); height: var(--pk-button-height); padding: 0; flex: none; }
-.pk-button[data-variant="primary"], .pk-button[data-variant="destructive"] { --pk-button-elevation: var(--pk-shadow-sm); }
 .pk-button[data-variant="primary"]:hover:not(:disabled) { background: var(--pk-color-accent-hover); }
 .pk-button[data-variant="secondary"] { background: var(--pk-color-bg-muted); color: var(--pk-color-fg); border-color: var(--pk-color-border); }
 .pk-button[data-variant="outline"] { background: transparent; color: var(--pk-color-fg); border-color: var(--pk-color-border-strong); }
 .pk-button[data-variant="ghost"] { background: transparent; color: var(--pk-color-fg); }
-.pk-button[data-variant="secondary"]:hover:not(:disabled),
+.pk-button[data-variant="secondary"]:hover:not(:disabled) { background: var(--pk-color-surface-elevated); }
 .pk-button[data-variant="outline"]:hover:not(:disabled),
-.pk-button[data-variant="ghost"]:hover:not(:disabled) { background: var(--pk-color-accent-soft); }
+.pk-button[data-variant="ghost"]:hover:not(:disabled) { background: var(--pk-color-bg-muted); }
 .pk-button[data-variant="destructive"] { background: var(--pk-color-danger); color: var(--pk-color-on-danger); }
 .pk-button[data-variant="destructive"]:hover:not(:disabled) { background: var(--pk-color-danger-hover); }
 .pk-button[data-variant="link"] { background: transparent; color: var(--pk-color-accent); text-underline-offset: var(--pk-space-1); }
@@ -96,7 +96,7 @@
 .pk-input::placeholder, .pk-textarea::placeholder { color: var(--pk-color-fg-muted); opacity: 1; }
 .pk-input:hover:not(:disabled), .pk-textarea:hover:not(:disabled), .pk-select:hover:not(:disabled) { border-color: var(--pk-color-fg-muted); }
 .pk-input:focus-visible, .pk-textarea:focus-visible, .pk-select:focus-visible { border-color: var(--pk-color-ring); }
-.pk-input:disabled, .pk-textarea:disabled, .pk-select:disabled { opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
+.pk-input:disabled, .pk-textarea:disabled, .pk-select:disabled { background: var(--pk-color-bg-muted); color: var(--pk-color-fg-muted); opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
 .pk-input[aria-invalid="true"], .pk-textarea[aria-invalid="true"], .pk-select[aria-invalid="true"] { border-color: var(--pk-color-danger); }
 .pk-input, .pk-textarea, .pk-input-container { --pk-field-height: var(--pk-control-height-md); }
 .pk-input[data-size="sm"], .pk-textarea[data-size="sm"], .pk-input-container[data-size="sm"] { --pk-field-height: var(--pk-control-height-sm); }
@@ -113,7 +113,7 @@
 .pk-input-container[data-adorned]:focus-within { border-color: var(--pk-color-ring); }
 .pk-input-container[data-adorned]:has(> .pk-input:focus-visible) { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
 .pk-input-container[data-adorned][data-invalid] { border-color: var(--pk-color-danger); }
-.pk-input-container[data-adorned]:has(> .pk-input:disabled) { opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
+.pk-input-container[data-adorned]:has(> .pk-input:disabled) { background: var(--pk-color-bg-muted); color: var(--pk-color-fg-muted); opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
 .pk-input-container[data-adorned] > .pk-input:disabled { opacity: 1; }
 .pk-input-container[data-adorned]:has(> .pk-input[readonly]) { background: var(--pk-color-bg-muted); }
 .pk-input-adornment { box-sizing: border-box; display: inline-flex; flex: 0 1 auto; align-items: center; min-width: 0; max-width: calc(100% - var(--pk-input-min-width)); color: var(--pk-color-fg-muted); overflow-wrap: anywhere; }
@@ -166,11 +166,11 @@
 .pk-field { display: grid; gap: var(--pk-space-2); min-width: 0; }
 .pk-field-hint, .pk-field-error { margin: 0; font-size: var(--pk-font-size-sm); overflow-wrap: anywhere; }
 .pk-field-hint { color: var(--pk-color-fg-muted); }
-.pk-field-error { display: flex; align-items: baseline; gap: var(--pk-space-2); color: var(--pk-color-danger); }
+.pk-field-error { display: flex; align-items: flex-start; gap: var(--pk-space-2); color: var(--pk-color-danger); }
+.pk-field-error > .pk-icon { margin-block-start: calc((1lh - var(--pk-icon-size-sm)) / 2); }
 .pk-field-error > div { min-width: 0; }
 .pk-field-hint > :first-child, .pk-field-error > div > :first-child { margin-top: 0; }
 .pk-field-hint > :last-child, .pk-field-error > div > :last-child { margin-bottom: 0; }
-.pk-feedback-symbol { display: inline-flex; flex: none; align-items: center; justify-content: center; min-width: var(--pk-layout-icon); font-weight: var(--pk-font-weight-semibold); }
 
 .pk-badge { display: inline-flex; align-items: center; gap: var(--pk-space-1-5); width: fit-content; min-height: var(--pk-space-6); min-width: 0; max-width: 100%; padding: var(--pk-space-0-5) var(--pk-space-2); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-full); background: var(--pk-color-bg-muted); color: var(--pk-color-fg); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-semibold); line-height: var(--pk-font-line-height-normal); font-variant-numeric: tabular-nums; vertical-align: middle; white-space: normal; overflow-wrap: anywhere; }
 .pk-badge[data-size="sm"] { gap: var(--pk-space-1); min-height: var(--pk-space-5); padding: 0 var(--pk-space-1-5); }
@@ -193,10 +193,10 @@
 .pk-skeleton:where([data-size="lg"]) { --pk-skeleton-control-size: var(--pk-control-height-lg); --pk-skeleton-text-size: var(--pk-font-size-base); }
 .pk-skeleton:where([data-variant="text"]) { min-height: 0; height: var(--pk-skeleton-text-size); }
 .pk-skeleton:where([data-variant="avatar"]) { align-self: start; width: var(--pk-skeleton-control-size); max-width: 100%; height: auto; min-height: 0; aspect-ratio: 1; border-radius: var(--pk-radius-full); }
-.pk-empty-state { --pk-empty-title-size: var(--pk-font-size-lg); --pk-empty-icon-frame: var(--pk-space-12); --pk-empty-icon-size: var(--pk-icon-size-lg); --pk-empty-icon-margin: auto; --pk-empty-actions-align: center; min-width: 0; max-width: 100%; padding: var(--pk-space-8) var(--pk-space-6); border: var(--pk-border-width-hairline) dashed var(--pk-color-border-strong); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); color: var(--pk-color-fg); text-align: center; }
+.pk-empty-state { --pk-empty-title-size: var(--pk-font-size-lg); --pk-empty-icon-frame: var(--pk-space-12); --pk-empty-icon-size: var(--pk-icon-size-lg); --pk-empty-icon-margin: auto; --pk-empty-actions-align: center; min-width: 0; max-width: 100%; padding: var(--pk-space-8) var(--pk-space-6); color: var(--pk-color-fg); text-align: center; }
 .pk-empty-state:where([data-size="sm"]) { --pk-empty-title-size: var(--pk-font-size-base); --pk-empty-icon-frame: var(--pk-space-8); --pk-empty-icon-size: var(--pk-icon-size-md); padding: var(--pk-space-4); }
 .pk-empty-state:where([data-align="start"]) { --pk-empty-icon-margin: 0; --pk-empty-actions-align: flex-start; text-align: start; }
-.pk-empty-icon { display: flex; align-items: center; justify-content: center; width: var(--pk-empty-icon-frame); height: var(--pk-empty-icon-frame); max-width: 100%; margin-inline: var(--pk-empty-icon-margin); margin-bottom: var(--pk-space-4); border-radius: var(--pk-radius-md); background: var(--pk-color-bg-muted); color: var(--pk-color-fg-muted); }
+.pk-empty-icon { display: flex; align-items: center; justify-content: center; width: var(--pk-empty-icon-frame); height: var(--pk-empty-icon-frame); max-width: 100%; margin-inline: var(--pk-empty-icon-margin); margin-bottom: var(--pk-space-4); color: var(--pk-color-fg-muted); }
 .pk-empty-icon > * { max-width: 100%; max-height: 100%; }
 .pk-empty-icon > svg { width: var(--pk-empty-icon-size); height: var(--pk-empty-icon-size); }
 .pk-empty-title { min-width: 0; max-width: 100%; margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-empty-title-size); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }

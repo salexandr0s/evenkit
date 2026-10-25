@@ -2,6 +2,7 @@
 
 import { forwardRef, useId, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { classes } from "./classes.js";
+import { CircleAlertIcon } from "./icons.js";
 
 export interface LabelProps extends ComponentPropsWithoutRef<"label"> {
   required?: boolean;
@@ -67,7 +68,7 @@ export function FieldFrame({ label, hint, error, optional, fieldClassName, descr
       {description.hasHint ? <div className="pk-field-hint" id={description.hintId}>{hint}</div> : null}
       {description.hasError ? (
         <div className="pk-field-error" id={description.errorId} role="alert">
-          <span className="pk-feedback-symbol" aria-hidden="true">!</span>
+          <CircleAlertIcon size="sm" />
           <div>{error}</div>
         </div>
       ) : null}

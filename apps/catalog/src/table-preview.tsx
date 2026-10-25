@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Badge, Button, DataTable, Label, Select, type DataTableColumn } from "@evenkit/ui";
+import { Button, DataTable, Label, Select, type DataTableColumn } from "@evenkit/ui";
 import { getProjectId, projectColumns, projects, type PreviewProject } from "./project-data";
 import "./table-preview.css";
 
@@ -125,7 +125,7 @@ export function TablePreview() {
         emptyTitle="No projects in this preview"
         emptyDescription="Restore the fictional projects to explore search, selection, and row actions."
         emptyAction={<Button size="sm" variant="outline" onClick={restoreProjects}>Restore preview projects</Button>}
-        toolbar={<Badge tone="accent">Local data</Badge>}
+        toolbar={<span className="catalog-caption">Local data</span>}
         selection={{ selectedIds, onSelectionChange: setSelectedIds, getRowLabel: (row) => row.name, actions: <Button size="sm" variant="outline" disabled={unavailable || selectedIds.length === 0} onClick={archiveSelected}>Archive selected</Button> }}
       />
       <p className="table-preview-result" role="status" aria-label="Archive result" aria-atomic="true">{archiveResult}</p>

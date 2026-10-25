@@ -1,6 +1,6 @@
 import { useId, useRef, useState, type FormEvent } from "react";
 import {
-  ActionMessage, Badge, Button, Dialog, DialogBody, DialogClose, DialogContent,
+  ActionMessage, Button, Dialog, DialogBody, DialogClose, DialogContent,
   DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
   SelectField, TextareaField, TextField,
 } from "@evenkit/ui";
@@ -73,9 +73,9 @@ export function DialogPreview() {
   return (
     <div className="dialog-workbench">
       <section className="dialog-preview-section" aria-label="Project editing example">
-        <div className="dialog-preview-heading"><h3>Edit a project</h3><p>Save updates the card below. Closing without saving discards your changes.</p></div>
+        <div className="dialog-preview-heading"><h3>Edit a project</h3><p>Save updates the project below. Closing without saving discards your changes.</p></div>
         <div className="dialog-project-card">
-          <div className="dialog-project-summary"><Badge tone="accent">Project</Badge><strong>{saved.name}</strong><p>Visibility: {saved.visibility}.</p></div>
+          <div className="dialog-project-summary"><strong>{saved.name}</strong><p>Visibility: {saved.visibility}.</p></div>
           <Dialog open={open} onOpenChange={changeOpen}>
             <DialogTrigger asChild><Button variant="outline">Edit project</Button></DialogTrigger>
             <DialogContent scroll="body">

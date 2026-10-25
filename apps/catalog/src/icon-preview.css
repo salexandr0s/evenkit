@@ -1,3 +1,4 @@
+/* Hallmark · checked: 2026-10-25 · genre: modern-minimal · built: the project · redesign: polish · v2.0.0 */
 .icon-workbench { display: grid; gap: var(--pk-space-8); min-width: 0; }
 .icon-workbench code { font-family: var(--pk-font-family-mono); font-size: var(--pk-font-size-xs); overflow-wrap: anywhere; }
 .icon-workbench h3, .icon-workbench h4 { margin: 0; font-weight: var(--pk-font-weight-semibold); line-height: var(--pk-font-line-height-snug); }
@@ -24,20 +25,20 @@
 .icon-workbench .icon-copy-notice { color: var(--pk-color-accent); font-size: var(--pk-font-size-xs); overflow-wrap: anywhere; }
 .icon-copy-notice:not(:empty) { padding: var(--pk-space-3); margin-bottom: var(--pk-space-3); background: var(--pk-color-accent-soft); border-radius: var(--pk-radius-sm); }
 .icon-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--pk-space-16) * 3)), 1fr)); gap: var(--pk-space-3); padding: 0; margin: 0; list-style: none; }
-.icon-card { display: flex; flex-direction: column; min-width: 0; border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); }
+.icon-card { display: flex; flex-direction: column; min-width: 0; border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .icon-card-heading { display: flex; align-items: center; gap: var(--pk-space-3); padding: var(--pk-space-4) var(--pk-space-4) var(--pk-space-3); }
 .icon-card-heading > div { display: grid; gap: var(--pk-space-1); min-width: 0; overflow-wrap: anywhere; }
 .icon-card-heading > div > span { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
-.icon-card-sample { display: inline-flex; flex: none; align-items: center; justify-content: center; width: var(--pk-space-12); height: var(--pk-space-12); background: var(--pk-color-bg-muted); border-radius: var(--pk-radius-sm); }
+.icon-card-sample { display: inline-flex; flex: none; align-items: center; justify-content: center; width: var(--pk-space-12); height: var(--pk-space-12); }
 .icon-export-name { display: block; padding: 0 var(--pk-space-4) var(--pk-space-3); font-weight: var(--pk-font-weight-medium); }
-.icon-import { display: flex; flex: 1; align-items: flex-start; gap: var(--pk-space-2); min-width: 0; padding: var(--pk-space-3) var(--pk-space-4); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: 0 0 var(--pk-radius-md) var(--pk-radius-md); background: var(--pk-color-bg-muted); }
+.icon-import { display: flex; flex: 1; align-items: flex-start; gap: var(--pk-space-2); min-width: 0; padding: var(--pk-space-3) var(--pk-space-4); }
 .icon-import-code { display: grid; flex: 1; gap: var(--pk-space-2); min-width: 0; }
 .icon-import code { display: block; color: var(--pk-color-fg-muted); user-select: all; }
 .icon-import .pk-button { flex: none; }
 .icon-patterns { display: grid; gap: var(--pk-space-5); padding-top: var(--pk-space-6); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .icon-patterns-heading { max-width: var(--pk-layout-reading); }
 .icon-pattern-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--pk-space-16) * 3 + var(--pk-space-8))), 1fr)); gap: var(--pk-space-4); }
-.icon-pattern { display: flex; flex-direction: column; gap: var(--pk-space-3); min-width: 0; padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); }
+.icon-pattern { display: flex; flex-direction: column; gap: var(--pk-space-3); min-width: 0; padding-block: var(--pk-space-4); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .icon-pattern-example { display: flex; align-items: center; min-height: var(--pk-control-height-lg); }
 .icon-pattern p { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); line-height: var(--pk-font-line-height-relaxed); }
 .icon-pattern > code { margin-top: auto; padding: var(--pk-space-3); border-radius: var(--pk-radius-sm); background: var(--pk-color-bg-muted); }

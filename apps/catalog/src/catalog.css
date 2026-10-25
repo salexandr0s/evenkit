@@ -1,3 +1,8 @@
+/* Hallmark · checked: 2026-10-25 · genre: modern-minimal · shape: app screen
+ * built: the project · redesign: polish · v2.0.0
+ * finish-review: subagent · 1 correction resolved · 1 finish finding answered
+ * Findings and retained product requirements: docs/hallmark-design-pass.md */
+html, body { overflow-x: clip; }
 body { margin: 0; background: var(--pk-color-bg); color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); }
 .catalog-app, .catalog-app *, .catalog-app *::before, .catalog-app *::after { box-sizing: border-box; }
 .catalog-app { min-height: 100dvh; }
@@ -20,18 +25,18 @@ body { margin: 0; background: var(--pk-color-bg); color: var(--pk-color-fg); fon
 .catalog-preferences > div { display: flex; align-items: center; gap: var(--pk-space-2); min-width: 0; }
 .catalog-preferences .pk-label { flex-shrink: 0; white-space: nowrap; }
 .catalog-preferences .pk-select { width: auto; min-width: calc(var(--pk-space-16) + var(--pk-space-12)); font-size: var(--pk-font-size-xs); }
-.catalog-detail { min-width: 0; }
+.catalog-detail { min-width: 0; max-width: var(--pk-layout-content); margin-inline: auto; }
 .catalog-detail-heading { padding: var(--pk-space-2) 0 var(--pk-space-8); }
-.catalog-eyebrow { display: flex; align-items: center; gap: var(--pk-space-2); font-size: var(--pk-font-size-xs); color: var(--pk-color-fg-muted); margin-bottom: var(--pk-space-4); }
+.catalog-app h1, .catalog-app h2 { min-width: 0; overflow-wrap: break-word; text-wrap: balance; }
 .catalog-title-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-3); }
-.catalog-title-row h1 { font-size: var(--pk-font-size-4xl); line-height: var(--pk-font-line-height-tight); letter-spacing: var(--pk-font-letter-spacing-tight); font-weight: var(--pk-font-weight-semibold); }
+.catalog-title-row h1 { font-size: var(--pk-font-size-3xl); line-height: var(--pk-font-line-height-tight); letter-spacing: var(--pk-font-letter-spacing-tight); font-weight: var(--pk-font-weight-semibold); }
 .catalog-description { max-width: var(--pk-layout-reading); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-base); line-height: var(--pk-font-line-height-normal); margin-top: var(--pk-space-4) !important; }
-.catalog-preview { min-width: 0; border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); overflow: hidden; background: var(--pk-color-surface); box-shadow: var(--pk-shadow-xs); }
-.catalog-preview-header { padding: var(--pk-space-4) var(--pk-space-6); display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: var(--pk-space-3); border-bottom: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.catalog-preview { min-width: 0; border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.catalog-preview-header { padding: var(--pk-space-4) 0; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: var(--pk-space-3); }
 .catalog-preview-header h2 { font-size: var(--pk-font-size-sm); font-weight: var(--pk-font-weight-medium); }
 .catalog-preview-header > span { display: flex; gap: var(--pk-space-2); align-items: center; font-size: var(--pk-font-size-xs); color: var(--pk-color-fg-muted); }
-.catalog-live-dot { width: var(--pk-space-1-5); height: var(--pk-space-1-5); border-radius: var(--pk-radius-full); background: var(--pk-color-success); }
-.catalog-preview-content { padding: var(--pk-space-8); }
+.catalog-preview-content { padding: var(--pk-space-4) 0 var(--pk-space-8); }
+.catalog-preview-mode { padding-inline-start: var(--pk-space-2); border-inline-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .catalog-demo-stack { display: flex; flex-direction: column; gap: var(--pk-space-6); min-width: 0; }
 .catalog-demo-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-3); }
 .catalog-align-end { align-items: flex-end; }
@@ -48,7 +53,7 @@ body { margin: 0; background: var(--pk-color-bg); color: var(--pk-color-fg); fon
 .catalog-copy-notice { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); margin-top: var(--pk-space-2) !important; }
 .catalog-copy-notice:empty { margin-top: 0 !important; }
 .catalog-information-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--pk-space-6); margin-top: var(--pk-space-8); }
-.catalog-info-panel { min-width: 0; padding: var(--pk-space-6); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); }
+.catalog-info-panel { min-width: 0; padding-top: var(--pk-space-5); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .catalog-info-panel h2 { font-size: var(--pk-font-size-sm); font-weight: var(--pk-font-weight-semibold); margin-bottom: var(--pk-space-4); }
 .catalog-info-panel p { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); line-height: var(--pk-font-line-height-relaxed); }
 .catalog-info-panel p + p, .catalog-info-panel pre + p { margin-top: var(--pk-space-4); }
@@ -60,15 +65,15 @@ body { margin: 0; background: var(--pk-color-bg); color: var(--pk-color-fg); fon
 .catalog-detail-footer { display: flex; gap: var(--pk-space-3); justify-content: space-between; flex-wrap: wrap; margin-top: var(--pk-space-8); padding-bottom: var(--pk-space-4); font-size: var(--pk-font-size-xs); color: var(--pk-color-fg-muted); }
 .catalog-no-results { padding-top: var(--pk-space-10); }
 .catalog-detail[data-composition="admin-shell"] .catalog-preview-content { padding: 0; }
-.catalog-detail[data-composition="data-table"] .catalog-preview-content { padding: var(--pk-space-5); }
+.catalog-detail[data-composition="data-table"] .catalog-preview-content { padding-inline: 0; }
 .catalog-admin-preview { --pk-admin-height: calc(var(--pk-space-16) * 8); min-width: 0; }
 .catalog-demo-brand { display: flex; align-items: center; gap: var(--pk-space-3); font-size: var(--pk-font-size-sm); }
 .catalog-shell-page { display: flex; flex-direction: column; gap: var(--pk-space-6); min-width: 0; }
 .catalog-shell-page h3 { margin: 0 0 var(--pk-space-2); font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-xl); line-height: var(--pk-font-line-height-snug); font-weight: var(--pk-font-weight-semibold); }
 .catalog-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--pk-space-3); }
-.catalog-summary-grid > div { display: flex; flex-direction: column; gap: var(--pk-space-2); padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); }
+.catalog-summary-grid > div { display: flex; flex-direction: column; gap: var(--pk-space-2); padding: var(--pk-space-4) 0; border-bottom: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .catalog-summary-grid span { font-size: var(--pk-font-size-xs); color: var(--pk-color-fg-muted); }
-.catalog-summary-grid strong { font-size: var(--pk-font-size-2xl); font-weight: var(--pk-font-weight-semibold); }
+.catalog-summary-grid strong { font-size: var(--pk-font-size-2xl); font-weight: var(--pk-font-weight-semibold); font-variant-numeric: tabular-nums; }
 .catalog-recent-projects { display: flex; flex-direction: column; }
 .catalog-recent-projects h4 { margin: 0 0 var(--pk-space-2); font-size: var(--pk-font-size-sm); font-weight: var(--pk-font-weight-semibold); }
 .catalog-recent-projects > div { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--pk-space-3); padding: var(--pk-space-3) 0; border-bottom: var(--pk-border-width-hairline) solid var(--pk-color-border); }
@@ -91,8 +96,8 @@ body { margin: 0; background: var(--pk-color-bg); color: var(--pk-color-fg); fon
   .catalog-preferences .pk-select { min-width: 0; width: 100%; }
   .catalog-title-row h1 { font-size: var(--pk-font-size-3xl); }
   .catalog-description { font-size: var(--pk-font-size-sm); }
-  .catalog-preview-header { padding: var(--pk-space-4); }
-  .catalog-preview-content { padding: var(--pk-space-5); }
+  .catalog-preview-header { padding: var(--pk-space-4) 0; }
+  .catalog-preview-content { padding: var(--pk-space-3) 0 var(--pk-space-6); }
   .catalog-code { padding: var(--pk-space-4); }
   .catalog-information-grid { grid-template-columns: minmax(0, 1fr); gap: var(--pk-space-4); }
 }

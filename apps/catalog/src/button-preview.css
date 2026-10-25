@@ -1,3 +1,4 @@
+/* Hallmark · checked: 2026-10-25 · genre: modern-minimal · scope: app · built: the project · redesign: polish · v2.0.0 */
 .button-workbench { display: grid; gap: var(--pk-space-8); min-width: 0; }
 .button-workbench h3 { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-lg); line-height: var(--pk-font-line-height-snug); font-weight: var(--pk-font-weight-semibold); }
 .button-workbench code { font-family: var(--pk-font-family-mono); font-size: var(--pk-font-size-xs); }
@@ -5,11 +6,11 @@
 .button-section + .button-section { padding-top: var(--pk-space-6); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .button-section-heading { display: grid; gap: var(--pk-space-2); max-width: var(--pk-layout-reading); }
 .button-section-heading > p, .button-save-copy > p { color: var(--pk-color-fg-muted); }
-.button-variants { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--pk-space-16) * 2 + var(--pk-space-8))), 1fr)); gap: var(--pk-space-3); }
-.button-variants > div { display: flex; flex-direction: column; align-items: flex-start; gap: var(--pk-space-3); min-width: 0; padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); }
+.button-variants { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--pk-space-3); }
+.button-variants > div { display: flex; flex-direction: column; align-items: flex-start; gap: var(--pk-space-3); min-width: 0; padding-block: var(--pk-space-2); }
 .button-variants > div > span, .button-size-grid > div > span { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
 .button-workbench .button-caption { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); line-height: var(--pk-font-line-height-relaxed); }
-.button-section.button-save-example { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-6); padding: var(--pk-space-5); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-bg-muted); }
+.button-section.button-save-example { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-6); }
 .button-save-copy { display: grid; justify-items: start; gap: var(--pk-space-3); flex: 2 1 calc(var(--pk-space-16) * 4); min-width: 0; }
 .button-save-control { display: flex; flex-direction: column; align-items: flex-start; gap: var(--pk-space-3); flex: 1 1 calc(var(--pk-space-16) * 3); min-width: 0; }
 .button-save-control .button-caption { min-height: calc(var(--pk-font-size-xs) * var(--pk-font-line-height-relaxed) * 2); }
@@ -19,7 +20,12 @@
 .button-size-grid code { color: var(--pk-color-fg-muted); }
 .button-icon-actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--pk-space-6); }
 .button-icon-actions > div { display: grid; justify-items: start; gap: var(--pk-space-3); }
-.button-toggle-row { display: flex; align-items: center; gap: var(--pk-space-3); padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); }
+.button-toggle-row { display: flex; align-items: center; gap: var(--pk-space-3); padding-block: var(--pk-space-4); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .button-toggle-row > div { min-width: 0; overflow-wrap: anywhere; }
 .button-toggle-row strong { font-weight: var(--pk-font-weight-medium); }
 .button-width-example { max-width: var(--pk-layout-form); width: 100%; }
+
+/* Matches foundation.breakpoint.sm. */
+@media (max-width: 640px) {
+  .button-variants { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

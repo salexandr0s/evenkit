@@ -53,7 +53,7 @@ export function LoadingPreview() {
       <section className="loading-section" aria-label="Spinner sizes">
         <div className="loading-section-heading"><h3>Small indicators for short waits</h3><p>Use one status message for the operation. These spinner samples are decorative.</p></div>
         <ul className="loading-spinner-samples" role="list">
-          {sizes.map(({ size, label }) => <li key={size}><span className="loading-spinner-slot"><Spinner size={size} aria-hidden="true" /></span><span>{label} · {foundation.icon.size[size]}</span></li>)}
+          {sizes.map(({ size, label }) => <li key={size}><span className="loading-spinner-slot"><Spinner size={size} aria-hidden="true" /></span><span className="loading-sample-description"><span>{label}</span><span>{foundation.icon.size[size]}</span></span></li>)}
         </ul>
         <p className="loading-caption">Motion follows your device's reduced-motion preference.</p>
       </section>
@@ -61,9 +61,9 @@ export function LoadingPreview() {
       <section className="loading-section" aria-label="Skeleton shapes">
         <div className="loading-section-heading"><h3>Match the content that will arrive</h3><p>Text, avatar, and block placeholders reserve space without adding another announcement.</p></div>
         <div className="loading-shape-grid">
-          <div className="loading-shape-card"><h4>Text</h4><div className="loading-shape-samples">{sizes.map(({ size, label, textHeight }) => <div key={size}><span>{label} · {textHeight}</span><Skeleton variant="text" size={size} /></div>)}</div></div>
-          <div className="loading-shape-card"><h4>Avatar</h4><div className="loading-shape-samples">{sizes.map(({ size, label }) => <div key={size}><span>{label} · {foundation.control.height[size]}</span><Skeleton variant="avatar" size={size} /></div>)}</div></div>
-          <div className="loading-shape-card"><h4>Block</h4><div className="loading-shape-samples">{sizes.map(({ size, label }) => <div key={size}><span>{label} · {foundation.control.height[size]} minimum</span><Skeleton variant="block" size={size} /></div>)}</div></div>
+          <div className="loading-shape-card"><h4>Text</h4><div className="loading-shape-samples">{sizes.map(({ size, label, textHeight }) => <div key={size}><span className="loading-sample-description"><span>{label}</span><span>{textHeight}</span></span><Skeleton variant="text" size={size} /></div>)}</div></div>
+          <div className="loading-shape-card"><h4>Avatar</h4><div className="loading-shape-samples">{sizes.map(({ size, label }) => <div key={size}><span className="loading-sample-description"><span>{label}</span><span>{foundation.control.height[size]}</span></span><Skeleton variant="avatar" size={size} /></div>)}</div></div>
+          <div className="loading-shape-card"><h4>Block</h4><div className="loading-shape-samples">{sizes.map(({ size, label }) => <div key={size}><span className="loading-sample-description"><span>{label}</span><span>{foundation.control.height[size]} minimum</span></span><Skeleton variant="block" size={size} /></div>)}</div></div>
         </div>
       </section>
     </div>

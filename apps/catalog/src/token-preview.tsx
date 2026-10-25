@@ -176,9 +176,9 @@ export function TokenPreview({ theme, mode }: { theme: ThemeName; mode: ColorMod
 
       <section className="token-theme-sample" aria-label="Theme sample">
         <div className="token-type-example">
-          <span className="token-eyebrow">{themes[theme].name} / {mode}</span>
           <h3>Project overview</h3>
           <p>Readable text, clear labels, and a shared scale.</p>
+          <span className="token-theme-context">{themes[theme].name} / {mode}</span>
           <small>Metadata and supporting details</small>
           <code>font.family.mono</code>
         </div>

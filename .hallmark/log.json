@@ -1,0 +1,16 @@
+[
+  {
+    "date": "2026-10-25",
+    "mode": "redesign",
+    "depth": "polish",
+    "scope": "app",
+    "theme": "existing project tokens",
+    "prompt": "One more design pass using Hallmark anti-slop analysis on every component",
+    "entry": "docs/hallmark-design-pass.md",
+    "waived": [],
+    "productRequirementsRetained": [
+      "sidebar resize motion",
+      "chat position motion"
+    ]
+  }
+]

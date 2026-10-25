@@ -111,7 +111,7 @@ export const TooltipContent = forwardRef<ComponentRef<typeof TooltipPrimitive.Co
             height={Number.parseFloat(foundation.space["1"])}
             aria-hidden="true"
           >
-            <svg viewBox="0 0 30 10" preserveAspectRatio="none">
+            <svg viewBox="0 0 30 10" preserveAspectRatio="none" aria-hidden="true">
               <path d="M0 0H30L15 10Z" />
               <path className="pk-tooltip-arrow-outline" d="M0 0L15 10L30 0" vectorEffect="non-scaling-stroke" />
             </svg>

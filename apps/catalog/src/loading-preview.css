@@ -1,3 +1,4 @@
+/* Hallmark · checked: 2026-10-25 · genre: modern-minimal (inferred) · shape: app screen · built: the project · redesign: polish · v2.0.0 */
 .loading-workbench { display: grid; gap: var(--pk-space-8); min-width: 0; }
 .loading-section { display: grid; gap: var(--pk-space-5); min-width: 0; }
 .loading-section + .loading-section { padding-top: var(--pk-space-6); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
@@ -6,11 +7,11 @@
 .loading-section-heading > p { color: var(--pk-color-fg-muted); }
 .loading-live-example { display: grid; gap: var(--pk-space-3); width: 100%; max-width: var(--pk-layout-form); min-width: 0; }
 .loading-live-status { min-height: calc(var(--pk-font-size-sm) * var(--pk-font-line-height-normal)); margin: 0; color: var(--pk-color-fg-muted); }
-.loading-project-card { position: relative; min-width: 0; padding: var(--pk-space-5); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface); box-shadow: var(--pk-shadow-xs); }
+.loading-project-card { position: relative; min-width: 0; padding: var(--pk-space-5); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface); }
 .loading-project-content { display: grid; gap: var(--pk-space-4); min-width: 0; }
 .loading-project-card[data-loading="true"] > .loading-project-content { visibility: hidden; }
 .loading-project-header { display: flex; align-items: center; gap: var(--pk-space-3); min-width: 0; min-height: var(--pk-control-height-lg); }
-.loading-project-avatar { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--pk-control-height-md); height: var(--pk-control-height-md); border-radius: var(--pk-radius-full); background: var(--pk-color-accent-soft); color: var(--pk-color-accent); }
+.loading-project-avatar { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--pk-control-height-md); height: var(--pk-control-height-md); border-radius: var(--pk-radius-full); background: var(--pk-color-bg-muted); color: var(--pk-color-fg-muted); }
 .loading-project-intro { display: grid; gap: var(--pk-space-1); min-width: 0; }
 .loading-project-intro h4 { margin: 0; font-size: var(--pk-font-size-base); line-height: var(--pk-font-line-height-normal); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
 .loading-project-intro p { margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
@@ -30,8 +31,10 @@
 .loading-spinner-samples { display: flex; flex-wrap: wrap; gap: var(--pk-space-5) var(--pk-space-8); margin: 0; padding: 0; list-style: none; }
 .loading-spinner-samples > li { display: flex; align-items: center; gap: var(--pk-space-3); }
 .loading-spinner-slot { display: inline-flex; align-items: center; justify-content: center; width: var(--pk-icon-size-lg); height: var(--pk-icon-size-lg); }
+.loading-sample-description { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: var(--pk-space-2); }
+.loading-sample-description > :last-child { color: var(--pk-color-fg-muted); font-variant-numeric: tabular-nums; }
 .loading-shape-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--pk-space-16) * 3)), 1fr)); gap: var(--pk-space-4); min-width: 0; }
-.loading-shape-card { display: grid; align-content: start; gap: var(--pk-space-4); min-width: 0; padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); }
+.loading-shape-card { display: grid; align-content: start; gap: var(--pk-space-4); min-width: 0; padding-block-start: var(--pk-space-4); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .loading-shape-card h4 { margin: 0; font-size: var(--pk-font-size-sm); font-weight: var(--pk-font-weight-semibold); }
 .loading-shape-samples { display: grid; gap: var(--pk-space-4); min-width: 0; }
 .loading-shape-samples > div { display: grid; align-content: start; gap: var(--pk-space-2); min-width: 0; }

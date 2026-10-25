@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Badge, ChatPanel, ChatWidget, SelectField, type ChatConversation, type ChatMessage, type ChatPanelProps, type ChatStatus } from "@evenkit/ui";
+import { ChatPanel, ChatWidget, SelectField, type ChatConversation, type ChatMessage, type ChatPanelProps, type ChatStatus } from "@evenkit/ui";
 import "./chat-preview.css";
 
 interface DemoConversation extends ChatConversation {
@@ -141,13 +141,13 @@ export function ChatPreview() {
     status,
     ...(status === "error" ? { error: "The sample reply failed. Try again to continue this conversation." } : {}),
     suggestions,
-    footer: "Sample replies · history lasts for this visit",
+    footer: "Sample replies. History lasts for this visit.",
   };
 
   return (
     <div className="chat-workbench">
       <div className="chat-preview-intro">
-        <div><Badge tone="accent">Interactive demo</Badge><h3>One assistant, two ways to use it</h3><p>Try the embedded panel below, or open the floating assistant in the corner. Expand it to browse conversations alongside your messages.</p></div>
+        <div><h3>Embedded and floating chat</h3><p>Try the panel below, or open the floating assistant. Expand it to browse conversations alongside your messages.</p></div>
         <SelectField label="Response preview" options={responseOptions} value={response} onValueChange={setResponse} disabled={status === "submitted" || status === "streaming"} />
       </div>
       <ChatPanel {...chat} className="chat-preview-panel" />

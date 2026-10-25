@@ -27,7 +27,7 @@ export function ThemePreview({ theme, mode, onThemeChange }: ThemePreviewProps) 
           <h3>Choose a palette</h3>
           <p>Compare the same workspace in every theme. Use the sun or moon button above to switch between light and dark colours.</p>
         </div>
-        <p className="theme-gallery-current" role="status">Using <strong>{themes[theme].name}</strong> · {mode}</p>
+        <p className="theme-gallery-current" role="status">Using <strong>{themes[theme].name}</strong><span>{mode}</span></p>
       </div>
       <div className="theme-gallery-grid">
         {themeNames.map((name) => {
@@ -49,13 +49,12 @@ export function ThemePreview({ theme, mode, onThemeChange }: ThemePreviewProps) 
               <div className="theme-card-specimen">
                 <div className="theme-specimen-topline"><span className="theme-specimen-mark" aria-hidden="true" /><span>Workspace</span><span>Overview</span></div>
                 <div className="theme-specimen-document">
-                  <span className="theme-specimen-eyebrow">Project notes</span>
                   <p className="theme-specimen-heading">The autumn project</p>
                   <p className="theme-specimen-body">Review the brief and share the next steps with your team.</p>
-                  <p className="theme-specimen-meta">Updated today · 4 contributors</p>
-                  <div className="theme-specimen-footer"><span className="theme-specimen-link">View project <span aria-hidden="true">↗</span></span><span className="theme-specimen-status"><CheckIcon size="sm" /> Ready</span></div>
+                  <p className="theme-specimen-meta"><span>Updated today</span><span>4 contributors</span></p>
+                  <div className="theme-specimen-footer"><span>Project notes</span><span className="theme-specimen-status"><CheckIcon size="sm" /> Ready</span></div>
                 </div>
-                <div className="theme-specimen-raised"><span className="theme-specimen-dot" aria-hidden="true" /><span>All changes saved</span></div>
+                <div className="theme-specimen-raised"><CheckIcon size="sm" /><span>All changes saved</span></div>
               </div>
               <div className="theme-card-details">
                 <div className="theme-card-heading"><h4 id={`${id}-${name}`}>{brand.name}</h4>{selected && <span className="theme-card-selected"><CheckIcon size="sm" /> Selected</span>}</div>
@@ -68,7 +67,7 @@ export function ThemePreview({ theme, mode, onThemeChange }: ThemePreviewProps) 
                     </div>
                   ))}
                 </dl>
-                <Button fullWidth aria-pressed={selected} onClick={() => onThemeChange(name)}>Apply {brand.name}</Button>
+                <Button fullWidth variant={selected ? "primary" : "outline"} aria-pressed={selected} onClick={() => onThemeChange(name)}>Apply {brand.name}</Button>
               </div>
             </article>
           );

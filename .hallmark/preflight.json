@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-25",
+  "mode": "redesign",
+  "depth": "polish",
+  "scope": "app",
+  "genre": "modern-minimal",
+  "source": "https://github.com/Nutlope/hallmark",
+  "revision": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+  "evidence": [
+    "package.json:7",
+    "packages/tokens/src/foundation.ts:1",
+    "packages/tokens/src/themes.ts:1",
+    "apps/catalog/src/catalog.tsx:1",
+    "packages/ui/src/index.ts:1"
+  ],
+  "preserved": [
+    "existing token palette and typography",
+    "all component APIs and wiring",
+    "requested sidebar/chat state motion",
+    "prior uncommitted work"
+  ],
+  "introduced": [
+    "flatter preview containment",
+    "quieter secondary emphasis",
+    "explicit disabled field colors",
+    "per-component audit"
+  ],
+  "routes": [
+    {
+      "url": "http://127.0.0.1:5173/#themes",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#tokens",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#icons",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#buttons",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#fields",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#select",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#dialog",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#tooltips",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#admin-shell",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#data-table",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#chat",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#status",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#loading",
+      "scope": "app"
+    },
+    {
+      "url": "http://127.0.0.1:5173/#empty",
+      "scope": "app"
+    }
+  ]
+}

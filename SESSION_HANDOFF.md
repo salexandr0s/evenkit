@@ -40,6 +40,16 @@ Committed this chat's completed 48-item design pass and popup-footer follow-up i
 
 An isolated copy of the exact runtime commit contents passed production build, configured TypeScript, full ESLint, eight token tests, all 130 included Chromium journeys, 62 copied examples/exactly 48 mappings and independent packed Next/Vite builds with SSR/HTTP/CSS/copied-block checks. The excluded Navbar work has five additional journeys; its absence explains the 130-test count versus the earlier combined 135-test run. Evidence: `.artifacts/design-commits/isolated-*.log`, `manifest.json`, planned patches and the saved preservation hashes. No additional implementation work was performed for packaging. Resume with `git log -4 --oneline` and `git status --short`; remaining edits belong to other work.
 
+## Menu bar refinement: 25 October 2026
+
+Completed the requested additional design pass. Compact headers retain Contact when their container is at least 640px and the brand, actions, account, Contact and menu control fit. Phones and longer content keep Contact in the drawer. Focus remains on a visible Contact control when navigation collapses and moves to the menu only when its control becomes hidden. Account controls now keep an accent border and muted surface while open; grouped mobile links have a logical inset and leading border. Navbar dropdowns use a 24px token offset to clear the header divider. Existing design tokens and public APIs are preserved.
+
+Runtime edits are limited to `packages/ui/src/navigation.tsx`, `navigation.css` and `navbar-parts.tsx`. Updated `docs/navigation.md` and extended the existing resize journey in `tests/browser/navbar-header.spec.ts`. The extended journey failed against the baseline at the missing tablet Contact action and passes after this change.
+
+Verification passed: production build, configured TypeScript and ESLint, all 11 navigation/header Chromium journeys, and independent packed Vite/Next.js builds with HTTP/stylesheet smoke checks. Visual geometry checks covered both website and application headers at 360/768/1440px across all eight themes and both modes (48 combinations). No header overlap, page overflow or runtime errors were found. Desktop group/account menus clear the divider by 9px; long action and brand labels hide Contact when needed, and hiding a focused action recovers to the menu. Before/after desktop, tablet, phone, drawer and light/dark account-menu captures were inspected. Firefox/Safari and physical touch were not tested.
+
+Evidence, source hashes and the isolated five-file patch are in `.artifacts/navbar-refinement/`. Preview: `http://127.0.0.1:5311/#navbar`. No required implementation work remains. Changes remain uncommitted alongside earlier navigation and concurrent component work. The existing preview server and concurrent popup-footer handoff were preserved. Resume with `git status --short`, `cat docs/navigation.md` and `.artifacts/navbar-refinement/owned-changes.patch`.
+
 ## Popup footer refinement: 25 October 2026
 
 Refined the popup button area requested in the attached edit-project screenshot. Dialog, AlertDialog and Sheet now share a same-surface footer with a content-width hairline, 16px top padding and 8px action gaps. Removed the full-bleed dark band and negative margins; the existing 24/20px outer gutters, motion and scrolling remain. In RecordWorkflow, Reset changes is a small explicit non-submit button after Notes. The footer pairs persistent status with Cancel/Save on desktop, expands errors across the row, and puts an equal-width/equal-height action pair below status on mobile. Long desktop labels move to another row before compressing status.
@@ -50,19 +60,25 @@ Verification passed: production builds, configured TypeScript, full ESLint, seve
 
 Evidence is in `.artifacts/popup-footers/`: `source-changes.patch` isolates the three runtime-file edits from their starting state; `before/`, `after/`, `final/`, `runtime-final/` and `alignment-final/` contain comparisons and reports; logs record the exact checks. Independent review is in `review.md`. The owned temporary preview on 5313 is confirmed closed; other previews were preserved. No required implementation work remains. Resume with `git status --short` and that patch before committing overlapping files.
 
-## Completed 48-item design goal: 25 October 2026
+## Menu bar design pass: 25 October 2026
 
-All 48 implemented Next inventory items were significantly improved in inventory order and independently reviewed. This completes the design goal based on user-confirmed implementation commit `686055c`. The authoritative per-item checklist and evidence are in `docs/component-design-elevation.md`. No required implementation or verification work remains.
+Completed the design improvement goal. The Navbar now uses a 72px desktop / 64px compact minimum row height, aligned 44px navigation and action controls, consistent 32px brand logos, and a single active-route underline for links and groups. Menus have more padding, stronger account-name hierarchy, and one account/avatar boundary. The mobile drawer has a grouped heading, independently scrolling links and a bottom Contact footer; opening it focuses the active enabled destination or first enabled link. All dimensions and colors use existing tokens; public APIs and host-owned routing/account/contact behavior remain compatible.
 
-Changes cover the six shared family modules/styles (`foundations`, `selection-controls`, `form-controls`, `navigation`, `overlays`, `data-workflows`), their catalog previews and family docs, the two editable record/recovery blocks, and a zero-specificity catalog margin reset. Existing switch and overlay browser journeys now cover reproduced RTL direction, confirmation exit-activation and AccountMenu keyboard pending-focus defects. Narrow rich/file rows use container width to keep text readable and actions reachable. Progress has a real indeterminate segment and reduced-motion state; SaveStatus preserves one lifecycle node. List Notes retain a readable width inside contained table scrolling. The page editor preserves native submission, drafts, aborts and focus while improving sections and save feedback.
+Changed `packages/ui/src/navigation.css` and `navigation.tsx`, `apps/catalog/src/navbar-preview.tsx` and `navigation-preview.css`, `docs/navigation.md`, and the existing mobile journey in `tests/browser/navbar-header.spec.ts`. Catalog controls now stay with the compact specimen and include derived default/selected-group/signed-in/unavailable presets. Reduced example-body spacing keeps the header visible. Other component families and the earlier uncommitted work were preserved.
 
-Verification passed: production builds; configured TypeScript and full ESLint; eight token tests; all 135 Chromium journeys including 48 routes across eight themes, two modes and four widths; 62 copied examples/exactly 48 priority mappings; independent packed Next/Vite builds, SSR/native-prop, HTTP/CSS and copied-block checks. After the full run, the sole source change was the block-local Notes renderer. Its six affected journeys, build/typecheck/focused lint and packed consumers passed again. All 291 source/config hashes were stable at the final checkpoint. During handoff, concurrent Navbar follow-up changes reached its shared component, catalog preview and browser test files. Those later contents are preserved and were not reverified by this goal. See `final-input-stability.json` for observed paths. No undefined CSS token references remain across 32 shared/catalog stylesheets. Independent source/pixel review signed off all 48; supplemental states include keyboard/reduced-motion/RTL, long names and narrow containers, five recovery variants and short-window save/retry/cancel/discard.
+Verification passed: production build, configured TypeScript and ESLint, all 11 navigation/header Chromium journeys, independent packed Next.js and Vite builds with SSR/HTTP/CSS checks, 64 theme/mode/width combinations for both website and app headers, and 32 themed dropdown/account-menu combinations. Checks found no overlap, page overflow, clipping, runtime errors or contrast failures in the checked pairs. Verified preview presets, disabled-link keyboard skipping, long brand/localized labels at 360/768/1024/1440/1920px, reduced motion, and mobile autofocus plus last-link/Contact reachability at 360×420px. Independent source and before/after visual review accepted the pass with no remaining finding. Firefox/Safari and physical touch were not tested.
 
-Evidence is under `.artifacts/design-elevation/`: `review-completion.md`, `final-*.log`, `o-final-*.log`, `o-final-package-verification.json`, `final-input-stability.json` and family screenshots/runtime reports. The tracker describes intermediate reproduced failures and harness corrections separately from product fixes. Firefox/Safari and physical touch were not tested.
+Before/after captures, verification logs, JSON results and the design-pass patch are in `.artifacts/navbar-design/`. The existing preview remains at `http://127.0.0.1:5311/#navbar`. No required design work remains. The work remains uncommitted alongside the previous navigation implementation and overlapping design changes. Resume with `git status --short`, `cat docs/navigation.md`, and `.artifacts/navbar-design/owned-changes.patch`.
 
-Concurrent complete-Navbar, Hallmark, compact utility and animated-icon work is preserved. The completed Navbar behavior and fixtures superseded the earlier E05 specimen and passed final integration before that later follow-up. This pass and its popup follow-up are committed locally; no deployment or push was performed. Separate Navbar and Hallmark work remains uncommitted. Root's temporary 5307 preview and M fixture 5393 are confirmed closed; independent consumers removed their own servers/directories; other previews are preserved.
+## Complete top navigation: 25 October 2026
 
-Resume for review: `cat docs/component-design-elevation.md`, `cat .artifacts/design-elevation/review-completion.md`, `git status --short`. No further design implementation is required for this goal.
+Extended the public Navbar without replacing its existing flat-link API. Added NavbarBrand, one-level link groups, named login/account controls, host-owned signed-in menus, and a Contact action. Desktop layout follows the supplied header reference using existing tokens. The header collapses below md or when its contents need more space; the account control stays visible and Contact moves into the mobile drawer. Hidden measurement content is inert. Resize, menu dismissal, host dialog handoff and account replacement preserve usable focus. Native link callbacks run before navigation, while callback-only popup actions run after dismissal.
+
+Core changes are in `packages/ui/src/navigation.tsx`, `navigation.css` and new `navbar-parts.tsx`. New `apps/catalog/src/navbar-preview.tsx` contains working website and application/sidebar specimens; the navigation preview, styles, copied usage and `docs/navigation.md` document integration. Existing navigation regression specimens remain available. `tests/browser/navbar-header.spec.ts` adds five interaction journeys. The packed consumer fixture and package verifier now exercise the complete header.
+
+Final verification passed: production build, configured TypeScript and ESLint, all 11 navigation/header Chromium journeys, packed Next.js and Vite builds with SSR/HTTP/CSS checks, and 64 visual/geometry combinations across eight themes, both modes and 360/768/1024/1440px. The initial integration run also passed all 10 sidebar/tooltip journeys. All 62 copied examples compiled, and eight token tests passed. Additional runtime checks confirm visible keyboard focus, reduced motion, long brand/localized labels at five widths, and no horizontal overflow or runtime errors. Independent source review accepted the implementation; desktop, mobile, dropdown, drawer and application captures were inspected. Firefox/Safari and physical touch were not tested.
+
+Evidence and the goal-only patch are in `.artifacts/navbar/`. The preview is available at `http://127.0.0.1:5311/#navbar` (owned preview session 96461). No required implementation work remains. Changes remain uncommitted: a dry-run applying the goal-only patch to the index failed on four files containing overlapping pre-existing design edits; those edits and the index were preserved. Resume with `git status --short`, `cat docs/navigation.md`, and `.artifacts/navbar/owned-changes.patch`.
 
 ## Icon motion clipping pass: 25 October 2026
 
@@ -113,6 +129,20 @@ Verification passed: production build, full configured typecheck and ESLint, 29 
 Concurrent icon-animation edits began during verification and temporarily introduced missing IconProvider/IconAnimation exports in the shared checkout. Final build/typecheck/lint passed in a snapshot of the starting working tree plus only this goal's changes. The successful browser run and visual checks used the completed icon-button build. Existing design and animation work was preserved; their integration remains owned by those chats. The password reveal is now square, superseding the earlier 64px Show/Hide description below. The commit includes only this goal's changes and the password-specific styling needed for its new control.
 
 Resume with `git status --short` and `.artifacts/icon-actions/changed-files.txt`. Existing preview on port 5173 was preserved; the temporary verification server and snapshot were removed.
+
+## Completed 48-item design goal: 25 October 2026
+
+All 48 implemented Next inventory items were significantly improved in inventory order and independently reviewed. This completes the design goal based on user-confirmed implementation commit `686055c`. The authoritative per-item checklist and evidence are in `docs/component-design-elevation.md`. No required implementation or verification work remains.
+
+Changes cover the six shared family modules/styles (`foundations`, `selection-controls`, `form-controls`, `navigation`, `overlays`, `data-workflows`), their catalog previews and family docs, the two editable record/recovery blocks, and a zero-specificity catalog margin reset. Existing switch and overlay browser journeys now cover reproduced RTL direction, confirmation exit-activation and AccountMenu keyboard pending-focus defects. Narrow rich/file rows use container width to keep text readable and actions reachable. Progress has a real indeterminate segment and reduced-motion state; SaveStatus preserves one lifecycle node. List Notes retain a readable width inside contained table scrolling. The page editor preserves native submission, drafts, aborts and focus while improving sections and save feedback.
+
+Verification passed: production builds; configured TypeScript and full ESLint; eight token tests; all 135 Chromium journeys including 48 routes across eight themes, two modes and four widths; 62 copied examples/exactly 48 priority mappings; independent packed Next/Vite builds, SSR/native-prop, HTTP/CSS and copied-block checks. After the full run, the sole source change was the block-local Notes renderer. Its six affected journeys, build/typecheck/focused lint and packed consumers passed again. All 291 source/config hashes were stable at the final checkpoint. During handoff, concurrent Navbar follow-up changes reached its shared component, catalog preview and browser test files. Those later contents are preserved and were not reverified by this goal. See `final-input-stability.json` for observed paths. No undefined CSS token references remain across 32 shared/catalog stylesheets. Independent source/pixel review signed off all 48; supplemental states include keyboard/reduced-motion/RTL, long names and narrow containers, five recovery variants and short-window save/retry/cancel/discard.
+
+Evidence is under `.artifacts/design-elevation/`: `review-completion.md`, `final-*.log`, `o-final-*.log`, `o-final-package-verification.json`, `final-input-stability.json` and family screenshots/runtime reports. The tracker describes intermediate reproduced failures and harness corrections separately from product fixes. Firefox/Safari and physical touch were not tested.
+
+Concurrent complete-Navbar, Hallmark, compact utility and animated-icon work is preserved. The completed Navbar behavior and fixtures superseded the earlier E05 specimen and passed final integration before that later follow-up. This pass and its popup follow-up are committed locally; no deployment or push was performed. Separate Navbar and Hallmark work remains uncommitted. Root's temporary 5307 preview and M fixture 5393 are confirmed closed; independent consumers removed their own servers/directories; other previews are preserved.
+
+Resume for review: `cat docs/component-design-elevation.md`, `cat .artifacts/design-elevation/review-completion.md`, `git status --short`. No further design implementation is required for this goal.
 
 ## Sidebar icon coverage: 25 October 2026
 
@@ -166,195 +196,62 @@ Verification passed: source review, production build, configured typecheck, ESLi
 
 Manual light/dark inspection passed. Screenshots: `.artifacts/tooltip-design-dark.png` and `.artifacts/tooltip-design-light.png`. Dark appearance and expanded navigation were restored; the temporary browser tab was closed and the existing preview on port 5173 preserved. Firefox and Safari were not tested. No required work remains for this tooltip request; the earlier component goal remains complete. Concurrent Hallmark, field-error-icon and component-inventory edits are preserved outside the tooltip commit. Resume with `git status --short` and this handoff before starting the next component.
 
-## Library sidebar: 25 October 2026
+## Component inventory research
 
-The component library now uses the public AdminShell, with icons for all 14 entries, magnetic edge dragging, one changing display button, and custom tooltips in the icon rail. Expanded, collapsed, and hidden modes persist through reloads. Search remains in the header in every mode. Theme selection, the sun/moon appearance button, native hash navigation, and browser history remain available.
+Added `docs/component-inventory.md` in response to the request for a full list of components and compositions to prepare. It compares the 14 existing catalog sections and public exports with the original local project review, Apple Minimal contracts, and current shadcn, Radix, Mantine, HeroUI, Chakra, React Aria, Uiverse and Supabase references.
 
-Shared shell fixes keep nested resize handles independent, close the mobile drawer after home-link navigation, and measure the sticky header so skip navigation leaves the destination visible. Existing browser tests now scope embedded shell controls to their preview. Two library journeys cover mode changes, dragging, persistence, tooltips, nested shells, search, history, drawer focus, home navigation, and the skip destination.
+The inventory contains 183 proposed additions/extensions across 18 groups: 48 Next, 90 Follow-up and 45 Optional. Each row identifies its delivery as UI, recipe, editable block or integration adapter. It records sources, current capabilities, common design requirements and a dependency-based preparation order. Card, Tabs, Toast, DropdownMenu and standalone Navbar have internal contracts but no public implementation; Checkbox and Pagination currently exist inside DataTable.
 
-Verification passed: source review, production build, configured typecheck, ESLint, all 41 Chromium journeys before the final home-link and skip-link fixes, and 17 affected journeys after those fixes. Packed Vite and Next consumers passed production builds, HTTP 200, and stylesheet delivery; owned servers and temporary consumers were removed. Logs: `.artifacts/catalog-sidebar-final-build.log`, `.artifacts/catalog-sidebar-final-browser.log`, and `.artifacts/catalog-sidebar-packages.log`. Package report: `.artifacts/catalog-sidebar-package-verification.json`.
+Documentation checks passed for unique/sequential IDs, priority counts, inventory table columns and all local link targets. External source pages were inspected during research. No runtime tests were run for this documentation-only change, and no component implementation was added. Existing application edits and the earlier handoff content below were preserved. Implementation of the proposed inventory remains future work.
 
-Manual inspection covered expanded, compact, hidden, dragging, icon tooltips, and light/dark appearance. Screenshots: `.artifacts/catalog-sidebar-expanded.png`, `.artifacts/catalog-sidebar-compact.png`, and `.artifacts/catalog-sidebar-light.png`. Dark appearance and expanded navigation were restored; the temporary browser tab was closed and the existing preview on port 5173 preserved. Firefox and Safari were not tested. No work remains for this request; the earlier component goal remains complete.
+Resume with `cat docs/component-inventory.md` and select a complete flow from its recommended waves. The research did not select new runtime dependencies, publish packages or migrate a consuming application.
 
-A separate Hallmark visual pass began editing shared files after verification. Those edits are preserved outside this sidebar commit; recheck the working tree before continuing.
+## Field error icon follow-up
 
-## Appearance icon: 25 October 2026
+Replaced the plain exclamation mark in `packages/ui/src/field-frame.tsx` with the existing 16px CircleAlertIcon. Updated the error-row styles in `packages/ui/src/styles.css` to align the icon with the first text line, including wrapped messages; removed the unused symbol class. This applies to text, textarea and select field errors. The icon is decorative; error text, alert semantics and control associations remain intact.
 
-The catalog appearance dropdown is now one ghost icon button beside Theme. A moon switches to dark mode; a sun switches to light mode. The accessible action name and custom tooltip change with the glyph, while the button and keyboard focus remain stable. The catalog still follows a saved/default system preference until the user makes an explicit choice, which persists across reloads. The two-state button replaces the system selection menu.
-
-Updated `apps/catalog/src/catalog.tsx/css`, related theme/chat preview guidance, and README. Existing Button tokens provide 40px desktop and 44px mobile targets; mobile alignment follows the bottom of the Theme select. Four existing browser test files now use the icon control. The appearance regression covers OS changes before manual selection, glyph changes, Enter/Space, tooltip naming, focus retention, persisted override, and mobile size.
-
-Verification passed: plan/source review, production build, configured typecheck, focused ESLint, and all ten Chromium journeys in `catalog.spec.ts`, `themes.spec.ts`, `token-reference.spec.ts`, and `status.spec.ts`. Manual light/dark and 360px inspection passed. Firefox/Safari were not tested. Screenshot: `.artifacts/appearance-icon-dark.jpg`; preview: `http://127.0.0.1:5173/#chat`. Dark mode was restored and the temporary viewport override cleared. No work remains for this request.
-
-Focused command: `KIT_CATALOG_PORT=5317 npx playwright test tests/browser/catalog.spec.ts tests/browser/themes.spec.ts tests/browser/token-reference.spec.ts tests/browser/status.spec.ts --workers=1 --output=.artifacts/appearance-icon-browser-results`.
-
-## Badge design pass: 25 October 2026
-
-Badges now use quiet semantic borders for both soft and outline variants, semibold labels, tabular numerals, and consistent 6px medium / 4px small icon gaps. Decorative content stays within its 16px slot; intrinsic width and inline alignment keep badges compact in lists and surrounding text. Existing 20/24px short-label sizes, semantic fills, long-label wrapping, native span semantics, and public props remain intact.
-
-Changes are limited to the Badge block in `packages/ui/src/styles.css` and badge examples in `apps/catalog/src/status-preview.tsx/css`. Badge examples appear first and include status icons, contextual counts, RTL, longer text, and a small project list. Message examples and recovery behavior remain available.
-
-Verification passed: plan/source review, `npm run build`, `npm run typecheck`, focused ESLint, eight token tests, and five Chromium journeys in `status.spec.ts` and `admin-kit.spec.ts`. Manual inspection covered light/dark appearance and 360px layouts. Firefox and Safari were not tested. References: `.artifacts/badge-design-light.jpg` and `.artifacts/badge-design-dark.jpg`. The stopped local preview was restarted on port 5173; Dark appearance was restored and temporary viewport emulation cleared. No badge work remains.
-
-Focused verification command: `KIT_CATALOG_PORT=5317 npx playwright test tests/browser/status.spec.ts tests/browser/admin-kit.spec.ts --workers=1 --output=.artifacts/badge-design-browser-results`.
-
-## Current state: component goal complete
-
-All twelve planned areas and final integration are complete. The user-requested sidebar has expanded, icon-only, and hidden states, magnetic edge dragging, quick smooth transitions, one changing display button, custom icon tooltips, and distinct team/person icons. The broader queue and evidence are in `COMPONENT_IMPROVEMENTS.md`; earlier sections below preserve the history of separate work.
-
-The final integration fixes every copied usage example into a typed standalone module, updates stale README/compatibility claims, and adds tooltip CSS to the existing packed stylesheet check. Review confirms all 14 catalog entries, 60 icons, 204 variables, eight themes, and 560 contrast pairs. Chat, themes, later tooltip/status styling, and chat motion were included. DataTable was committed as `efe41b9`; the final integration commit follows it.
-
-Final source review has no findings. `KIT_CATALOG_PORT=5298 npm run verify` passed production build, configured type checks, ESLint, eight token tests, and all 39 Chromium journeys in 16 files. All 14 extracted snippets passed strict TypeScript with unused-code and CSS-import checks. `npm run verify:packages` passed Vite/Next installation, production builds, HTTP 200, Next server rendering, and stylesheet delivery, including tooltips and chat. Owned servers and temporary consumers were removed. Logs: `.artifacts/integration-verify.log`, `.artifacts/integration-packages.log`; report: `.artifacts/integration-package-verification.json`.
-
-Manual final inspection covered the single sidebar control, drag/snapping, icon rail tooltip, distinct person/team icons, and dark chat overlay. References: `.artifacts/integration-sidebar.png`, `.artifacts/integration-sidebar-tooltip.png`, `.artifacts/integration-chat.png`. DataTable also has final light/dark references. Temporary browser tabs are closed; the user's existing tab, preview on port 5173, and Dark appearance were preserved. Firefox/Safari, production adoption, and real mobile keyboards remain unverified. Packages remain unpublished local pilots. No required goal work remains.
-
-## Earlier continuation: DataTable complete
-
-All twelve planned component areas are implemented and verified individually. DataTable now supports primitive wrap/truncate behavior with tooltips only for actual overflow, unclipped custom cells, nonsearchable columns, clear-search focus, displayed ranges, host selection actions, and clearing IDs across pages/filters. IDs survive temporary unavailable data. The preview demonstrates local archiving, rich rows, row review, state recovery, and reset. Public types, docs, and both packed fixtures cover the additions.
-
-Async focus handling recovers disabled or removed table controls to the stable scroll region while preserving outside focus. Select closes an open popup when disabled. Two focused host-fixture journeys cover the page-size portal, search, row actions, and external focus; the fixture is bundled in memory without adding a product route. Overflow text opens its keyboard tooltip after focus-triggered scrolling settles. Custom dates stay on one line in the preview.
-
-Verification passed: plan/source review, production build, configured type checks, ESLint, 22 affected Chromium journeys, and packed Vite/Next builds plus HTTP/CSS checks. After the final preview polish, seven table/admin/host journeys passed again. The table usage snippet passed independent TypeScript compilation. Package report: `.artifacts/table-package-verification.json`; temporary consumers and owned servers were cleaned. Screenshots: `.artifacts/table-dark-reference.png`, `.artifacts/table-light-reference.png`. Dark appearance was restored and the temporary tab closed. Firefox/Safari remain untested.
-
-Only final integration remains. Audit found stale icon counts and package-verification scope in README, obsolete compatibility evidence, and copied examples with adjacent JSX roots or module-scope hooks. Correct those, check every usage snippet against actual exports, include tooltip CSS in the existing packed stylesheet check, then run the combined `npm run verify` and `npm run verify:packages`. Include separately added themes/chat and tooltip/status refinements. Keep the goal active until that evidence and final review pass.
-
-## Earlier continuation: EmptyState complete
-
-Eleven of twelve component areas are verified. EmptyState adds decorative icons, secondary actions (including secondary-only panels), small/medium sizing, logical start/center alignment, and `titleAs` for paragraphs, block content, or headings. The root div, native attributes/ref, and existing caller defaults remain compatible. Descriptions respect the reading-width token. No new dependency or token was added, and the component does not manage announcements or focus.
-
-Key changes: `packages/ui/src/feedback.tsx`, the EmptyState block in `styles.css`, public exports, README, both packed fixtures, and new `apps/catalog/src/empty-preview.tsx/css`. The preview has working first-use/template/search/retry/troubleshooting examples with explicit focus recovery. `catalog.tsx` now returns focus to Search components after Clear search, reopening hidden mobile navigation first. The obsolete `control-previews.tsx` was removed.
-
-Verification passed: plan/source review, production build, workspace/test typecheck, ESLint, 13 relevant Chromium journeys, and independent packed Vite/Next builds plus HTTP/stylesheet checks. The icon journey initially failed because its next keyboard action ran before Radix completed close autofocus; its choose helper now waits for trigger focus, preserving the final reset/search assertion. New tests cover both actions, focus, search counts/results, retry/help, secondary-only RTL recovery, and 360px overflow. Package report: `.artifacts/empty-package-verification.json`; temporary consumers and servers were cleaned. Light/dark screenshots: `.artifacts/empty-dark-reference.png`, `.artifacts/empty-light-reference.png`. Original Dark appearance was restored and the temporary browser tab closed. Firefox/Safari remain untested.
-
-Next: DataTable, then final integration including separately added chat, themes, and tooltip/status styling. The goal remains active. Other chats committed `2f6ad38` (chat opening/closing) and `a0131d8` (message styling) during this work; their changes were preserved. Recheck git status before editing. Focused browser command: `KIT_CATALOG_PORT=5298 npx playwright test tests/browser/empty.spec.ts tests/browser/catalog.spec.ts tests/browser/admin-kit.spec.ts tests/browser/icon-reference.spec.ts tests/browser/token-reference.spec.ts --workers=1 --output=.artifacts/empty-browser-final`.
-
-## Status message design pass: 25 October 2026
-
-The status banners now have neutral surfaces, fine borders with a colored leading edge, and consistent 32px tinted icon tiles around the existing 20px SVG status symbols. Standalone text aligns with the icon; messages with headings use quieter body text and retain their action layout. The leading edge follows RTL and preserves tone when the icon is hidden. The ActionMessage API and announcement/retry/dismiss behavior are unchanged.
-
-Only the ActionMessage block in `packages/ui/src/styles.css` and `apps/catalog/src/status-preview.tsx/css` changed for this request. Four compact message examples at the top of the preview match the screenshot's use case. Existing badge, recovery, custom-icon, hidden-icon, and RTL examples remain available.
-
-Verification passed: production build, workspace/test typecheck, focused ESLint, both Chromium journeys in `tests/browser/status.spec.ts`, and source review. Manual checks covered light/dark, 360px wrapping, longer messages, actions, and custom/hidden icons. Firefox and Safari suites were not run. References: `.artifacts/message-design-light.jpg` and `.artifacts/message-design-dark.jpg`. Preview: `http://127.0.0.1:5173/#status`. The stopped preview server was restarted; the observed Dark selection was restored after inspection.
-
-Concurrent EmptyState and chat work belongs to other chats. Preserve those edits, especially adjacent shared CSS and `feedback.tsx`. Focused check: `KIT_CATALOG_PORT=5317 npx playwright test tests/browser/status.spec.ts --workers=1 --output=.artifacts/message-design-browser-results`.
-
-## Earlier continuation: loading complete
-
-Spinner and Skeleton are complete; ten of twelve component areas are now verified. `packages/ui/src/feedback.tsx` adds Spinner size/ref support and Skeleton variant/size props; shared CSS preserves the 20px spinner and 40px block defaults, fixes text-line minimum heights, and keeps avatars square when narrow. Low-specificity selectors preserve custom class overrides. Public exports, README/provenance, and packed Vite/Next fixtures cover the additions. No new dependency or token was added.
-
-`apps/catalog/src/loading-preview.tsx/css` supplies an initially loaded project card, a persistent enabled Reload project button, one status outside the busy content, and decorative spinner/skeleton specimens. Reload restarts one 1200ms timer; unmount cancels it and completion never moves focus. Hidden loaded content preserves the card footprint beneath a placeholder overlay. The old LoadingPreview and its obsolete catalog CSS were removed. `tests/browser/loading.spec.ts` covers restarts, focus, roles, sizes, and responsive geometry; the catalog reduced-motion assertion now handles the three spinner specimens.
-
-Verification: plan/source reviews, production build, configured workspace/test typecheck, ESLint, 12 relevant Chromium journeys (loading, button, catalog, admin), and independent packed Vite/Next builds plus HTTP/CSS checks passed. The package report is `.artifacts/loading-package-verification.json`; its temporary consumers and servers were cleaned. Manual light/dark inspection passed. Screenshots: `.artifacts/loading-reference.png` and `.artifacts/loading-dark-reference.png`. The temporary browser tab was closed and original Light appearance restored. Firefox/Safari remain untested.
-
-Next: EmptyState, then DataTable, then final integration including the separate chat, theme, and tooltip additions. The active goal is not complete. The previous goal turn made progress in fa5586f; this turn completes area 10. Tooltip work is now committed as a5a4c70 and was preserved. Recheck git state before editing because other chats share this checkout.
-
-## Tooltip design pass: 25 October 2026
-
-The separate tooltip design goal is complete. `packages/ui/src/tooltip.tsx/css` now uses the theme's elevated surface and foreground, a fine border, medium radius, and an outlined arrow. The existing medium shadow keeps the light surface distinct from adjacent controls. The inner height cap accounts for both borders. The public API, 280px width cap, hover delay, keyboard behavior, and collision handling are unchanged.
-
-`apps/catalog/src/tooltip-preview.tsx/css` places the sharing hint below its trigger, shortens it to the supplemental visibility detail, and keeps invitation and permissions guidance visible. Space below the trigger keeps the hint clear of the next section.
-
-Verification passed: production build, configured workspace/test typecheck, focused ESLint, eight token tests including theme contrast, and all six Chromium journeys in `tests/browser/sidebar-tooltip.spec.ts`. Plan and source review found no remaining issues. Manual inspection covered all four arrow directions and light/dark appearance. A final shadow-only adjustment was rebuilt and inspected. Firefox and Safari suites were not run. References: `.artifacts/tooltip-design-light.jpg` and `.artifacts/tooltip-design-dark.jpg`.
-
-Preview: `http://127.0.0.1:5173/#tooltips`; original Neutral/Light selection restored. This goal does not complete the broader component queue below. Resume with `git status --short` and `npm run build`; focused browser command: `KIT_CATALOG_PORT=5317 npx playwright test tests/browser/sidebar-tooltip.spec.ts --workers=1 --output=.artifacts/tooltip-design-browser-results`.
-
-## Feedback pass: complete
-
-Badge and ActionMessage are complete, bringing the component goal to nine of twelve areas. `packages/ui/src/feedback.tsx` and the targeted shared CSS add badge sizes/variants/icon/dot/wrapping and message warning/heading/actions/custom-icon composition. Root element/ref/native-title/role contracts remain compatible. Three feedback icons and their exports/catalog metadata bring the icon set to 60. README, UI provenance, icon guidance, and both packed fixtures cover the public API.
-
-`apps/catalog/src/status-preview.tsx/css` replaces the old static StatusPreview. It demonstrates retry/dismiss/reset with timer cancellation and stable focus, plus static notes, RTL, long labels, and custom icons. `tests/browser/status.spec.ts` adds two journeys for those behaviors and responsive geometry. Review caught and fixed missing 20/24px minimum badge heights. Retry transfers focus before becoming disabled; completion never steals focus.
-
-Verification: production build, configured workspace/test typecheck, ESLint, eight token tests, all 32 Chromium journeys, and independent packed Vite/Next builds plus HTTP/CSS checks passed. The report was copied to `.artifacts/feedback-package-verification.json`; temporary consumers and owned servers were cleaned. Manual light/dark status inspection and the single sidebar cycle passed. Screenshots: `.artifacts/status-reference.png`, `.artifacts/status-dark-reference.png`, `.artifacts/sidebar-single-control.png`. The temporary browser tab was closed and its original Light appearance restored. Firefox/Safari remain untested.
-
-Next: Spinner/Skeleton, then EmptyState and DataTable, then final integration including separately added chat and themes. The goal remains active. New concurrent tooltip edits appeared in `packages/ui/src/tooltip.tsx/css` and `apps/catalog/src/tooltip-preview.tsx/css` after this feedback verification; preserve them and do not stage them in the feedback commit. Recheck working-tree ownership before starting the next area. Earlier theme/chat sections below are historical context.
-
-## Theme expansion: 25 October 2026
-
-The separate theme goal is implemented: six additional palettes (Graphite, Linen, Ocean, Dusk, Clay, Rose) bring the kit to eight themes and sixteen light/dark combinations. Each new palette defines coordinated surfaces, primary/secondary text, control borders, and action states. Linen uses local Georgia headings with the shared system body font. The 204-variable contract and component dimensions remain unchanged.
-
-`packages/tokens/src/themes.ts` owns the palettes. `schema.ts` now checks secondary text and inset focus rings against `accent-soft`, used by chat history and selected controls. Grove's dark selected background changes from `#14532D` to `#123D24`, improving secondary-text contrast from 3.55:1 to 4.77:1. Custom brands may need adjustments for the stricter validation; this is documented in `packages/tokens/README.md` and `PROVENANCE.md`.
-
-`apps/catalog/src/theme-preview.tsx/css` adds `/#themes`, with eight comparison cards, actual semantic swatches, and keyboard-operable Apply buttons. Catalog toolbar/card selection and persistence use the same state. All previews follow resolved appearance; portals use the document theme. `tests/browser/themes.spec.ts` checks computed colours/fonts, keyboard apply, persistence, mode precedence, independent card palettes, responsive widths, and a Linen dialog. Root README and `docs/compatibility.md` describe the new options.
-
-Verification: independent static review passed. All 560 contrast pairs (35 × 2 × 8) pass; every new-theme text pair exceeds 5:1. Token build, focused lint, and eight unit tests passed in the shared checkout. Full build/typecheck initially encountered concurrent unfinished feedback changes importing missing CircleCheckIcon, InfoIcon, and TriangleAlertIcon. They are unrelated to this goal and were preserved. An isolated copy of `88c8c93` plus only this goal's changes passed production build, workspace/test type checks, ESLint, eight token tests, eight Chromium journeys, and packed Vite/Next consumer builds plus HTTP/stylesheet checks. Its verified catalog output was copied to the existing preview on port 5173. The package report is `.artifacts/theme-package-verification.json`. Firefox and Safari were not tested.
-
-The theme work is separate from the earlier component-improvement queue below. Preserve concurrent changes in `packages/ui/src/feedback.tsx` and `styles.css`; do not stage or revert them as part of themes. Recheck their state before a shared build. Resume with `git status --short`, `git log --oneline -5`, and `npm run build`; the theme browser checks are `tests/browser/themes.spec.ts`, `token-reference.spec.ts`, and `catalog.spec.ts`. User-facing preview: `http://127.0.0.1:5173/#themes`.
-
-## Earlier component work
-
-The user's goal was to substantially improve every component one by one. All twelve areas and final integration are complete. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. Queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
+Production build, configured typecheck, focused ESLint and all four existing field/select Chromium journeys passed. Dark desktop and mobile inspection passed; the mobile icon is 16px square, centered on the first line, without overflow. Screenshots: `.artifacts/field-error-icon-dark.png` and `.artifacts/field-error-icon-mobile.png`. No required follow-up remains. Other uncommitted work was preserved.
 
 ## Completed
 
-- Tokens (`ea8bacc`): searchable variable reference, copying, specimens, and 33 contrast pairs. Subsequent Dialog/Tooltip/AdminShell additions bring the reference to 204 variables.
-- Icons (`f3b69f9`, expanded in `a5d173a`): search, categories/aliases, sizes, named imports, accessible examples. Sidebar work brought the set to 53 wrappers, including distinct UserIcon and UsersIcon; concurrent chat work adds more.
-- Buttons (`829c1a2`): icon shape/slots, full width, pressed state, stable loading, touch targets.
-- Fields (`edc880b`): shared frame, TextareaField, label cues, stable adornments, native refs/descriptions, RTL/wrapping, validation/reset focus, read-only states.
-- Select (`1dfd7f9`): grouped/described options, SelectField, empty-menu focus/recovery, intrinsic popup sizing, touch/RTL layout, validation/form examples.
-- Dialog (`3030904`): three widths, header/body/footer composition, optional body scrolling, short-window fallback, logical close/title spacing, edit/brief/RTL examples.
-- Tooltips and AdminShell (`a5d173a`): reusable custom tooltips, three sidebar display modes, mobile/focus recovery, icon expansion.
-- Sidebar drag refinement (commit includes this handoff): magnetic edge dragging, 160ms transitions, one changing cycle button, keyboard resizing, cancellation, and reduced motion.
+Completed a Hallmark design polish across all 14 catalog entries and every public component family. The complete audit, copy changes, remaining linter findings and evidence are in `docs/hallmark-design-pass.md`. Hallmark source: version 2.0.0, commit `7ec868225c6caa040558c321ee0fefa0e73f83a8`, cloned outside the project at `/tmp/design-tokens-hallmark-20261025`.
 
-## Sidebar and tooltip implementation
+The catalog now uses fewer nested frames and decorative labels; theme selection, control emphasis, disabled fields, empty states, and component specimens are clearer. Existing token palettes, typography, APIs, state handling, semantic feedback and requested sidebar/chat motion remain. No dependencies were added to the project, no tests changed for this pass, and nothing was published.
 
-- `packages/ui/src/admin-shell.tsx/css`: exported AdminSidebarState=`expanded|collapsed|hidden`; controlled sidebarState/onSidebarStateChange or uncontrolled defaultSidebarState. Widths 260/72/0 in a stable animated two-column grid. One stable header button cycles expanded→collapsed→hidden→expanded; icon/name/tooltip describe the next action. compactBrand/compactFooter and AdminNavItem.end are additive. Legacy missing icons get CircleIcon. Active links use the accent surface and logical inset indicator.
-- Internal `use-admin-sidebar-drag.ts` tracks a temporary width from the actual rendered start width, with 24px magnetic attraction, pointer capture, and nearest-mode release. Callbacks fire only on changed-mode commits. Escape, pointercancel/lost capture, external state changes, unmount, and mobile resize clean up. Live frame width/handle visibility guard move and release against observer lag. No animation while dragging; normal settle is 160ms, reduced motion disables it.
-- The separator stays outside the inert/clipped sidebar and remains reachable at width0; it has a visible grip, 44px coarse-pointer hit area, keyboard arrows with RTL direction, Home/End, numeric values/state text, and an aside ID association. Fixed inner widths prevent label reflow during movement. Sidebar focus tracking handles inert blur without stealing separator focus.
-- Custom renderLink retains its ReactNode return API through an internal forwarded NavLink. Consumers must spread supplied native props, events, ARIA attributes, and anchor ref. Collapsed links have accessible names independently of tooltips.
-- Navigation receives actual collapsed mode separately from tooltipsEnabled=wideLayout. Visible focus/hover intent is retained before the ResizeObserver state commits; rendering is gated by wideLayout. Narrow cleanup checks actual visibility to avoid erasing new desktop intent. Header tooltips use the same visibility rule. Existing mobile drawer closes on route selection, Escape, outside click, and container growth.
-- Guarded onBlurCapture on sidebar and desktop controls recovers focus to the visible mobile menu when CSS hides the focused target. Controlled hiding uses a layout effect to focus Expand sidebar. No global focus tracker.
-- New `packages/ui/src/tooltip.tsx/css`: TooltipProvider, Tooltip, TooltipTrigger, TooltipContent; Radix 1.4.1 dependency. Custom inverse surface, arrow, wrapping/scrolling, 280px width cap, 400ms hover delay, immediate keyboard focus, reduced-motion support. Content owns its wrapper/arrow and deliberately omits asChild; Trigger supports it. Portal container, refs, and forceMount supported.
-- `packages/tokens/src/foundation.ts`: layout.sidebarCollapsed=72px, layout.tooltip=280px, motion.delay.tooltip=400ms, with provenance. All 204 resolved variables appear in the existing reference.
-- `packages/ui/src/icons.tsx`, catalog metadata, public exports, and docs add 22 wrappers (53 total). UserIcon is the individual-person glyph, UsersIcon the team glyph. Static wrappers preserve accessibility, refs, token sizes, and tree shaking.
-- Catalog has a new Tooltips entry (12 entries total), bookmark/help/placement examples, controlled shell preview, navigation counts, and single-person team rows. README and both packed consumer fixtures cover the public additions.
-- `tests/browser/sidebar-tooltip.spec.ts`: six journeys covering the single cycle control, modes/space, pointer tracking and snapping, hidden restoration, Escape/mobile cancellation, separator keyboard/RTL and values, reduced motion, icons, tooltips, mobile focus, immediate focus after resize, controlled hiding, and viewport bounds.
+## Key files changed
 
-## Verification
+- Catalog chrome and foundations: `apps/catalog/src/catalog.tsx/css`, theme/token/icon preview files.
+- Controls: `packages/ui/src/styles.css`, button and dialog preview files.
+- Compositions: `packages/ui/src/admin-shell.css`, `chat.css`, `data-table.css`, `tooltip.tsx`; chat and table preview files.
+- Feedback: loading and empty preview files. Badge, ActionMessage and Tooltip visual designs were audited and retained.
+- Audit records: `docs/hallmark-design-pass.md`, `.hallmark/preflight.json`, `.hallmark/log.json`.
 
-Production build, workspace/test type checks, ESLint, seven token tests, all 23 Chromium journeys, and packed Vite/Next consumers passed during this update. Independent consumers built and passed HTTP/stylesheet checks; their owned servers and temporary directory were removed. After the final focus/resize fixes, UI/catalog builds, type checks, lint, and all seven affected sidebar/tooltip/admin journeys passed again. No remaining review findings.
+## Verification state
 
-The later drag/single-button refinement passed build, types, lint, nine affected Chromium journeys, and independent packed Vite/Next builds plus HTTP/CSS checks in an isolated copy of `a5d173a` plus only the sidebar source/test changes. Its first pointer test caught a release-before-observer race, fixed with live geometry checks. The shared workspace build also passed after concurrent chat files landed. Source review has no remaining findings. The isolated preview was stopped and its verification directory moved to Trash; its package report is saved in `.artifacts/sidebar-package-verification.json`.
+Production build, configured TypeScript checks, ESLint, eight token tests and all 41 Chromium browser journeys passed. Two button journeys passed after final CSS adjustments; two dialog journeys and focused ESLint/typecheck passed after the review's final badge/copy cleanup. Packed Vite and Next consumers passed production builds and stylesheet/HTTP checks on the final package artifacts.
 
-Root inspected dark dragging, the single changing icon, and restoration from hidden. Screenshot `.artifacts/sidebar-drag-reference.png` records the refinement; `.artifacts/sidebar-reference.png` records the prior tooltip work. Firefox and Safari remain untested.
+Hallmark rendered all 14 routes across eight widths, with a separate 56-capture light/dark desktop/mobile check. No document overflow or runtime errors were found by that capture check. Preserved inventory: 41 links, 29 fields, 138 handlers, two figures. One chat heading was replaced and recorded.
 
-Unrelated chat-component work is occurring concurrently in this same checkout, including shared README/catalog files and UI exports/icons/bundling. Preserve it. Stage only the sidebar hunks in shared files; do not include or revert other work. Integrate newly added components into the final goal review once that work is complete.
+Raw Hallmark confirmation: 18 FAIL, 16 REFLEX, four WARN. These are documented, not hidden: requested layout motion; separate-column sticky, disabled-cascade and scrolling/closed-content false positives; state rules defined outside preview CSS; existing apostrophe style; and intentional table horizontal scrolling on phones. No claim of a clean raw linter run is made.
 
-## Remaining work
+Independent finish review inspected all route areas. It requested removal of one redundant dialog badge, then checked the recapture and returned `ship`; the mobile table tradeoff was answered. Logs are in `.artifacts/hallmark/`; before/after comparison is `.hallmark/compare.html`.
 
-No required work remains for this goal. Final integration resolved the copied-example and stale-documentation findings and verified the combined library. Optional future browser/platform coverage is documented in `docs/compatibility.md` and is not a completion blocker.
+## Remaining / known gaps
 
-Keep plan/review, relevant verification, and logical local commits. Shared source/CSS ownership must remain sequential.
+No required work remains for this design pass. Firefox/Safari and physical mobile keyboards were not tested. The table still requires horizontal scrolling on small screens. Packages remain local/unpublished.
 
-## Local preview
+Concurrent sidebar work was preserved and committed separately as `702f00e feat(catalog): reuse draggable sidebar for library navigation` during this pass. The design-pass files are uncommitted. The initial working-tree diff is `.artifacts/hallmark/pre-existing.patch`; do not attribute that prior sidebar work to this pass.
 
-Pre-existing production preview: `http://127.0.0.1:5173/#admin-shell`, serving rebuilt catalog. Recheck process ownership before stopping it. The user's existing browser tab was preserved; a separate verification tab was closed. Saved screenshots are in ignored `.artifacts/`. Packages remain unpublished local pilots.
-
-## Resume
+## Resume commands
 
 ```sh
 git status --short
-git log --oneline -8
-cat COMPONENT_IMPROVEMENTS.md
-cat packages/ui/src/feedback.tsx
+git diff --stat
+cat docs/hallmark-design-pass.md
 ```
 
-Read relevant UI contracts before changes. Build packages after public source changes and catalog before checking the production preview. Existing `/root/tokens_implementation`, `/root/tooltip_implementation`, `/root/audit`, and `/root/review` agents can be reused with followup_task. Configured specialist roles use an unavailable model, so inherited-model explicit assignments are required. Workspace instructions require delegated implementation/review and avoid-ai-writing. Developer authorization covers reversible goal work without repeated approvals. Do not mark the goal complete until every queue item and final integration review passes.
+Preview remains available at `http://127.0.0.1:5173/#buttons`. Before/after screenshots and logs are ignored artifacts; the audit and Hallmark metadata are source records.
 
-## Reusable AI chat addition
+## Decisions
 
-The user requested a reusable chatbot based on `brainwave_site` within the kit's current tokens. This addition is complete; the earlier component improvement queue above remains separate.
-
-- `ChatWidget` provides a floating launcher, compact modal, and maximized workspace; `ChatPanel` embeds the same UI. Both use one stable surface across resizing. Source is in `packages/ui/src/chat*.tsx`, `chat-types.ts`, and `chat.css`.
-- Conversations, messages, drafts, response status, and callbacks belong to the host. The UI includes searchable history, new/delete actions, suggested prompts, multiline/IME-safe entry, stop/retry/copy, bounded scrolling, and a keyboard-accessible jump action. Plain text is safe by default; a renderer hook supports product content. The kit adds no transport, storage, dependency, or foundation token.
-- Brainwave's source sidebar is a question outline within one conversation. The kit instead accepts genuine saved-conversation metadata, matching the user's requested history behavior.
-- Four named icons were added (57 total). Public exports and packed CSS include chat. The catalog has 13 entries; `/#chat` demonstrates per-conversation drafts and simulated responses with cancellation. Documentation: `docs/chat.md`. Independent Vite and Next fixtures exercise the public API.
-- Verification: production build, workspace/test typecheck, ESLint, four chat Chromium journeys, and seven catalog/icon journeys passed. Packed Vite and Next consumers built and passed HTTP/SSR/stylesheet smoke checks. Final focus-only fixes were subsequently rebuilt, typechecked, linted, and browser tested. Static review found no remaining issues. Native preview checked light/dark compact and expanded views. Firefox/Safari and a real mobile software keyboard were not tested.
-- Browser tests caught Stop changing into a submit button during its click. Distinct keyed buttons plus default prevention preserve the next draft and return focus. Resize and jump focus regressions are covered. Transcript uses a named region with a separate status announcer so Radix can hide the background transcript when the widget opens.
-- Use isolated browser test output when concurrent runs share this checkout: `KIT_CATALOG_PORT=5297 npx playwright test tests/browser/chat.spec.ts --workers=1 --output=.artifacts/chat-browser-results`. The initial shared output run collided with another runner's artifact cleanup; the isolated final run passed.
-- User-facing preview remains open at `http://127.0.0.1:5173/#chat`; screenshot `.artifacts/chat-reference.png`. AI replies in the catalog are samples. Projects connect their own service and persistence using the integration guide.
-
-The concurrent sidebar change was committed separately as `7976024`; its files were preserved.
-
-Chat motion follow-up: maximize/restore now transition size, position, and corners with the existing 220ms duration and standard easing. Both sizes keep the same logical end anchor, including RTL, so position interpolates without an auto-to-zero jump. The panel inherits the animated radius; reduced motion disables the transition. Production build and all four chat Chromium journeys passed after this CSS-only change.
-
-Chat open/close follow-up: the panel fades and moves by the existing space-3 token on entry (220ms) and exit (160ms); the backdrop fades with it and the launcher fades between visibility states. Radix's data-state animations retain the closing content until its exit completes. Reduced motion disables these animations and transitions. Production build and all four chat Chromium journeys passed. The user's preview had moved to Fields during verification, so it was left undisturbed; refresh to load the rebuilt CSS.
+Use Hallmark's app-screen polish criteria within the existing system. Preserve explicit prior requests for sidebar and chat motion, report mechanical exceptions honestly, retain functional field/modal/table/theme boundaries, and change components only where the audit found a useful improvement.
