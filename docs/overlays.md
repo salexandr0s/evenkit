@@ -17,6 +17,8 @@ All surfaces use existing semantic foreground/surface colors, shared borders/rad
 
 Menus use a 6px inset, aligned trailing selection checks, and separate selected, highlighted, and keyboard-focus treatments. Popovers use 20px padding, with a tighter title/description pair above their content. Both surfaces have layered depth and a 160ms entrance from their anchored side. Closed content has no animation, so the primitive can unmount it and restore focus immediately.
 
+Dialog, AlertDialog and Sheet footers use the body surface, an inset hairline aligned to the content, 16px top padding and 8px action spacing. Outer gutters are 24px on desktop and 20px on narrow screens.
+
 ## Composition and ownership
 
 Import token CSS before UI CSS. Roots support controlled and uncontrolled open state. Content wrappers include their own portal and accept `container`; use a container in the current modal for modal-local notifications and their announcements. Document-level theme attributes remain the supported general portal setup.

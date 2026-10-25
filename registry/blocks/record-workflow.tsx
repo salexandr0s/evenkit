@@ -120,16 +120,14 @@ export function RecordWorkflow({ records, onSave, title = "Projects", descriptio
             <FormSection heading="Notes" headingAs="h3">
               <TextareaField label="Project notes" name="notes" optional value={editor?.draft.notes ?? ""} disabled={pending} onChange={event => patchDraft({ notes: event.target.value })} />
             </FormSection>
+            <Button type="button" className="pk-record-reset" size="sm" variant="ghost" disabled={pending || !dirty} onClick={resetDraft}>Reset changes</Button>
           </form></DialogBody>
-          <DialogFooter><Stack gap="3" style={{ width: "100%" }}>
+          <DialogFooter className="pk-record-footer">
             <SaveStatus state={saveError ? "error" : pending ? "saving" : dirty ? "dirty" : "idle"} role={saveError ? "alert" : "status"} heading={saveError ? "Project was not saved" : undefined}>
               {saveError ? <>{saveError} Your draft is available for retry.</> : saveNote || (pending ? "Saving project…" : dirty ? "Unsaved changes" : "No unsaved changes")}
             </SaveStatus>
-            <Inline justify="between">
-              <Button variant="ghost" disabled={pending || !dirty} onClick={resetDraft}>Reset changes</Button>
-              <Inline justify="end" style={{ flex: "1 1 auto" }}><Button ref={cancelButton} variant="outline" onClick={() => pending ? cancelSave() : requestClose()}>{pending ? "Cancel save" : "Cancel"}</Button><Button type="submit" form={formId} loading={pending}>{saveError ? "Retry save" : "Save project"}</Button></Inline>
-            </Inline>
-          </Stack></DialogFooter>
+            <div className="pk-record-footer-actions"><Button ref={cancelButton} variant="outline" onClick={() => pending ? cancelSave() : requestClose()}>{pending ? "Cancel save" : "Cancel"}</Button><Button type="submit" form={formId} loading={pending}>{saveError ? "Retry save" : "Save project"}</Button></div>
+          </DialogFooter>
         </>}
       </DialogContent>
     </Dialog>
