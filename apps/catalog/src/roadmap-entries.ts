@@ -9,6 +9,8 @@ import { mediaPreviewEntries } from "./media-preview-entries.js";
 import { avatarUploadEntries } from "./avatar-upload-entries.js";
 import { documentLibraryEntries } from "./document-library-entries.js";
 
+import { teamAdminEntries } from "./team-admin-entries.js";
+
 export const roadmapEntries: readonly CatalogEntry[] = [
   ...datesEntries,
   ...valueFieldsEntries,
@@ -19,4 +21,5 @@ export const roadmapEntries: readonly CatalogEntry[] = [
   ...mediaPreviewEntries,
   ...avatarUploadEntries,
   ...documentLibraryEntries,
+  ...teamAdminEntries,
 ];

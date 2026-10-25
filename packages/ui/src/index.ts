@@ -108,3 +108,8 @@ export { NewPasswordPage, type NewPasswordPageProps } from "./auth-new-password-
 export type { AuthSubmissionContext, AuthError, AuthResult, LoginValues, SignupValues, PasswordResetValues, NewPasswordValues, LoginField, SignupField, PasswordResetField, NewPasswordField, SignupResult, AuthPageProps, PasswordPolicyProps } from "./auth-types.js";
 export * from "./media-preview.js";
 export * from "./document-library.js";
+export * from "./team-admin-types.js";
+export * from "./team-members.js";
+export * from "./invitation-acceptance.js";
+export * from "./role-capability-editor.js";
+export * from "./audit-viewer.js";

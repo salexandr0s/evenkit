@@ -6,6 +6,9 @@ import { accountRecordEntries } from "./account-record-entries.js";
 import { uploadsEntries } from "./uploads-entries.js";
 import { commandWizardEntries } from "./command-wizard-entries.js";
 
+import { teamAdminEntries } from "./team-admin-entries.js";
+
+const TeamAdminPreview = lazy(() => import("./team-admin-preview.js").then(module => ({ default: module.TeamAdminPreview })));
 const DatesPreview = lazy(() => import("./dates-preview.js").then(module => ({ default: module.DatesPreview })));
 const ValueFieldsPreview = lazy(() => import("./value-fields-preview.js").then(module => ({ default: module.ValueFieldsPreview })));
 const RemoteTablePreview = lazy(() => import("./remote-table-preview.js").then(module => ({ default: module.RemoteTablePreview })));
@@ -26,5 +29,6 @@ export function RoadmapPreview({ id }: { id: string }) {
   if (accountRecordEntries.some(entry => entry.id === id)) return <AccountRecordPreview id={id} />;
   if (uploadsEntries.some(entry => entry.id === id)) return <UploadsPreview id={id} />;
   if (commandWizardEntries.some(entry => entry.id === id)) return <CommandWizardPreview id={id} />;
+  if (teamAdminEntries.some(entry => entry.id === id)) return <TeamAdminPreview id={id} />;
   return null;
 }

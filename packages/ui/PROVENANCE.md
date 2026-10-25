@@ -95,3 +95,8 @@ consumers are the catalog and independent packed Vite/Next fixtures. Internal
 source remains unlicensed for public distribution; existing dependency notices
 retain their terms. Contracts, copyable examples and verification references
 are in `docs/document-library.md` and `docs/document-library-handoff.md`.
+## Team administration
+
+`TeamMembers`, `InvitationAcceptance`, `RoleCapabilityEditor` and `AuditViewer` are original kit compositions. They reuse the existing remote DataTable, fields, dialogs, checkboxes, settings layout and ActivityTimeline. The editable team, invitation, role and audit blocks in `registry/blocks` are original source recipes. Their catalog data and simulated host operations are fictional.
+
+This addition introduces no runtime or development dependencies and copies no third-party component source. It continues to use the installed React, Radix and TanStack dependencies and their existing notices under `licenses/`. The package manifest and lockfile remain unchanged. The [team administration guide](../../docs/team-administration.md) documents the application boundary, action lifecycle and integration examples.

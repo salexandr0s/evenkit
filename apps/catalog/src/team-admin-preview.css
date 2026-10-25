@@ -1,0 +1,8 @@
+.team-admin-preview { display: grid; gap: var(--pk-space-6); min-inline-size: 0; }
+.team-admin-demo-note { margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); overflow-wrap: anywhere; }
+.team-admin-demo-controls { display: flex; flex-wrap: wrap; align-items: end; gap: var(--pk-space-4); padding-block-start: var(--pk-space-5); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.team-admin-demo-controls > * { min-inline-size: 0; max-inline-size: 100%; }
+.team-admin-demo-controls > .pk-field { flex: 1 1 auto; }
+.team-admin-demo-controls .pk-button { white-space: normal; block-size: auto; min-block-size: var(--pk-control-height-md); text-align: start; }
+.team-admin-demo-status { margin: 0; overflow-wrap: anywhere; font-size: var(--pk-font-size-sm); }
+.team-admin-preview .pk-page-header-content { min-inline-size: 0; overflow-wrap: anywhere; }

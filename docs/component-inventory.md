@@ -4,7 +4,7 @@ Research date: 25 October 2026. Project: `@evenkit` in `design-tokens`.
 
 The kit should cover complete application and website flows, from small controls to editable page templates. The research baseline had 14 catalog sections. The tables below preserve that baseline and the proposed expansion scope.
 
-The 48 entries marked Next have been implemented and verified; their completion evidence is in the [priority tracker](./priority-build-plan.md). The original 24 additions are tracked in the [component roadmap](./component-roadmap-plan.md). The [document-library additions](./document-library.md) cover J05, J06 and J07, bringing the catalog to 89 entries and 75 inventory mappings. Remaining Follow-up and Optional entries are proposals.
+The original 48 priority entries and 24 application additions are implemented. Subsequent verified families include [document-library](./document-library.md), [team administration](./team-administration.md) and auth pages. The final combined counts and evidence are tracked in [admin integration](./admin-integration.md). Remaining Follow-up and Optional entries are proposals.
 
 This is a proposed inventory, based on the original project review, the internal Apple Minimal contracts, current public exports, and fresh research of the original upstream libraries. Priorities are recommendations. An entry records a reusable family or work item; it does not promise a separate package, export, or ready implementation for every name.
 
@@ -248,7 +248,7 @@ Reuse the original SME Manager/Brainwave/Moving Project findings from the [initi
 | L01 | Auth layout | Follow-up / Block | Compact and split layouts, brand/legal/help slots, responsive content. |
 | L02 | Magic-link sign-in | Follow-up / Block | Email, pending/error/sent, resend/change-address recovery. |
 | L03 | Verification/callback result | Follow-up / Block | Confirming, success, invalid/expired link, resend and safe continuation. |
-| L04 | Invitation acceptance | Follow-up / Block | Invitation details, account mismatch, expired/revoked/accepted states. |
+| L04 | Invitation acceptance | Built / Block | Invitation details, account mismatch, expired/revoked/accepted states. |
 | L05 | MFA challenge and enrollment | Optional / Block | Code entry, setup, recovery, pending/error states under provider policy. |
 | L06 | Session expired and reauthentication | Follow-up / Block | Preserve context, explain expiry, safe continuation and sign-out. |
 | L07 | Access denied/request access | Follow-up / Block | Clear denial, supported next step, anonymous versus unavailable provider. |
@@ -268,8 +268,8 @@ These extend the original invitation/settings candidates into explicit UI blocks
 | M04 | Profile settings | Built / Block | Name, email, avatar, validation and save recovery. |
 | M05 | Appearance/language preferences | Built / Block | Theme/mode, density and locale; compose existing token options. |
 | M06 | Notification preferences | Follow-up / Block | Per-channel/category preferences, pending and failed saves. |
-| M07 | Members and invitations | Follow-up / Block | Member list, invite/resend/revoke, pending/expired and action feedback. |
-| M08 | Role/capability editor | Optional / Block | Application-defined grants, read-only/denied states and confirmation. |
+| M07 | Members and invitations | Built / Block | Member list, invite/resend/revoke, pending/expired and action feedback. |
+| M08 | Role/capability editor | Built / Block | Application-defined grants, read-only/denied states and confirmation. |
 | M09 | Security and active sessions | Optional / Block | MFA, sessions/devices, revoke and reauthentication requirements. |
 | M10 | API keys and connected integrations | Optional / Block | Create/revoke/reconnect, one-time secret reveal, provider status. |
 | M11 | Danger zone/account deletion | Follow-up / Block | Specific consequence, explicit confirmation, pending/error and recovery. |
@@ -302,7 +302,7 @@ Keep [existing chat](./chat.md) as the base. The [shadcn AI Elements references]
 | O06 | Onboarding/wizard | Built / Block | Steps, per-step validation, back/forward, review, draft recovery. |
 | O07 | Search results page | Follow-up / Block | Query, facets, counts, result rows, no-results and unavailable search. |
 | O08 | Notification center | Follow-up / Block | Unread/read, groups, actions, pagination and empty/error states. |
-| O09 | Activity/audit viewer | Follow-up / Block | Event filters, actors, timestamps, details and export; no audit storage engine. |
+| O09 | Activity/audit viewer | Built / Block | Event filters, actors, timestamps, details and export; no audit storage engine. |
 | O10 | Help/support page | Follow-up / Block | Search, FAQ, contact/support entry and documented availability. |
 | O11 | Error/access/offline pages | Next / Block | 404, unavailable/500, denied, offline and maintenance with useful recovery. |
 | O12 | Import/export workflow | Optional / Block | File selection, mapping, preview, validation results, progress and retry. |

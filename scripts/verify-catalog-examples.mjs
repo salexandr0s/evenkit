@@ -17,7 +17,7 @@ try {
   server = await createServer({
     configFile: false,
     root: join(root, "apps", "catalog"),
-    server: { middlewareMode: true },
+    server: { middlewareMode: true, hmr: false },
     appType: "custom",
   });
   const { entries } = await server.ssrLoadModule("/src/catalog-data.ts");
@@ -33,7 +33,7 @@ try {
     "J03", "J04", "E10", "E08", "O06",
   ];
   const inventoryIds = [...inventory.matchAll(/^\| ([A-R]\d{2}) \|/gm)].map(match => match[1]);
-  const workstreamIds = ["L01", "L08", "L09", "J05", "J06", "J07"];
+  const workstreamIds = ["L01", "L08", "L09", "J05", "J06", "J07", "M07", "L04", "M08", "O09"];
   const expected = [...original, ...additions, ...workstreamIds];
   if (new Set([...original, ...additions]).size !== 72 || expected.some(id => !inventoryIds.includes(id)) || new Set(expected).size !== expected.length) {
     throw new Error("The baseline and workstream mappings must be distinct inventory entries.");
