@@ -99,3 +99,5 @@ export * from "./upload-queue.js";
 export * from "./image.js";
 export * from "./command-palette.js";
 export * from "./step-indicator.js";
+export * from "./notifications.js";
+export * from "./persistent-feedback.js";

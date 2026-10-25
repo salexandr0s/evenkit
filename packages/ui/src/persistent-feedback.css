@@ -1,0 +1,13 @@
+/* Original persistent feedback compositions; see docs/notifications.md. */
+.pk-persistent-banner { display: grid; gap: var(--pk-space-3); min-width: 0; max-width: 100%; }
+.pk-persistent-banner:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
+.pk-persistent-banner .pk-action-message-heading { font-family: var(--pk-font-family-heading); }
+.pk-banner-action { display: grid; justify-items: start; gap: var(--pk-space-1); min-width: 0; max-width: 100%; }
+.pk-banner-note { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); overflow-wrap: anywhere; }
+.pk-persistent-banner .pk-button[aria-disabled="true"] { cursor: not-allowed; opacity: var(--pk-opacity-disabled); }
+.pk-presence-indicator, .pk-unread-indicator { display: inline-flex; align-items: center; gap: var(--pk-space-2); min-width: 0; max-width: 100%; color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); overflow-wrap: anywhere; }
+.pk-presence-dot { box-sizing: border-box; flex: none; width: var(--pk-space-2); height: var(--pk-space-2); border: var(--pk-border-width-hairline) solid currentColor; border-radius: var(--pk-radius-full); background: var(--pk-color-fg-muted); }
+.pk-presence-indicator[data-state="online"] .pk-presence-dot { background: var(--pk-color-success); }
+.pk-presence-indicator[data-state="away"] .pk-presence-dot { background: var(--pk-color-warning); }
+.pk-presence-indicator[data-state="busy"] .pk-presence-dot { background: var(--pk-color-danger); }
+.pk-presence-indicator[data-state="offline"] .pk-presence-dot { background: transparent; }

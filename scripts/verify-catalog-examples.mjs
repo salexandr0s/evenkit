@@ -31,11 +31,12 @@ try {
     "D01", "D02", "D03", "D04", "D08", "C08", "C09", "C05", "C06",
     "I08", "I04", "I05", "I06", "O03", "H06", "M02", "M03", "M04", "M05",
     "J03", "J04", "E10", "E08", "O06",
+    "O08", "M06", "H10", "G03", "G06",
   ];
   const inventoryIds = [...inventory.matchAll(/^\| ([A-R]\d{2}) \|/gm)].map(match => match[1]);
   const expected = [...original, ...additions];
-  if (new Set(expected).size !== 72 || additions.some(id => !inventoryIds.includes(id))) {
-    throw new Error("The requested roadmap must contain 24 distinct additions present in the inventory.");
+  if (new Set(expected).size !== 77 || additions.some(id => !inventoryIds.includes(id))) {
+    throw new Error("The requested roadmap must contain 29 distinct additions present in the inventory.");
   }
   const mapped = entries.flatMap(entry => entry.inventoryIds ?? []);
   for (const id of expected) {

@@ -1,0 +1,7 @@
+.persistent-feedback-preview { min-width: 0; }
+.persistent-feedback-intro { display: grid; gap: var(--pk-space-2); }
+.persistent-feedback-intro h3 { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-lg); }
+.persistent-feedback-intro p, .persistent-feedback-result { margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); }
+.persistent-feedback-intro h3:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
+.persistent-feedback-options { display: grid; gap: var(--pk-space-4); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); padding-block-start: var(--pk-space-5); }
+.persistent-feedback-options > .pk-button { justify-self: start; }
