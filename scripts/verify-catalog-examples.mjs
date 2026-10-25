@@ -33,8 +33,9 @@ try {
     "J03", "J04", "E10", "E08", "O06",
   ];
   const inventoryIds = [...inventory.matchAll(/^\| ([A-R]\d{2}) \|/gm)].map(match => match[1]);
-  const expected = [...original, ...additions];
-  if (new Set(expected).size !== 72 || additions.some(id => !inventoryIds.includes(id))) {
+  const workstreamIds = ["L01", "L08", "L09"];
+  const expected = [...original, ...additions, ...workstreamIds];
+  if (new Set([...original, ...additions]).size !== 72 || additions.some(id => !inventoryIds.includes(id))) {
     throw new Error("The requested roadmap must contain 24 distinct additions present in the inventory.");
   }
   const mapped = entries.flatMap(entry => entry.inventoryIds ?? []);

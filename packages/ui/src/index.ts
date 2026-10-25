@@ -99,3 +99,10 @@ export * from "./upload-queue.js";
 export * from "./image.js";
 export * from "./command-palette.js";
 export * from "./step-indicator.js";
+
+export { AuthLayout, type AuthLayoutProps } from "./auth-layout.js";
+export { LoginPage, type LoginPageProps } from "./auth-login-page.js";
+export { SignupPage, type SignupPageProps } from "./auth-signup-page.js";
+export { PasswordResetPage, type PasswordResetPageProps } from "./auth-password-reset-page.js";
+export { NewPasswordPage, type NewPasswordPageProps } from "./auth-new-password-page.js";
+export type { AuthSubmissionContext, AuthError, AuthResult, LoginValues, SignupValues, PasswordResetValues, NewPasswordValues, LoginField, SignupField, PasswordResetField, NewPasswordField, SignupResult, AuthPageProps, PasswordPolicyProps } from "./auth-types.js";

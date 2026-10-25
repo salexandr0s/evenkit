@@ -25,6 +25,7 @@ import { navigationEntries } from "./navigation-entries";
 import { overlaysEntries } from "./overlays-entries";
 import { workflowsEntries } from "./workflows-entries";
 import { roadmapEntries } from "./roadmap-entries";
+import { authEntries } from "./auth-data";
 import { CodeExample } from "./code-example";
 import { FieldPreview } from "./field-preview";
 import { EmptyPreview } from "./empty-preview";
@@ -50,9 +51,12 @@ const OverlaysPreview = lazy(() => import("./overlays-preview").then((module) =>
 const WorkflowsPreview = lazy(() => import("./workflows-preview").then((module) => ({ default: module.WorkflowsPreview })));
 const RoadmapPreview = lazy(() => import("./roadmap-preview").then((module) => ({ default: module.RoadmapPreview })));
 
+const AuthPreview = lazy(() => import("./auth-preview").then(module => ({ default: module.AuthPreview })));
+
 const sidebarStates = ["expanded", "collapsed", "hidden"] as const;
 const themeOptions = themeNames.map((name) => ({ value: name, label: themes[name].name }));
 const navigationIcons: Record<string, ReactNode> = {
+  login: <KeyRoundIcon />, signup: <UserIcon />, "password-reset": <KeyRoundIcon />, "new-password": <KeyRoundIcon />,
   themes: <SunIcon />, tokens: <LayoutDashboardIcon />, icons: <ShapesIcon />,
   buttons: <SquareIcon />, fields: <PencilIcon />, select: <ChevronDownIcon />,
   dialog: <MaximizeIcon />, tooltips: <CircleHelpIcon />, "admin-shell": <PanelLeftIcon />,
@@ -92,6 +96,7 @@ function selectedFromHash() {
 }
 
 function Preview({ id, theme, mode, onThemeChange }: { id: string; theme: ThemeName; mode: ColorMode; onThemeChange: (theme: ThemeName) => void }) {
+  if (authEntries.some(entry => entry.id === id) && (id === "login" || id === "signup" || id === "password-reset" || id === "new-password")) return <AuthPreview kind={id} />;
   if (roadmapEntries.some(entry => entry.id === id)) return <RoadmapPreview id={id} />;
   if (foundationsEntries.some(entry => entry.id === id)) return <FoundationsPreview id={id} />;
   if (selectionEntries.some(entry => entry.id === id)) return <SelectionPreview id={id} />;
