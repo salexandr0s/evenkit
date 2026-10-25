@@ -2,7 +2,17 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
-## Current continuation: DataTable complete
+## Current state: component goal complete
+
+All twelve planned areas and final integration are complete. The user-requested sidebar has expanded, icon-only, and hidden states, magnetic edge dragging, quick smooth transitions, one changing display button, custom icon tooltips, and distinct team/person icons. The broader queue and evidence are in `COMPONENT_IMPROVEMENTS.md`; earlier sections below preserve the history of separate work.
+
+The final integration fixes every copied usage example into a typed standalone module, updates stale README/compatibility claims, and adds tooltip CSS to the existing packed stylesheet check. Review confirms all 14 catalog entries, 60 icons, 204 variables, eight themes, and 560 contrast pairs. Chat, themes, later tooltip/status styling, and chat motion were included. DataTable was committed as `efe41b9`; the final integration commit follows it.
+
+Final source review has no findings. `KIT_CATALOG_PORT=5298 npm run verify` passed production build, configured type checks, ESLint, eight token tests, and all 39 Chromium journeys in 16 files. All 14 extracted snippets passed strict TypeScript with unused-code and CSS-import checks. `npm run verify:packages` passed Vite/Next installation, production builds, HTTP 200, Next server rendering, and stylesheet delivery, including tooltips and chat. Owned servers and temporary consumers were removed. Logs: `.artifacts/integration-verify.log`, `.artifacts/integration-packages.log`; report: `.artifacts/integration-package-verification.json`.
+
+Manual final inspection covered the single sidebar control, drag/snapping, icon rail tooltip, distinct person/team icons, and dark chat overlay. References: `.artifacts/integration-sidebar.png`, `.artifacts/integration-sidebar-tooltip.png`, `.artifacts/integration-chat.png`. DataTable also has final light/dark references. Temporary browser tabs are closed; the user's existing tab, preview on port 5173, and Dark appearance were preserved. Firefox/Safari, production adoption, and real mobile keyboards remain unverified. Packages remain unpublished local pilots. No required goal work remains.
+
+## Earlier continuation: DataTable complete
 
 All twelve planned component areas are implemented and verified individually. DataTable now supports primitive wrap/truncate behavior with tooltips only for actual overflow, unclipped custom cells, nonsearchable columns, clear-search focus, displayed ranges, host selection actions, and clearing IDs across pages/filters. IDs survive temporary unavailable data. The preview demonstrates local archiving, rich rows, row review, state recovery, and reset. Public types, docs, and both packed fixtures cover the additions.
 
@@ -76,7 +86,7 @@ The theme work is separate from the earlier component-improvement queue below. P
 
 ## Earlier component work
 
-The user's active goal is to substantially improve every component one by one. All twelve areas are complete, including DataTable. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. Final integration remains unfinished. The goal stays active; queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
+The user's goal was to substantially improve every component one by one. All twelve areas and final integration are complete. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. Queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
 
 ## Completed
 
@@ -115,7 +125,7 @@ Unrelated chat-component work is occurring concurrently in this same checkout, i
 
 ## Remaining work
 
-Next: final integration. Review catalog frame, all copied snippets, public exports, README and `docs/compatibility.md`, and independent packed consumers together. See the current continuation above for concrete audit findings. All twelve component areas are complete; their evidence is in `COMPONENT_IMPROVEMENTS.md`.
+No required work remains for this goal. Final integration resolved the copied-example and stale-documentation findings and verified the combined library. Optional future browser/platform coverage is documented in `docs/compatibility.md` and is not a completion blocker.
 
 Keep plan/review, relevant verification, and logical local commits. Shared source/CSS ownership must remain sequential.
 

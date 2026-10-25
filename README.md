@@ -218,7 +218,7 @@ import { Button, UserIcon, TooltipProvider, Tooltip, TooltipTrigger, TooltipCont
 </TooltipProvider>
 ```
 
-TooltipContent includes the styled surface, text wrapper, and arrow. It supports Radix positioning props, a forwarded ref, `container`, and `showArrow`; it owns its markup and does not expose `asChild`. Text wraps within the viewport, with a 280px maximum width. The high-contrast colors follow the document theme. Provider timings are overridable. Use `UserIcon` for a person and `UsersIcon` for a team; the icon reference includes all 53 named wrappers.
+TooltipContent includes the styled surface, text wrapper, and arrow. It supports Radix positioning props, a forwarded ref, `container`, and `showArrow`; it owns its markup and does not expose `asChild`. Text wraps within the viewport, with a 280px maximum width. The high-contrast colors follow the document theme. Provider timings are overridable. Use `UserIcon` for a person and `UsersIcon` for a team; the icon reference includes all 60 named wrappers.
 
 ## Admin shell and tables
 
@@ -269,9 +269,9 @@ npm run verify
 npm run verify:packages
 ```
 
-`verify` builds, type-checks, lints, runs token validation tests, and exercises the catalog in Chromium. Install the test browser with `npx playwright install chromium` if it is not available. The browser journeys cover component search, appearance precedence, form recovery, dialog focus/dismissal, dropdown sizing, narrow layouts, reduced motion, table behavior, and shell navigation.
+`verify` builds, type-checks, lints, runs token validation tests, and exercises the catalog and a focused table host fixture in Chromium. Install the test browser with `npx playwright install chromium` if it is not available. The browser journeys cover token and icon search/copying, theme persistence, form recovery, feedback and loading announcements, empty-state actions, dialog and tooltip behavior, narrow and RTL layouts, reduced motion, table selection/focus, sidebar resizing, and chat drafts, streaming, retry, and copying.
 
-`verify:packages` checks the currently built package artifacts. It packs them, creates independent temporary Vite and Next.js consumers, builds them without Tailwind, serves each production build on an allocated loopback port, and verifies token, control, icon, shell, and table CSS delivery. It removes its own temporary directories and servers. The result is saved to `.artifacts/package-verification.json`. Run `build:packages` before this check after package edits.
+`verify:packages` checks the currently built package artifacts. It packs them, creates independent temporary Vite and Next.js consumers, builds them without Tailwind, serves each production build on an allocated loopback port, and verifies token, control, icon, tooltip, shell, table, and chat CSS delivery. The Vite fixture builds a ChatWidget; the Next.js fixture builds a ChatPanel and checks its server-rendered title alongside the shell and table. Interactive chat behavior is checked in the catalog browser journeys. The script removes its own temporary directories and servers and saves its result to `.artifacts/package-verification.json`. Run `build:packages` before this check after package edits.
 
 The `fixtures` directory is deliberately outside npm workspaces. The installation check must resolve packaged public exports rather than following workspace source links. Its checked-in templates pin framework versions; generated fixture locks and output stay in its temporary directory.
 

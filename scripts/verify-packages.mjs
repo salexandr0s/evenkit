@@ -105,8 +105,8 @@ async function smoke(kind, directory) {
       return css.text();
     }));
     const css = styles.join("\n");
-    if (!["--pk-color-accent", ".pk-button", ".pk-icon", ".pk-admin-shell", ".pk-data-table", ".pk-chat"].every(selector => css.includes(selector))) {
-      throw new Error(`${kind} fixture did not ship token, control, icon, shell, table, and chat CSS.`);
+    if (!["--pk-color-accent", ".pk-button", ".pk-icon", ".pk-tooltip-content", ".pk-admin-shell", ".pk-data-table", ".pk-chat"].every(selector => css.includes(selector))) {
+      throw new Error(`${kind} fixture did not ship token, control, icon, tooltip, shell, table, and chat CSS.`);
     }
     smokeResult = { httpStatus: response.status, stylesheetCount: stylesheets.length };
   } catch (error) {

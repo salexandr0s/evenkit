@@ -2,6 +2,8 @@
 
 Requested on 25 October 2026. Goal: review every component one by one, make substantial improvements, and verify each before moving on. Work runs on `codex/component-improvements`.
 
+Completed on 25 October 2026. All twelve areas and the final integration review passed. Per-area evidence below is historical; the final integration section records the combined library and its current counts.
+
 Keep the existing public API compatible. Preserve all built-in themes, document-level theming, token-based dimensions, prefixed package CSS, and independent Next/Vite installation. Improvements should make the component more useful, easier to understand, or safer to compose. Changes to an already sound primitive need a concrete reason.
 
 ## Queue
@@ -138,4 +140,12 @@ The preview demonstrates wrapped summaries, rich owner cells, semantic dates, ro
 
 Plan and source reviews passed. Review and runtime checks resolved midword action wrapping, focus-triggered scrolling that dismissed overflow tooltips, and a page-size popup left open during loading. Production build, workspace/test type checks, ESLint, 22 affected Chromium journeys, and independent packed Vite/Next builds plus HTTP/CSS checks passed. Seven table/admin/async-host journeys passed again after the date-layout polish and removal of an ignored test-build option. The copied table usage example also passed TypeScript independently. No dependency or token was added. Package verification cleaned its temporary consumers and servers; report: `.artifacts/table-package-verification.json`. Light/dark references: `.artifacts/table-light-reference.png`, `.artifacts/table-dark-reference.png`. Firefox and Safari remain untested.
 
-All twelve planned areas are complete. The goal remains active until the catalog frame, copied examples, exports, documentation, and combined checks pass final integration, including the separate chat, theme, and tooltip/status additions.
+### Final integration
+
+The catalog frame, public exports, copied examples, documentation, and packed consumers were reviewed together. All 14 catalog entries map to public features. The library now includes 60 named icon wrappers, 204 resolved variables, and eight themes with 560 defined contrast pairs. The review includes the separately added ChatWidget/ChatPanel, theme gallery, and later tooltip/status styling and chat motion.
+
+All 14 copied examples now compile as complete typed modules. Hooks live inside components; required host callbacks and data are explicit props. Examples import token CSS before UI CSS. README and compatibility evidence reflect the current library. The existing packed stylesheet check now also detects missing tooltip CSS.
+
+Final source review found no remaining issues. `KIT_CATALOG_PORT=5298 npm run verify` passed production build, configured type checks, ESLint, eight token tests, and all 39 Chromium journeys across 16 files. Extracted snippets passed strict TypeScript with unused-code and CSS-import checks. `npm run verify:packages` passed independent Vite/Next builds, HTTP 200, Next server rendering, and stylesheet delivery. Both temporary servers and the consumer directory were cleaned. Logs: `.artifacts/integration-verify.log`, `.artifacts/integration-packages.log`; report: `.artifacts/integration-package-verification.json`.
+
+Manual integrated inspection confirmed the sidebar's single changing control, expanded/icon-only/hidden cycle, magnetic drag, distinct team/person icons, compact navigation tooltip, and dark chat overlay layout. Screenshots: `.artifacts/integration-sidebar.png`, `.artifacts/integration-sidebar-tooltip.png`, `.artifacts/integration-chat.png`. The temporary tabs were closed; the existing preview and Dark preference were preserved. Earlier component passes include light/dark and narrow layouts. Firefox, Safari, production adoption, and real mobile keyboards remain outside the verified scope. No required work remains for this goal.
