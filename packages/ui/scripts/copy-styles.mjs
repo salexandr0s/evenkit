@@ -7,6 +7,7 @@ const sources = [
   "date-controls.css",
   "multi-value.css", "number-field.css", "table-controls.css", "activity-timeline.css", "workspace-settings.css",
   "upload-queue.css", "image.css", "command-palette.css", "step-indicator.css",
+  "rich-chat-rendering.css", "rich-chat-attachments.css", "rich-chat-sources.css",
 ];
 const styles = await Promise.all(sources.map(file => readFile(new URL(`../src/${file}`, import.meta.url), "utf8")));
 await writeFile(new URL("../dist/styles.css", import.meta.url), styles.join("\n"));

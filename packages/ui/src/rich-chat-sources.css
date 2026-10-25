@@ -1,0 +1,13 @@
+.pk-chat-sources { min-inline-size: 0; margin-block-start: var(--pk-space-4); white-space: normal; }
+.pk-chat-sources h4 { margin: 0 0 var(--pk-space-2); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-semibold); }
+.pk-chat-sources ol { display: grid; gap: var(--pk-space-2); margin: 0; padding-inline-start: var(--pk-space-5); }
+.pk-chat-sources li { min-inline-size: 0; padding-inline-start: var(--pk-space-1); }
+.pk-chat-source-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-2); }
+.pk-chat-source-name { flex: 1; min-inline-size: 0; overflow-wrap: anywhere; }
+.pk-chat-source-name a { color: var(--pk-color-accent); text-decoration: underline; text-underline-offset: var(--pk-space-0-5); }
+.pk-chat-source-name a:hover { text-decoration-thickness: var(--pk-border-width-thick); }
+.pk-chat-source-name a:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
+.pk-chat-source-name small { display: block; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
+.pk-chat-source-preview { max-inline-size: min(var(--pk-layout-dialog-sm), calc(100vw - var(--pk-space-6))); overflow-wrap: anywhere; }
+.pk-chat-source-excerpt { max-block-size: min(var(--pk-layout-dialog-sm), 50dvh); overflow: auto; white-space: pre-wrap; }
+.pk-chat-source-excerpt:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }

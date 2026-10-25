@@ -7,8 +7,12 @@ import { Spinner } from "./feedback.js";
 import { ArrowDownIcon, CheckIcon, CopyIcon, MessageSquareIcon, RotateCcwIcon } from "./icons.js";
 import type { ChatLabels, ChatMessage, ChatStatus } from "./chat-types.js";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip.js";
+import { ChatMarkdown } from "./chat-markdown.js";
+import { ChatAttachments } from "./chat-attachments.js";
+import { ChatSources } from "./chat-sources.js";
 
 interface ChatMessagesProps {
+  dir?: string | undefined;
   messages: readonly ChatMessage[];
   activeConversationId?: string | undefined;
   status: ChatStatus;
@@ -20,7 +24,7 @@ interface ChatMessagesProps {
   renderMessage?: ((message: ChatMessage) => ReactNode) | undefined;
 }
 
-function Message({ message, labels, copyable, renderMessage }: { message: ChatMessage; labels: ChatLabels; copyable: boolean; renderMessage?: ChatMessagesProps["renderMessage"] }) {
+function Message({ message, labels, copyable, streaming, renderMessage, dir }: { message: ChatMessage; labels: ChatLabels; copyable: boolean; streaming: boolean; renderMessage?: ChatMessagesProps["renderMessage"]; dir?: string | undefined }) {
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
   const [copiedContent, setCopiedContent] = useState("");
   const copied = copyState === "copied" && copiedContent === message.content;
@@ -31,9 +35,11 @@ function Message({ message, labels, copyable, renderMessage }: { message: ChatMe
       setCopyState("copied");
     } catch { setCopyState("error"); }
   }
-  return <article className="pk-chat-message" data-role={message.role}>
+  return <article className="pk-chat-message" data-role={message.role} data-has-attachments={Boolean(message.attachments?.length) || undefined}>
     <div className="pk-chat-message-author">{message.role === "assistant" && <MessageSquareIcon size="sm" />}<span>{message.role === "user" ? labels.user : labels.assistant}</span></div>
-    <div className="pk-chat-message-content">{renderMessage ? renderMessage(message) : message.content}</div>
+    {(renderMessage || message.content || !(message.attachments?.length || message.sources?.length)) && <div className="pk-chat-message-content">{renderMessage ? renderMessage(message) : message.format === "markdown" ? <ChatMarkdown content={message.content} streaming={streaming} /> : message.content}</div>}
+    {message.attachments && <ChatAttachments attachments={message.attachments} />}
+    {message.sources && <ChatSources sources={message.sources} dir={dir} />}
     {copyable && message.content.trim() && <div className="pk-chat-message-actions">
       <Tooltip><TooltipTrigger asChild><Button variant="ghost" size="xs" shape="icon" aria-label={copied ? labels.copied : labels.copy} onClick={() => { void copy(); }}>{copied ? <CheckIcon size="sm" /> : <CopyIcon size="sm" />}</Button></TooltipTrigger><TooltipContent>{copied ? labels.copied : labels.copy}</TooltipContent></Tooltip>
       <span className={copyState === "error" ? "pk-chat-copy-error" : "pk-chat-visually-hidden"} role="status">{copyState === "error" ? labels.copyFailed : copied ? labels.copied : ""}</span>
@@ -41,7 +47,7 @@ function Message({ message, labels, copyable, renderMessage }: { message: ChatMe
   </article>;
 }
 
-export function ChatMessages({ messages, activeConversationId, status, error, labels, suggestions, onSuggestion, onRetry, renderMessage }: ChatMessagesProps) {
+export function ChatMessages({ messages, activeConversationId, status, error, labels, suggestions, onSuggestion, onRetry, renderMessage, dir }: ChatMessagesProps) {
   const viewport = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
   const following = useRef(true);
@@ -92,7 +98,7 @@ export function ChatMessages({ messages, activeConversationId, status, error, la
             {suggestions.map((suggestion, index) => <Button key={`${index}-${suggestion}`} variant="outline" onClick={() => onSuggestion(suggestion)}>{suggestion}</Button>)}
           </div>}
         </div>}
-        {messages.map(message => <Message key={message.id} message={message} labels={labels} renderMessage={renderMessage} copyable={message.role === "assistant" && message.id !== streamingMessageId} />)}
+        {messages.map(message => <Message key={message.id} message={message} labels={labels} dir={dir} renderMessage={renderMessage} streaming={message.id === streamingMessageId} copyable={message.role === "assistant" && message.id !== streamingMessageId} />)}
         {busy && <div className="pk-chat-responding"><Spinner aria-hidden="true" /><span>{labels.responding}</span></div>}
         {status === "error" && <div className="pk-chat-error" role="alert"><p>{error || labels.error}</p>{onRetry && <Button variant="outline" size="sm" startIcon={<RotateCcwIcon size="sm" />} onClick={onRetry}>{labels.retry}</Button>}</div>}
         {status === "idle" && lastUser && onRetry && <div className="pk-chat-retry"><Tooltip><TooltipTrigger asChild><Button variant="ghost" size="xs" shape="icon" aria-label={labels.retry} onClick={onRetry}><RotateCcwIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{labels.retry}</TooltipContent></Tooltip></div>}

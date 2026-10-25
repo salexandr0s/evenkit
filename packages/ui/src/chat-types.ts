@@ -1,10 +1,16 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type * as DialogPrimitive from "@radix-ui/react-dialog";
+import type { ChatAttachment, ChatComposerAttachments } from "./chat-attachments.js";
+import type { ChatSource } from "./chat-sources.js";
 
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
   content: string;
+  /** Plain text remains the default. Custom renderMessage takes precedence. */
+  format?: "text" | "markdown";
+  attachments?: readonly ChatAttachment[];
+  sources?: readonly ChatSource[];
 }
 
 export interface ChatConversation {
@@ -80,8 +86,10 @@ export interface ChatPanelProps extends Omit<ComponentPropsWithoutRef<"div">, "t
   onStop?: () => void;
   onRetry?: () => void;
   suggestions?: readonly string[];
-  /** Safe plain text is the default. Rich text rendering is supplied by the host. */
+  /** Overrides the content renderer. The host owns the safety of this React output. */
   renderMessage?: (message: ChatMessage) => ReactNode;
+  /** Optional controlled uploads. onSend receives text; the host snapshots completed items. */
+  attachments?: ChatComposerAttachments;
   title?: string;
   description?: string;
   footer?: ReactNode;

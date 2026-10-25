@@ -30,8 +30,8 @@ interface ChatSurfaceProps extends ChatPanelProps {
 const ChatSurface = forwardRef<ChatSurfaceHandle, ChatSurfaceProps>(function ChatSurface({
   messages, conversations, activeConversationId, value, onValueChange, onSend, onSelectConversation,
   onNewConversation, onDeleteConversation, status = "idle", error, onStop, onRetry,
-  suggestions = [], renderMessage, title = "Assistant", description, footer, labels: customLabels,
-  maxLength = 4000, expanded, onMaximize, onClose, dialog = false, elementRef, className, onKeyDown, ...props
+  suggestions = [], renderMessage, attachments, title = "Assistant", description, footer, labels: customLabels,
+  maxLength = 4000, expanded, onMaximize, onClose, dialog = false, elementRef, className, onKeyDown, dir, ...props
 }, ref) {
   const labels = { ...defaultChatLabels, ...customLabels };
   const root = useRef<HTMLDivElement>(null);
@@ -103,7 +103,7 @@ const ChatSurface = forwardRef<ChatSurfaceHandle, ChatSurfaceProps>(function Cha
 
   const Title = dialog ? DialogTitle : "h2";
   const Description = dialog ? DialogDescription : "p";
-  return <div {...props} ref={setElement} className={classes("pk-chat-panel", className)} data-mode={expanded ? "expanded" : "compact"} data-wide={wide} data-history={historyOpen} onKeyDown={event => {
+  return <div {...props} dir={dir} ref={setElement} className={classes("pk-chat-panel", className)} data-mode={expanded ? "expanded" : "compact"} data-wide={wide} data-history={historyOpen} onKeyDown={event => {
     onKeyDown?.(event);
     if (!dialog && !event.defaultPrevented && event.key === "Escape" && closeHistory()) event.preventDefault();
   }}>
@@ -143,8 +143,8 @@ const ChatSurface = forwardRef<ChatSurfaceHandle, ChatSurfaceProps>(function Cha
       <div ref={main} className="pk-chat-main" hidden={historyReplacesMain} onBlurCapture={event => {
         if (!event.relatedTarget && event.currentTarget.hidden) search.current?.focus();
       }}>
-        <ChatMessages messages={messages} activeConversationId={activeConversationId} status={status} error={error} labels={labels} suggestions={suggestions} renderMessage={renderMessage} onRetry={onRetry} onSuggestion={text => { onValueChange(text); focusComposer(); }} />
-        <ChatComposer value={value} onValueChange={onValueChange} onSend={onSend} onStop={onStop} status={status} labels={labels} maxLength={Number.isFinite(maxLength) && maxLength > 0 ? Math.max(1, Math.floor(maxLength)) : 4000} textareaRef={composer} />
+        <ChatMessages messages={messages} dir={dir} activeConversationId={activeConversationId} status={status} error={error} labels={labels} suggestions={suggestions} renderMessage={renderMessage} onRetry={onRetry} onSuggestion={text => { onValueChange(text); focusComposer(); }} />
+        <ChatComposer value={value} onValueChange={onValueChange} onSend={onSend} onStop={onStop} status={status} labels={labels} maxLength={Number.isFinite(maxLength) && maxLength > 0 ? Math.max(1, Math.floor(maxLength)) : 4000} textareaRef={composer} {...(attachments ? { attachments } : {})} />
         {footer && <div className="pk-chat-footer">{footer}</div>}
       </div>
     </div>
