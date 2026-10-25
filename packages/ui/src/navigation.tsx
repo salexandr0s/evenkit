@@ -61,8 +61,8 @@ export const Collapsible = forwardRef<ComponentRef<typeof CollapsiblePrimitive.R
   return <CollapsiblePrimitive.Root {...props} ref={ref} className={classes("pk-collapsible", className)} />;
 });
 export type CollapsibleTriggerProps = ComponentPropsWithoutRef<typeof CollapsiblePrimitive.Trigger>;
-export const CollapsibleTrigger = forwardRef<ComponentRef<typeof CollapsiblePrimitive.Trigger>, CollapsibleTriggerProps>(function CollapsibleTrigger({ className, ...props }, ref) {
-  return <CollapsiblePrimitive.Trigger {...props} ref={ref} className={classes("pk-collapsible-trigger", className)} />;
+export const CollapsibleTrigger = forwardRef<ComponentRef<typeof CollapsiblePrimitive.Trigger>, CollapsibleTriggerProps>(function CollapsibleTrigger({ className, children, asChild, ...props }, ref) {
+  return <CollapsiblePrimitive.Trigger {...props} asChild={asChild} ref={ref} className={classes("pk-collapsible-trigger", className)}>{asChild ? children : <><span>{children}</span><ChevronDownIcon size="sm" className="pk-collapsible-chevron" /></>}</CollapsiblePrimitive.Trigger>;
 });
 export type CollapsibleContentProps = ComponentPropsWithoutRef<typeof CollapsiblePrimitive.Content>;
 export const CollapsibleContent = forwardRef<ComponentRef<typeof CollapsiblePrimitive.Content>, CollapsibleContentProps>(function CollapsibleContent({ className, ...props }, ref) {
@@ -293,9 +293,11 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(function Pagi
   return <TooltipProvider><nav aria-label={label} {...props} ref={ref} aria-busy={busy || props["aria-busy"]} className={classes("pk-pagination", className)} data-compact={compact || undefined}>
     {showStatus ? <span className="pk-pagination-status" role="status">{statusText ?? `Page ${current} of ${count}`}</span> : null}
     <div className="pk-pagination-controls">
-      {pageControl(Math.max(1, current - 1), <><ChevronLeftIcon size="sm" /><span>{previousLabel}</span></>, previousLabel, blocked || current <= 1)}
-      {!compact ? pageChoices(current, count).map(choice => <span key={choice} className="pk-pagination-choice">{typeof choice === "number" ? pageControl(choice, choice, pageLabel(choice), blocked, choice === current) : <span className="pk-pagination-gap" aria-hidden="true">…</span>}</span>) : null}
-      {pageControl(Math.min(count, current + 1), <><span>{nextLabel}</span><ChevronRightIcon size="sm" /></>, nextLabel, blocked || current >= count)}
+      {!compact && count > 0 ? <div className="pk-pagination-pages">{pageChoices(current, count).map(choice => <span key={choice} className="pk-pagination-choice" data-gap={typeof choice === "string" || undefined}>{typeof choice === "number" ? pageControl(choice, choice, pageLabel(choice), blocked, choice === current) : <span className="pk-pagination-gap" aria-hidden="true">…</span>}</span>)}</div> : null}
+      <div className="pk-pagination-navigation">
+        {pageControl(Math.max(1, current - 1), <><ChevronLeftIcon size="sm" /><span>{previousLabel}</span></>, previousLabel, blocked || current <= 1)}
+        {pageControl(Math.min(count, current + 1), <><span>{nextLabel}</span><ChevronRightIcon size="sm" /></>, nextLabel, blocked || current >= count)}
+      </div>
     </div>
   </nav></TooltipProvider>;
 });
