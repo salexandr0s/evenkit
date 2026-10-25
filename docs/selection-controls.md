@@ -22,7 +22,21 @@ Absent, false and empty-string host errors permit native validation feedback. An
 
 The RadioGroup wrapper retains keyboard navigation intent until Radix's deferred roving-focus task runs. This avoids a quick key release clearing Radix 1.5.1's arrow flag before the new item receives focus. Pointer and non-navigation keys clear that intent; Radix still determines movement, direction, looping and disabled-option skipping.
 
-The examples expose mixed/disabled choices, form serialization/reset, disabled-option keyboard skipping, a failed preference save and retry, pressed actions, copy success/failure/retry, and determinate/indeterminate progress. They use fictional settings and local timers; no provider or persistence is included.
+## Selection presentation
+
+Checkbox labels use medium weight, with hints aligned beneath the label and space between separate choices. Radio options use a quiet selected row boundary in addition to their checked indicator. Selected row styling is limited to radio options; labels and controls retain their native click targets.
+
+The switch thumb travels inside a fixed track over the base motion duration. Travel derives from the track width, thumb width, padding and border tokens. The nearest explicit `dir="ltr"` or `dir="rtl"` context sets its direction, including nested overrides, through an inherited private CSS variable. This avoids the production build's language-based lowering of `:dir()`. A pending save shows a small spinner inside the thumb without changing control geometry or focus. Reduced motion removes thumb transitions and spinner rotation.
+
+Toggle actions have individual outlines and pressed fills. Segmented choices share a recessed track, balanced widths and a raised selected surface. The catalog applies formatting toggles to a note and switches the project presentation between list and cards.
+
+Joined button groups share one border at each seam and raise hovered or focused buttons above their neighbours. Horizontal groups keep labels wrapped within a single row on larger screens and stack below 640px, with logical corners preserved. Spaced groups retain their normal wrapping behavior and every action stays in Tab order.
+
+Copy feedback occupies a reserved line beneath the action and grows when a message wraps. Success and failure pair text with decorative icons; copying replaces the action icon with a spinner. The button label, focus and stale-result guards remain stable. The catalog places the source value beside the action, then stacks them on narrow screens.
+
+Progress keeps its native element, label, ref and value semantics inside a clipped visual track. Unknown totals show a moving partial segment instead of a filled bar. The nearest explicit direction context controls travel; a `dir` prop also reaches the track, including nested overrides. Reduced motion leaves a centered stationary segment. Completed work has a decorative check and defaults to “100% complete”; supplied `valueText` is preserved. Meter remains a native bounded measurement with its low/high/optimum inputs unchanged. Label and value rows wrap when space is limited.
+
+The examples expose mixed/disabled choices, form serialization/reset, disabled-option keyboard skipping, a failed preference save and retry, pressed actions, copy success/failure/retry, and determinate/indeterminate progress. The preparation example advances four fictional files and keeps workspace capacity separate. No provider or persistence is included.
 
 Import `@project-kit/tokens/css`, then `@project-kit/ui/css`. Controls are exported from `@project-kit/ui`; recipes and complete snippets are in the corresponding catalog entries.
 

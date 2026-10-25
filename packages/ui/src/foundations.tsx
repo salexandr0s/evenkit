@@ -3,7 +3,7 @@
 import { forwardRef, useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { classes } from "./classes.js";
 import type { BadgeTone } from "./feedback.js";
-import { XIcon } from "./icons.js";
+import { CheckIcon, XIcon } from "./icons.js";
 
 type DivProps = ComponentPropsWithoutRef<"div">;
 function hasContent(value: ReactNode): boolean {
@@ -141,7 +141,7 @@ export interface TagProps extends ComponentPropsWithoutRef<"span"> {
 export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag({ tone = "neutral", selected = false, onSelectedChange, onRemove, removeLabel, disabled = false, children, className, ...props }, ref) {
   const name = removeLabel ?? `Remove ${typeof children === "string" ? children : "tag"}`;
   return <span {...props} ref={ref} className={classes("pk-badge pk-tag", className)} data-tone={tone} data-selected={selected || undefined} data-disabled={disabled || undefined}>
-    {onSelectedChange ? <button type="button" className="pk-tag-select" aria-pressed={selected} disabled={disabled} onClick={() => onSelectedChange(!selected)}>{children}</button> : <span className="pk-tag-label">{children}</span>}
+    {onSelectedChange ? <button type="button" className="pk-tag-select" aria-pressed={selected} disabled={disabled} onClick={() => onSelectedChange(!selected)}><span className="pk-tag-check" aria-hidden="true"><CheckIcon size="sm" /></span><span className="pk-tag-text">{children}</span></button> : <span className="pk-tag-label">{children}</span>}
     {onRemove ? <button type="button" className="pk-tag-remove" aria-label={name} disabled={disabled} onClick={onRemove}><XIcon size="sm" /></button> : null}
   </span>;
 });
@@ -158,7 +158,7 @@ export const DataListItem = forwardRef<HTMLDivElement, DataListItemProps>(functi
 });
 export interface ListItemProps extends Omit<DivProps, "title"> { title: ReactNode; description?: ReactNode; media?: ReactNode; metadata?: ReactNode; actions?: ReactNode }
 export const ListItem = forwardRef<HTMLDivElement, ListItemProps>(function ListItem({ title, description, media, metadata, actions, className, ...props }, ref) {
-  return <div {...props} ref={ref} className={classes("pk-list-item", className)}>
+  return <div {...props} ref={ref} className={classes("pk-list-item", className)} data-has-media={hasContent(media) || undefined} data-has-actions={hasContent(actions) || undefined}>
     {hasContent(media) ? <div className="pk-list-item-media">{media}</div> : null}
     <div className="pk-list-item-content"><div className="pk-list-item-title">{title}</div>{hasContent(description) ? <div className="pk-list-item-description">{description}</div> : null}{hasContent(metadata) ? <div className="pk-list-item-metadata">{metadata}</div> : null}</div>
     {hasContent(actions) ? <div className="pk-list-item-actions">{actions}</div> : null}

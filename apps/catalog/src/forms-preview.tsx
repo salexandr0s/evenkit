@@ -1,7 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   Autocomplete, Button, Combobox, Dialog, DialogClose, DialogContent, DialogDescription, DialogTrigger,
-  DialogFooter, DialogTitle, Fieldset, FormActions, FormErrorSummary, FormSection,
+  DialogFooter, DialogTitle, Fieldset, FileTextIcon, FormActions, FormErrorSummary, FormSection,
   PasswordField, SaveStatus, SearchField, TextField, type ComboboxOption, type FormErrorItem,
   type SaveStatusState,
 } from "@project-kit/ui";
@@ -21,16 +21,18 @@ const topics: readonly ComboboxOption[] = [
 function FieldsetExample() {
   const [disabled, setDisabled] = useState(false);
   return <div className="forms-preview-stack">
-    <FormSection heading="Contact details" headingAs="h3" description="Keep related fields together and explain what the group is for.">
+    <FormSection heading="Contact details" headingAs="h3" description="Choose who receives updates about this project.">
       <Fieldset legend="Project contact" hint="This fictional contact receives project updates." required disabled={disabled}>
         <TextField label="Contact name" name="contactName" defaultValue="Alex Morgan" required />
         <TextField label="Contact email" type="email" name="contactEmail" defaultValue="alex@example.com" required />
       </Fieldset>
+      <div className="forms-preview-actions"><Button variant="outline" onClick={() => setDisabled(current => !current)}>{disabled ? "Enable contact fields" : "Disable contact fields"}</Button></div>
     </FormSection>
-    <Button variant="outline" onClick={() => setDisabled(current => !current)}>{disabled ? "Enable contact fields" : "Disable contact fields"}</Button>
-    <Fieldset legend="Reference details" optional hint="Read-only fields can still be selected and copied.">
-      <TextField label="Workspace reference" defaultValue="WK-2048" readOnly />
-    </Fieldset>
+    <FormSection heading="Workspace information" headingAs="h3" description="Include this reference when discussing the project with your team.">
+      <Fieldset legend="Reference details" optional hint="This reference is assigned to the workspace.">
+        <TextField label="Workspace reference" defaultValue="WK-2048" readOnly />
+      </Fieldset>
+    </FormSection>
   </div>;
 }
 
@@ -54,6 +56,7 @@ function SummaryExample() {
     if (issues.length > 0) queueMicrotask(() => summary.current?.focus());
   }
   return <form className="forms-preview-stack" noValidate onSubmit={submit} onReset={() => { setName(""); setEmail(""); setErrors([]); setSubmitted(false); }}>
+    <header className="forms-preview-header"><h3>Project contact</h3><p>Add the person who should receive project updates.</p></header>
     <FormErrorSummary ref={summary} errors={errors} />
     <TextField id={nameId} label="Project contact name" name="name" value={name} required onChange={event => { setName(event.target.value); setSubmitted(false); }} error={errors.find(issue => issue.fieldId === nameId)?.message} />
     <TextField id={emailId} label="Project contact email" name="email" type="email" value={email} required onChange={event => { setEmail(event.target.value); setSubmitted(false); }} error={errors.find(issue => issue.fieldId === emailId)?.message} />
@@ -65,28 +68,46 @@ function SummaryExample() {
 function SearchExample() {
   const [query, setQuery] = useState("");
   const [nativeQuery, setNativeQuery] = useState("");
-  const documents = ["Release notes", "Team handbook", "Project brief"];
-  const matches = documents.filter(document => document.toLowerCase().includes(query.trim().toLowerCase()));
+  const documents = [
+    { title: "Release notes", detail: "Recent changes to the workspace.", kind: "Updates" },
+    { title: "Team handbook", detail: "Working agreements and team contacts.", kind: "Guide" },
+    { title: "Project brief", detail: "The next decision, owner and review date.", kind: "Project" },
+  ];
+  const matches = documents.filter(document => document.title.toLowerCase().includes(query.trim().toLowerCase()));
   return <div className="forms-preview-stack">
-    <SearchField label="Search documents" name="query" value={query} onValueChange={setQuery} placeholder="Search by title" results={`${matches.length} ${matches.length === 1 ? "document" : "documents"} found.`} />
-    <ul className="forms-preview-results" aria-label="Matching documents">{matches.map(document => <li key={document}>{document}</li>)}</ul>
-    <SearchField label="Native controlled search" value={nativeQuery} onChange={event => setNativeQuery(event.currentTarget.value)} clearLabel="Clear native search"
-      hint="Native onChange can control the field, including its clear action." results={`Native query: ${nativeQuery || "(empty)"}.`} />
-    <form className="forms-preview-stack" onReset={() => undefined}>
-      <SearchField label="Saved search" defaultValue="Project" name="savedSearch" hint="This uncontrolled field restores its default when its form resets." />
-      <Button type="reset" variant="outline">Reset saved search</Button>
-    </form>
+    <section className="forms-preview-stack forms-preview-search" aria-label="Document search">
+      <header className="forms-preview-header"><h3>Workspace documents</h3><p>Search release notes, guides and project documents.</p></header>
+      <div>
+        <SearchField label="Search documents" name="query" value={query} onValueChange={setQuery} placeholder="Search by title" results={`${matches.length} ${matches.length === 1 ? "document" : "documents"} found.`} />
+        <ul className="forms-preview-results" aria-label="Matching documents">{matches.map(document => <li key={document.title}><span className="forms-preview-document-icon"><FileTextIcon /></span><div className="forms-preview-document-copy"><strong>{document.title}</strong><p>{document.detail}</p></div><span className="forms-preview-document-kind">{document.kind}</span></li>)}</ul>
+        {!matches.length ? <div className="forms-preview-no-results"><strong>No matching documents</strong><p>Try another title or clear the search to see all documents.</p></div> : null}
+      </div>
+    </section>
+    <section className="forms-preview-stack forms-preview-secondary" aria-label="Controlled and saved searches">
+      <header className="forms-preview-header"><h4>Controlled and saved searches</h4><p>Try clearing a controlled value or restoring a saved search.</p></header>
+      <SearchField label="Native controlled search" value={nativeQuery} onChange={event => setNativeQuery(event.currentTarget.value)} clearLabel="Clear native search"
+        hint="Native onChange can control the field, including its clear action." results={`Native query: ${nativeQuery || "(empty)"}.`} />
+      <form className="forms-preview-stack" onReset={() => undefined}>
+        <SearchField label="Saved search" defaultValue="Project" name="savedSearch" hint="This uncontrolled field restores its default when its form resets." />
+        <Button type="reset" variant="outline">Reset saved search</Button>
+      </form>
+    </section>
   </div>;
 }
 
 function PasswordExample() {
   const [submitted, setSubmitted] = useState(false);
   return <form className="forms-preview-stack" onSubmit={event => { event.preventDefault(); setSubmitted(true); }}>
-    <PasswordField label="Account password" name="password" autoComplete="current-password" required hint="Use a sample value. This example does not send or store it." />
-    <PasswordField label="Read-only password" defaultValue="sample-reference" readOnly autoComplete="off" />
-    <PasswordField label="Unavailable password" disabled autoComplete="off" />
-    <Button type="submit">Check password field</Button>
-    <p className="forms-preview-note" role="status">{submitted ? "The required field has a value. No request was sent." : "Show and hide the value without replacing the input."}</p>
+    <FormSection heading="Account access" headingAs="h3" description="Enter your password to continue to the workspace.">
+      <PasswordField label="Account password" name="password" autoComplete="current-password" required hint="Use a sample value. This example does not send or store it." />
+      <FormActions><Button type="submit">Check password field</Button></FormActions>
+      <p className="forms-preview-note" role="status">{submitted ? "The required field has a value. No request was sent." : "Show and hide the value without replacing the input."}</p>
+    </FormSection>
+    <section className="forms-preview-stack forms-preview-secondary" aria-label="Password field states">
+      <header className="forms-preview-header"><h4>Read-only and unavailable</h4><p>A read-only value can still be revealed and copied.</p></header>
+      <PasswordField label="Read-only password" defaultValue="sample-reference" readOnly autoComplete="off" />
+      <PasswordField label="Unavailable password" disabled autoComplete="off" />
+    </section>
   </form>;
 }
 
@@ -98,32 +119,36 @@ function ComboboxExample() {
   const [disabled, setDisabled] = useState(false);
   const [dialogContainer, setDialogContainer] = useState<HTMLDivElement | null>(null);
   return <div className="forms-preview-stack">
+    <header className="forms-preview-header"><h3>Project ownership</h3><p>Choose the team responsible for the work and add a topic.</p></header>
     <form aria-label="Team choice form" className="forms-preview-stack" onSubmit={event => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       setSubmitted(`Submitted team: ${String(data.get("team") ?? "")}; topic: ${String(data.get("topic") ?? "")}.`);
     }} onReset={() => setSubmitted("Choices reset to their defaults.")}>
-      <Combobox label="Project team" name="team" options={teams} defaultValue="planning" required disabled={disabled} hint="Search the labels. Arrow keys can highlight unavailable teams to read their descriptions; they cannot be selected. The form submits the team's ID." clearLabel="Clear project team" openLabel="Show project teams" />
+      <Combobox label="Project team" name="team" options={teams} defaultValue="planning" required disabled={disabled} hint="Search by team name. Paused teams are unavailable for new projects." clearLabel="Clear project team" openLabel="Show project teams" />
       <Autocomplete label="Project topic" name="topic" options={topics} defaultValue="Roadmap" hint="Choose a suggestion or enter your own topic." clearLabel="Clear project topic" openLabel="Show topic suggestions" />
       <FormActions><Button type="submit">Capture choices</Button><Button type="reset" variant="outline">Reset choices</Button></FormActions>
       <p className="forms-preview-note" role="status">{submitted}</p>
     </form>
     <Button variant="outline" onClick={() => setDisabled(current => !current)}>{disabled ? "Enable project team" : "Disable project team"}</Button>
-    <form aria-label="Controlled team form" className="forms-preview-stack" onReset={() => setControlled("planning")}>
-      <Combobox label="Controlled team" name="controlledTeam" options={controlledTeams} value={controlled} onValueChange={setControlled} hint="The host owns this value and its reset behavior." clearLabel="Clear controlled team" openLabel="Show controlled teams" />
-      <div className="forms-preview-actions"><Button variant="outline" onClick={() => setControlled("research")}>Choose Research externally</Button><Button variant="outline" onClick={() => setResearchLabel(current => current === "Research" ? "Research and discovery" : "Research")}>Refresh team labels</Button><Button type="reset" variant="outline">Reset controlled team</Button></div>
-    </form>
-    <Combobox label="Read-only team" options={teams} defaultValue="operations" readOnly hint="A read-only selection remains available to copy." />
-    <div dir="rtl"><Combobox dir="rtl" label="Right-to-left team" options={teams} defaultValue="research" openLabel="Show right-to-left teams" clearLabel="Clear right-to-left team" hint="Option descriptions and controls follow the field direction." /></div>
-    <Dialog>
-      <DialogTrigger asChild><Button variant="outline">Choose a team in a dialog</Button></DialogTrigger>
-      <DialogContent ref={setDialogContainer}>
-        <DialogTitle>Project team dialog</DialogTitle>
-        <DialogDescription>The popup stays within this dialog's focus and dismissal boundary.</DialogDescription>
-        <Combobox label="Dialog project team" options={teams} defaultValue="planning" container={dialogContainer} openLabel="Show dialog teams" clearLabel="Clear dialog team" />
-        <DialogFooter><DialogClose asChild><Button variant="outline">Done choosing team</Button></DialogClose></DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <section className="forms-preview-stack forms-preview-secondary" aria-label="Additional team selection examples">
+      <header className="forms-preview-header"><h4>Selection states</h4><p>Controlled values, read-only fields, direction and dialog placement.</p></header>
+      <form aria-label="Controlled team form" className="forms-preview-stack" onReset={() => setControlled("planning")}>
+        <Combobox label="Controlled team" name="controlledTeam" options={controlledTeams} value={controlled} onValueChange={setControlled} hint="The host owns this value and its reset behavior." clearLabel="Clear controlled team" openLabel="Show controlled teams" />
+        <div className="forms-preview-actions"><Button variant="outline" onClick={() => setControlled("research")}>Choose Research externally</Button><Button variant="outline" onClick={() => setResearchLabel(current => current === "Research" ? "Research and discovery" : "Research")}>Refresh team labels</Button><Button type="reset" variant="outline">Reset controlled team</Button></div>
+      </form>
+      <Combobox label="Read-only team" options={teams} defaultValue="operations" readOnly hint="A read-only selection remains available to copy." />
+      <div dir="rtl"><Combobox dir="rtl" label="Right-to-left team" options={teams} defaultValue="research" openLabel="Show right-to-left teams" clearLabel="Clear right-to-left team" hint="Option descriptions and controls follow the field direction." /></div>
+      <Dialog>
+        <DialogTrigger asChild><Button variant="outline">Choose a team in a dialog</Button></DialogTrigger>
+        <DialogContent ref={setDialogContainer}>
+          <DialogTitle>Project team dialog</DialogTitle>
+          <DialogDescription>The popup stays within this dialog's focus and dismissal boundary.</DialogDescription>
+          <Combobox label="Dialog project team" options={teams} defaultValue="planning" container={dialogContainer} openLabel="Show dialog teams" clearLabel="Clear dialog team" />
+          <DialogFooter><DialogClose asChild><Button variant="outline">Done choosing team</Button></DialogClose></DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </section>
   </div>;
 }
 
@@ -157,21 +182,23 @@ function SaveExample() {
   }
   function reset() { stopSave(); setDraft(savedName); setState("idle"); }
   return <div className="forms-preview-stack">
-    <p className="forms-preview-note">Change the fictional project name. Its first save fails; Retry then succeeds. Cancel can stop a pending save.</p>
+    <header className="forms-preview-header"><h3>Project details</h3><p>Edit the project name and save when you are ready.</p></header>
     <form className="forms-preview-stack" onSubmit={event => { event.preventDefault(); save(); }} onReset={reset}>
-      <TextField label="Editable project name" name="name" required value={draft} readOnly={saving} onChange={event => { setDraft(event.target.value); setState("dirty"); }} />
-      <FormActions dirty={dirty}>
-        <Button ref={saveButton} type="submit" loading={saving} disabled={!dirty}>Save project</Button>
-        <Button ref={cancelButton} variant="outline" onClick={() => {
-          if (saving) { stopSave(); setState("dirty"); }
-          else if (dirty) setDiscardOpen(true);
-          else reset();
-        }}>{saving ? "Cancel save" : "Cancel changes"}</Button>
-        <Button type="reset" variant="ghost" disabled={saving}>Reset draft</Button>
-      </FormActions>
+      <TextField label="Editable project name" name="name" required value={draft} readOnly={saving} hint={<span>Saved name: <strong>{savedName}</strong></span>} onChange={event => { const next = event.target.value; setDraft(next); setState(next === savedName ? "idle" : "dirty"); }} />
+      <div className="forms-preview-save-footer">
+        <FormActions>
+          <Button ref={saveButton} type="submit" loading={saving} disabled={!dirty}>Save project</Button>
+          <Button ref={cancelButton} variant="outline" onClick={() => {
+            if (saving) { stopSave(); setState("dirty"); }
+            else if (dirty) setDiscardOpen(true);
+            else reset();
+          }}>{saving ? "Cancel save" : "Cancel changes"}</Button>
+          <Button type="reset" variant="ghost" disabled={saving}>Reset draft</Button>
+        </FormActions>
+        <SaveStatus state={state === "idle" && dirty ? "dirty" : state} actions={state === "error" ? <Button ref={retryButton} size="sm" onClick={save}>Retry save</Button> : undefined} />
+      </div>
     </form>
-    <SaveStatus state={state === "idle" && dirty ? "dirty" : state} actions={state === "error" ? <Button ref={retryButton} size="sm" onClick={save}>Retry save</Button> : undefined} />
-    <p className="forms-preview-note">Saved name: <strong>{savedName}</strong></p>
+    <p className="forms-preview-note forms-preview-scenario">Change the fictional project name. Its first save fails; Retry then succeeds. Cancel can stop a pending save.</p>
     <Dialog open={discardOpen} onOpenChange={setDiscardOpen}>
       <DialogContent size="sm" onCloseAutoFocus={event => { event.preventDefault(); cancelButton.current?.focus(); }}>
         <DialogTitle>Discard changes?</DialogTitle>

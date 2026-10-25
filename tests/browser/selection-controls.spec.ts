@@ -190,6 +190,18 @@ test("pending switches preserve focus, reject repeated activation, recover error
   await expect(digest).toBeChecked();
   await page.setViewportSize({ width: 360, height: 900 });
   expect((await preference.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+
+  // Check the built CSS: :dir() lowering must not confuse direction with language.
+  await region.evaluate(element => element.setAttribute("dir", "rtl"));
+  const thumbIsOnRight = () => preference.evaluate(element => {
+    const thumb = element.querySelector(".pk-switch-thumb")?.getBoundingClientRect();
+    const track = element.querySelector(".pk-switch-track")?.getBoundingClientRect();
+    if (!thumb || !track) throw new Error("Missing switch geometry");
+    return thumb.x + thumb.width / 2 > track.x + track.width / 2;
+  });
+  await expect.poll(thumbIsOnRight).toBe(false);
+  await preference.evaluate(element => element.setAttribute("dir", "ltr"));
+  await expect.poll(thumbIsOnRight).toBe(true);
 });
 
 test("toggle groups use roving focus and preserve independent pressed actions", async ({ page }) => {

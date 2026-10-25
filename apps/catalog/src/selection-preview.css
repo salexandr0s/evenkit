@@ -2,8 +2,29 @@
 .selection-preview h3 { margin: 0; color: var(--pk-color-fg); font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-xl); line-height: var(--pk-font-line-height-snug); font-weight: var(--pk-font-weight-semibold); }
 .selection-preview p { margin: 0; overflow-wrap: anywhere; }
 .selection-preview > p { color: var(--pk-color-fg-muted); }
+.selection-preview-heading { display: grid; gap: var(--pk-space-2); }
+.selection-preview-heading > p { color: var(--pk-color-fg-muted); }
+.selection-preview-heading .selection-preview-context { margin-block-end: var(--pk-space-1); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-medium); }
+.selection-preview-section { padding-block-start: var(--pk-space-6); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .selection-preview-stack { display: flex; flex-direction: column; align-items: stretch; gap: var(--pk-space-4); min-width: 0; }
 .selection-preview-stack > .pk-button { align-self: flex-start; }
 .selection-preview code { min-width: 0; padding-block: var(--pk-space-2); font-family: var(--pk-font-family-mono); color: var(--pk-color-fg); overflow-wrap: anywhere; }
-.selection-preview [role="status"] { color: var(--pk-color-fg-muted); }
+.selection-preview :where([role="status"]) { color: var(--pk-color-fg-muted); }
 .selection-preview > [dir="rtl"] { padding-block-start: var(--pk-space-4); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.selection-preview-note { padding: var(--pk-space-6); border-block: var(--pk-border-width-hairline) solid var(--pk-color-border); color: var(--pk-color-fg); font-size: var(--pk-font-size-lg); line-height: var(--pk-font-line-height-relaxed); overflow-wrap: anywhere; }
+.selection-preview-note[data-bold] { font-weight: var(--pk-font-weight-semibold); }
+.selection-preview-note[data-underline] { text-decoration: underline; text-underline-offset: var(--pk-space-1); }
+.selection-preview-note[data-align="center"] { text-align: center; }
+.selection-preview-note[data-align="end"] { text-align: end; }
+.selection-preview-projects { display: grid; gap: 0; min-width: 0; list-style: none; margin: 0; padding: 0; }
+.selection-preview-projects > li { display: flex; align-items: center; justify-content: space-between; gap: var(--pk-space-4); padding-block: var(--pk-space-4); border-block-end: var(--pk-border-width-hairline) solid var(--pk-color-border); min-width: 0; overflow-wrap: anywhere; }
+.selection-preview-projects strong { color: var(--pk-color-fg); font-weight: var(--pk-font-weight-medium); }
+.selection-preview-projects p, .selection-preview-projects > li > span { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
+.selection-preview-projects p { margin-block-start: var(--pk-space-1); }
+.selection-preview-projects[data-mode="cards"] { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--pk-space-3); }
+.selection-preview-projects[data-mode="cards"] > li { flex-direction: column; align-items: flex-start; padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); }
+.selection-preview-reference { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: var(--pk-space-4); padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); }
+.selection-preview-reference > code { box-sizing: border-box; display: flex; align-items: center; min-height: var(--pk-control-height-md); }
+.selection-preview-progress-card { display: grid; gap: var(--pk-space-4); padding: var(--pk-space-5); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface); }
+.selection-preview-progress-card > p, .selection-preview-storage-note { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
+@media (max-width: 639px) { .selection-preview-projects[data-mode="cards"], .selection-preview-reference { grid-template-columns: minmax(0, 1fr); } }

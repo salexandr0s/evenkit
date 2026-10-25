@@ -8,7 +8,8 @@ import { forwardRef, useEffect, useId, useRef, useState, type ComponentPropsWith
 import { Button, type ButtonProps, type ControlSize } from "./button.js";
 import { classes } from "./classes.js";
 import { useFieldDescription } from "./field-frame.js";
-import { CheckIcon, CopyIcon } from "./icons.js";
+import { Spinner } from "./feedback.js";
+import { CheckIcon, CircleAlertIcon, CopyIcon } from "./icons.js";
 
 export type CheckboxState = boolean | "indeterminate";
 
@@ -185,7 +186,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
       aria-describedby={description.descriptionIds} aria-invalid={description.hasError ? true : invalid}
       onCheckedChange={next => { validation.clear(); onCheckedChange?.(next); }}
       onClick={event => { onClick?.(event); if (pending) event.preventDefault(); }}>
-      <span className="pk-switch-track" aria-hidden="true"><SwitchPrimitive.Thumb className="pk-switch-thumb" /></span>
+      <span className="pk-switch-track" aria-hidden="true"><SwitchPrimitive.Thumb className="pk-switch-thumb">{pending ? <span className="pk-switch-pending" /> : null}</SwitchPrimitive.Thumb></span>
     </SwitchPrimitive.Root>
     {label != null ? <label className="pk-choice-label" htmlFor={description.controlId}>{label}</label> : null}
     <ChoiceMessages hint={hint} error={validation.error} description={description} />
@@ -264,10 +265,13 @@ export const CopyAction = forwardRef<HTMLButtonElement, CopyActionProps>(functio
       if (mounted.current && current === attempt.current) setStatus("error");
     }
   }
-  return <span className="pk-copy-action">
+  return <span className="pk-copy-action" data-status={status}>
     <Button {...props} ref={ref} variant={variant} aria-busy={status === "copying" || undefined}
-      startIcon={status === "copied" ? <CheckIcon /> : <CopyIcon />} onClick={() => { void copy(); }}>{children}</Button>
-    <span className="pk-copy-feedback" role="status" data-error={status === "error" || undefined}>{status === "copying" ? copyingMessage : status === "copied" ? copiedMessage : status === "error" ? errorMessage : ""}</span>
+      startIcon={status === "copying" ? <Spinner aria-hidden="true" /> : status === "copied" ? <CheckIcon /> : <CopyIcon />} onClick={() => { void copy(); }}>{children}</Button>
+    <span className="pk-copy-feedback" role="status" data-error={status === "error" || undefined}>
+      {status === "error" ? <CircleAlertIcon size="sm" /> : status === "copied" ? <CheckIcon size="sm" /> : null}
+      <span>{status === "copying" ? copyingMessage : status === "copied" ? copiedMessage : status === "error" ? errorMessage : ""}</span>
+    </span>
   </span>;
 });
 
@@ -284,11 +288,15 @@ export const Progress = forwardRef<HTMLProgressElement, ProgressProps>(function 
   const controlId = id ?? `pk-progress-${generatedId}`;
   const limit = Number.isFinite(max) && max > 0 ? max : 100;
   const amount = value !== undefined && Number.isFinite(value) ? Math.max(0, Math.min(limit, value)) : undefined;
-  const text = valueText ?? (amount === undefined ? "In progress" : `${Math.round(amount / limit * 100)}%`);
-  return <div className="pk-measurement">
-    <div className="pk-measurement-heading"><label htmlFor={controlId}>{label}</label><span id={`${controlId}-value`}>{text}</span></div>
-    <progress {...props} ref={ref} id={controlId} className={classes("pk-progress", className)} max={limit} value={amount}
-      aria-valuetext={text} aria-describedby={[describedBy, `${controlId}-value`].filter(Boolean).join(" ")} />
+  const complete = amount === limit;
+  const text = valueText ?? (amount === undefined ? "In progress" : complete ? "100% complete" : `${Math.round(amount / limit * 100)}%`);
+  return <div className="pk-measurement" data-complete={complete || undefined}>
+    <div className="pk-measurement-heading"><label htmlFor={controlId}>{label}</label><span id={`${controlId}-value`}>{complete ? <CheckIcon size="sm" aria-hidden="true" /> : null}{text}</span></div>
+    <div className="pk-progress-track" dir={props.dir}>
+      <progress {...props} ref={ref} id={controlId} className={classes("pk-progress", className)} max={limit} value={amount}
+        aria-valuetext={text} aria-describedby={[describedBy, `${controlId}-value`].filter(Boolean).join(" ")} />
+      {amount === undefined ? <span className="pk-progress-indeterminate" aria-hidden="true" /> : null}
+    </div>
   </div>;
 });
 

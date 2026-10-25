@@ -10,10 +10,10 @@ import {
 } from "react";
 import { Button, type ControlSize } from "./button.js";
 import { classes } from "./classes.js";
-import { ActionMessage, type ActionMessageProps } from "./feedback.js";
+import { ActionMessage, Spinner, type ActionMessageProps } from "./feedback.js";
 import { FieldFrame, useFieldDescription, type FieldContentProps } from "./field-frame.js";
 import { TextField, type TextFieldProps } from "./field.js";
-import { CheckIcon, ChevronDownIcon, CircleAlertIcon, EyeIcon, EyeOffIcon, SearchIcon, XIcon } from "./icons.js";
+import { CheckIcon, ChevronDownIcon, CircleAlertIcon, EyeIcon, EyeOffIcon, PencilIcon, SearchIcon, XIcon } from "./icons.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 function useInputHandle(forwardedRef: ForwardedRef<HTMLInputElement>) {
@@ -97,7 +97,7 @@ export const FormErrorSummary = forwardRef<HTMLDivElement, FormErrorSummaryProps
   if (errors.length === 0) return null;
   return (
     <div {...props} ref={ref} className={classes("pk-form-summary", className)} role={role} tabIndex={tabIndex} aria-labelledby={labelledBy ?? headingId}>
-      <p id={headingId} className="pk-form-summary-heading">{heading}</p>
+      <div className="pk-form-summary-header"><span className="pk-form-summary-icon" aria-hidden="true"><CircleAlertIcon /></span><p id={headingId} className="pk-form-summary-heading">{heading}</p></div>
       <ul>{errors.map((error, index) => <li key={`${error.fieldId}-${index}`}><a href={`#${encodeURIComponent(error.fieldId)}`} onClick={event => {
         const target = document.getElementById(error.fieldId);
         if (target && !target.matches(":disabled")) { event.preventDefault(); target.focus(); }
@@ -222,7 +222,7 @@ function ChoiceInput({ inputProps, inputRef, controlId, labelId, descriptionIds,
       <ComboboxPrimitive.Input {...inputProps} ref={inputRef} id={controlId} className={classes("pk-input pk-combobox-input", inputProps.className)} data-size={controlSize} aria-labelledby={inputProps["aria-labelledby"] ?? (inputProps["aria-label"] === undefined ? labelId : undefined)} aria-describedby={descriptionIds} aria-invalid={invalid} />
       <span className="pk-combobox-actions">
         {clearable && !inputProps.readOnly ? <ComboboxPrimitive.Clear className="pk-combobox-action" aria-label={clearLabel}><XIcon size="sm" /></ComboboxPrimitive.Clear> : null}
-        <Trigger className="pk-combobox-action" aria-label={openLabel}><ChevronDownIcon size="sm" /></Trigger>
+        <Trigger className="pk-combobox-action pk-combobox-trigger" aria-label={openLabel}><ChevronDownIcon size="sm" /></Trigger>
       </span>
     </Group>
   );
@@ -326,8 +326,9 @@ export interface SaveStatusProps extends Omit<ActionMessageProps, "tone"> {
 }
 
 export const SaveStatus = forwardRef<HTMLDivElement, SaveStatusProps>(function SaveStatus(
-  { state, children, className, ...props }, ref,
+  { state, children, className, icon, ...props }, ref,
 ) {
   const messages: Record<SaveStatusState, string> = { idle: "No changes to save.", dirty: "You have unsaved changes.", saving: "Saving changes…", saved: "Changes saved.", error: "Changes could not be saved. Try again." };
-  return <ActionMessage {...props} ref={ref} className={classes("pk-save-status", className)} data-state={state} tone={state === "error" ? "error" : state === "saved" ? "success" : "info"}>{children ?? messages[state]}</ActionMessage>;
+  const stateIcon = state === "saving" ? <Spinner size="sm" aria-hidden="true" /> : state === "idle" ? <CheckIcon size="sm" /> : state === "dirty" ? <PencilIcon size="sm" /> : undefined;
+  return <ActionMessage {...props} ref={ref} className={classes("pk-save-status", className)} data-state={state} icon={icon === undefined ? stateIcon : icon} tone={state === "error" ? "error" : state === "saved" ? "success" : "info"}>{children ?? messages[state]}</ActionMessage>;
 });

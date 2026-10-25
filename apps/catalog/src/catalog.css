@@ -1,7 +1,7 @@
 body { margin: 0; background: var(--pk-color-bg); color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); }
 .catalog-app, .catalog-app *, .catalog-app *::before, .catalog-app *::after { box-sizing: border-box; }
 .catalog-app { min-height: 100dvh; }
-.catalog-app h1, .catalog-app h2, .catalog-app p { margin: 0; }
+:where(.catalog-app h1, .catalog-app h2, .catalog-app p) { margin: 0; }
 .catalog-info-panel > a { color: var(--pk-color-accent); text-underline-offset: var(--pk-space-1); }
 .catalog-brand:focus-visible, .catalog-info-panel > a:focus-visible, .catalog-app pre:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-1); border-radius: var(--pk-radius-sm); }
 .catalog-app > .pk-admin-frame > .pk-admin-workspace > .pk-admin-header { flex-wrap: wrap; gap: var(--pk-space-4); padding: var(--pk-space-4) var(--pk-space-10); }
