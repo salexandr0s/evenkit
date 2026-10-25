@@ -2,6 +2,18 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Animated icons: 25 October 2026
+
+Completed the icon-animation goal. All 99 named icons animate only on pointer hover, including their containing controls. Fifty SVG bodies adapt Lucide Animated at commit `4662fff2b60fdcf4751b32013606756caf7c4c26`; 49 use original CSS motion on the installed Lucide artwork. `animation="static"` and `IconProvider` provide per-icon and subtree settings. Reduced motion, touch contact, disabled/busy controls, exit and unmount are handled centrally. Sizes, currentColor, accessible labels, native SVG refs/props and canonical Lucide classes remain available. Spinner keeps its existing progress behavior.
+
+The Icons catalog has a mode selector, side-by-side examples and matching JSX. Documentation, provenance and MIT notices accompany pinned Motion 14.6.0. Main sources: `packages/ui/src/icons.tsx`, `icon-provider.tsx`, `use-icon-animation.ts`, `icons.css`, `animated-icons/`; catalog and docs changes are limited to icons.
+
+Verification passed: production build, configured TypeScript and ESLint, eight token tests, all 62 copied examples/48 mappings, packed Vite and Next production builds with HTTP/CSS smoke, SSR/native-prop smoke and independent source review. The 99-glyph browser sweep checks idle state, actual path/geometry motion and complete reset. All three focused icon journeys passed after replacing timing-sensitive polling with an observer (`.artifacts/animated-icons-focused-final.log`). Light/dark desktop and narrow screenshots show no overflow; a development hover-then-unmount check recorded no runtime errors.
+
+The fixed-build full Chromium run passed 127 of 129 journeys (`.artifacts/animated-icons-browser-final.log`). One failure was the short-animation polling assertion, fixed and rerun successfully without runtime changes. The remaining failure is unrelated: `tests/browser/overlays.spec.ts:100` detects Enter activating confirmation while AlertDialog exits. Review confirmed its content wrapper matches HEAD, lacks the closed-state input guards of DialogContent, and the failing dialog has no icon. Concurrent overlay work is preserved. Vite still reports its chunk-size advisory. Firefox/Safari and physical touch devices were not tested.
+
+No required icon work remains. Existing Hallmark/design, compact-button and overlay edits are outside this commit. The owned patch is `.artifacts/animated-icons-owned.patch`; screenshots are `.artifacts/animated-icons-{desktop,mobile,dark}.png`. Resume with `git status --short` and `cat docs/icons.md`. Existing catalog preview on port 5173 remains available at `/#icons`.
+
 ## Utility icon buttons: 25 October 2026
 
 Completed the utility-icon goal. Undo archive, code/import/token copy, password visibility, chat copy/idle retry/jump, file-row actions, status dismissal and table selection clearing use named square icon buttons with shared tooltips. Primary actions, confirmation labels, empty-state recovery and filter resets retain text. Added Undo2Icon, EyeIcon and EyeOffIcon (99 wrappers). Toast actions accept an optional icon while retaining label, altText, callbacks and the existing text fallback. Updated copied examples and family docs.

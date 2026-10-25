@@ -22,6 +22,12 @@ The root project records tested framework versions and checks. Usage in the loca
 
 The curated icon wrappers use named static imports from `lucide-react` 1.61.0, following the [Lucide React guide](https://lucide.dev/guide/react). The package retains Lucide's ISC license and the MIT notices for Feather-derived icons. The installed notice is included in this package's `licenses` directory.
 
+Fifty animated glyphs in `src/animated-icons` adapt [Lucide Animated](https://lucide-animated.com/) at [commit 4662fff2b60fdcf4751b32013606756caf7c4c26](https://github.com/pqoqubbw/icons/tree/4662fff2b60fdcf4751b32013606756caf7c4c26/icons). Its MIT notice is retained in `licenses/lucide-animated.txt`. The other 49 icons use original kit CSS animations on the installed Lucide artwork. The standing-person Accessibility icon retains its meaning instead of adopting the upstream wheelchair artwork. Motion 14.6.0 supplies SVG animation; its MIT notice and the notices for its animation dependencies are retained in `licenses`.
+
+The adaptations share the kit's SVG wrapper and hover controller. Outer SVG refs, control transforms, dimensions, stroke width and accessible naming remain under the kit's contract. Animations use the existing motion tokens, with finite sequences spanning multiple token durations where needed. Keyboard uses deterministic key feedback; Menu returns to its menu shape; Logout has an explicit resting state. There is no initial animation or continuous loop.
+
+Icons default to hover motion. `animation="static"` disables it for an icon; `IconProvider` sets a subtree default, including portal content. Pointer hover follows the nearest native or ARIA control, or a `data-icon-trigger` wrapper. Leaving, disabling, loading, losing window focus, or enabling reduced motion stops and resets the artwork. Touch contact and keyboard focus do not start icon motion. Spinner retains its independent progress behavior.
+
 Icons use the kit's `sm`, `md`, and `lg` size tokens, a shared stroke-width token, and `currentColor`. They are decorative by default. Supply `label` when an icon itself conveys information; the wrapper then exposes an image role and accessible name. An icon-only button still needs its own accessible label. The icon wrappers do not accept a dynamic icon name or load an icon registry.
 
 Dropdown rows use border-box sizing and the shared option-height token. Small desktop controls use the shared small-control height without extra content-box padding; mobile controls retain the touch-height token.

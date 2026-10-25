@@ -32,11 +32,11 @@ const baseEntries: readonly CatalogEntry[] = [
     id: "icons",
     name: "Icons",
     group: "Foundations",
-    description: "A curated set of named icons with shared sizes, stroke weight, and accessible labeling patterns.",
-    tags: ["icon", "lucide", "search", "folder", "navigation", "arrow", "glyph", "svg"],
-    source: "Lucide React · named kit wrappers",
-    sourceUrl: "https://lucide.dev/guide/packages/lucide-react",
-    usage: "\"use client\";\n\nimport \"@project-kit/tokens/css\";\nimport \"@project-kit/ui/css\";\nimport { Button, PlusIcon, SearchIcon } from \"@project-kit/ui\";\n\nexport function IconExamples({ onAdd }: { onAdd: () => void }) {\n  return (\n    <>\n      {/* Decorative beside visible button text. */}\n      <Button startIcon={<PlusIcon />} onClick={onAdd}>Add project</Button>\n      {/* Name an icon-only action on its button. */}\n      <Button shape=\"icon\" aria-label=\"Add project\" onClick={onAdd}>\n        <PlusIcon />\n      </Button>\n      {/* A standalone icon supplies its own label. */}\n      <SearchIcon size=\"lg\" label=\"Search projects\" />\n    </>\n  );\n}\n"
+    description: "Named icons that animate on hover, with static versions, shared sizes, and accessible labeling patterns.",
+    tags: ["icon", "lucide", "animated", "hover", "static", "motion", "search", "folder", "navigation", "arrow", "glyph", "svg"],
+    source: "Lucide · Lucide Animated · kit motion",
+    sourceUrl: "https://lucide-animated.com/",
+    usage: "\"use client\";\n\nimport \"@project-kit/tokens/css\";\nimport \"@project-kit/ui/css\";\nimport { Button, IconProvider, PlusIcon, SearchIcon } from \"@project-kit/ui\";\n\nexport function IconExamples({ onAdd }: { onAdd: () => void }) {\n  return (\n    <IconProvider animation=\"hover\">\n      {/* Hover the button to animate its decorative icon. */}\n      <Button startIcon={<PlusIcon />} onClick={onAdd}>Add project</Button>\n      {/* Name an icon-only action on its button. */}\n      <Button shape=\"icon\" aria-label=\"Add project\" onClick={onAdd}>\n        <PlusIcon />\n      </Button>\n      {/* An explicit static icon stays still within the provider. */}\n      <SearchIcon animation=\"static\" size=\"lg\" label=\"Search projects\" />\n    </IconProvider>\n  );\n}\n"
   },
   {
     id: "buttons",

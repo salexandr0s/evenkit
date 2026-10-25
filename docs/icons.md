@@ -1,6 +1,6 @@
 # Icons
 
-Use the named Lucide wrappers exported by `@project-kit/ui`. The kit pins `lucide-react` 1.61.0. Its outlined icons suit controls, navigation, and table actions, and its static React imports support tree shaking. [Lucide React documentation](https://lucide.dev/guide/react).
+Use the named Lucide wrappers exported by `@project-kit/ui`. Icons animate on hover by default and accept `animation="static"` for a still version. The kit pins `lucide-react` 1.61.0 and adapts matching animations from [Lucide Animated](https://lucide-animated.com/), with kit animations for the remaining icons. Named imports support tree shaking. [Lucide React documentation](https://lucide.dev/guide/react).
 
 ```tsx
 import { Button, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@project-kit/ui";
@@ -52,7 +52,27 @@ Use `PanelLeftCloseIcon` for collapsing the sidebar and `PanelLeftOpenIcon` for 
 
 ActionMessage uses `CircleCheckIcon` for success, `CircleAlertIcon` for errors, `TriangleAlertIcon` for warnings, and `InfoIcon` for information. Each glyph accompanies visible text so color is not the only status cue.
 
-The catalog lets you filter by category, search names and related words such as "delete" or "directory", compare the three token sizes, and copy a named import. Each card keeps its import selectable when clipboard access is unavailable. Examples show decorative icons beside text, labelled icon buttons, and icons with independent meaning.
+## Hover animation and static icons
+
+Icons stay still on mount and while idle. Hovering an icon or its enclosing button or link plays its animation once; leaving resets it. Keyboard focus does not start an animation. Reduced-motion preferences keep icons still, including icons explicitly set to `animation="hover"`.
+
+Use `IconProvider` to set a default for a section or application. An explicit icon prop overrides the nearest provider. Both modes retain the same import, size tokens, accessible label, and SVG ref.
+
+```tsx
+import { BellIcon, Button, IconProvider, PlusIcon } from "@project-kit/ui";
+
+<BellIcon animation="hover" label="Notifications" />
+<BellIcon animation="static" label="Notifications" />
+
+<IconProvider animation="static">
+  <Button startIcon={<PlusIcon />}>Create project</Button>
+  <BellIcon animation="hover" label="Notifications" />
+</IconProvider>
+```
+
+For a custom hover area, put `data-icon-trigger` on the enclosing element. The catalog uses this on each icon card. This attribute controls motion only; use native buttons or links for actions and keep their accessible names.
+
+The catalog lets you filter by category, search names and related words such as "delete" or "directory", compare the three token sizes, and choose hover or static motion. Each card shows JSX for the selected settings and keeps its import selectable when clipboard access is unavailable. Copy import still copies only the named import. Examples compare both animation modes and show decorative icons beside text, labelled icon buttons, and icons with independent meaning.
 
 Every catalog sidebar entry has an explicit icon in `apps/catalog/src/catalog.tsx`. The icon reference includes a Controls category and component search terms such as "checkbox", "fieldset", and "combobox".
 
@@ -63,7 +83,8 @@ Add new named wrappers to `packages/ui/src/icons.tsx` when a product needs them,
 | Library | Useful characteristics | Kit decision |
 |---|---|---|
 | [Lucide](https://lucide.dev/guide/react) | Typed individual React components, adjustable size/stroke, tree shaking | Adopt for this phase |
+| [Lucide Animated](https://lucide-animated.com/) | Per-icon hover animations based on Lucide | Adapt matching animations; supply kit animations for gaps |
 | [Tabler](https://tabler.io/icons) | Outline and filled variants, 24px grid, 2px stroke, MIT license | Suitable alternative for future gaps; avoid mixing similar outline sets now |
 | [Phosphor](https://github.com/phosphor-icons/react) | Multiple weights, filled/duotone treatments, React and SSR imports | Consider if a product needs those treatments |
 
-Sources were inspected on 25 October 2026. Lucide uses the ISC license, with MIT notices for Feather-derived icons. Its full notice and the TanStack dependency notices ship in `packages/ui/licenses`. See [Lucide's license](https://lucide.dev/license). Brand logos are outside this curated set.
+Sources were inspected on 25 October 2026. Lucide uses the ISC license, with MIT notices for Feather-derived icons. Lucide Animated and Motion use MIT licenses. Their notices ship in `packages/ui/licenses`; [UI provenance](../packages/ui/PROVENANCE.md#icons) records the pinned source and adaptations. See [Lucide's license](https://lucide.dev/license). Brand logos are outside this curated set.

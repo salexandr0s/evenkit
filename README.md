@@ -268,6 +268,8 @@ const columns: readonly DataTableColumn<Project>[] = [
 
 Table rows use 44px default or 36px compact density, growing when custom content needs more room. Dropdown options use 36px desktop rows. Interactive targets use at least 44px in touch layouts. See [icons](docs/icons.md) for the chosen library, alternatives, import names, and accessible usage.
 
+All 99 icons animate once when hovered, including when the pointer enters their containing button or link. They reset on exit and respect reduced motion. Use `<BellIcon animation="static" />` for a still icon, or wrap a section in `<IconProvider animation="static">` to set its default. An explicit icon prop overrides the provider. The Icons catalog compares both modes and shows the matching JSX. See [icon motion](docs/icons.md#hover-animation-and-static-icons) for usage.
+
 ## Check the kit
 
 ```sh

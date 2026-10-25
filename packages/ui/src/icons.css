@@ -12,3 +12,42 @@
 
 .pk-icon[data-size="sm"] { width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); }
 .pk-icon[data-size="lg"] { width: var(--pk-icon-size-lg); height: var(--pk-icon-size-lg); }
+
+/* Animate artwork inside the SVG so control rotation and positioning still work. */
+.pk-icon > g { transform-origin: center; transform-box: view-box; }
+
+@media (prefers-reduced-motion: no-preference) and (any-hover: hover) {
+  .pk-icon[data-icon-animation="hover"][data-icon-hovered="true"]:not([data-icon-motion="paths"]) > * {
+    transform-box: view-box;
+    transform-origin: center;
+    animation-duration: calc(var(--pk-motion-duration-slow) * 2);
+    animation-timing-function: var(--pk-motion-easing-standard);
+    animation-iteration-count: 1;
+  }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="pulse"] > * { animation-name: pk-icon-pulse; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="detail"] > :not(:first-child) { animation-name: pk-icon-pulse; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="rows"] > * { animation-name: pk-icon-row; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="columns"] > * { animation-name: pk-icon-column; }
+  .pk-icon[data-icon-hovered="true"]:is([data-icon-motion="rows"], [data-icon-motion="columns"], [data-icon-motion="dots"]) > :nth-child(2n) { animation-delay: calc(var(--pk-motion-duration-fast) / 2); }
+  .pk-icon[data-icon-hovered="true"]:is([data-icon-motion="rows"], [data-icon-motion="columns"], [data-icon-motion="dots"]) > :nth-child(3n) { animation-delay: var(--pk-motion-duration-fast); }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="lid"] > :nth-last-child(-n+2) { animation-name: pk-icon-lid; transform-origin: 75% 25%; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="mail"] > path { animation-name: pk-icon-flap; transform-origin: 50% 25%; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="dots"] > * { animation-name: pk-icon-column; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="write"] > * { animation-name: pk-icon-write; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="toggle"] > circle { animation-name: pk-icon-row; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="swap-y"] > * { animation-name: pk-icon-column; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="swap-y"] > :nth-child(n+3) { animation-direction: reverse; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="swap-x"] > * { animation-name: pk-icon-row; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="swap-x"] > :nth-child(n+3) { animation-direction: reverse; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="turn"] > * { animation-name: pk-icon-turn; }
+  .pk-icon[data-icon-hovered="true"][data-icon-motion="check"] > path:last-child { animation-name: pk-icon-pulse; }
+}
+
+/* Distances and angles describe the 24-unit icon artwork, not layout spacing. */
+@keyframes pk-icon-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(.86); } }
+@keyframes pk-icon-row { 0%, 100% { transform: translateX(0); } 40% { transform: translateX(-2px); } 70% { transform: translateX(1px); } }
+@keyframes pk-icon-column { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-2px); } 70% { transform: translateY(1px); } }
+@keyframes pk-icon-lid { 0%, 100% { transform: translateY(0) rotate(0deg); } 45% { transform: translateY(-2px) rotate(9deg); } }
+@keyframes pk-icon-flap { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.55); } }
+@keyframes pk-icon-write { 0%, 100% { transform: translate(0, 0); } 35% { transform: translate(1px, -1px); } 70% { transform: translate(-1px, 1px); } }
+@keyframes pk-icon-turn { 0%, 100% { transform: rotate(0deg); } 45% { transform: rotate(-12deg); } }
