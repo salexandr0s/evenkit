@@ -72,6 +72,41 @@ test("critical confirmation starts at cancel, retains failed requests, and inval
   await expect(cancel).toBeFocused();
   await page.mouse.click(4, 4);
   await expect(confirm).toBeVisible();
+  // Retained exit controls must not activate when Escape is followed by Enter.
+  await confirm.evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)));
+  const destructive = confirm.getByRole("button", { name: "Confirm deletion" });
+  const exit = await destructive.evaluateHandle(button => {
+    const surface = button.closest(".pk-dialog-content");
+    if (!surface) throw new Error("Missing confirmation surface.");
+    const result = { paused: false, retained: false, activations: 0 };
+    button.addEventListener("click", () => { result.activations++; });
+    const observer = new MutationObserver(() => {
+      if (surface.getAttribute("data-state") !== "closed") return;
+      for (const animation of surface.getAnimations()) {
+        animation.pause();
+        result.paused = animation.playState === "paused";
+      }
+      result.retained = surface.isConnected;
+      observer.disconnect();
+    });
+    observer.observe(surface, { attributes: true, attributeFilter: ["data-state"] });
+    return result;
+  });
+  try {
+    await destructive.focus();
+    await page.keyboard.press("Escape");
+    await expect.poll(() => exit.jsonValue()).toMatchObject({ paused: true, retained: true });
+    await page.keyboard.press("Enter");
+    expect((await exit.jsonValue()).activations).toBe(0);
+  } finally {
+    await page.locator(".pk-dialog-content").evaluateAll(elements => {
+      for (const element of elements) for (const animation of element.getAnimations()) animation.play();
+    });
+    await exit.dispose();
+  }
+  await expect(confirm).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  await trigger.click();
   await confirm.getByRole("button", { name: "Confirm deletion" }).click();
   await expect(cancel).toBeFocused();
   await expect(confirm.getByRole("alert")).toContainText("The preview request failed");
@@ -105,6 +140,7 @@ test("sheets save through an external footer form and restore the actual invokin
   await page.evaluate(() => { document.documentElement.dir = "rtl"; });
   const start = page.getByRole("button", { name: "Open start sheet" });
   await start.click();
+  await sheet.evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)));
   const bounds = await sheet.boundingBox();
   if (!bounds) throw new Error("Missing sheet bounds.");
   expect(bounds.x + bounds.width).toBeCloseTo(360, 0);
@@ -131,6 +167,8 @@ test("toasts pause expiry, cap current notices, restore action focus, and clear 
   const undo = page.getByRole("button", { name: "Undo archive" });
   await expect(undo).toHaveAttribute("data-shape", "icon");
   await expect(undo).toHaveText("");
+  // Compare resting geometry after the shared surface finishes its entrance.
+  await notice.evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)));
   for (const [width, target] of [[1280, 24], [360, 44]] as const) {
     await page.setViewportSize({ width, height: 900 });
     const titleBox = await notice.locator(".pk-toast-title").boundingBox();
@@ -192,7 +230,9 @@ test("account menus preserve controlled preferences and show host-owned sign-out
   await expect(trigger).toBeFocused();
   await expect(page.getByRole("status").filter({ hasText: "Appearance preference: dark" })).toBeVisible();
   await trigger.click();
-  await page.getByRole("menuitem", { name: "Sign out", exact: true }).click();
+  const signOut = page.getByRole("menuitem", { name: "Sign out", exact: true });
+  await signOut.focus();
+  await signOut.press("Enter");
   await expect(page.getByRole("menu")).toBeFocused();
   await expect(page.getByRole("alert")).toContainText("The local sign-out attempt failed");
   await page.getByRole("menuitem", { name: "Sign out", exact: true }).click();

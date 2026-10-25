@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { ActionMessage, AppliedFilters, Button, DataTable, Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, FilterBar, SelectField, TextareaField, TextField, type DataTableColumn } from "@project-kit/ui";
+import { AppliedFilters, Badge, Button, CircleCheckIcon, DataTable, Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, FilterBar, FormSection, Inline, PageHeader, PlusIcon, SaveStatus, SearchField, SelectField, Stack, TextareaField, TextField, type DataTableColumn } from "@project-kit/ui";
 
 export interface WorkflowRecord { id: string; name: string; notes: string; status: "draft" | "active" }
 export interface WorkflowDraft { id?: string; name: string; notes: string; status: "draft" | "active" }
@@ -93,31 +93,43 @@ export function RecordWorkflow({ records, onSave, title = "Projects", descriptio
   function clearFilters() { setQuery(""); setAppliedQuery(""); setStatus("all"); setAppliedStatus("all"); }
   const columns: readonly DataTableColumn<WorkflowRecord>[] = [
     { id: "name", header: "Project", accessor: record => record.name, overflow: "wrap" },
-    { id: "status", header: "Status", accessor: record => record.status === "active" ? "Active" : "Draft" },
-    { id: "notes", header: "Notes", accessor: record => record.notes || "No notes", overflow: "wrap" },
+    { id: "status", header: "Status", accessor: record => record.status === "active" ? "Active" : "Draft", cell: record => <Badge size="sm" tone={record.status === "active" ? "success" : "neutral"} dot>{record.status === "active" ? "Active" : "Draft"}</Badge> },
+    { id: "notes", header: "Notes", accessor: record => record.notes || "No notes", overflow: "wrap", cell: record => <span style={{ display: "block", minWidth: "var(--pk-layout-sidebar)" }}>{record.notes || "No notes"}</span> },
     { id: "actions", header: "Actions", accessor: () => "", sortable: false, searchable: false, cell: record => <Button variant="ghost" size="sm" aria-label={`Edit ${record.name}`} onClick={event => openEditor(record, event.currentTarget)}>Edit</Button> },
   ];
   return <section className="pk-record-workflow" aria-label={`${title} workflow`}>
-    <header className="pk-record-header"><div><h2>{title}</h2><p>{description}</p></div><Button ref={createButton} onClick={event => openEditor(null, event.currentTarget)}>Create project</Button></header>
-    <FilterBar aria-label="Project filters" dirty={dirtyFilters} busy={loading} status={`${filtered.length} matching ${filtered.length === 1 ? "project" : "projects"}.`} onApply={() => { setAppliedQuery(query.trim()); setQuery(query.trim()); setAppliedStatus(status); }} onClear={clearFilters}>
-      <TextField ref={searchInput} label="Find projects" name="query" value={query} onChange={event => setQuery(event.target.value)} type="search" />
-      <SelectField label="Project status" name="status" options={[{ value: "all", label: "All statuses" }, ...statusOptions]} value={status} onValueChange={setStatus} />
-    </FilterBar>
-    <AppliedFilters filters={[...(appliedQuery ? [{ id: "query", label: `Search: ${appliedQuery}` }] : []), ...(appliedStatus !== "all" ? [{ id: "status", label: `Status: ${appliedStatus}` }] : [])]} onRemove={id => { if (id === "query") { setAppliedQuery(""); setQuery(""); } else { setAppliedStatus("all"); setStatus("all"); } }} onClear={clearFilters} />
+    <header><PageHeader headingAs="h2" title={title} description={description} metadata={`${records.length} ${records.length === 1 ? "project" : "projects"} in total`} actions={<Button ref={createButton} startIcon={<PlusIcon size="sm" />} onClick={event => openEditor(null, event.currentTarget)}>Create project</Button>} /></header>
+    <Stack gap="3">
+      <FilterBar aria-label="Project filters" dirty={dirtyFilters} busy={loading} status={`${filtered.length} matching ${filtered.length === 1 ? "project" : "projects"}.`} onApply={() => { setAppliedQuery(query.trim()); setQuery(query.trim()); setAppliedStatus(status); }} onClear={clearFilters}>
+        <SearchField ref={searchInput} label="Find projects" clearLabel="Clear project search" name="query" value={query} onChange={event => setQuery(event.target.value)} />
+        <SelectField label="Project status" name="status" options={[{ value: "all", label: "All statuses" }, ...statusOptions]} value={status} onValueChange={setStatus} />
+      </FilterBar>
+      <AppliedFilters filters={[...(appliedQuery ? [{ id: "query", label: `Search: ${appliedQuery}` }] : []), ...(appliedStatus !== "all" ? [{ id: "status", label: `Status: ${appliedStatus}` }] : [])]} onRemove={id => { if (id === "query") { setAppliedQuery(""); setQuery(""); } else { setAppliedStatus("all"); setStatus("all"); } }} onClear={clearFilters} />
+    </Stack>
     <DataTable caption="Project records" data={filtered} columns={columns} getRowId={record => record.id} searchable={false} initialPageSize={3} pageSizeOptions={[3, 5, 10]} loading={loading} {...(error === undefined ? {} : { error })} {...(onRetry ? { onRetry } : {})} emptyTitle={records.length ? "No projects match these filters" : "No projects yet"} emptyDescription={records.length ? "Clear the applied filters to see your projects." : "Create a project to start this list."} emptyAction={records.length ? <Button onClick={() => { clearFilters(); searchInput.current?.focus(); }}>Clear filters</Button> : <Button onClick={event => openEditor(null, event.currentTarget)}>Create your first project</Button>} />
-    <p className="pk-record-result" role="status">{result}</p>
+    <Inline className="pk-record-result" role="status" gap="2">{result ? <CircleCheckIcon size="sm" /> : null}{result}</Inline>
     <Dialog open={editor !== null} onOpenChange={open => { if (!open) requestClose(); }}>
-      <DialogContent showCloseButton={false} onCloseAutoFocus={event => { event.preventDefault(); (returnTarget.current?.isConnected ? returnTarget.current : createButton.current)?.focus(); }} onEscapeKeyDown={event => { event.preventDefault(); if (confirmDiscard) { setConfirmDiscard(false); queueMicrotask(() => nameInput.current?.focus()); } else requestClose(); }} onPointerDownOutside={event => { event.preventDefault(); if (!confirmDiscard) requestClose(); }}>
+      <DialogContent showCloseButton={false} scroll="body" onCloseAutoFocus={event => { event.preventDefault(); (returnTarget.current?.isConnected ? returnTarget.current : createButton.current)?.focus(); }} onEscapeKeyDown={event => { event.preventDefault(); if (confirmDiscard) { setConfirmDiscard(false); queueMicrotask(() => nameInput.current?.focus()); } else requestClose(); }} onPointerDownOutside={event => { event.preventDefault(); if (!confirmDiscard) requestClose(); }}>
         {confirmDiscard ? <><DialogHeader><DialogTitle>Discard changes?</DialogTitle><DialogDescription>Your unsaved changes will be removed.</DialogDescription></DialogHeader><DialogBody><p>Keep editing to return to this draft, or discard it and return to the list.</p></DialogBody><DialogFooter><Button ref={keepEditing} variant="outline" onClick={() => { setConfirmDiscard(false); queueMicrotask(() => nameInput.current?.focus()); }}>Keep editing</Button><Button variant="destructive" onClick={closeEditor}>Discard changes</Button></DialogFooter></> : <>
-          <DialogHeader><DialogTitle>{editor?.draft.id ? "Edit project" : "Create project"}</DialogTitle><DialogDescription>Set the project name, status and notes.</DialogDescription></DialogHeader>
+          <DialogHeader><DialogTitle>{editor?.draft.id ? "Edit project" : "Create project"}</DialogTitle><DialogDescription>{editor?.original.id ? `Update ${editor.original.name}.` : "Set the name, status and notes for a new project."}</DialogDescription></DialogHeader>
           <DialogBody><form id={formId} onSubmit={event => { void submit(event); }} className="pk-record-form">
-            <TextField ref={nameInput} label="Project name" name="name" required autoComplete="off" value={editor?.draft.name ?? ""} disabled={pending} onInvalid={() => setAttempted(true)} onChange={event => patchDraft({ name: event.target.value })} error={attempted && !editor?.draft.name.trim() ? "Enter a project name." : undefined} />
-            <SelectField label="Status" name="record-status" options={statusOptions} value={editor?.draft.status ?? "draft"} disabled={pending} onValueChange={value => { if (value === "draft" || value === "active") patchDraft({ status: value }); }} />
-            <TextareaField label="Project notes" name="notes" optional value={editor?.draft.notes ?? ""} disabled={pending} onChange={event => patchDraft({ notes: event.target.value })} />
-            <p className="pk-record-dirty" role="status">{pending ? "Saving project…" : dirty ? "Unsaved changes" : "No unsaved changes"}</p>
-            {saveError ? <ActionMessage tone="error" heading="Project was not saved">{saveError} Your draft is available for retry.</ActionMessage> : saveNote ? <ActionMessage>{saveNote}</ActionMessage> : null}
+            <FormSection heading="Project details" headingAs="h3">
+              <TextField ref={nameInput} label="Project name" name="name" required autoComplete="off" value={editor?.draft.name ?? ""} disabled={pending} onInvalid={() => setAttempted(true)} onChange={event => patchDraft({ name: event.target.value })} error={attempted && !editor?.draft.name.trim() ? "Enter a project name." : undefined} />
+              <SelectField label="Status" name="record-status" options={statusOptions} value={editor?.draft.status ?? "draft"} disabled={pending} onValueChange={value => { if (value === "draft" || value === "active") patchDraft({ status: value }); }} />
+            </FormSection>
+            <FormSection heading="Notes" headingAs="h3">
+              <TextareaField label="Project notes" name="notes" optional value={editor?.draft.notes ?? ""} disabled={pending} onChange={event => patchDraft({ notes: event.target.value })} />
+            </FormSection>
           </form></DialogBody>
-          <DialogFooter><Button ref={cancelButton} variant="outline" onClick={() => pending ? cancelSave() : requestClose()}>{pending ? "Cancel save" : "Cancel"}</Button><Button variant="ghost" disabled={pending || !dirty} onClick={resetDraft}>Reset changes</Button><Button type="submit" form={formId} loading={pending}>{saveError ? "Retry save" : "Save project"}</Button></DialogFooter>
+          <DialogFooter><Stack gap="3" style={{ width: "100%" }}>
+            <SaveStatus state={saveError ? "error" : pending ? "saving" : dirty ? "dirty" : "idle"} role={saveError ? "alert" : "status"} heading={saveError ? "Project was not saved" : undefined}>
+              {saveError ? <>{saveError} Your draft is available for retry.</> : saveNote || (pending ? "Saving project…" : dirty ? "Unsaved changes" : "No unsaved changes")}
+            </SaveStatus>
+            <Inline justify="between">
+              <Button variant="ghost" disabled={pending || !dirty} onClick={resetDraft}>Reset changes</Button>
+              <Inline justify="end" style={{ flex: "1 1 auto" }}><Button ref={cancelButton} variant="outline" onClick={() => pending ? cancelSave() : requestClose()}>{pending ? "Cancel save" : "Cancel"}</Button><Button type="submit" form={formId} loading={pending}>{saveError ? "Retry save" : "Save project"}</Button></Inline>
+            </Inline>
+          </Stack></DialogFooter>
         </>}
       </DialogContent>
     </Dialog>

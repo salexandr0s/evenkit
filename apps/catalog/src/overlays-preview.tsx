@@ -16,8 +16,8 @@ function MenuExample() {
   const [density, setDensity] = useState("comfortable");
   const [message, setMessage] = useState("No action selected.");
   return <div className="overlays-preview-stack">
-    <p>Choose an action or change how the local project list is displayed.</p>
-    <div className="overlays-preview-actions"><DropdownMenu>
+    <div className="overlays-preview-project">
+    <div className="overlays-preview-project-heading"><div><h3>Project list</h3><p>Plan the next team review.</p></div><DropdownMenu>
       <DropdownMenuTrigger asChild><Button variant="outline">Project actions</Button></DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Project list</DropdownMenuLabel>
@@ -37,25 +37,31 @@ function MenuExample() {
         </DropdownMenuSubContent></DropdownMenuSub>
         <DropdownMenuSeparator /><DropdownMenuItem destructive onSelect={() => setMessage("Archive requested. Your application confirms and applies it.")}>Archive project</DropdownMenuItem>
       </DropdownMenuContent>
-    </DropdownMenu>
-    <DropdownMenu dir="rtl"><DropdownMenuTrigger asChild><Button dir="rtl" variant="ghost">RTL actions</Button></DropdownMenuTrigger><DropdownMenuContent><DropdownMenuLabel>مشروع الفريق</DropdownMenuLabel><DropdownMenuItem onSelect={() => setMessage("The long RTL action was selected.")}>عرض جميع تفاصيل المشروع والملاحظات المرتبطة به للفريق</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
+    </DropdownMenu></div>
+    <ul className="overlays-preview-project-list" data-density={density} aria-label="Sample projects">
+      <li><span>Launch review</span><span>In review</span></li>
+      <li><span>Access review</span><span>Planning</span></li>
+      {archived ? <li><span>Previous launch</span><span>Archived</span></li> : null}
+    </ul></div>
     <p role="status">Archived projects: {archived ? "shown" : "hidden"}. Row spacing: {density}. {message}</p>
+    <div className="overlays-preview-secondary"><span>Direction and long labels</span><DropdownMenu dir="rtl"><DropdownMenuTrigger asChild><Button dir="rtl" variant="ghost">RTL actions</Button></DropdownMenuTrigger><DropdownMenuContent><DropdownMenuLabel>مشروع الفريق</DropdownMenuLabel><DropdownMenuItem onSelect={() => setMessage("The long RTL action was selected.")}>عرض جميع تفاصيل المشروع والملاحظات المرتبطة به للفريق</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
   </div>;
 }
 
 function SharingPopover({ label = "Sharing options" }: { label?: string }) {
   const [name, setName] = useState("Review group");
   return <Popover><PopoverTrigger asChild><Button variant="outline">{label}</Button></PopoverTrigger><PopoverContent align="start">
-    <PopoverTitle>Sharing options</PopoverTitle><PopoverDescription>Name the local review group.</PopoverDescription>
+    <div className="overlays-preview-popover-heading"><PopoverTitle>Sharing options</PopoverTitle><PopoverDescription>Name the group reviewing the launch brief.</PopoverDescription></div>
     <TextField label="Review group" value={name} onChange={event => setName(event.target.value)} />
-    <PopoverClose asChild><Button size="sm">Done</Button></PopoverClose>
+    <div className="overlays-preview-popover-footer"><PopoverClose asChild><Button size="sm">Done</Button></PopoverClose></div>
   </PopoverContent></Popover>;
 }
 
 function PopoverExample() {
   const [action, setAction] = useState("No dialog action selected.");
-  return <div className="overlays-preview-stack"><p>A popover keeps interactive content close to its trigger. It also works from inside a dialog.</p>
-    <div className="overlays-preview-actions"><SharingPopover /><Dialog><DialogTrigger asChild><Button>Open nested overlays</Button></DialogTrigger><DialogContent>
+  return <div className="overlays-preview-stack">
+    <div className="overlays-preview-project"><div className="overlays-preview-project-heading"><div><h3>Launch review</h3><p>Coordinate the project review group.</p></div><SharingPopover /></div></div>
+    <div className="overlays-preview-secondary"><span>Controls inside a dialog</span><Dialog><DialogTrigger asChild><Button variant="outline">Open nested overlays</Button></DialogTrigger><DialogContent>
       <DialogHeader><DialogTitle>Edit project access</DialogTitle><DialogDescription>Try the controls without leaving this dialog.</DialogDescription></DialogHeader>
       <DialogBody><div className="overlays-preview-stack"><SharingPopover label="Sharing options in dialog" /><DropdownMenu><DropdownMenuTrigger asChild><Button variant="outline">Actions in dialog</Button></DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem onSelect={() => setAction("The review link is ready.")}>Prepare review link</DropdownMenuItem></DropdownMenuContent></DropdownMenu><p role="status">{action}</p></div></DialogBody>
     </DialogContent></Dialog></div>
@@ -95,14 +101,16 @@ function ConfirmationExample() {
       else { removed.current = true; setDeleted(true); changeOpen(false); }
     }, 400);
   }
-  return <div className="overlays-preview-stack"><p>The first local deletion fails. Retry it, or cancel while it is pending.</p>
+  return <div className="overlays-preview-stack"><div className="overlays-preview-record"><strong>Launch review</strong><span>Sample project · Demo workspace</span></div>
     <AlertDialog open={open} onOpenChange={changeOpen}>
       <AlertDialogTrigger asChild><Button variant="destructive" disabled={deleted}>Delete project</Button></AlertDialogTrigger><AlertDialogContent onCloseAutoFocus={event => { if (removed.current) { event.preventDefault(); restore.current?.focus(); } }}>
-        <AlertDialogHeader><AlertDialogTitle>Delete the sample project?</AlertDialogTitle><AlertDialogDescription>This removes the fictional project from this example. Cancel keeps it available.</AlertDialogDescription></AlertDialogHeader>
+        <AlertDialogHeader><AlertDialogTitle>Delete the sample project?</AlertDialogTitle><AlertDialogDescription>Remove Launch review from the demo workspace. Cancel keeps the project available; after deletion, you can restore the sample.</AlertDialogDescription></AlertDialogHeader>
+        <div className="overlays-preview-record"><strong>Launch review</strong><span>Sample project · Demo workspace</span></div>
         {error ? <ActionMessage tone="error">{error}</ActionMessage> : null}
         <AlertDialogFooter><AlertDialogCancel ref={cancel}>Cancel deletion</AlertDialogCancel><AlertDialogAction disabled={pending} aria-busy={pending || undefined} onClick={event => { event.preventDefault(); remove(); }}>{pending ? "Deleting…" : error ? "Retry deletion" : "Confirm deletion"}</AlertDialogAction></AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+    <p className="overlays-preview-hint">The first preview request fails. Retry it, or cancel while it is pending.</p>
     {deleted ? <div className="overlays-preview-stack"><p role="status">Sample project deleted.</p><Button ref={restore} onClick={() => { removed.current = false; setDeleted(false); failures.current = 0; }}>Restore sample project</Button></div> : null}
   </div>;
 }
@@ -114,12 +122,15 @@ function SheetExample() {
   const [draft, setDraft] = useState(saved);
   const formId = useId();
   const opener = useRef<HTMLButtonElement | null>(null);
-  return <div className="overlays-preview-stack"><p>Saved notes: {saved}</p><Sheet open={open} onOpenChange={next => { setOpen(next); if (next) setDraft(saved); }}>
+  return <div className="overlays-preview-stack"><div className="overlays-preview-record"><strong>Launch review</strong><p>Saved notes: {saved}</p></div><Sheet open={open} onOpenChange={next => { setOpen(next); if (next) setDraft(saved); }}>
     <div className="overlays-preview-actions"><SheetTrigger asChild><Button onClick={event => { opener.current = event.currentTarget; setSide("end"); }}>Edit notes in sheet</Button></SheetTrigger><Button variant="outline" onClick={event => { opener.current = event.currentTarget; setSide("start"); setDraft(saved); setOpen(true); }}>Open start sheet</Button></div>
-    <SheetContent side={side} closeLabel="Close notes sheet" onCloseAutoFocus={event => { event.preventDefault(); opener.current?.focus(); }}><SheetHeader><SheetTitle>Project notes</SheetTitle><SheetDescription>Update the fictional launch brief. The body scrolls independently of the actions.</SheetDescription></SheetHeader>
-      <SheetBody><form className="overlays-preview-stack" id={formId} onSubmit={event => { event.preventDefault(); setSaved(draft.trim()); setOpen(false); }}>
+    <SheetContent side={side} closeLabel="Close notes sheet" onCloseAutoFocus={event => { event.preventDefault(); opener.current?.focus(); }}><SheetHeader><SheetTitle>Project notes</SheetTitle><SheetDescription>Prepare the launch review. Keep decisions and next steps in the project brief.</SheetDescription></SheetHeader>
+      <SheetBody><form className="overlays-preview-stack overlays-preview-sheet-form" id={formId} onSubmit={event => { event.preventDefault(); setSaved(draft.trim()); setOpen(false); }}>
         <TextareaField label="Launch notes" required value={draft} onChange={event => setDraft(event.target.value)} rows={5} />
-        {Array.from({ length: 8 }, (_, index) => <section key={index}><h3>Review point {index + 1}</h3><p>Check the owner, schedule, and supporting material before the launch meeting. Record decisions in the project brief so the team can follow up.</p></section>)}
+        <section className="overlays-preview-review-section"><h3>Review owner</h3><p>Confirm who will lead the discussion and collect decisions. Add the people who need to approve the launch.</p></section>
+        <section className="overlays-preview-review-section"><h3>Schedule</h3><p>Check the review date against delivery milestones. Leave time for changes before the team shares the final brief.</p></section>
+        <section className="overlays-preview-review-section"><h3>Supporting material</h3><p>Gather the current design, access requirements, and open questions. Link each document from the brief so reviewers can prepare.</p></section>
+        <section className="overlays-preview-review-section"><h3>Follow-up</h3><p>Record each decision with its owner and next step. Bring unresolved questions to the next project review.</p></section>
       </form></SheetBody><SheetFooter><SheetClose asChild><Button variant="outline">Discard notes</Button></SheetClose><Button type="submit" form={formId}>Save notes</Button></SheetFooter>
     </SheetContent>
   </Sheet></div>;
@@ -134,19 +145,23 @@ function ToastActions({ changeContext }: { changeContext: () => void }) {
     const timers = delayed.current;
     return () => { timers.forEach(timer => clearTimeout(timer)); timers.clear(); };
   }, []);
-  return <div className="overlays-preview-stack"><p>Notifications pause while hovered or focused. Press F8 to reach them. Changing context clears old notices.</p>
-    <div className="overlays-preview-actions"><Button ref={save} onClick={() => toast({ title: "Project saved", description: "Your local example is up to date.", tone: "success", returnFocusTo: save.current })}>Show saved notice</Button>
+  return <div className="overlays-preview-stack">
+    <div className="overlays-preview-project"><div className="overlays-preview-project-heading"><div><h3>Launch review</h3><p role="status">{state}</p></div></div>
+    <div className="overlays-preview-project-actions"><Button ref={save} onClick={() => toast({ title: "Project saved", description: "Your local example is up to date.", tone: "success", returnFocusTo: save.current })}>Show saved notice</Button>
       <Button variant="outline" onClick={event => { const target = event.currentTarget; setState("The sample project is archived."); toast({ title: "Project archived", duration: Infinity, returnFocusTo: target, action: { label: "Undo archive", altText: "Restore the project from its archive action", icon: <Undo2Icon size="sm" />, onClick: () => setState("The sample project is active.") } }); }}>Show action notice</Button>
+    </div></div>
+    <p className="overlays-preview-hint">Notifications pause while hovered or focused. Press F8 to reach them.</p>
+    <div className="overlays-preview-secondary"><span>Notification lifecycle</span><div className="overlays-preview-actions">
       <Button variant="outline" onClick={() => { for (let index = 1; index <= 4; index++) toast({ title: `Current notice ${index}`, duration: Infinity }); }}>Show four notices</Button>
       <Button variant="outline" onClick={() => { const timer = setTimeout(() => { delayed.current.delete(timer); toast({ title: "Delayed review ready", duration: Infinity }); }, 400); delayed.current.add(timer); }}>Schedule delayed notice</Button>
       <Button variant="ghost" onClick={clear}>Clear notifications</Button><Button variant="ghost" onClick={changeContext}>Change notification context</Button>
-    </div><p role="status">{state}</p><TextField label="Draft preserved across context changes" placeholder="Keep typing here" />
+    </div><TextField label="Draft preserved across context changes" placeholder="Keep typing here" /></div>
   </div>;
 }
 
 function ToastExample() {
   const [context, setContext] = useState("planning");
-  return <ToastProvider scopeKey={context}><div className="overlays-preview-stack"><p>Notification context: {context}</p><ToastActions changeContext={() => setContext(value => value === "planning" ? "review" : "planning")} /></div></ToastProvider>;
+  return <ToastProvider scopeKey={context}><div className="overlays-preview-stack"><ToastActions changeContext={() => setContext(value => value === "planning" ? "review" : "planning")} /><p className="overlays-preview-hint">Notification context: {context}</p></div></ToastProvider>;
 }
 
 function AccountExample() {
@@ -166,9 +181,12 @@ function AccountExample() {
       else { setMessage("The demo session has ended. No account provider was contacted."); setOpen(false); }
     }, 400);
   }
-  return <div className="overlays-preview-stack"><p>Choose an appearance preference, follow a local profile link, or try the sign-out failure and retry.</p>
-    <AccountMenu name="Alex Morgan" description="Demo workspace" links={[{ id: "profile", label: "Profile", href: "#account-profile-example" }, { id: "billing", label: "Billing (unavailable)", href: "#account-billing-example", disabled: true }]} appearance={{ value: appearance, onValueChange: setAppearance }} open={open} onOpenChange={setOpen} onSignOut={signOut} signOutPending={pending} signOutError={error} />
-    <p role="status">Appearance preference: {appearance}. {message}</p><section id="account-profile-example" tabIndex={-1}><h3>Local profile</h3><p>Alex coordinates the sample project review. Identity and settings data come from the host.</p></section>
+  return <div className="overlays-preview-stack">
+    <div className="overlays-preview-project"><div className="overlays-preview-project-heading"><div><h3>Demo workspace</h3><p>Profile and account preferences.</p></div>
+      <AccountMenu name="Alex Morgan" description="Demo workspace" links={[{ id: "profile", label: "Profile", href: "#account-profile-example" }, { id: "billing", label: "Billing (unavailable)", href: "#account-billing-example", disabled: true }]} appearance={{ value: appearance, onValueChange: setAppearance }} open={open} onOpenChange={setOpen} onSignOut={signOut} signOutPending={pending} signOutError={error} />
+    </div><section className="overlays-preview-account-profile" id="account-profile-example" tabIndex={-1}><h3>Local profile</h3><p>Alex coordinates the sample project review.</p></section></div>
+    <p role="status">Appearance preference: {appearance}. {message}</p>
+    <p className="overlays-preview-hint">The sign-out preview fails once so you can try again.</p>
   </div>;
 }
 

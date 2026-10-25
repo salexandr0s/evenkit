@@ -6,11 +6,13 @@ import * as AlertPrimitive from "@radix-ui/react-alert-dialog";
 import * as ToastPrimitive from "@radix-ui/react-toast";
 import { foundation } from "@project-kit/tokens";
 import { createPortal } from "react-dom";
-import { createContext, forwardRef, useCallback, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentPropsWithoutRef, type ComponentRef, type MouseEvent, type ReactNode } from "react";
+import { createContext, forwardRef, useCallback, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentPropsWithoutRef, type ComponentRef, type MouseEvent, type ReactNode, type SyntheticEvent } from "react";
 import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, type DialogContentProps } from "./dialog.js";
-import { CheckIcon, ChevronDownIcon, ChevronRightIcon, CircleAlertIcon, CircleCheckIcon, InfoIcon, LogOutIcon, TriangleAlertIcon, UserIcon, XIcon } from "./icons.js";
+import { Spinner } from "./feedback.js";
+import { Avatar } from "./foundations.js";
+import { CheckIcon, ChevronDownIcon, ChevronRightIcon, CircleAlertIcon, CircleCheckIcon, InfoIcon, LogOutIcon, MoonIcon, SettingsIcon, SunIcon, TriangleAlertIcon, XIcon } from "./icons.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 const popupGap = Number.parseFloat(foundation.space["2"]);
@@ -43,10 +45,10 @@ export const DropdownMenuSeparator = forwardRef<ComponentRef<typeof MenuPrimitiv
   return <MenuPrimitive.Separator {...props} ref={ref} className={classes("pk-menu-separator", className)} />;
 });
 export const DropdownMenuCheckboxItem = forwardRef<ComponentRef<typeof MenuPrimitive.CheckboxItem>, ComponentPropsWithoutRef<typeof MenuPrimitive.CheckboxItem>>(function DropdownMenuCheckboxItem({ className, children, ...props }, ref) {
-  return <MenuPrimitive.CheckboxItem {...props} ref={ref} className={classes("pk-menu-item pk-menu-choice", className)}><span className="pk-menu-indicator"><MenuPrimitive.ItemIndicator><CheckIcon size="sm" /></MenuPrimitive.ItemIndicator></span><span className="pk-menu-item-text">{children}</span></MenuPrimitive.CheckboxItem>;
+  return <MenuPrimitive.CheckboxItem {...props} ref={ref} className={classes("pk-menu-item pk-menu-choice", className)}><span className="pk-menu-item-text">{children}</span><span className="pk-menu-indicator" aria-hidden="true"><MenuPrimitive.ItemIndicator><CheckIcon size="sm" /></MenuPrimitive.ItemIndicator></span></MenuPrimitive.CheckboxItem>;
 });
 export const DropdownMenuRadioItem = forwardRef<ComponentRef<typeof MenuPrimitive.RadioItem>, ComponentPropsWithoutRef<typeof MenuPrimitive.RadioItem>>(function DropdownMenuRadioItem({ className, children, ...props }, ref) {
-  return <MenuPrimitive.RadioItem {...props} ref={ref} className={classes("pk-menu-item pk-menu-choice", className)}><span className="pk-menu-indicator"><MenuPrimitive.ItemIndicator><CheckIcon size="sm" /></MenuPrimitive.ItemIndicator></span><span className="pk-menu-item-text">{children}</span></MenuPrimitive.RadioItem>;
+  return <MenuPrimitive.RadioItem {...props} ref={ref} className={classes("pk-menu-item pk-menu-choice", className)}><span className="pk-menu-item-text">{children}</span><span className="pk-menu-indicator" aria-hidden="true"><MenuPrimitive.ItemIndicator><CheckIcon size="sm" /></MenuPrimitive.ItemIndicator></span></MenuPrimitive.RadioItem>;
 });
 export const DropdownMenuSubTrigger = forwardRef<ComponentRef<typeof MenuPrimitive.SubTrigger>, ComponentPropsWithoutRef<typeof MenuPrimitive.SubTrigger>>(function DropdownMenuSubTrigger({ className, children, ...props }, ref) {
   return <MenuPrimitive.SubTrigger {...props} ref={ref} className={classes("pk-menu-item pk-menu-sub-trigger", className)}><span className="pk-menu-item-text">{children}</span><ChevronRightIcon className="pk-menu-sub-chevron" size="sm" /></MenuPrimitive.SubTrigger>;
@@ -78,8 +80,19 @@ export const AlertDialogHeader = DialogHeader;
 export const AlertDialogFooter = DialogFooter;
 export type AlertDialogProps = ComponentPropsWithoutRef<typeof AlertPrimitive.Root>;
 export interface AlertDialogContentProps extends ComponentPropsWithoutRef<typeof AlertPrimitive.Content> { container?: ComponentPropsWithoutRef<typeof AlertPrimitive.Portal>["container"] }
-export const AlertDialogContent = forwardRef<ComponentRef<typeof AlertPrimitive.Content>, AlertDialogContentProps>(function AlertDialogContent({ className, children, container, forceMount, ...props }, ref) {
-  return <AlertPrimitive.Portal container={container} forceMount={forceMount}><AlertPrimitive.Overlay className="pk-dialog-overlay" forceMount={forceMount} /><AlertPrimitive.Content {...props} ref={ref} forceMount={forceMount} className={classes("pk-dialog-content pk-alert-dialog-content", className)} data-size="sm">{children}</AlertPrimitive.Content></AlertPrimitive.Portal>;
+function whileAlertDialogOpen<Event extends SyntheticEvent<HTMLElement>>(handler?: (event: Event) => void) {
+  return (event: Event) => {
+    // Radix retains the closing surface until its exit animation finishes.
+    if (event.currentTarget.dataset.state === "closed") {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    handler?.(event);
+  };
+}
+export const AlertDialogContent = forwardRef<ComponentRef<typeof AlertPrimitive.Content>, AlertDialogContentProps>(function AlertDialogContent({ className, children, container, forceMount, onKeyDownCapture, onKeyUpCapture, onClickCapture, ...props }, ref) {
+  return <AlertPrimitive.Portal container={container} forceMount={forceMount}><AlertPrimitive.Overlay className="pk-dialog-overlay" forceMount={forceMount} /><AlertPrimitive.Content {...props} ref={ref} forceMount={forceMount} className={classes("pk-dialog-content pk-alert-dialog-content", className)} data-size="sm" onKeyDownCapture={whileAlertDialogOpen(onKeyDownCapture)} onKeyUpCapture={whileAlertDialogOpen(onKeyUpCapture)} onClickCapture={whileAlertDialogOpen(onClickCapture)}>{children}</AlertPrimitive.Content></AlertPrimitive.Portal>;
 });
 export const AlertDialogTitle = forwardRef<ComponentRef<typeof AlertPrimitive.Title>, ComponentPropsWithoutRef<typeof AlertPrimitive.Title>>(function AlertDialogTitle({ className, ...props }, ref) {
   return <AlertPrimitive.Title {...props} ref={ref} className={classes("pk-dialog-title", className)} />;
@@ -88,10 +101,10 @@ export const AlertDialogDescription = forwardRef<ComponentRef<typeof AlertPrimit
   return <AlertPrimitive.Description {...props} ref={ref} className={classes("pk-dialog-description", className)} />;
 });
 export const AlertDialogCancel = forwardRef<ComponentRef<typeof AlertPrimitive.Cancel>, ComponentPropsWithoutRef<typeof AlertPrimitive.Cancel>>(function AlertDialogCancel({ className, ...props }, ref) {
-  return <AlertPrimitive.Cancel {...props} ref={ref} className={classes("pk-button", className)} data-variant="outline" />;
+  return <AlertPrimitive.Cancel {...props} ref={ref} className={classes("pk-button", className)} data-size="md" data-variant="outline" />;
 });
 export const AlertDialogAction = forwardRef<ComponentRef<typeof AlertPrimitive.Action>, ComponentPropsWithoutRef<typeof AlertPrimitive.Action>>(function AlertDialogAction({ className, ...props }, ref) {
-  return <AlertPrimitive.Action {...props} ref={ref} className={classes("pk-button", className)} data-variant="destructive" />;
+  return <AlertPrimitive.Action {...props} ref={ref} className={classes("pk-button pk-alert-dialog-action", className)} data-size="md" data-variant="destructive" />;
 });
 
 export const Sheet = Dialog;
@@ -170,7 +183,7 @@ function ToastNotice({ notice, dismiss, dismissLabel, viewport, container }: { n
   }}>
     <span className="pk-toast-icon" aria-hidden="true"><Icon size="sm" /></span>
     <div className="pk-toast-content"><ToastPrimitive.Title className="pk-toast-title">{notice.title}</ToastPrimitive.Title>{notice.description ? <ToastPrimitive.Description className="pk-toast-description">{notice.description}</ToastPrimitive.Description> : null}
-      {notice.action && !notice.action.icon ? <ToastPrimitive.Action asChild altText={notice.action.altText}><Button size="sm" variant="outline" onClick={notice.action.onClick}>{notice.action.label}</Button></ToastPrimitive.Action> : null}
+      {notice.action && !notice.action.icon ? <ToastPrimitive.Action asChild altText={notice.action.altText}><Button className="pk-toast-text-action" size="sm" variant="outline" onClick={notice.action.onClick}>{notice.action.label}</Button></ToastPrimitive.Action> : null}
     </div>
     <div className="pk-toast-actions">
       {notice.action?.icon ? <Tooltip>
@@ -253,20 +266,28 @@ export function AccountMenu({ name, description, links, appearance, onSignOut, s
   const content = useRef<HTMLDivElement>(null);
   const signOut = useRef<HTMLDivElement>(null);
   const errorId = useId();
+  const appearanceId = useId();
   useLayoutEffect(() => {
     if (signOutPending && signOut.current?.contains(document.activeElement)) content.current?.focus({ preventScroll: true });
   }, [signOutPending]);
   return <DropdownMenu open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange} dir={dir}>
-    <DropdownMenuTrigger asChild><Button className="pk-account-trigger" variant="ghost" aria-label={text.trigger}><UserIcon /><span>{name}</span><ChevronDownIcon size="sm" /></Button></DropdownMenuTrigger>
-    <DropdownMenuContent ref={content} align="end" aria-busy={signOutPending || undefined}>
-      <DropdownMenuLabel><span className="pk-account-name">{name}</span>{description ? <span className="pk-account-description">{description}</span> : null}</DropdownMenuLabel>
-      <DropdownMenuSeparator />
-      {links.map(link => link.disabled ? <DropdownMenuItem key={link.id} disabled>{link.label}</DropdownMenuItem> : <DropdownMenuItem key={link.id} asChild><a href={link.href}>{link.label}</a></DropdownMenuItem>)}
-      {appearance ? <><DropdownMenuSeparator /><DropdownMenuLabel>{text.appearance}</DropdownMenuLabel><DropdownMenuRadioGroup value={appearance.value} onValueChange={value => { if (value === "light" || value === "dark" || value === "system") appearance.onValueChange(value); }}>
-        {(["light", "dark", "system"] as const).map(value => <DropdownMenuRadioItem key={value} value={value} onSelect={event => event.preventDefault()}>{text[value]}</DropdownMenuRadioItem>)}
+    <DropdownMenuTrigger asChild><Button className="pk-account-trigger" variant="ghost" dir={dir} aria-label={text.trigger}><Avatar name={name} size="sm" decorative /><span className="pk-account-identity"><span className="pk-account-name">{name}</span>{description ? <span className="pk-account-description">{description}</span> : null}</span><span className="pk-account-chevron" aria-hidden="true"><ChevronDownIcon size="sm" /></span></Button></DropdownMenuTrigger>
+    <DropdownMenuContent ref={content} className="pk-account-menu" align="end" aria-busy={signOutPending || undefined} onFocus={event => {
+      // Keep pending focus on the surface instead of Radix re-entering the disabling item.
+      if (signOutPending && event.target === event.currentTarget) event.preventDefault();
+    }}>
+      <DropdownMenuLabel className="pk-account-header"><Avatar name={name} decorative /><span className="pk-account-identity"><span className="pk-account-name">{name}</span>{description ? <span className="pk-account-description">{description}</span> : null}</span></DropdownMenuLabel>
+      {links.length > 0 ? <><DropdownMenuSeparator /><DropdownMenuGroup>{links.map(link => link.disabled ? <DropdownMenuItem key={link.id} disabled>{link.label}</DropdownMenuItem> : <DropdownMenuItem key={link.id} asChild><a href={link.href}>{link.label}</a></DropdownMenuItem>)}</DropdownMenuGroup></> : null}
+      {appearance ? <><DropdownMenuSeparator /><DropdownMenuLabel id={appearanceId}>{text.appearance}</DropdownMenuLabel><DropdownMenuRadioGroup aria-labelledby={appearanceId} value={appearance.value} onValueChange={value => { if (value === "light" || value === "dark" || value === "system") appearance.onValueChange(value); }}>
+        {(["light", "dark", "system"] as const).map(value => {
+          const Icon = { light: SunIcon, dark: MoonIcon, system: SettingsIcon }[value];
+          return <DropdownMenuRadioItem key={value} value={value} onSelect={event => event.preventDefault()}><span className="pk-account-option-label"><Icon size="sm" /><span>{text[value]}</span></span></DropdownMenuRadioItem>;
+        })}
       </DropdownMenuRadioGroup></> : null}
-      {onSignOut ? <><DropdownMenuSeparator /><DropdownMenuItem ref={signOut} destructive disabled={signOutPending} aria-describedby={signOutError ? errorId : undefined} onSelect={event => { event.preventDefault(); onSignOut(); }}><LogOutIcon size="sm" />{signOutPending ? text.signingOut : text.signOut}</DropdownMenuItem></> : null}
-      {signOutError ? <div id={errorId} className="pk-account-error" role="alert">{signOutError}</div> : null}
+      {onSignOut || signOutError ? <><DropdownMenuSeparator /><DropdownMenuGroup>
+        {onSignOut ? <DropdownMenuItem ref={signOut} destructive disabled={signOutPending} aria-describedby={signOutError ? errorId : undefined} onSelect={event => { event.preventDefault(); onSignOut(); }}><span className="pk-account-action-icon" aria-hidden="true">{signOutPending ? <Spinner size="sm" aria-hidden="true" /> : <LogOutIcon size="sm" />}</span><span className="pk-menu-item-text">{signOutPending ? text.signingOut : text.signOut}</span></DropdownMenuItem> : null}
+        {signOutError ? <div id={errorId} className="pk-account-error" role="alert"><CircleAlertIcon size="sm" /><div>{signOutError}</div></div> : null}
+      </DropdownMenuGroup></> : null}
     </DropdownMenuContent>
   </DropdownMenu>;
 }

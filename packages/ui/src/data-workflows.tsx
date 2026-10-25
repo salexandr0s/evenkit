@@ -3,7 +3,9 @@
 import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, type ComponentPropsWithoutRef, type FormEvent, type ReactNode } from "react";
 import { Button, ButtonLink } from "./button.js";
 import { classes } from "./classes.js";
-import { DownloadIcon, ExternalLinkIcon, FileTextIcon, RotateCcwIcon, TrashIcon, UploadIcon, XIcon } from "./icons.js";
+import { Spinner } from "./feedback.js";
+import { CircleAlertIcon, CircleCheckIcon, DownloadIcon, ExternalLinkIcon, FileTextIcon, RotateCcwIcon, TrashIcon, UploadIcon, XIcon } from "./icons.js";
+import { Progress } from "./selection-controls.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 export interface SemanticTableProps extends ComponentPropsWithoutRef<"table"> { density?: "default" | "compact" }
@@ -35,10 +37,10 @@ export interface FilterBarProps extends Omit<ComponentPropsWithoutRef<"form">, "
 }
 export const FilterBar = forwardRef<HTMLFormElement, FilterBarProps>(function FilterBar({ className, onApply, onClear, dirty = false, busy = false, status, applyLabel = "Apply filters", clearLabel = "Reset filters", children, ...props }, ref) {
   const statusId = useId();
-  return <form {...props} ref={ref} className={classes("pk-filter-bar", className)} aria-busy={busy || undefined} onSubmit={event => { event.preventDefault(); if (!busy) onApply(event); }} onReset={event => { event.preventDefault(); onClear(); }}>
+  return <form {...props} ref={ref} className={classes("pk-filter-bar", className)} data-dirty={dirty || undefined} aria-busy={busy || undefined} onSubmit={event => { event.preventDefault(); if (!busy) onApply(event); }} onReset={event => { event.preventDefault(); onClear(); }}>
     <div className="pk-filter-fields">{children}</div>
     <div className="pk-filter-actions"><Button type="submit" className="pk-filter-apply" aria-disabled={busy || undefined} aria-describedby={statusId}>{applyLabel}</Button><Button type="reset" variant="outline">{clearLabel}</Button></div>
-    <p className="pk-filter-status" id={statusId} role="status">{dirty ? "Changes not applied. Apply filters to update results." : busy ? "Updating results…" : status ?? "Showing all results."}</p>
+    <p className="pk-filter-status" id={statusId} role="status">{busy ? <span className="pk-filter-updating"><Spinner size="sm" aria-hidden="true" />Updating results…</span> : null}{dirty ? "Changes not applied. Apply filters to update results." : busy ? null : status ?? "Showing all results."}</p>
   </form>;
 });
 
@@ -98,8 +100,8 @@ export const AppliedFilters = forwardRef<HTMLDivElement, AppliedFiltersProps>(fu
   }
   return <div {...props} ref={node => { root.current = node; if (typeof forwardedRef === "function") return forwardedRef(node); if (forwardedRef) forwardedRef.current = node; }} className={classes("pk-applied-filters", className)} role="group" aria-label={props["aria-label"] ?? "Applied filters"}>
     <p ref={empty} className="pk-filter-status" role="status" tabIndex={-1}>{filters.length ? `${filters.length} active ${filters.length === 1 ? "filter" : "filters"}.` : emptyLabel}</p>
-    {filters.map((filter, index) => <Button key={filter.id} size="sm" variant="outline" data-filter-remove="" aria-label={`Remove filter: ${filter.label}`} onClick={event => { retainFocus(event.currentTarget, index, filter.id); onRemove(filter.id); }}>{filter.label}<span aria-hidden="true">×</span></Button>)}
-    {filters.length > 0 ? <Button size="sm" variant="ghost" onClick={event => { retainFocus(event.currentTarget, 0, null); onClear(); }}>{clearLabel}</Button> : null}
+    {filters.map((filter, index) => <Button key={filter.id} className="pk-applied-filter" size="sm" variant="outline" data-filter-remove="" aria-label={`Remove filter: ${filter.label}`} onClick={event => { retainFocus(event.currentTarget, index, filter.id); onRemove(filter.id); }}><span className="pk-applied-filter-label">{filter.label}</span><XIcon size="sm" aria-hidden="true" /></Button>)}
+    {filters.length > 0 ? <Button className="pk-applied-filters-clear" size="sm" variant="ghost" onClick={event => { retainFocus(event.currentTarget, 0, null); onClear(); }}>{clearLabel}</Button> : null}
   </div>;
 });
 
@@ -178,7 +180,7 @@ export const FileInput = forwardRef<HTMLInputElement, FileInputProps>(function F
   return <div className={classes("pk-file-input", className)} data-disabled={disabled || undefined}>
     <label className="pk-label" id={`${controlId}-label`} htmlFor={controlId}>{label}</label>
     <label className="pk-file-dropzone" htmlFor={controlId} data-dragging={dragging || undefined} onDragOver={event => { event.preventDefault(); if (!disabled && !input.current?.matches(":disabled") && event.dataTransfer.types.includes("Files")) setDragging(true); }} onDragLeave={event => { if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) setDragging(false); }} onDrop={event => { event.preventDefault(); setDragging(false); if (!disabled) select(Array.from(event.dataTransfer.files)); }}>
-      <UploadIcon /><span>{chooseLabel}</span>
+      <span className="pk-file-dropzone-icon" aria-hidden="true"><UploadIcon /></span><span className="pk-file-choose">{chooseLabel}</span>
       <input {...props} ref={node => { input.current = node; if (typeof forwardedRef === "function") return forwardedRef(node); if (forwardedRef) forwardedRef.current = node; }} id={controlId} type="file" accept={accept} multiple={multiple} disabled={disabled} aria-labelledby={props["aria-labelledby"] ?? `${controlId}-label`} aria-describedby={describedBy} aria-invalid={errors.length > 0 || props["aria-invalid"]} onChange={event => select(Array.from(event.currentTarget.files ?? []))} onClick={event => { onClick?.(event); if (!event.defaultPrevented) event.currentTarget.value = ""; }} />
     </label>
     {hint ? <div id={hintId} className="pk-field-hint">{hint}</div> : null}
@@ -203,9 +205,16 @@ export interface FileRowProps extends Omit<ComponentPropsWithoutRef<"li">, "titl
 }
 export const FileRow = forwardRef<HTMLLIElement, FileRowProps>(function FileRow({ className, name, sizeBytes, fileType, state = "ready", progress, message, href, downloadHref, onRemove, onRetry, onCancel, locale, ...props }, ref) {
   const formattedSize = sizeBytes === undefined ? undefined : sizeBytes < 1024 ? `${new Intl.NumberFormat(locale).format(sizeBytes)} B` : `${new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(sizeBytes / 1024)} KB`;
+  const metadata = [fileType, formattedSize].filter(Boolean).join(" · ");
   const stateLabel = { ready: "Ready", uploading: "Uploading", complete: "Complete", error: "Failed" }[state];
   return <li {...props} ref={ref} className={classes("pk-file-row", className)} data-state={state}>
-    <FileTextIcon /><div className="pk-file-row-content"><span className="pk-file-name">{name}</span><span className="pk-file-metadata">{[fileType, formattedSize, stateLabel].filter(Boolean).join(" · ")}</span>{message ? <span className="pk-file-message" role={state === "error" ? "alert" : "status"}>{message}</span> : null}{state === "uploading" ? <progress aria-label={`Upload progress for ${name}`} max={100} {...(progress === undefined ? {} : { value: Math.min(100, Math.max(0, progress)) })} /> : null}</div>
+    <span className="pk-file-row-icon" aria-hidden="true"><FileTextIcon /></span>
+    <div className="pk-file-row-content">
+      <span className="pk-file-name">{name}</span>
+      <span className="pk-file-metadata">{metadata ? <span>{metadata}</span> : null}<span className="pk-file-state">{state === "uploading" ? <Spinner size="sm" aria-hidden="true" /> : state === "complete" ? <CircleCheckIcon size="sm" aria-hidden="true" /> : state === "error" ? <CircleAlertIcon size="sm" aria-hidden="true" /> : null}{stateLabel}</span></span>
+      {message ? <span className="pk-file-message" role={state === "error" ? "alert" : "status"}>{message}</span> : null}
+      {state === "uploading" ? <Progress label="Upload progress" aria-label={`Upload progress for ${name}`} max={100} {...(progress === undefined || !Number.isFinite(progress) ? {} : { value: progress })} /> : null}
+    </div>
     <TooltipProvider><div className="pk-file-actions">
       {href ? <Tooltip><TooltipTrigger asChild><ButtonLink href={href} size="xs" variant="ghost" shape="icon" aria-label={`Open ${name}`}><ExternalLinkIcon size="sm" /></ButtonLink></TooltipTrigger><TooltipContent>{`Open ${name}`}</TooltipContent></Tooltip> : null}
       {downloadHref ? <Tooltip><TooltipTrigger asChild><ButtonLink href={downloadHref} download={name} size="xs" variant="ghost" shape="icon" aria-label={`Download ${name}`}><DownloadIcon size="sm" /></ButtonLink></TooltipTrigger><TooltipContent>{`Download ${name}`}</TooltipContent></Tooltip> : null}
