@@ -1,0 +1,2 @@
+These files are part of the Evenkit admin demo. Uploads stay in this browser tab.
+Remove a file to try the undo action. No file is sent to a server.

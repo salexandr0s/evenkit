@@ -10,6 +10,9 @@ import { useStarter } from "./starter-providers";
 const DashboardView = lazy(() => import("./views/dashboard-view").then(module => ({ default: module.DashboardView })));
 const RecordsView = lazy(() => import("./views/records-view").then(module => ({ default: module.RecordsView })));
 const SettingsView = lazy(() => import("./views/settings-view").then(module => ({ default: module.SettingsView })));
+const DocumentsView = lazy(() => import("./views/documents-view").then(module => ({ default: module.DocumentsView })));
+const TeamView = lazy(() => import("./views/team-view").then(module => ({ default: module.TeamView })));
+const NotificationsView = lazy(() => import("./views/notifications-view").then(module => ({ default: module.NotificationsView })));
 
 export interface StarterSession { mode: "demo" | "supabase"; userLabel: string }
 const navigation: readonly AdminNavGroup[] = [{ label: "Workspace", items: [
@@ -53,7 +56,7 @@ export function AdminWorkspace({ section, session, recordId }: { section: AdminS
       </details>
       <div key={`${starter.workspaceId}:${section}`} className="starter-view">
         <Suspense fallback={<div className="starter-load"><Spinner label={`Loading ${sectionLabels[section].toLowerCase()}`} /></div>}>
-          {section === "dashboard" ? <DashboardView /> : section === "records" ? <RecordsView {...(recordId ? { recordId } : {})} /> : section === "settings" ? <SettingsView /> : <p>Integration for this workspace view is in progress.</p>}
+          {section === "dashboard" ? <DashboardView /> : section === "records" ? <RecordsView {...(recordId ? { recordId } : {})} /> : section === "settings" ? <SettingsView /> : section === "documents" ? <DocumentsView /> : section === "team" ? <TeamView /> : <NotificationsView />}
         </Suspense>
       </div>
     </div>

@@ -1,5 +1,7 @@
 import type { WorkflowRecord } from "../blocks/record-workflow";
 import type { ProfileValue } from "../blocks/account-settings";
+import { initialDocuments, type DemoDocument } from "./demo-documents";
+import { initialTeam, type DemoTeam } from "./demo-team";
 
 export const demoWorkspaces = [
   { id: "northstar", name: "Northstar Studio", description: "Design projects · fictional workspace" },
@@ -11,6 +13,8 @@ export function isWorkspaceId(value: string): value is WorkspaceId { return demo
 export interface WorkspaceData {
   records: WorkflowRecord[];
   profile: ProfileValue;
+  documents: readonly DemoDocument[];
+  team: DemoTeam;
 }
 
 export function initialWorkspaceData(): Record<WorkspaceId, WorkspaceData> {
@@ -23,6 +27,8 @@ export function initialWorkspaceData(): Record<WorkspaceId, WorkspaceData> {
         { id: "northstar-4", name: "Winter exhibition", status: "draft", notes: "Review the draft schedule and floor plan." },
       ],
       profile: { id: "northstar-demo-user", name: "Alex Rivers", email: "alex@northstar.example" },
+      documents: initialDocuments("northstar"),
+      team: initialTeam("northstar"),
     },
     harbor: {
       records: [
@@ -30,6 +36,8 @@ export function initialWorkspaceData(): Record<WorkspaceId, WorkspaceData> {
         { id: "harbor-2", name: "Tool library", status: "draft", notes: "Catalogue donated tools and their care notes." },
       ],
       profile: { id: "harbor-demo-user", name: "Sam Rowan", email: "sam@harbor.example" },
+      documents: initialDocuments("harbor"),
+      team: initialTeam("harbor"),
     },
   };
 }

@@ -34,6 +34,10 @@ To use another port, append `-- --port 5397` to the workspace `dev` or `start` c
 
 The workspace switcher changes the active data context. Pending requests are aborted and the next view starts with that workspace's state. Changes to one workspace's records and profile do not alter the other workspace. A record URL from another workspace displays a recovery action instead of showing the previous workspace's record.
 
+Team actions create, renew and revoke sample invitations without sending email. Role changes update the local capability list and add a sample audit event. The demo policy prevents Coordinator invitations or edits and retains the `audit.read` grant; the host callback enforces these restrictions as well as displaying them. Audit export downloads every event matching the current filters as JSON.
+
+Documents support folders, search, sort, list/grid views, previews, downloads, uploads, removal and undo. Sample text files are served from the app's `public/sample-files` directory. Uploaded files stay in memory through object URLs; they are never posted to a server. The demo checks the size and supported MIME type, decodes images, and checks PDF headers. PDF files have open/download actions instead of an embedded preview. Removal retains the data for undo. URLs are revoked when the admin provider unmounts, including on session recovery. A production transport needs its own file inspection, authorization, durable storage and URL lifecycle.
+
 Open **Demo controls** to make requests slow or fail the next request. Refresh a view to exercise loading, cancellation and retry. Save a record or profile to exercise mutation failure: the form retains its draft, offers retry and supports cancellation. Changing workspace during a save prevents the old result from updating the new context. The session recovery link preserves the current destination, then starts a fresh demo after recovery.
 
 Appearance preferences are scoped by workspace and stored on this browser when storage is available. Theme, light/dark/system mode and density affect the app. The formatting locale affects timestamp formatting; interface text remains English. Browser storage failure leaves preferences usable for the current visit.
@@ -44,7 +48,7 @@ Appearance preferences are scoped by workspace and stored on this browser when s
 
 `components/starter-providers.tsx` owns the demo request lifecycle and workspace data. Replace its fictional fixtures and request function with your application's transport. Keep the `AbortSignal` contract and check the active workspace before committing async results. A backend must enforce authorization and validate the workspace on every read and mutation; the client switcher is presentation state.
 
-`blocks/` contains editable copies of the record workflow, record detail and account settings blocks. Applications own these files and their domain language. Their primitives still come from `@evenkit/ui`; framework imports belong in the app's route and integration files. Copy source blocks together with their declared local dependencies.
+`blocks/` contains editable copies of the record, account settings, document, team and notification blocks. Applications own these files and their domain language. Their primitives still come from `@evenkit/ui`; framework imports belong in the app's route and integration files. Copy source blocks together with their declared local dependencies.
 
 The `(admin)` route-group layout owns the client provider. Moving to sign-in or session recovery unmounts it and cancels pending requests. Each server page calls `requireStarterSession` before rendering. The reusable components and source blocks do not import Next or Supabase.
 

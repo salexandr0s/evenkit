@@ -18,9 +18,13 @@ The app imports `requireStarterSession` and `StarterSessionMonitor` from the aut
 - Root reported a passing production Next build and is running assembled browser journeys. Browser results belong in the final integration handoff; this document does not claim they passed yet.
 - Read-only review corrections applied: valid focus/background/font tokens; loader focus restoration only when its focused control disappears; English document language; record detail keyed by record ID; provider lifetime scoped to the admin route group.
 
-## Integration remaining at core commit
+## Track integration after the core commit
 
-Team, notifications, documents and the reporting dashboard are waiting for their finished track commits and handoffs. Their navigation entries exist; the three pending views currently show an integration message. These are required integration work, not a completed R06 delivery. The starter owner will wire copied blocks once root integrates the verified commits, then update this handoff and the setup guide.
+Root integrated the verified document and team commits before their app sources were copied. The Documents view now uses `DocumentLibraryBlock` with per-workspace files, list/grid, folder queries, preview/download, local upload validation, removal retry/cancel and undo. File object URLs remain available for the current admin visit and are revoked on provider teardown. The Team view uses copied `TeamAdministration`, `RoleSettings` and `AuditPage` blocks with retained per-workspace members, invitations, grants and recorded sample events. Invite/resend/revoke and role saves recheck revisions and the demo's policy before local updates. Audit export downloads all matching events.
+
+The notifications helper owns its provider, copied blocks and view; `AdminWorkspace` now loads its named `NotificationsView` export lazily. All six navigation destinations have implemented views. Reporting integration still awaits its finished handoff; the current dashboard has the core project's metrics and links.
+
+Focused ESLint passed for the document and team sources. After the shared UI declarations were rebuilt, `npm run typecheck --workspace @evenkit/admin-starter` passed with the new document, team and notification views. Assembled production/browser verification remains with root. This is still an integration checkpoint, not a final R06 completion claim.
 
 Root owns final build/type/lint/unit/browser runs, copied example verification, independent packed Next/Vite consumers, bundle measurements and inventory status. Physical devices and browsers beyond the reported test matrix remain unverified unless the final handoff adds evidence.
 

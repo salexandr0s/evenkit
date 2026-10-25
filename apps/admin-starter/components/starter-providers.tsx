@@ -6,6 +6,8 @@ import type { WorkflowDraft, WorkflowRecord } from "../blocks/record-workflow";
 import type { ProfileValue } from "../blocks/account-settings";
 import { demoWorkspaces, initialWorkspaceData, isWorkspaceId, waitForDemo, type WorkspaceData, type WorkspaceId } from "../lib/demo-data";
 import { appearanceStorageKey, readAppearance } from "../lib/appearance";
+import type { DemoDocument } from "../lib/demo-documents";
+import type { DemoTeam } from "../lib/demo-team";
 
 interface StarterContextValue {
   workspaceId: WorkspaceId;
@@ -17,6 +19,9 @@ interface StarterContextValue {
   request: (signal: AbortSignal) => Promise<void>;
   saveRecord: (draft: WorkflowDraft, context: { signal: AbortSignal }) => Promise<WorkflowRecord>;
   saveProfile: (draft: ProfileValue, context: { signal: AbortSignal }) => Promise<ProfileValue>;
+  updateDocuments: (update: (documents: readonly DemoDocument[]) => readonly DemoDocument[], signal: AbortSignal) => void;
+  createFileUrl: (file: File) => string;
+  updateTeam: (update: (team: DemoTeam) => DemoTeam, signal: AbortSignal) => void;
   slow: boolean;
   setSlow: (value: boolean) => void;
   failNext: () => void;
@@ -35,6 +40,7 @@ export function StarterProviders({ children }: { children: ReactNode }) {
   const controls = useRef({ slow: false, fail: false });
   const requests = useRef(new Set<AbortController>());
   const activeWorkspace = useRef(workspaceId);
+  const fileUrls = useRef(new Set<string>());
   const appearance = appearances[workspaceId] ?? defaultAppearance;
 
   useEffect(() => {
@@ -57,7 +63,8 @@ export function StarterProviders({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const pending = requests.current;
-    return () => { for (const controller of pending) controller.abort(); pending.clear(); };
+    const urls = fileUrls.current;
+    return () => { for (const controller of pending) controller.abort(); pending.clear(); for (const url of urls) URL.revokeObjectURL(url); urls.clear(); };
   }, []);
 
   const request = useCallback(async (signal: AbortSignal) => {
@@ -108,9 +115,27 @@ export function StarterProviders({ children }: { children: ReactNode }) {
     return draft;
   }
 
+  function updateDocuments(update: (documents: readonly DemoDocument[]) => readonly DemoDocument[], signal: AbortSignal) {
+    if (signal.aborted || activeWorkspace.current !== workspaceId) throw new DOMException("Cancelled", "AbortError");
+    const scope = workspaceId;
+    setWorkspaces(current => ({ ...current, [scope]: { ...current[scope], documents: update(current[scope].documents) } }));
+  }
+
+  function createFileUrl(file: File) {
+    const url = URL.createObjectURL(file);
+    fileUrls.current.add(url);
+    return url;
+  }
+
+  function updateTeam(update: (team: DemoTeam) => DemoTeam, signal: AbortSignal) {
+    if (signal.aborted || activeWorkspace.current !== workspaceId) throw new DOMException("Cancelled", "AbortError");
+    const scope = workspaceId;
+    setWorkspaces(current => ({ ...current, [scope]: { ...current[scope], team: update(current[scope].team) } }));
+  }
+
   return <StarterContext.Provider value={{
     workspaceId, workspaceName: demoWorkspaces.find(workspace => workspace.id === workspaceId)?.name ?? "Workspace", data: workspaces[workspaceId],
-    appearance, setAppearance: value => setAppearances(current => ({ ...current, [workspaceId]: value })), switchWorkspace, request, saveRecord, saveProfile,
+    appearance, setAppearance: value => setAppearances(current => ({ ...current, [workspaceId]: value })), switchWorkspace, request, saveRecord, saveProfile, updateDocuments, createFileUrl, updateTeam,
     slow, setSlow: value => { controls.current.slow = value; setSlow(value); },
     failNext: () => { controls.current.fail = true; setFailureArmed(true); }, failureArmed,
   }}>{children}</StarterContext.Provider>;
