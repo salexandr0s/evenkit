@@ -48,6 +48,12 @@ export const modeColorsSchema = z.strictObject({
   success: color,
   "success-bg": color,
   ring: color,
+  "chart-series-1": color,
+  "chart-series-2": color,
+  "chart-series-3": color,
+  "chart-series-4": color,
+  "chart-series-5": color,
+  "chart-series-6": color,
   overlay,
 });
 
@@ -69,6 +75,8 @@ export const contrastChecks: readonly ContrastCheck[] = [
     { foreground: "danger" as const, background, minimum: 4.5 },
     { foreground: "border-strong" as const, background, minimum: 3 },
     { foreground: "ring" as const, background, minimum: 3 },
+    ...(["chart-series-1", "chart-series-2", "chart-series-3", "chart-series-4", "chart-series-5", "chart-series-6"] as const)
+      .map((foreground) => ({ foreground, background, minimum: 3 })),
   ]),
   { foreground: "on-accent", background: "accent", minimum: 4.5 },
   { foreground: "on-accent", background: "accent-hover", minimum: 4.5 },

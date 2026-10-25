@@ -23,8 +23,13 @@ function flatten(value: unknown, path: string[] = []): CssVariables {
 export const staticCssVariables: Readonly<CssVariables> = Object.freeze(flatten(foundation));
 
 function brandVariables(brand: Brand, mode: ColorMode): CssVariables {
+  const colors: CssVariables = {};
+  for (const [role, value] of Object.entries(brand.modes[mode])) {
+    const name: `--pk-${string}` = role.startsWith("chart-series-") ? `--pk-${role}` : `--pk-color-${role}`;
+    colors[name] = value;
+  }
   return {
-    ...flatten(brand.modes[mode], ["color"]),
+    ...colors,
     "--pk-font-family-sans": brand.fontFamily,
     "--pk-font-family-heading": brand.headingFamily,
     "--pk-radius-sm": brand.radius.sm,

@@ -25,3 +25,11 @@ Semantic colors, typography overrides, and radius overrides are emitted from the
 ## Priority component extensions
 
 The action-menu widths (180px minimum, 320px maximum) and toast width (360px) follow the inherited `dropdown.v1` and `toast.v1` contracts. Menu scrolling uses the same 320px cap. Toast lifetimes of 3000/3500/4500/6000ms for success/info/warning/error are explicit feedback tokens; they control message lifetime rather than animation duration. Existing palettes and visual scales remain unchanged.
+
+## Chart series
+
+The chart palette is original kit work. `foundation.palette.chart` adds teal, ochre, violet, coral, and slate values for light and dark plotting surfaces. Each mode has six required semantic roles, `chart-series-1` through `chart-series-6`, emitted as `--pk-chart-series-1` through `--pk-chart-series-6`. The first role follows each built-in theme's accent; the other five roles share the chart palette. Existing semantic colors and neutral surfaces are unchanged.
+
+Validation requires each series color to reach 3:1 against `bg`, `bg-muted`, `surface`, and `surface-elevated`. Series colors are for graphical marks. Labels and values use the existing text tokens. Series colors are not guaranteed to contrast with each other, so charts must also use names, markers, line styles or fill patterns and expose their data in a table. Area fills use the original kit token `--pk-chart-area-opacity` at `0.16`. These fills are supplementary; the full-opacity line carries the series boundary.
+
+Custom brands must provide all six chart roles in both modes or extend a built-in mode. The schema rejects missing roles, CSS aliases and colors that fail the plotting-surface contrast checks. Custom colors do not receive unchecked fallback values.
