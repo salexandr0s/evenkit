@@ -186,7 +186,7 @@ Use [Chakra's display catalog](https://chakra-ui.com/docs/components/concepts/ov
 | H04 | List item and rich item row | Next / UI | Leading media, title/description, metadata, trailing actions. |
 | H05 | Statistic/KPI | Follow-up / UI | Value, unit, period, comparison and text-based trend. |
 | H06 | Timeline/activity item | Built / UI | Actor, action, timestamp, grouped events and pending/error states. |
-| H07 | Code block and inline code | Follow-up / UI | Overflow, copy, language label, long lines; optional highlighting. |
+| H07 | Code block and inline code | Built / UI | Overflow, copy feedback, language labels and long lines; highlighting is off. See [rich chat](./rich-chat.md). |
 | H08 | Keyboard shortcut/Kbd | Next / UI | Platform-aware shortcut display and accessible descriptions. |
 | H09 | Text overflow/read-more | Follow-up / Recipe | Wrapping first, deliberate truncation, full-content access. |
 | H10 | Presence/unread indicator | Follow-up / UI | Text equivalents for state; no color-only meaning. |
@@ -280,9 +280,9 @@ Keep [existing chat](./chat.md) as the base. The [shadcn AI Elements references]
 
 | ID | Family | When / delivery | Scope |
 | --- | --- | --- | --- |
-| N01 | Rich message rendering | Follow-up / Adapter, Extend | Markdown, code, links and tables with a safe content boundary. |
-| N02 | Message attachments | Follow-up / UI, Extend | Upload/preview/remove and per-file failure in the composer. |
-| N03 | Sources and citations | Follow-up / UI, Extend | Source title, link/preview, unavailable sources and keyboard access. |
+| N01 | Rich message rendering | Built / Adapter, Extend | Opt-in Markdown, code, links and tables with a fixed safe content boundary. See [rich chat](./rich-chat.md). |
+| N02 | Message attachments | Built / UI, Extend | Upload/preview/remove, progress and per-file recovery through the existing upload queue. |
+| N03 | Sources and citations | Built / UI, Extend | Source title, validated link, keyboard preview and unavailable states. |
 | N04 | Task/tool status and confirmation | Optional / UI, Extend | Queued/running/failed/completed actions and explicit approval where required. |
 | N05 | Model/context selectors | Optional / UI, Extend | Host-provided choices, unavailable options and context limits. |
 | N06 | Message feedback and editing | Optional / UI, Extend | Rating/report, edit/resend and branching policy supplied by the host. |

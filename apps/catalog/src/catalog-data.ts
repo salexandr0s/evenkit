@@ -6,6 +6,7 @@ import { navigationEntries } from "./navigation-entries.js";
 import { overlaysEntries } from "./overlays-entries.js";
 import { workflowsEntries } from "./workflows-entries.js";
 import { roadmapEntries } from "./roadmap-entries.js";
+import { richChatEntries } from "./rich-chat-entries.js";
 export type { CatalogEntry } from "./catalog-types.js";
 
 const baseEntries: readonly CatalogEntry[] = [
@@ -154,7 +155,7 @@ const baseEntries: readonly CatalogEntry[] = [
 export const entries: readonly CatalogEntry[] = [
   ...baseEntries, ...foundationsEntries, ...selectionEntries, ...formsEntries,
   ...navigationEntries, ...overlaysEntries, ...workflowsEntries,
-  ...roadmapEntries,
+  ...roadmapEntries, ...richChatEntries,
 ];
 
 export const groups = ["Foundations", "Controls", "Compositions", "Feedback"] as const;

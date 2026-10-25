@@ -22,6 +22,10 @@ try {
   });
   const { entries } = await server.ssrLoadModule("/src/catalog-data.ts");
   if (!Array.isArray(entries)) throw new Error("Catalog entries were not exported.");
+  const richChatSource = await readFile(join(root, "apps", "catalog", "src", "rich-chat-example.tsx"), "utf8");
+  if (entries.find(entry => entry.id === "rich-chat")?.usage !== richChatSource) {
+    throw new Error("Rich chat copied source is stale. Run node scripts/generate-rich-chat-example.mjs.");
+  }
   const ids = entries.map(entry => entry.id);
   if (new Set(ids).size !== ids.length) throw new Error("Catalog entry IDs must be unique.");
   const inventory = await readFile(join(root, "docs", "component-inventory.md"), "utf8");
@@ -31,11 +35,12 @@ try {
     "D01", "D02", "D03", "D04", "D08", "C08", "C09", "C05", "C06",
     "I08", "I04", "I05", "I06", "O03", "H06", "M02", "M03", "M04", "M05",
     "J03", "J04", "E10", "E08", "O06",
+    "N01", "N02", "N03", "H07",
   ];
   const inventoryIds = [...inventory.matchAll(/^\| ([A-R]\d{2}) \|/gm)].map(match => match[1]);
   const expected = [...original, ...additions];
-  if (new Set(expected).size !== 72 || additions.some(id => !inventoryIds.includes(id))) {
-    throw new Error("The requested roadmap must contain 24 distinct additions present in the inventory.");
+  if (new Set(expected).size !== 76 || additions.some(id => !inventoryIds.includes(id))) {
+    throw new Error("The requested roadmap must contain 28 distinct additions present in the inventory.");
   }
   const mapped = entries.flatMap(entry => entry.inventoryIds ?? []);
   for (const id of expected) {

@@ -97,6 +97,7 @@ async function smoke(kind, directory) {
     if (kind === "next" && !html.includes("Packed package check")) throw new Error("Next server did not render the package fixture.");
     if (kind === "next" && !html.includes("Packed projects")) throw new Error("Next server did not render the client shell/table fixture.");
     if (kind === "next" && !html.includes("Package assistant")) throw new Error("Next server did not render the client chat fixture.");
+    if (kind === "next" && !html.includes("Packed rich chat")) throw new Error("Next server did not render the rich chat fixture.");
     if (kind === "next" && !html.includes("Priority package controls")) throw new Error("Next server did not render the new priority control families.");
     if (kind === "next" && !html.includes("Roadmap package controls")) throw new Error("Next server did not render the roadmap controls and blocks.");
     if (kind === "next" && !html.includes("Packed primary navigation")) throw new Error("Next server did not render the complete navbar fixture.");
@@ -114,6 +115,7 @@ async function smoke(kind, directory) {
     }
     const roadmapSelectors = [".pk-calendar", ".pk-date-range", ".pk-multi-field", ".pk-number-field", ".pk-sort-control", ".pk-activity-timeline", ".pk-settings-layout", ".pk-upload-queue", ".pk-image", ".pk-command", ".pk-step-indicator"];
     if (!roadmapSelectors.every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship the roadmap styles.`);
+    if (![".pk-code-block", ".pk-chat-markdown", ".pk-chat-attachments", ".pk-chat-sources"].every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship rich chat styles.`);
     smokeResult = { httpStatus: response.status, stylesheetCount: stylesheets.length };
   } catch (error) {
     failure = error;
