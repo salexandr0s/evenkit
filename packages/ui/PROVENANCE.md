@@ -56,7 +56,13 @@ Primitive cells retain the inherited table contract's single-line default, with 
 
 `ChatWidget` and `ChatPanel` are original kit compositions using the existing Radix Dialog dependency and kit controls. Brainwave's launcher, compact/fullscreen transitions, composer, message actions, and scroll behavior supplied the interaction reference. The kit adds host-supplied conversation history and uses the kit's existing semantic tokens throughout. Brainwave's branding, content protocol, AI transport, and storage implementation are not included.
 
-Chat records, drafts, response status, cancellation, persistence, and any rich message renderer belong to the consumer. Plain text is the default. The catalog demonstrates local sample replies; the UI package makes no AI requests.
+Chat records, drafts, response status, cancellation and persistence belong to the consumer. Plain text is the default; a message can opt into the kit's fixed Markdown renderer. Custom renderers remain the consumer's safety boundary. The catalog demonstrates local sample replies; the UI package makes no AI requests.
+
+### Rich chat
+
+N01/N02/N03/H07 use original kit compositions with `react-markdown` 10.1.0 and `remark-gfm` 4.0.1. Both are MIT licensed. The [dependency decision](../../docs/rich-chat-rendering-research.md) records official sources, alternatives, HTML/highlighting review and streaming limits. Installed license notices for all 98 newly introduced direct and transitive packages (MIT or ISC) are retained in `licenses/rich-chat-dependencies.txt`; the lockfile records resolved versions and integrity hashes.
+
+The Markdown pipeline escapes raw HTML, validates navigation protocols and replaces Markdown images with text. No raw-HTML or syntax-highlighting plugin is installed. Code blocks reuse CopyAction; attachment composition reuses UploadQueue, FileRow and Thumbnail; source previews reuse Popover. Applications supply citation records and authorized attachment URLs, and own upload transport, storage, permissions and object-URL lifetimes. The local catalog fixture simulates uploads and exposes no provider credentials or private model reasoning.
 
 ## Priority expansion
 
