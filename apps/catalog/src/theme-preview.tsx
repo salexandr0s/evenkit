@@ -25,7 +25,7 @@ export function ThemePreview({ theme, mode, onThemeChange }: ThemePreviewProps) 
       <div className="theme-gallery-intro">
         <div>
           <h3>Choose a palette</h3>
-          <p>Compare the same workspace in every theme. Use Appearance above to see their light and dark colours.</p>
+          <p>Compare the same workspace in every theme. Use the sun or moon button above to switch between light and dark colours.</p>
         </div>
         <p className="theme-gallery-current" role="status">Using <strong>{themes[theme].name}</strong> · {mode}</p>
       </div>

@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { themes, themeNames, type ColorMode, type ThemeName } from "@project-kit/tokens";
-import { Badge, Button, ChevronRightIcon, EmptyState, ExternalLinkIcon, Input, Label, MenuIcon, SearchIcon, Select, Spinner } from "@project-kit/ui";
+import { Badge, Button, ChevronRightIcon, EmptyState, ExternalLinkIcon, Input, Label, MenuIcon, MoonIcon, SearchIcon, Select, Spinner, SunIcon, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@project-kit/ui";
 import { entries, groups } from "./catalog-data";
 import { CodeExample } from "./code-example";
 import { FieldPreview } from "./field-preview";
@@ -22,11 +22,6 @@ const TooltipPreview = lazy(() => import("./tooltip-preview").then((module) => (
 const appearances = ["system", "light", "dark"] as const;
 type Appearance = (typeof appearances)[number];
 const themeOptions = themeNames.map((name) => ({ value: name, label: themes[name].name }));
-const appearanceOptions = [
-  { value: "system", label: "System" },
-  { value: "light", label: "Light" },
-  { value: "dark", label: "Dark" }
-] as const;
 
 function readPreference<T extends string>(key: string, options: readonly T[], fallback: T): T {
   try {
@@ -71,6 +66,7 @@ export function Catalog() {
   const [appearance, setAppearance] = useState<Appearance>(() => readPreference("appearance", appearances, "system"));
   const [systemDark, setSystemDark] = useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches);
   const mode: ColorMode = appearance === "system" ? (systemDark ? "dark" : "light") : appearance;
+  const appearanceAction = mode === "light" ? "Switch to dark mode" : "Switch to light mode";
 
   useLayoutEffect(() => {
     if (!focusSearchAfterClear.current) return;
@@ -161,7 +157,16 @@ export function Catalog() {
           <p className="catalog-breadcrumb">Library <span aria-hidden="true">/</span> <strong>Component reference</strong></p>
           <div className="catalog-preferences">
             <div><Label htmlFor="theme-select">Theme</Label><Select id="theme-select" value={theme} options={themeOptions} onValueChange={(selected) => { const value = themeNames.find((name) => name === selected); if (value) setTheme(value); }} /></div>
-            <div><Label htmlFor="appearance-select">Appearance</Label><Select id="appearance-select" value={appearance} options={appearanceOptions} onValueChange={(selected) => { const value = appearances.find((name) => name === selected); if (value) setAppearance(value); }} /></div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button shape="icon" variant="ghost" aria-label={appearanceAction} onClick={() => setAppearance(mode === "light" ? "dark" : "light")}>
+                    {mode === "light" ? <MoonIcon /> : <SunIcon />}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" align="end">{appearanceAction}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </header>
         <main className="catalog-main" id="catalog-main" tabIndex={-1}>

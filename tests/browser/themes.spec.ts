@@ -32,7 +32,7 @@ test("theme gallery applies and remembers a palette across appearance changes an
   await expect(page.locator("html")).not.toHaveAttribute("data-kit-mode");
   await expect(linen).toHaveAttribute("data-mode", "dark");
   await expect(page.locator("body")).toHaveCSS("background-color", rgb(themes.linen.modes.dark.bg));
-  await chooseOption(page, "Appearance", "Light");
+  await page.getByRole("button", { name: "Switch to light mode", exact: true }).click();
   await expect(linen).toHaveAttribute("data-mode", "light");
   await expect(page.locator("body")).toHaveCSS("color", rgb(themes.linen.modes.light.fg));
 
@@ -47,7 +47,7 @@ test("theme gallery applies and remembers a palette across appearance changes an
   }
 
   await apply.click();
-  await chooseOption(page, "Appearance", "Dark");
+  await page.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
   await page.getByRole("navigation", { name: "Components", exact: true }).getByRole("link", { name: "Dialog", exact: true }).click();
   await page.getByRole("button", { name: "Edit project", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Edit project", exact: true });

@@ -11,7 +11,7 @@ const initialConversations: DemoConversation[] = [
   { id: "plan", title: "Plan a project", description: "Start a conversation", messages: [], draft: "" },
   { id: "themes", title: "Theme setup", description: "Colors and appearance", draft: "", messages: [
     { id: "theme-question", role: "user", content: "Can the assistant match our brand?" },
-    { id: "theme-answer", role: "assistant", content: "Yes. The chat uses the same color, typography, spacing, and motion tokens as the rest of the kit. Try changing Theme or Appearance above the preview.\n\nYour project supplies the assistant name, introductory text, suggested prompts, and footer." },
+    { id: "theme-answer", role: "assistant", content: "Yes. The chat uses the same color, typography, spacing, and motion tokens as the rest of the kit. Try changing Theme or using the sun or moon button above the preview.\n\nYour project supplies the assistant name, introductory text, suggested prompts, and footer." },
   ] },
   { id: "launch", title: "Launch checklist", description: "A saved conversation", draft: "", messages: [
     { id: "launch-question", role: "user", content: "What should we check before launch?" },
@@ -28,7 +28,7 @@ const responseOptions = [
 
 function replyFor(text: string, long: boolean) {
   const intro = /theme|brand|color/i.test(text)
-    ? "The assistant inherits your project's design tokens. Change Theme or Appearance to see its surfaces, text, and controls update together."
+    ? "The assistant inherits your project's design tokens. Change Theme or use the sun or moon button to see its surfaces, text, and controls update together."
     : /reuse|component|integrat/i.test(text)
       ? "Use ChatWidget for a floating assistant, or ChatPanel for a dedicated page. Your project supplies messages, conversations, and response callbacks."
       : "Start with the outcome you want, then list the work and the decisions that need an owner. Keep the first version small enough to try with your team.";

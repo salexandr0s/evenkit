@@ -35,8 +35,8 @@ body { margin: 0; background: var(--pk-color-bg); color: var(--pk-color-fg); fon
 .catalog-toolbar { min-height: calc(var(--pk-space-16) + var(--pk-space-6)); padding: var(--pk-space-4) var(--pk-space-10); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--pk-space-4); border-bottom: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .catalog-breadcrumb { display: flex; align-items: center; gap: var(--pk-space-3); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
 .catalog-breadcrumb strong { font-weight: var(--pk-font-weight-medium); color: var(--pk-color-fg); }
-.catalog-preferences { display: flex; flex-wrap: wrap; gap: var(--pk-space-3); }
-.catalog-preferences > div { display: flex; align-items: center; gap: var(--pk-space-2); }
+.catalog-preferences { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-3); }
+.catalog-preferences > div { display: flex; align-items: center; gap: var(--pk-space-2); min-width: 0; }
 .catalog-preferences .pk-label { flex-shrink: 0; white-space: nowrap; }
 .catalog-preferences .pk-select { width: auto; min-width: calc(var(--pk-space-16) + var(--pk-space-12)); font-size: var(--pk-font-size-xs); }
 .catalog-main { max-width: var(--pk-layout-content); margin: 0 auto; padding: var(--pk-space-10); }
@@ -112,7 +112,7 @@ body { margin: 0; background: var(--pk-color-bg); color: var(--pk-color-fg); fon
   .catalog-sidebar-body { display: none; padding: var(--pk-space-2) var(--pk-space-4) var(--pk-space-6); }
   .catalog-sidebar-body[data-open="true"] { display: flex; }
   .catalog-toolbar { padding: var(--pk-space-4); }
-  .catalog-preferences { width: 100%; justify-content: space-between; gap: var(--pk-space-4); }
+  .catalog-preferences { width: 100%; align-items: flex-end; justify-content: space-between; gap: var(--pk-space-4); }
   .catalog-preferences > div { flex: 1; align-items: stretch; flex-direction: column; }
   .catalog-preferences .pk-select { min-width: 0; width: 100%; }
   .catalog-main { padding: var(--pk-space-6) var(--pk-space-4); }

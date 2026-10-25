@@ -23,7 +23,7 @@ test("token reference keeps search, copying and contrast tied to the selected th
   await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe("var(--pk-color-accent)");
 
   await chooseOption(page, "Theme", "Grove");
-  await chooseOption(page, "Appearance", "Dark");
+  await page.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
   await expect(search).toHaveValue("--pk-color-accent");
   await expect(category).toHaveText("Semantic colors");
   await expect(accent).toContainText(themes.grove.modes.dark.accent);
@@ -32,7 +32,7 @@ test("token reference keeps search, copying and contrast tied to the selected th
   const contrast = page.getByRole("list", { name: "Defined contrast pairs" });
   const colors = themes.grove.modes.dark;
   await expect(contrast.locator('[data-contrast="fg/bg"]')).toContainText(contrastRatio(colors.fg, colors.bg).toFixed(2));
-  await chooseOption(page, "Appearance", "Light");
+  await page.getByRole("button", { name: "Switch to light mode", exact: true }).click();
   await expect(contrast.locator('[data-contrast="fg/bg"]')).toContainText(contrastRatio(themes.grove.modes.light.fg, themes.grove.modes.light.bg).toFixed(2));
 
   // Clipboard denial must leave the copyable expression on screen.

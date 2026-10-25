@@ -28,26 +28,42 @@ test("search finds controls and recovers from no results", async ({ page }) => {
   await expect(search).toBeFocused();
 });
 
-test("explicit appearance overrides the system and theme selection changes actual colors", async ({ page }) => {
+test("appearance icon follows the system until a keyboard choice and remembers that choice", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
-  const appearance = page.getByLabel("Appearance", { exact: true });
+  const toLight = page.getByRole("button", { name: "Switch to light mode", exact: true });
+  const toDark = page.getByRole("button", { name: "Switch to dark mode", exact: true });
   await expect(page.locator("html")).not.toHaveAttribute("data-kit-mode");
   await expect(page.locator("html")).toHaveCSS("color-scheme", "dark");
-  await chooseOption(page, "Appearance", "Light");
+  await expect(toLight).toBeVisible();
+  const sunGlyph = await toLight.locator("svg").innerHTML();
+  await page.emulateMedia({ colorScheme: "light" });
+  await expect(toDark).toBeVisible();
+  await expect(page.locator("html")).not.toHaveAttribute("data-kit-mode");
+  expect(await toDark.locator("svg").innerHTML()).not.toBe(sunGlyph);
+  await page.emulateMedia({ colorScheme: "dark" });
+  await toLight.focus();
+  await expect(page.getByRole("tooltip")).toHaveText("Switch to light mode");
+  await toLight.press("Enter");
   await expect(page.locator("html")).toHaveCSS("color-scheme", "light");
+  await expect(toDark).toBeFocused();
   const primary = page.getByRole("button", { name: "Primary action", exact: true });
   const neutralColor = await primary.evaluate(element => getComputedStyle(element).backgroundColor);
   await chooseOption(page, "Theme", "Grove");
   await expect(primary).not.toHaveCSS("background-color", neutralColor);
-  await chooseOption(page, "Appearance", "Dark");
+  await toDark.press("Space");
+  await expect(toLight).toBeFocused();
+  expect(await toLight.locator("svg").innerHTML()).toBe(sunGlyph);
   await page.emulateMedia({ colorScheme: "light" });
   await expect(page.locator("html")).toHaveCSS("color-scheme", "dark");
-  await chooseOption(page, "Appearance", "System");
-  await expect(page.locator("html")).toHaveCSS("color-scheme", "light");
   await page.reload();
   await expect(page.getByRole("combobox", { name: "Theme", exact: true })).toHaveText("Grove");
-  await expect(appearance).toHaveText("System");
+  await expect(page.locator("html")).toHaveCSS("color-scheme", "dark");
+  await expect(toLight).toBeVisible();
+  await page.setViewportSize({ width: 360, height: 800 });
+  const bounds = await toLight.boundingBox();
+  expect(bounds?.width).toBeGreaterThanOrEqual(44);
+  expect(bounds?.height).toBeGreaterThanOrEqual(44);
 });
 
 test("field validation associates descriptions, focuses the first error, and resets", async ({ page }) => {
@@ -95,7 +111,7 @@ test("field validation associates descriptions, focuses the first error, and res
 test("dialog contains focus, inherits the theme, closes with Escape and restores focus", async ({ page }) => {
   await page.goto("/#dialog");
   await chooseOption(page, "Theme", "Grove");
-  await chooseOption(page, "Appearance", "Dark");
+  await page.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
   const trigger = page.getByRole("button", { name: "Edit project", exact: true });
   await trigger.click();
   const dialog = page.getByRole("dialog", { name: "Edit project" });

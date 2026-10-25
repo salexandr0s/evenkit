@@ -68,8 +68,7 @@ test("badges retain compact geometry while longer feedback and RTL content fit n
   const initialColor = await warning.evaluate(element => getComputedStyle(element).backgroundColor);
   await page.getByRole("combobox", { name: "Theme", exact: true }).click();
   await page.getByRole("option", { name: "Grove", exact: true }).click();
-  await page.getByRole("combobox", { name: "Appearance", exact: true }).click();
-  await page.getByRole("option", { name: "Dark", exact: true }).click();
+  await page.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
   await expect(warning).not.toHaveCSS("background-color", initialColor);
 
   for (const width of [360, 768, 1024, 1440]) {

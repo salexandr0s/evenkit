@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Appearance icon: 25 October 2026
+
+The catalog appearance dropdown is now one ghost icon button beside Theme. A moon switches to dark mode; a sun switches to light mode. The accessible action name and custom tooltip change with the glyph, while the button and keyboard focus remain stable. The catalog still follows a saved/default system preference until the user makes an explicit choice, which persists across reloads. The two-state button replaces the system selection menu.
+
+Updated `apps/catalog/src/catalog.tsx/css`, related theme/chat preview guidance, and README. Existing Button tokens provide 40px desktop and 44px mobile targets; mobile alignment follows the bottom of the Theme select. Four existing browser test files now use the icon control. The appearance regression covers OS changes before manual selection, glyph changes, Enter/Space, tooltip naming, focus retention, persisted override, and mobile size.
+
+Verification passed: plan/source review, production build, configured typecheck, focused ESLint, and all ten Chromium journeys in `catalog.spec.ts`, `themes.spec.ts`, `token-reference.spec.ts`, and `status.spec.ts`. Manual light/dark and 360px inspection passed. Firefox/Safari were not tested. Screenshot: `.artifacts/appearance-icon-dark.jpg`; preview: `http://127.0.0.1:5173/#chat`. Dark mode was restored and the temporary viewport override cleared. No work remains for this request.
+
+Focused command: `KIT_CATALOG_PORT=5317 npx playwright test tests/browser/catalog.spec.ts tests/browser/themes.spec.ts tests/browser/token-reference.spec.ts tests/browser/status.spec.ts --workers=1 --output=.artifacts/appearance-icon-browser-results`.
+
 ## Badge design pass: 25 October 2026
 
 Badges now use quiet semantic borders for both soft and outline variants, semibold labels, tabular numerals, and consistent 6px medium / 4px small icon gaps. Decorative content stays within its 16px slot; intrinsic width and inline alignment keep badges compact in lists and surrounding text. Existing 20/24px short-label sizes, semantic fills, long-label wrapping, native span semantics, and public props remain intact.
