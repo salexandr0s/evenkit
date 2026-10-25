@@ -40,17 +40,19 @@ export function NotificationList({ groups, selectedIds = [], onSelectionChange, 
   return <div className="pk-notification-list">
     {groups.filter(group => group.items.length > 0).map((group, index) => <section className="pk-notification-group" key={group.id} aria-labelledby={`${id}-${index}`}>
       <h3 className="pk-notification-group-title" id={`${id}-${index}`}>{group.label}</h3>
-      <ul>{group.items.map((item, itemIndex) => <li className="pk-notification-item" key={item.id} data-unread={!item.read || undefined}>
+      <ul>{group.items.map((item, itemIndex) => <li className="pk-notification-item" key={item.id} data-unread={!item.read || undefined} data-selected={selectedIds.includes(item.id) || undefined}>
         {onSelectionChange ? <Checkbox aria-label={`Select ${item.title}`} checked={selectedIds.includes(item.id)} disabled={disabled || Boolean(item.readOnlyReason)} aria-describedby={item.readOnlyReason ? `${id}-${index}-${itemIndex}-reason` : undefined} aria-disabled={busy || undefined} onCheckedChange={checked => { if (!busy) onSelectionChange(item.id, checked === true); }} /> : null}
         <div className="pk-notification-content">
-          <div className="pk-notification-meta"><span className="pk-notification-read-state">{item.read ? <CheckIcon size="sm" /> : <CircleIcon size="sm" />} {item.read ? "Read" : "Unread"}</span>{item.timestamp && item.timestampLabel ? <time dateTime={item.timestamp}>{item.timestampLabel}</time> : null}</div>
-          <h4 className="pk-notification-title">{item.title}</h4>
+          <div className="pk-notification-title-row"><h4 className="pk-notification-title">{item.title}</h4><span className="pk-notification-read-state">{item.read ? <CheckIcon size="sm" /> : <CircleIcon size="sm" />} {item.read ? "Read" : "Unread"}</span></div>
           {item.description ? <p className="pk-notification-description">{item.description}</p> : null}
           {item.readOnlyReason ? <p className="pk-notification-reason" id={`${id}-${index}-${itemIndex}-reason`}>{item.readOnlyReason}</p> : null}
-          {onReadChange || item.actions?.length ? <div className="pk-notification-actions">
+          <div className="pk-notification-item-footer">
+            {item.timestamp && item.timestampLabel ? <time className="pk-notification-time" dateTime={item.timestamp}>{item.timestampLabel}</time> : null}
+            {onReadChange || item.actions?.length ? <div className="pk-notification-actions">
             {onReadChange ? <Button size="sm" variant="ghost" disabled={disabled || Boolean(item.readOnlyReason)} aria-describedby={item.readOnlyReason ? `${id}-${index}-${itemIndex}-reason` : undefined} aria-disabled={busy || undefined} aria-label={`Mark ${item.title} as ${item.read ? "unread" : "read"}`} onClick={() => { if (!busy) onReadChange(item.id, !item.read); }}>{item.read ? "Mark as unread" : "Mark as read"}</Button> : null}
             {item.actions?.map((action, actionIndex) => <div className="pk-notification-action" key={action.id}><Button size="sm" variant="outline" disabled={disabled || !onAction || Boolean(action.unavailable)} aria-describedby={action.unavailable ? `${id}-${index}-${itemIndex}-${actionIndex}-reason` : undefined} aria-disabled={busy || undefined} aria-label={`${action.label}: ${item.title}`} onClick={() => { if (!busy) onAction?.(item.id, action.id); }}>{action.label}</Button>{action.unavailable ? <span className="pk-notification-reason" id={`${id}-${index}-${itemIndex}-${actionIndex}-reason`}>{action.unavailable}</span> : null}</div>)}
-          </div> : null}
+            </div> : null}
+          </div>
         </div>
       </li>)}</ul>
     </section>)}

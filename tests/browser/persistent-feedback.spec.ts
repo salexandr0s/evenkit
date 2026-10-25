@@ -3,6 +3,7 @@ import { themeNames, themes } from "@evenkit/tokens";
 
 test("banner retry retains focus and dismissal restores the page heading", async ({ page }) => {
   await page.goto("/#persistent-banner");
+  await page.getByText("Example controls", { exact: true }).click();
   const banner = page.getByRole("region", { name: "Scheduled maintenance", exact: true });
   await page.getByRole("checkbox", { name: "Fail the next request" }).check();
   const dismiss = banner.getByRole("button", { name: "Dismiss notice", exact: true });
@@ -19,9 +20,10 @@ test("banner retry retains focus and dismissal restores the page heading", async
 
 test("banner rejects stale success and failure after context and permission changes", async ({ page }) => {
   await page.goto("/#persistent-banner");
+  await page.getByText("Example controls", { exact: true }).click();
   await page.clock.install();
   await page.getByRole("checkbox", { name: "Use a slow response" }).check();
-  const action = page.getByRole("button", { name: "Review scheduled maintenance and preparation instructions", exact: true });
+  const action = page.getByRole("button", { name: "View maintenance details", exact: true });
   await action.click();
   await page.getByRole("button", { name: "Switch notification context", exact: true }).click();
   await page.clock.fastForward(3000);
@@ -40,6 +42,7 @@ test("banner rejects stale success and failure after context and permission chan
 
 test("connection state invalidates recovery and keeps critical information visible", async ({ page }) => {
   await page.goto("/#connection-status");
+  await page.getByText("Example controls", { exact: true }).click();
   await page.clock.install();
   await page.getByRole("checkbox", { name: "Use a slow response" }).check();
   await page.getByRole("button", { name: "Check connection", exact: true }).click();
@@ -87,7 +90,7 @@ test("notification family preserves neutral surfaces, theme accents, RTL and res
       for (const mode of ["light", "dark"] as const) {
         const toggle = page.getByRole("button", { name: `Switch to ${mode} mode`, exact: true });
         if (await toggle.count()) await toggle.click();
-        const surface = preview.locator(".pk-notification-toolbar, .pk-notification-preference-category, .pk-persistent-banner > .pk-action-message").first();
+        const surface = preview.locator(".pk-notification-center, .pk-notification-preference-option:not([data-locked]), .pk-persistent-banner > .pk-action-message").first();
         if (await surface.count()) await expect(surface).toHaveCSS("background-color", rgb(themes.neutral.modes[mode].surface));
         const accent = preview.locator('.pk-badge[data-tone="accent"]').first();
         if (await accent.count()) await expect(accent).toHaveCSS("color", rgb(themes[theme].modes[mode].accent));
@@ -97,7 +100,10 @@ test("notification family preserves neutral surfaces, theme accents, RTL and res
         if (await checked.count()) await expect(checked).toHaveCSS("background-color", rgb(themes[theme].modes[mode].accent));
       }
     }
-    if (id === "notification-center") await page.getByRole("checkbox", { name: "Use long notification labels", exact: true }).check();
+    if (id === "notification-center" || id === "persistent-banner") {
+      await page.getByText("Example controls", { exact: true }).click();
+      await page.getByRole("checkbox", { name: id === "notification-center" ? "Use long notification labels" : "Use a long action label", exact: true }).check();
+    }
     await page.evaluate(() => { document.documentElement.dir = "rtl"; });
     for (const width of [360, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 1000 });
@@ -115,6 +121,7 @@ test("notification family preserves neutral surfaces, theme accents, RTL and res
     await page.setViewportSize({ width: 1440, height: 1000 });
   }
   await page.goto("/#persistent-banner");
+  await page.getByText("Example controls", { exact: true }).click();
   await page.getByRole("checkbox", { name: "Use a slow response" }).check();
   await page.getByRole("button", { name: "Dismiss notice", exact: true }).click();
   await expect(page.locator(".pk-persistent-banner .pk-spinner")).toHaveCSS("animation-name", "none");

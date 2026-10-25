@@ -32,13 +32,13 @@ Editing creates a local draft. Reset restores the saved snapshot. Cancellation a
 
 ## Persistent banners and status
 
-`PersistentBanner` composes `ActionMessage` and `Button`. It occupies normal layout space, has a named region, and stays visible until the host removes it. Supply a heading, content, context key, optional revision/tone/actions/dismissal, and optional concise announcement. Critical notices can omit dismissal. Content remains readable throughout failures and retries.
+`PersistentBanner` composes `ActionMessage` and `Button`. It occupies normal layout space, has a named region, and stays visible until the host removes it. Supply a heading, content, context key, optional revision/tone/actions/dismissal, and optional concise announcement. An optional `icon` replaces the tone's decorative icon; `null` or `false` hides it. Critical notices can omit dismissal. Content remains readable throughout failures and retries.
 
 Each action has an ID, label, async `onAction`, optional guarded `onSuccess`, unavailable reason and optional `focusRef`. Pass a visible focus target when success removes the banner or its focused action. Dismissal requires an async `onDismiss`, guarded `onDismissed` and a `focusRef` outside the banner. The component restores focus before dismissal only if focus is still inside the banner, preserving an external control the user has moved to. Retry stays mounted while pending and returns focus to the original action on success. A removed focused action falls back to the named banner region.
 
 The persistent content and action buttons are outside the live region. A separate concise `aria-live` message announces progress and errors. `urgency` defaults to polite; use assertive only for a notice that needs an immediate interruption. A host announcement can summarize changing content without announcing the entire interactive banner repeatedly.
 
-`ConnectionStatus` supports `offline`, `reconnecting`, `stale` and `session-expiring`. It supplies a heading and warning/info tone, and invalidates recovery when state changes. Content must describe the application's actual save behavior, last-update information or expiry time. Applications decide whether recovery resolves the notice, and when session state is authoritative. A recovery button does not imply data was saved offline or a session was extended.
+`ConnectionStatus` supports `offline`, `reconnecting`, `stale` and `session-expiring`. It supplies a heading, state-specific decorative icon and warning/info tone, and invalidates recovery when state changes. The `icon` override follows the banner contract. Content must describe the application's actual save behavior, last-update information or expiry time. Applications decide whether recovery resolves the notice, and when session state is authoritative. A recovery button does not imply data was saved offline or a session was extended.
 
 ## Presence and unread indicators
 
@@ -46,7 +46,7 @@ The persistent content and action buttons are outside the live region. A separat
 
 ## Appearance and accessibility evidence
 
-The family uses existing neutral surfaces, theme accents, `--pk-` spacing/type/shape tokens, the shared control sizes and mobile touch targets. It introduces no motion; progress spinners and controls retain their existing reduced-motion rules. Logical spacing and wrapping support RTL and long labels. Linen headings keep the shared heading font.
+The family uses existing neutral surfaces, theme accents, `--pk-` spacing/type/shape tokens, the shared control sizes and mobile touch targets. The inbox groups notifications inside one frame; selected rows use a neutral fill and accent edge, while unread rows retain visible state text. Preferences align channel choices beside category descriptions and show required, managed and unavailable policies. Banners place actions beside the message when space permits and stack them at narrow widths. It introduces no motion; progress spinners and controls retain their existing reduced-motion rules. Logical spacing and wrapping support RTL and long labels. Linen headings keep the shared heading font.
 
 Focused Chromium coverage checks page selection and permissions, failed action/page recovery, pending focus, stale results after context/permission/revision changes, preference cancellation and schema removal, banner dismissal/retry, persistent status, and accessible names. The family matrix exercises all eight themes and both modes plus 360/768/1024/1440px RTL layouts. Exact executed commands and outcomes are recorded in `SESSION_HANDOFF.md`; browser DOM/accessibility-tree checks are not a manual screen-reader listening audit. Safari, Firefox, physical mobile keyboards and production services remain unverified.
 

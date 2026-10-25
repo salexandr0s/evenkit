@@ -4,6 +4,8 @@ import { useId, useLayoutEffect, useRef, useState, type ReactNode, type RefObjec
 import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { ActionMessage, Badge, Spinner, type ActionMessageTone } from "./feedback.js";
+import { ClockIcon, KeyRoundIcon, RotateCcwIcon } from "./icons.js";
+import { WifiIcon } from "./icons-technology.js";
 
 export interface FeedbackRequestContext { signal: AbortSignal; contextKey: string }
 export interface BannerAction {
@@ -32,6 +34,8 @@ export interface PersistentBannerProps {
   heading: string;
   children: ReactNode;
   tone?: ActionMessageTone;
+  /** Optional decorative icon; visible text still conveys the notice's meaning. */
+  icon?: ReactNode;
   actions?: readonly BannerAction[];
   dismissal?: BannerDismissal;
   /** Concise live text; the persistent content itself is not a live region. */
@@ -41,7 +45,7 @@ export interface PersistentBannerProps {
 }
 
 /** In-flow persistent information. Visibility and dismissal storage belong to the host. */
-export function PersistentBanner({ contextKey, revision = 0, heading, children, tone = "info", actions = [], dismissal, announcement = "", urgency = "polite", className }: PersistentBannerProps) {
+export function PersistentBanner({ contextKey, revision = 0, heading, children, tone = "info", icon, actions = [], dismissal, announcement = "", urgency = "polite", className }: PersistentBannerProps) {
   const headingId = useId();
   const region = useRef<HTMLDivElement>(null);
   const request = useRef<AbortController | null>(null);
@@ -98,7 +102,7 @@ export function PersistentBanner({ contextKey, revision = 0, heading, children, 
   }
 
   return <div ref={region} role="region" tabIndex={-1} aria-labelledby={headingId} className={classes("pk-persistent-banner", className)} onFocusCapture={event => { focused.current = event.target; }} onBlurCapture={event => { if (event.relatedTarget instanceof HTMLElement && !event.currentTarget.contains(event.relatedTarget)) focused.current = null; }}>
-    <ActionMessage role="group" tone={tone} heading={<span id={headingId}>{heading}</span>} actions={<>
+    <ActionMessage role="group" tone={tone} icon={icon} heading={<span id={headingId}>{heading}</span>} actions={actions.length || dismissal ? <>
       {actions.map(action => <span key={action.id} className="pk-banner-action">
         <Button ref={node => { if (node) controls.current.set(`action:${action.id}`, node); else controls.current.delete(`action:${action.id}`); }} variant="outline" size="sm" aria-disabled={pending !== null || Boolean(action.unavailable)} aria-busy={pending === `action:${action.id}` || undefined} aria-describedby={action.unavailable ? `${headingId}-${action.id}` : undefined} onClick={() => { void run(`action:${action.id}`); }}>
           {pending === `action:${action.id}` ? <Spinner size="sm" aria-hidden="true" /> : null}{action.label}
@@ -106,7 +110,7 @@ export function PersistentBanner({ contextKey, revision = 0, heading, children, 
         {action.unavailable ? <span id={`${headingId}-${action.id}`} className="pk-banner-note">{action.unavailable}</span> : null}
       </span>)}
       {dismissal ? <Button ref={node => { if (node) controls.current.set("dismiss", node); else controls.current.delete("dismiss"); }} variant="ghost" size="sm" aria-disabled={pending !== null} aria-busy={pending === "dismiss" || undefined} onClick={() => { void run("dismiss"); }}>{pending === "dismiss" ? <Spinner size="sm" aria-hidden="true" /> : null}{dismissal.label ?? "Dismiss notice"}</Button> : null}
-    </>}>{children}</ActionMessage>
+    </> : undefined}>{children}</ActionMessage>
     {failure ? <ActionMessage role="group" tone="error" heading="Action could not be completed" actions={<Button ref={retry} variant="outline" size="sm" aria-disabled={pending !== null} aria-busy={pending === failure.id || undefined} onClick={() => { void run(failure.id); }}>Retry action</Button>}>{failure.message}</ActionMessage> : null}
     <span className="pk-visually-hidden" aria-live={urgency} aria-atomic="true">{announcement}{note ? ` ${note}` : ""}</span>
   </div>;
@@ -123,7 +127,8 @@ const connectionHeadings: Record<ConnectionState, string> = {
   offline: "You are offline", reconnecting: "Reconnecting", stale: "Data may be out of date", "session-expiring": "Your session is expiring",
 };
 export function ConnectionStatus({ state, heading = connectionHeadings[state], revision = 0, children, ...props }: ConnectionStatusProps) {
-  return <PersistentBanner {...props} revision={JSON.stringify([revision, state])} heading={heading} tone={state === "reconnecting" ? "info" : "warning"} announcement={heading}>{children}</PersistentBanner>;
+  const stateIcon = { offline: <WifiIcon />, reconnecting: <RotateCcwIcon />, stale: <ClockIcon />, "session-expiring": <KeyRoundIcon /> }[state];
+  return <PersistentBanner {...props} icon={props.icon === undefined ? stateIcon : props.icon} revision={JSON.stringify([revision, state])} heading={heading} tone={state === "reconnecting" ? "info" : "warning"} announcement={heading}>{children}</PersistentBanner>;
 }
 
 export interface PresenceIndicatorProps {

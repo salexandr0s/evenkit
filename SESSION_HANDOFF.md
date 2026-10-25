@@ -1,5 +1,13 @@
 # Session handoff: 25 October 2026
 
+## Notification design pass: 25 October 2026
+
+On `codex/notifications` in `/Users/nationalbank/.codex/worktrees/notifications/design-tokens`, refined the inbox hierarchy and selection states, preference channel/policy layout, responsive persistent banners, and workspace/team catalog examples. Added an optional decorative banner icon. Async and focus contracts remain intact. The [integration handoff](docs/notifications-handoff.md#design-pass-25-october-2026) records changes, integration scope, screenshots and verification.
+
+Build, configured typecheck, full lint, 23 unit tests, all 14 focused Chromium cases in one run, 91 copied examples/77 mappings, and packed Vite/Next checks passed. Visual review includes Ocean light desktop/mobile, selected and empty inboxes, Linen dark preferences, and Rose dark RTL mobile feedback. Manual screen-reader listening, Safari/Firefox and physical devices remain unverified. No required work remains; nothing was pushed, published or deployed. Local preview: `http://127.0.0.1:59475/#notification-center`.
+
+Resume with `git status --short` and `git log -3 --oneline` in the worktree above. Preserve both this follow-up and the original feature when integrating. Earlier handoff history follows.
+
 ## Notification family: 25 October 2026
 
 Current isolated worktree: `/Users/nationalbank/.codex/worktrees/notifications/design-tokens`, branch `codex/notifications`, feature commit `b3ca9c7`. The [notification integration handoff](docs/notifications-handoff.md) records O08/M06/H10/G03/G06, contracts, shared integration points and verification evidence. Build/type/lint, 23 unit tests, 91 copyable examples, 77 inventory mappings, 13 Chromium behavior cases plus the theme/layout matrix, and independent packed Next/Vite consumers passed. No push, publication or deployment occurred.
