@@ -76,3 +76,5 @@ The user requested a reusable chatbot based on `brainwave_site` within the kit's
 - User-facing preview remains open at `http://127.0.0.1:5173/#chat`; screenshot `.artifacts/chat-reference.png`. AI replies in the catalog are samples. Projects connect their own service and persistence using the integration guide.
 
 The concurrent sidebar change was committed separately as `7976024`; its files were preserved.
+
+Chat motion follow-up: maximize/restore now transition size, position, and corners with the existing 220ms duration and standard easing. Both sizes keep the same logical end anchor, including RTL, so position interpolates without an auto-to-zero jump. The panel inherits the animated radius; reduced motion disables the transition. Production build and all four chat Chromium journeys passed after this CSS-only change.

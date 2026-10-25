@@ -76,11 +76,14 @@
   position: fixed; z-index: var(--pk-z-index-modal); inset-inline-end: var(--pk-space-4);
   inset-block-start: calc(var(--pk-chat-viewport-top, 0px) + var(--pk-chat-viewport-height, 100dvh) - var(--pk-chat-window-height) - var(--pk-space-4));
   inline-size: min(var(--pk-layout-dialog-sm), calc(100% - var(--pk-space-4) * 2)); block-size: var(--pk-chat-window-height);
-  border-radius: var(--pk-radius-lg); background: var(--pk-color-surface); box-shadow: var(--pk-shadow-lg); outline: none;
+  border-radius: var(--pk-radius-lg); background: var(--pk-color-surface); box-shadow: var(--pk-shadow-lg); outline: none; overflow: hidden;
+  transition-property: inline-size, block-size, inset-inline-end, inset-block-start, border-radius;
+  transition-duration: var(--pk-motion-duration-slow);
+  transition-timing-function: var(--pk-motion-easing-standard);
 }
-.pk-chat-widget > .pk-chat-panel { block-size: 100%; }
-.pk-chat-widget[data-maximized="true"] { inset-inline: 0; inset-block-start: var(--pk-chat-viewport-top, 0px); inline-size: 100%; block-size: var(--pk-chat-viewport-height, 100dvh); border-radius: 0; }
-.pk-chat-widget[data-maximized="true"] > .pk-chat-panel { border: 0; border-radius: 0; padding-block-start: env(safe-area-inset-top); padding-block-end: env(safe-area-inset-bottom); }
+.pk-chat-widget > .pk-chat-panel { block-size: 100%; border-radius: inherit; }
+.pk-chat-widget[data-maximized="true"] { inset-inline-end: 0; inset-block-start: var(--pk-chat-viewport-top, 0px); inline-size: 100%; block-size: var(--pk-chat-viewport-height, 100dvh); border-radius: 0; }
+.pk-chat-widget[data-maximized="true"] > .pk-chat-panel { border: 0; padding-block-start: env(safe-area-inset-top); padding-block-end: env(safe-area-inset-bottom); }
 /* 640px reuses foundation.breakpoint.sm. */
 @media (max-width: 640px) {
   .pk-chat-header { padding: var(--pk-space-2); }
@@ -96,4 +99,4 @@
   .pk-chat-footer { padding-block-end: var(--pk-space-2); }
   .pk-chat-empty { padding-block: var(--pk-space-2); }
 }
-@media (prefers-reduced-motion: reduce) { .pk-chat-history-select { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .pk-chat-widget, .pk-chat-history-select { transition: none; } }
