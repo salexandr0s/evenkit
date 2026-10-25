@@ -13,6 +13,7 @@ import { teamAdminEntries } from "./team-admin-entries.js";
 import { notificationCenterEntries } from "./notification-center-entries.js";
 import { notificationPreferencesEntries } from "./notification-preferences-entries.js";
 import { persistentFeedbackEntries } from "./persistent-feedback-entries.js";
+import { reportingEntries } from "./reporting-entries.js";
 
 export const roadmapEntries: readonly CatalogEntry[] = [
   ...datesEntries,
@@ -28,4 +29,5 @@ export const roadmapEntries: readonly CatalogEntry[] = [
   ...notificationCenterEntries,
   ...notificationPreferencesEntries,
   ...persistentFeedbackEntries,
+  ...reportingEntries,
 ];

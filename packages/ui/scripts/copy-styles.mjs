@@ -11,6 +11,7 @@ const sources = [
   "team-members.css", "invitation-acceptance.css", "role-capability-editor.css", "audit-viewer.css",
   "notifications.css", "notification-preferences.css", "persistent-feedback.css",
   "rich-chat-rendering.css", "rich-chat-attachments.css", "rich-chat-sources.css",
+  "chart.css", "statistic.css", "reporting.css",
 ];
 const styles = await Promise.all(sources.map(file => readFile(new URL(`../src/${file}`, import.meta.url), "utf8")));
 await writeFile(new URL("../dist/styles.css", import.meta.url), styles.join("\n"));

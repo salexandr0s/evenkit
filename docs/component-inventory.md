@@ -184,7 +184,7 @@ Use [Chakra's display catalog](https://chakra-ui.com/docs/components/concepts/ov
 | H02 | Tag/chip and tag group | Next / UI | Display, removal or selection with distinct semantics; reuse Badge styling. |
 | H03 | Description/data list | Next / Recipe | Label/value details, compact/responsive layout, missing values. |
 | H04 | List item and rich item row | Next / UI | Leading media, title/description, metadata, trailing actions. |
-| H05 | Statistic/KPI | Follow-up / UI | Value, unit, period, comparison and text-based trend. |
+| H05 | Statistic/KPI | Built / UI | Value, unit, period, comparison and text-based trend. |
 | H06 | Timeline/activity item | Built / UI | Actor, action, timestamp, grouped events and pending/error states. |
 | H07 | Code block and inline code | Built / UI | Overflow, copy feedback, language labels and long lines; highlighting is off. See [rich chat](./rich-chat.md). |
 | H08 | Keyboard shortcut/Kbd | Next / UI | Platform-aware shortcut display and accessible descriptions. |
@@ -231,13 +231,13 @@ References: [Leitspur upload picker](/Users/nationalbank/GitHub/leitspur/apps/in
 
 | ID | Family | When / delivery | Scope |
 | --- | --- | --- | --- |
-| K01 | Chart frame and series contract | Follow-up / Adapter | Title/description, units, series colors, legend, tooltip, responsive sizing, fallback data. |
-| K02 | Line/area chart | Follow-up / Adapter | Time series, missing values, explicit time and aggregation units. |
-| K03 | Bar chart | Follow-up / Adapter | Horizontal/vertical, grouped/stacked, long labels, comparison. |
+| K01 | Chart frame and series contract | Built / Adapter | Title/description, units, series colors, legend, tooltip, responsive sizing, fallback data. |
+| K02 | Line/area chart | Built / Adapter | Time series, missing values, explicit time and aggregation units. |
+| K03 | Bar chart | Built / Adapter | Horizontal/vertical, grouped/stacked, long labels, comparison. |
 | K04 | Donut/pie chart | Optional / Adapter | Small part-to-whole sets with values in text and a legend. |
 | K05 | Sparkline and trend | Optional / Adapter | Small contextual trend with an accessible summary. |
 | K06 | Heatmap/scatter and specialist charts | Optional / Adapter | Add only the chart type a real reporting view requires. |
-| K07 | Reporting controls and export | Follow-up / Block | Period, comparison, filters, units, export preparation and failure. |
+| K07 | Reporting controls and export | Built / Block | Period, comparison, filters, units, export preparation and failure. |
 
 ## Authentication and access screens
 
@@ -294,7 +294,7 @@ Keep [existing chat](./chat.md) as the base. The [shadcn AI Elements references]
 
 | ID | Family | When / delivery | Scope |
 | --- | --- | --- | --- |
-| O01 | Dashboard/overview | Follow-up / Block | Page header, useful summaries, activity, optional chart and data section. |
+| O01 | Dashboard/overview | Built / Block | Page header, useful summaries, activity, optional chart and data section. |
 | O02 | List/index page | Next / Block | Header/actions, filters, table/list, pagination and recovery states. |
 | O03 | Record detail page | Built / Block | Summary, description list, tabs, activity and contextual actions. |
 | O04 | Create/edit page | Next / Block | Sections, validation, save/cancel, pending/error, unsaved changes. |

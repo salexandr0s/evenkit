@@ -6,6 +6,7 @@ import { accountRecordEntries } from "./account-record-entries.js";
 import { uploadsEntries } from "./uploads-entries.js";
 import { commandWizardEntries } from "./command-wizard-entries.js";
 import { persistentFeedbackEntries } from "./persistent-feedback-entries.js";
+import { reportingEntries } from "./reporting-entries.js";
 
 import { teamAdminEntries } from "./team-admin-entries.js";
 
@@ -22,6 +23,7 @@ const DocumentLibraryPreview = lazy(() => import("./document-library-preview.js"
 const NotificationCenterPreview = lazy(() => import("./notification-center-preview.js").then(module => ({ default: module.NotificationCenterPreview })));
 const NotificationPreferencesPreview = lazy(() => import("./notification-preferences-preview.js").then(module => ({ default: module.NotificationPreferencesPreview })));
 const PersistentFeedbackPreview = lazy(() => import("./persistent-feedback-preview.js").then(module => ({ default: module.PersistentFeedbackPreview })));
+const ReportingPreview = lazy(() => import("./reporting-preview.js").then(module => ({ default: module.ReportingPreview })));
 
 export function RoadmapPreview({ id }: { id: string }) {
   if (id === "file-preview") return <MediaPreviewPreview />;
@@ -37,5 +39,6 @@ export function RoadmapPreview({ id }: { id: string }) {
   if (uploadsEntries.some(entry => entry.id === id)) return <UploadsPreview id={id} />;
   if (commandWizardEntries.some(entry => entry.id === id)) return <CommandWizardPreview id={id} />;
   if (teamAdminEntries.some(entry => entry.id === id)) return <TeamAdminPreview id={id} />;
+  if (reportingEntries.some(entry => entry.id === id)) return <ReportingPreview id={id} />;
   return null;
 }

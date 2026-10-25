@@ -105,6 +105,7 @@ async function smoke(kind, directory) {
     if (kind === "next" && !html.includes("Roadmap package controls")) throw new Error("Next server did not render the roadmap controls and blocks.");
     if (kind === "next" && !html.includes("Document library package controls")) throw new Error("Next server did not render the document library fixture.");
     if (kind === "next" && !html.includes("Packed notification family")) throw new Error("Next server did not render notification exports and copied blocks.");
+    if (kind === "next" && !["Reporting package controls", "Packed reporting dashboard", "Packed monthly activity", "View data table"].every(text => html.includes(text))) throw new Error("Next server did not render the reporting chart and copied dashboard block.");
     if (kind === "next" && !html.includes("Packed primary navigation")) throw new Error("Next server did not render the complete navbar fixture.");
     if (kind === "next" && !html.includes("Packed editable projects")) throw new Error("Next server did not render the independently copied page blocks.");
     if (kind === "vite" && !html.includes('id="root"')) throw new Error("Vite did not serve the package fixture.");
@@ -126,6 +127,8 @@ async function smoke(kind, directory) {
     if (kind === "next" && !html.includes("Team administration package controls")) throw new Error("Next server did not render team administration controls.");
     if (![".pk-notification-list", ".pk-notification-preferences", ".pk-persistent-banner", ".pk-presence-indicator"].every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship notification family styles.`);
     if (![".pk-code-block", ".pk-chat-markdown", ".pk-chat-attachments", ".pk-chat-sources"].every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship rich chat styles.`);
+    const reportingSelectors = [".pk-statistic", ".pk-reporting-controls", ".pk-export-action", ".pk-chart", "--pk-chart-series-1", "--pk-chart-series-6"];
+    if (!reportingSelectors.every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship the reporting styles and chart series tokens.`);
     smokeResult = { httpStatus: response.status, stylesheetCount: stylesheets.length };
   } catch (error) {
     failure = error;
@@ -162,6 +165,9 @@ try {
     for (const required of ["dist/index.js", "dist/index.d.ts", name === "tokens" ? "dist/tokens.css" : "dist/styles.css"]) {
       if (!item.files.some(file => file.path === required)) throw new Error(`${name} package is missing ${required}.`);
     }
+    if (name === "ui") for (const required of ["licenses/d3-shape.txt", "licenses/d3-path.txt"]) {
+      if (!item.files.some(file => file.path === required)) throw new Error(`UI package is missing ${required}.`);
+    }
     tarballs[name] = join(scratch, item.filename);
   }
   for (const kind of ["vite", "next"]) {
@@ -173,6 +179,7 @@ try {
     await cp(join(root, "fixtures", "document-library-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "document-library-fixture.tsx"));
     await cp(join(root, "fixtures", "team-admin-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "team-admin-fixture.tsx"));
     if (!verifyRegistry) await cp(join(root, "registry", "blocks"), join(directory, kind === "next" ? "app" : "", "blocks"), { recursive: true });
+    await cp(join(root, "fixtures", "reporting-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "reporting-fixture.tsx"));
     const manifestPath = join(directory, "package.json");
     const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
     manifest.dependencies["@evenkit/tokens"] = `file:${tarballs.tokens}`;

@@ -119,3 +119,8 @@ export * from "./role-capability-editor.js";
 export * from "./audit-viewer.js";
 export * from "./notifications.js";
 export * from "./persistent-feedback.js";
+export * from "./statistic.js";
+export * from "./reporting.js";
+export type { ChartColor, ChartDatum, ChartSeries, ChartLabels, ChartProps, BarChartProps } from "./chart-types.js";
+export { ChartFrame, ChartLegend, ChartTooltip, ChartDataTable, type ChartFrameProps, type ChartFrameRenderProps, type ChartLegendProps, type ChartTooltipProps, type ChartDataTableProps } from "./chart-frame.js";
+export { LineChart, AreaChart, BarChart, type LineChartProps, type AreaChartProps } from "./charts.js";

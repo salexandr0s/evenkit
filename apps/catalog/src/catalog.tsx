@@ -97,6 +97,9 @@ const navigationIcons: Record<string, ReactNode> = {
   "website-faq": <CircleHelpIcon />, "website-forms": <ContactRoundIcon />,
   "website-article": <FileTextIcon />,
   "rich-chat": <MessageSquareTextIcon />,
+  statistic: <GaugeIcon />, "chart-frame": <LayoutDashboardIcon />,
+  "line-chart": <ActivityIcon />, "bar-chart": <Columns3Icon />,
+  "reporting-controls": <SlidersHorizontalIcon />, dashboard: <LayoutDashboardIcon />,
 };
 
 function selectedFromHash() {

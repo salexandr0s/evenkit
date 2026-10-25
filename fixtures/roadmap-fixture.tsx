@@ -9,6 +9,7 @@ import { OnboardingWizard } from "./blocks/onboarding-wizard";
 import { DocumentLibraryFixture } from "./document-library-fixture";
 import { NotificationCenter } from "./blocks/notification-center";
 import { NotificationPreferences } from "./blocks/notification-preferences";
+import { ReportingFixture } from "./reporting-fixture";
 
 const requiredExports: readonly (keyof typeof Kit)[] = [
   "Calendar", "DateField", "DatePicker", "DateRangePicker", "TimeField",
@@ -43,6 +44,7 @@ export function RoadmapFixture() {
       onOperation={async () => {}} onCommit={() => {}} onLoadPage={async page => ({ page, pageCount: 1, groups: [] })} onPageLoaded={() => {}} />
     <NotificationPreferences contextKey="packed" revision={1} channels={[{ id: "email", label: "Email" }]} categories={[{ id: "mentions", label: "Mentions" }]}
       value={{ mentions: { email: true } }} onSave={async draft => draft} />
+    <ReportingFixture />
     <Kit.Calendar value={date} onValueChange={setDate} today="2026-10-25" />
     <Kit.DatePicker label="Packed deadline" value={date} onValueChange={setDate} today="2026-10-25" />
     <Kit.DateRangePicker label="Packed reporting period" today="2026-10-25" />
