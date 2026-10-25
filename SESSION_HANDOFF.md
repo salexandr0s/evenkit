@@ -1,5 +1,9 @@
 # Session handoff: 25 October 2026
 
+## Latest session: rich chat
+
+**DONE** on `codex/rich-chat` in `/Users/nationalbank/.codex/worktrees/rich-chat/design-tokens`, based on `b588b1b`. N01/N02/N03/H07 are complete. Local commits: `64f3196` (UI and safe rendering) and `363f84b` (catalog, docs and verification). Build, typecheck, lint, 32 unit tests, 11 focused Chromium journeys, 87 copied examples and packed Next/Vite checks passed. No publishing or deployment occurred. See [rich chat handoff](./docs/rich-chat-handoff.md) for evidence, decisions, integration notes and resume commands. Earlier session notes below are retained for the other ongoing work.
+
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
 ## Component accent details: 25 October 2026
