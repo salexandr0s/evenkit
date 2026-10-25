@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Private repository and production deployment: 25 October 2026
+
+Committed all remaining navigation and catalog design changes as `f2eff93` and `20d89eb`. Created the private GitHub repository `https://github.com/salexandr0s/evenkit`, added it as `origin`, and pushed all three local branches with upstream tracking. The default branch is `codex/component-improvements`; `main` and `codex/auth-pages` retain their existing histories. The concurrent sidebar fix `d8dfd23` is also pushed.
+
+Production is live at `https://evenkit.dev` and `https://www.evenkit.dev`. Deployment `dpl_BpM2DTiz5MM2MH3UETMKDEEuX6Uw` is READY at `https://evenkit-6ol25r9wc-blockconsult.vercel.app`, built from clean source commit `d8dfd238036a514b7904af0f3220699c5be240ed`. It uses the existing Block Consult GmbH project `evenkit`, ID `prj_5K4UrqWVGwIWPIxGYAe8OkwfpxBW`. The Vercel connector lacks access to this team; the authorized local CLI session deployed successfully with explicit scope `blockconsult`.
+
+Reused the applicable build, type, lint, unit, browser and packed-consumer verification recorded below. Vercel completed a fresh production build. Live Chromium checks confirmed the 86-entry catalog, calendar month navigation and remote table at 1440/360px without runtime errors or horizontal overflow. A final production check confirmed the sidebar handle stays at y=468 after scrolling 300px in a 1000px-high viewport. Evidence is in `.artifacts/repository-publish/`. This handoff-only commit is excluded from deployment by `.vercelignore`.
+
+No requested work remains. Resume with `git status --short`, `git remote -v` and `git log -4 --oneline`. Deploy future changes from this checkout with `vercel deploy --prod --scope blockconsult`; automatic Git deployment was not configured. The package artifacts remain unpublished.
+
 ## Sidebar resize handle: 25 October 2026
 
 Fixed the resize handle moving upward with the main content. In `packages/ui/src/admin-shell.css`, its sticky top offset now matches its initial position at the sidebar midpoint. Before the fix, scrolling 300px moved the handle from y=448 to y=148 while the sidebar remained at y=0. After the fix, the handle stays at y=448 throughout the 960px-high page, including at the bottom. Confidence in the localized CSS fix is high.
