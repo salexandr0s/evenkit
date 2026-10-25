@@ -6,6 +6,7 @@ import "./token-preview.css";
 const categories = [
   { value: "all", label: "All tokens", description: "Every resolved CSS variable in the selected theme." },
   { value: "color", label: "Semantic colors", description: "Use these roles in components. Their values follow the selected theme and appearance." },
+  { value: "chart", label: "Chart series", description: "Six series colors for chart graphics. Pair each with a series name and a marker, dash or pattern." },
   { value: "palette", label: "Palette", description: "Raw color scales stay the same across themes. Use semantic colors for component states and content." },
   { value: "space", label: "Spacing", description: "A shared scale for padding, gaps, and margins. Samples show each spacing value at its actual size." },
   { value: "font", label: "Typography", description: "Font families, sizes, weights, and presets for readable text and consistent hierarchy." },
@@ -18,7 +19,7 @@ type Category = (typeof categories)[number]["value"];
 
 function categoryFor(name: string): Category {
   const token = name.slice("--pk-".length);
-  for (const prefix of ["color", "palette", "space", "font", "motion"] as const) {
+  for (const prefix of ["color", "chart", "palette", "space", "font", "motion"] as const) {
     if (token.startsWith(`${prefix}-`)) return prefix;
   }
   if (/^(radius|shadow|border-width)-/.test(token)) return "shape";
@@ -32,7 +33,7 @@ function TokenSample({ name, value }: { name: string; value: string }) {
   let style: CSSProperties = {};
   let content = "·";
 
-  if (name.startsWith("--pk-color-") || name.startsWith("--pk-palette-")) {
+  if (name.startsWith("--pk-color-") || name.startsWith("--pk-chart-series-") || name.startsWith("--pk-palette-")) {
     kind = "color";
     style = { backgroundColor: variable };
     content = "";

@@ -99,3 +99,8 @@ export * from "./upload-queue.js";
 export * from "./image.js";
 export * from "./command-palette.js";
 export * from "./step-indicator.js";
+export * from "./statistic.js";
+export * from "./reporting.js";
+export type { ChartColor, ChartDatum, ChartSeries, ChartLabels, ChartProps, BarChartProps } from "./chart-types.js";
+export { ChartFrame, ChartLegend, ChartTooltip, ChartDataTable, type ChartFrameProps, type ChartFrameRenderProps, type ChartLegendProps, type ChartTooltipProps, type ChartDataTableProps } from "./chart-frame.js";
+export { LineChart, AreaChart, BarChart, type LineChartProps, type AreaChartProps } from "./charts.js";

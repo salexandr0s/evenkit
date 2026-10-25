@@ -5,6 +5,7 @@ import { remoteTableEntries } from "./remote-table-entries.js";
 import { accountRecordEntries } from "./account-record-entries.js";
 import { uploadsEntries } from "./uploads-entries.js";
 import { commandWizardEntries } from "./command-wizard-entries.js";
+import { reportingEntries } from "./reporting-entries.js";
 
 export const roadmapEntries: readonly CatalogEntry[] = [
   ...datesEntries,
@@ -13,4 +14,5 @@ export const roadmapEntries: readonly CatalogEntry[] = [
   ...accountRecordEntries,
   ...uploadsEntries,
   ...commandWizardEntries,
+  ...reportingEntries,
 ];

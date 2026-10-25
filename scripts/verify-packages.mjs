@@ -99,6 +99,7 @@ async function smoke(kind, directory) {
     if (kind === "next" && !html.includes("Package assistant")) throw new Error("Next server did not render the client chat fixture.");
     if (kind === "next" && !html.includes("Priority package controls")) throw new Error("Next server did not render the new priority control families.");
     if (kind === "next" && !html.includes("Roadmap package controls")) throw new Error("Next server did not render the roadmap controls and blocks.");
+    if (kind === "next" && !["Reporting package controls", "Packed reporting dashboard", "Packed monthly activity", "View data table"].every(text => html.includes(text))) throw new Error("Next server did not render the reporting chart and copied dashboard block.");
     if (kind === "next" && !html.includes("Packed primary navigation")) throw new Error("Next server did not render the complete navbar fixture.");
     if (kind === "next" && !html.includes("Packed editable projects")) throw new Error("Next server did not render the independently copied page blocks.");
     if (kind === "vite" && !html.includes('id="root"')) throw new Error("Vite did not serve the package fixture.");
@@ -114,6 +115,8 @@ async function smoke(kind, directory) {
     }
     const roadmapSelectors = [".pk-calendar", ".pk-date-range", ".pk-multi-field", ".pk-number-field", ".pk-sort-control", ".pk-activity-timeline", ".pk-settings-layout", ".pk-upload-queue", ".pk-image", ".pk-command", ".pk-step-indicator"];
     if (!roadmapSelectors.every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship the roadmap styles.`);
+    const reportingSelectors = [".pk-statistic", ".pk-reporting-controls", ".pk-export-action", ".pk-chart", "--pk-chart-series-1", "--pk-chart-series-6"];
+    if (!reportingSelectors.every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship the reporting styles and chart series tokens.`);
     smokeResult = { httpStatus: response.status, stylesheetCount: stylesheets.length };
   } catch (error) {
     failure = error;
@@ -149,6 +152,9 @@ try {
     for (const required of ["dist/index.js", "dist/index.d.ts", name === "tokens" ? "dist/tokens.css" : "dist/styles.css"]) {
       if (!item.files.some(file => file.path === required)) throw new Error(`${name} package is missing ${required}.`);
     }
+    if (name === "ui") for (const required of ["licenses/d3-shape.txt", "licenses/d3-path.txt"]) {
+      if (!item.files.some(file => file.path === required)) throw new Error(`UI package is missing ${required}.`);
+    }
     tarballs[name] = join(scratch, item.filename);
   }
   for (const kind of ["vite", "next"]) {
@@ -157,6 +163,7 @@ try {
     await cp(join(root, "fixtures", kind), directory, { recursive: true });
     await cp(join(root, "fixtures", "priority-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "priority-fixture.tsx"));
     await cp(join(root, "fixtures", "roadmap-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "roadmap-fixture.tsx"));
+    await cp(join(root, "fixtures", "reporting-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "reporting-fixture.tsx"));
     await cp(join(root, "registry", "blocks"), join(directory, kind === "next" ? "app" : "", "blocks"), { recursive: true });
     const manifestPath = join(directory, "package.json");
     const manifest = JSON.parse(await readFile(manifestPath, "utf8"));

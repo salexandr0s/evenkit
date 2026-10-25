@@ -5,6 +5,7 @@ import { remoteTableEntries } from "./remote-table-entries.js";
 import { accountRecordEntries } from "./account-record-entries.js";
 import { uploadsEntries } from "./uploads-entries.js";
 import { commandWizardEntries } from "./command-wizard-entries.js";
+import { reportingEntries } from "./reporting-entries.js";
 
 const DatesPreview = lazy(() => import("./dates-preview.js").then(module => ({ default: module.DatesPreview })));
 const ValueFieldsPreview = lazy(() => import("./value-fields-preview.js").then(module => ({ default: module.ValueFieldsPreview })));
@@ -12,6 +13,7 @@ const RemoteTablePreview = lazy(() => import("./remote-table-preview.js").then(m
 const AccountRecordPreview = lazy(() => import("./account-record-preview.js").then(module => ({ default: module.AccountRecordPreview })));
 const UploadsPreview = lazy(() => import("./uploads-preview.js").then(module => ({ default: module.UploadsPreview })));
 const CommandWizardPreview = lazy(() => import("./command-wizard-preview.js").then(module => ({ default: module.CommandWizardPreview })));
+const ReportingPreview = lazy(() => import("./reporting-preview.js").then(module => ({ default: module.ReportingPreview })));
 
 export function RoadmapPreview({ id }: { id: string }) {
   if (datesEntries.some(entry => entry.id === id)) return <DatesPreview id={id} />;
@@ -20,5 +22,6 @@ export function RoadmapPreview({ id }: { id: string }) {
   if (accountRecordEntries.some(entry => entry.id === id)) return <AccountRecordPreview id={id} />;
   if (uploadsEntries.some(entry => entry.id === id)) return <UploadsPreview id={id} />;
   if (commandWizardEntries.some(entry => entry.id === id)) return <CommandWizardPreview id={id} />;
+  if (reportingEntries.some(entry => entry.id === id)) return <ReportingPreview id={id} />;
   return null;
 }
