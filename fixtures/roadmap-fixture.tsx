@@ -4,6 +4,7 @@ import { useState } from "react";
 import * as Kit from "@evenkit/ui";
 import { RecordDetail } from "./blocks/record-detail";
 import { ProfileSettings, AppearanceSettings } from "./blocks/account-settings";
+import { TeamAdminFixture } from "./team-admin-fixture";
 import { OnboardingWizard } from "./blocks/onboarding-wizard";
 
 const requiredExports: readonly (keyof typeof Kit)[] = [
@@ -26,6 +27,7 @@ export function RoadmapFixture() {
   for (const name of requiredExports) if (Kit[name] === undefined) throw new Error(`Missing roadmap export: ${name}`);
   return <Kit.Stack aria-label="Packed roadmap controls">
     <h2>Roadmap package controls</h2>
+    <TeamAdminFixture />
     <Kit.Calendar value={date} onValueChange={setDate} today="2026-10-25" />
     <Kit.DatePicker label="Packed deadline" value={date} onValueChange={setDate} today="2026-10-25" />
     <Kit.DateRangePicker label="Packed reporting period" today="2026-10-25" />

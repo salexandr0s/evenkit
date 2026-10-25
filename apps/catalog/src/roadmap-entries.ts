@@ -6,6 +6,8 @@ import { accountRecordEntries } from "./account-record-entries.js";
 import { uploadsEntries } from "./uploads-entries.js";
 import { commandWizardEntries } from "./command-wizard-entries.js";
 
+import { teamAdminEntries } from "./team-admin-entries.js";
+
 export const roadmapEntries: readonly CatalogEntry[] = [
   ...datesEntries,
   ...valueFieldsEntries,
@@ -13,4 +15,5 @@ export const roadmapEntries: readonly CatalogEntry[] = [
   ...accountRecordEntries,
   ...uploadsEntries,
   ...commandWizardEntries,
+  ...teamAdminEntries,
 ];

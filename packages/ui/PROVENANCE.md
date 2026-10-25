@@ -73,3 +73,9 @@ DataTable now consumes the public Checkbox and Pagination rather than maintainin
 The 24-item roadmap adds original calendar arithmetic and keyboard navigation, date/time controls, Intl formatting, multi-value and number fields, remote table controls, activity and settings compositions, upload queues, images, command search and wizard progress. It adds no runtime dependencies. MultiSelect uses the existing Base UI Combobox; date and workspace popups use the existing Radix Popover; command search uses the existing Dialog. Calendar dates remain separate from zoned timestamps, and number drafts remain separate from stored numeric values.
 
 The upload queue receives a host transport and protects each attempt from stale callbacks. Command search accepts a host search callback. The additional `record-detail`, `account-settings` and `onboarding-wizard` blocks are distributed as source alongside the existing blocks; applications own data validation, storage, authentication, navigation and network services. The catalog uses fictional local records and simulated requests.
+
+## Team administration
+
+`TeamMembers`, `InvitationAcceptance`, `RoleCapabilityEditor` and `AuditViewer` are original kit compositions. They reuse the existing remote DataTable, fields, dialogs, checkboxes, settings layout and ActivityTimeline. The editable team, invitation, role and audit blocks in `registry/blocks` are original source recipes. Their catalog data and simulated host operations are fictional.
+
+This addition introduces no runtime or development dependencies and copies no third-party component source. It continues to use the installed React, Radix and TanStack dependencies and their existing notices under `licenses/`. The package manifest and lockfile remain unchanged. The [team administration guide](../../docs/team-administration.md) documents the application boundary, action lifecycle and integration examples.
