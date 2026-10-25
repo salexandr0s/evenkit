@@ -2,6 +2,14 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Homepage copy cleanup: 25 October 2026
+
+Applied the requested `avoid-ai-writing` pass to homepage text. The hero now reads "React components and design tokens." Replaced vague theme, library, setup and footer wording, shortened the introduction, and made the demo instructions and checklist labels specific. Only ten selected copy spans in `apps/catalog/src/homepage.tsx` changed; component behavior, links, IDs and styling are preserved.
+
+One editing pass completed, with no further justified copy changes found on review. The skill's quote normalizer and detector ran on changed prose; the detector reported no findings. An exact reverse comparison confirmed no source edits outside the selected spans. Catalog build, TypeScript and focused ESLint passed. Chromium checks and screenshots at 1440/360px confirmed the new heading, working checklist, no horizontal overflow and no runtime errors. Evidence: `.artifacts/homepage/copy-desktop.png`, `copy-mobile.png` and `copy-build.log`. No new tests were added for copy changes.
+
+The rebuilt preview is at `http://127.0.0.1:5390/`; refresh an already-open tab to see it. No remaining work for this copy request. Changes are local and have not been deployed. Resume with `git status --short` and `git log -2 --oneline`.
+
 ## Homepage and default landing page: 25 October 2026
 
 Completed the homepage goal. The root URL now opens a dedicated Evenkit homepage with an interactive project form and checklist, eight theme choices, links into the component library, and copyable starter code. Existing component URLs such as `/#buttons`, `/#themes` and `/#tokens` still open the catalog. Catalog branding returns to `/`; theme, appearance and sidebar preferences retain their existing storage keys. The homepage accurately describes the packages as unpublished pilots.

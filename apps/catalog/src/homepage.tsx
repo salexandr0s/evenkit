@@ -55,7 +55,7 @@ function ProjectSpecimen() {
       <div className="home-project-card">
         <div className="home-project-heading"><span className="home-project-icon"><PlusIcon /></span><Badge variant="outline" size="sm">Preview</Badge></div>
         <h2>New project</h2>
-        <p>Give your next idea a place to start.</p>
+        <p>Name the project and choose who can see it.</p>
         <form onSubmit={event => {
           event.preventDefault();
           if (!projectName.trim()) {
@@ -76,10 +76,10 @@ function ProjectSpecimen() {
       </div>
       <div className="home-checklist-card">
         <div className="home-checklist-heading"><h3>Launch checklist</h3><span>{complete} of 3</span></div>
-        {["Choose a direction", "Build the first screen", "Make it your own"].map((label, index) => (
+        {["Choose a theme", "Build the first screen", "Check keyboard navigation"].map((label, index) => (
           <Checkbox key={label} label={label} checked={tasks[index]} onCheckedChange={checked => setTasks(current => current.map((value, position) => position === index ? checked === true : value))} />
         ))}
-        <div className="home-checklist-footer"><AvatarGroup label="Example team" size="sm" avatars={[{ name: "Alex Morgan" }, { name: "Sam Rivera" }, { name: "Jamie Chen" }]} /><Badge tone={complete === 3 ? "success" : "accent"} dot>{complete === 3 ? "Ready to go" : "In progress"}</Badge></div>
+        <div className="home-checklist-footer"><AvatarGroup label="Example team" size="sm" avatars={[{ name: "Alex Morgan" }, { name: "Sam Rivera" }, { name: "Jamie Chen" }]} /><Badge tone={complete === 3 ? "success" : "accent"} dot>{complete === 3 ? "Complete" : "In progress"}</Badge></div>
       </div>
     </div>
     <div className="home-specimen-footnote"><CodeXmlIcon size="sm" /><span>Built with the same components you can browse.</span></div>
@@ -106,8 +106,8 @@ export function Homepage({ theme, mode, onThemeChange, onToggleAppearance }: Hom
       <section className="home-hero home-container" aria-labelledby="home-title">
         <div className="home-hero-copy">
           <p className="home-eyebrow"><span className="home-live-dot" />THE EVENKIT COMPONENT LIBRARY</p>
-          <h1 id="home-title">React interfaces,<br /><span>thoughtfully assembled.</span></h1>
-          <p className="home-hero-description">A shared set of tokens, components and layouts for your next app. Explore the details, try the interactions, and make it your own.</p>
+          <h1 id="home-title">React components<br /><span>and design tokens.</span></h1>
+          <p className="home-hero-description">Design tokens, form controls and layouts for React apps. Try the live examples and copy their usage code.</p>
           <div className="home-hero-actions"><ButtonLink size="lg" href="/#buttons" endIcon={<ArrowRightIcon />}>Browse components</ButtonLink><a className="home-text-link" href="#home-start">Start building <ArrowRightIcon size="sm" /></a></div>
           <p className="home-hero-note">React 19 <span aria-hidden="true">/</span> TypeScript <span aria-hidden="true">/</span> Ordinary CSS</p>
         </div>
@@ -116,7 +116,7 @@ export function Homepage({ theme, mode, onThemeChange, onToggleAppearance }: Hom
 
       <section className="home-theme-section" id="home-themes" aria-labelledby="home-themes-title">
         <div className="home-container home-theme-layout">
-          <div className="home-theme-intro"><h2 id="home-themes-title">Same components.<br />Your palette.</h2><p>Choose a theme to change this page.</p></div>
+          <div className="home-theme-intro"><h2 id="home-themes-title">Eight color<br />themes</h2><p>Choose a theme to change this page.</p></div>
           <div className="home-palette-group" role="group" aria-label="Choose a theme">
             {themeNames.map(name => <button key={name} className="home-palette" type="button" aria-label={`Apply ${themes[name].name}`} aria-pressed={theme === name} onClick={() => onThemeChange(name)}>
               <span className="home-palette-swatch" style={{ backgroundColor: themes[name].modes[mode].accent }} aria-hidden="true">{theme === name && <CheckIcon size="sm" style={{ color: themes[name].modes[mode]["on-accent"] }} />}</span>
@@ -128,7 +128,7 @@ export function Homepage({ theme, mode, onThemeChange, onToggleAppearance }: Hom
       </section>
 
       <section className="home-collections home-container" id="home-components" aria-labelledby="home-components-title">
-        <div className="home-section-heading"><div><p className="home-eyebrow">EXPLORE THE LIBRARY</p><h2 id="home-components-title">From the first field<br />to the full page.</h2></div><p>86 examples, with live previews and usage code.<br />Find the pieces your project needs.</p></div>
+        <div className="home-section-heading"><div><p className="home-eyebrow">EXPLORE THE LIBRARY</p><h2 id="home-components-title">Browse the<br />component library</h2></div><p>86 examples with live previews and usage code.</p></div>
         <div className="home-collection-grid">{collections.map(collection => <article className="home-collection" key={collection.number}>
           <div className="home-collection-top"><span>{collection.number}</span>{collection.icon}</div>
           <h3>{collection.name}</h3><p>{collection.description}</p>
@@ -137,11 +137,11 @@ export function Homepage({ theme, mode, onThemeChange, onToggleAppearance }: Hom
       </section>
 
       <section className="home-start home-container" id="home-start" aria-labelledby="home-start-title">
-        <div className="home-start-copy"><p className="home-eyebrow">BUILD WITH EVENKIT</p><h2 id="home-start-title">Take it into<br />your project.</h2><p>Import the styles, add a component, and connect your own state. Every example in the catalog includes code you can copy.</p><p className="home-pilot-note"><Badge variant="outline" size="sm">Pilot 0.1.0</Badge>The packages are currently unpublished. With repository access, build and pack <code>@evenkit/tokens</code> and <code>@evenkit/ui</code> locally using the README instructions.</p><a className="home-text-link" href="/#buttons">See a complete example <ArrowRightIcon size="sm" /></a></div>
+        <div className="home-start-copy"><p className="home-eyebrow">BUILD WITH EVENKIT</p><h2 id="home-start-title">Use Evenkit<br />in your project</h2><p>Import the styles, add a component, and connect your own state. Every example in the catalog includes code you can copy.</p><p className="home-pilot-note"><Badge variant="outline" size="sm">Pilot 0.1.0</Badge>The packages are currently unpublished. With repository access, build and pack <code>@evenkit/tokens</code> and <code>@evenkit/ui</code> locally using the README instructions.</p><a className="home-text-link" href="/#buttons">See a complete example <ArrowRightIcon size="sm" /></a></div>
         <div className="home-code-panel"><div className="home-code-header"><span><CodeXmlIcon size="sm" />App.tsx</span><CopyAction text={starterCode} size="sm" variant="ghost">Copy code</CopyAction></div><pre tabIndex={0} aria-label="React starter example"><code>{starterCode}</code></pre><p>Import token styles before component styles.</p></div>
       </section>
     </main>
 
-    <footer className="home-footer home-container"><a className="home-brand" href="/" aria-label="Evenkit home"><span className="home-brand-mark" aria-hidden="true" /><span>Evenkit</span></a><p>Components, with a common language.</p><nav aria-label="Footer navigation"><a href="/#tokens">Tokens</a><a href="/#themes">Themes</a><a href="/#buttons">Catalog <ArrowRightIcon size="sm" /></a></nav></footer>
+    <footer className="home-footer home-container"><a className="home-brand" href="/" aria-label="Evenkit home"><span className="home-brand-mark" aria-hidden="true" /><span>Evenkit</span></a><p>Version 0.1.0 · Pilot</p><nav aria-label="Footer navigation"><a href="/#tokens">Tokens</a><a href="/#themes">Themes</a><a href="/#buttons">Catalog <ArrowRightIcon size="sm" /></a></nav></footer>
   </div>;
 }
