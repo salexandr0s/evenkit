@@ -150,6 +150,22 @@ export const foundation = {
     "tooltip": 100
   },
   "palette": {
+    "chart": {
+      "light": {
+        "teal": "#0F766E",
+        "ochre": "#8A5A00",
+        "violet": "#8B5FBF",
+        "coral": "#BA4A2E",
+        "slate": "#52687A"
+      },
+      "dark": {
+        "teal": "#5ED3C6",
+        "ochre": "#E9BE64",
+        "violet": "#BAA0E5",
+        "coral": "#F18F75",
+        "slate": "#A5BACA"
+      }
+    },
     "neutral": {
       "0": "#FFFFFF",
       "50": "#FAFAFA",
@@ -262,6 +278,9 @@ export const foundation = {
   "opacity": {
     "disabled": 0.55,
     "skeleton": 0.55
+  },
+  "chart": {
+    "areaOpacity": 0.16
   },
   "spinner": {
     "size": "16px"

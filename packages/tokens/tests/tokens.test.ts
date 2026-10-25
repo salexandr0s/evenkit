@@ -52,7 +52,7 @@ describe("theme trust boundary", () => {
   });
 
   it("keeps built-in themes neutral outside their distinct accents", () => {
-    const accentRoles = new Set(["accent", "accent-hover", "on-accent", "accent-soft", "ring"]);
+    const accentRoles = new Set(["accent", "accent-hover", "on-accent", "accent-soft", "ring", "chart-series-1"]);
     for (const mode of colorModes) {
       const sharedColors = Object.entries(themes.neutral.modes[mode]).filter(([role]) => !accentRoles.has(role));
       for (const name of themeNames) {
@@ -87,6 +87,31 @@ describe("theme trust boundary", () => {
       expect(result.error.issues.some((issue) => issue.path.join(".") === "modes.dark.fg" && issue.message.includes("accent-soft"))).toBe(true);
     }
     expect(() => createBrandCss(input)).toThrow();
+  });
+
+  it("requires safe chart colors and validates every series on plotting surfaces", () => {
+    for (const role of ["chart-series-1", "chart-series-2", "chart-series-3", "chart-series-4", "chart-series-5", "chart-series-6"] as const) {
+      const base = structuredClone(themes.neutral);
+      const incomplete: Partial<typeof base.modes.light> = { ...base.modes.light };
+      delete incomplete[role];
+      expect(brandSchema.safeParse({ ...base, modes: { ...base.modes, light: incomplete } }).success).toBe(false);
+      for (const value of ["var(--unsafe)", "#FFFFFF"]) {
+        expect(brandSchema.safeParse({
+          ...base,
+          modes: { ...base.modes, light: { ...base.modes.light, [role]: value } },
+        }).success).toBe(false);
+      }
+      for (const name of themeNames) {
+        for (const mode of colorModes) {
+          const colors = themes[name].modes[mode];
+          expect(cssVariables(name, mode)[`--pk-${role}`]).toBe(colors[role]);
+          if (role === "chart-series-1") expect(colors[role]).toBe(colors.accent);
+          for (const background of ["bg", "bg-muted", "surface", "surface-elevated"] as const) {
+            expect(contrastChecks).toContainEqual({ foreground: role, background, minimum: 3 });
+          }
+        }
+      }
+    }
   });
 
   it("rejects unreadable secondary text and inset focus rings on selected surfaces", () => {

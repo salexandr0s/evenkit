@@ -1,7 +1,7 @@
 import { foundation } from "./foundation.js";
 import { brandSchema, type Brand } from "./schema.js";
 
-const { neutral, blue, green, red, amber } = foundation.palette;
+const { neutral, blue, green, red, amber, chart } = foundation.palette;
 const light = {
   bg: neutral[0],
   "bg-muted": neutral[50],
@@ -24,6 +24,12 @@ const light = {
   success: green[800],
   "success-bg": green[50],
   ring: blue[700],
+  "chart-series-1": blue[700],
+  "chart-series-2": chart.light.teal,
+  "chart-series-3": chart.light.ochre,
+  "chart-series-4": chart.light.violet,
+  "chart-series-5": chart.light.coral,
+  "chart-series-6": chart.light.slate,
   overlay: "rgba(0,0,0,0.40)",
 };
 const dark = {
@@ -48,6 +54,12 @@ const dark = {
   success: green[300],
   "success-bg": green[900],
   ring: blue[300],
+  "chart-series-1": blue[300],
+  "chart-series-2": chart.dark.teal,
+  "chart-series-3": chart.dark.ochre,
+  "chart-series-4": chart.dark.violet,
+  "chart-series-5": chart.dark.coral,
+  "chart-series-6": chart.dark.slate,
   overlay: "rgba(0,0,0,0.55)",
 };
 
@@ -75,8 +87,8 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
     name: "Grove",
     description: "Green accents and soft highlights on neutral surfaces.",
     modes: {
-      light: { ...light, accent: green[800], "accent-hover": green[900], "accent-soft": "#E0F2E6", ring: green[800] },
-      dark: { ...dark, accent: green[300], "accent-hover": green[200], "accent-soft": "#123A24", ring: green[300] },
+      light: { ...light, accent: green[800], "accent-hover": green[900], "accent-soft": "#E0F2E6", ring: green[800], "chart-series-1": green[800] },
+      dark: { ...dark, accent: green[300], "accent-hover": green[200], "accent-soft": "#123A24", ring: green[300], "chart-series-1": green[300] },
     },
   }),
   graphite: brandSchema.parse({
@@ -91,6 +103,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#FFFFFF",
         "accent-soft": "#E5E5E5",
         ring: "#3D3D3D",
+        "chart-series-1": "#3D3D3D",
       },
       dark: {
         ...dark,
@@ -99,6 +112,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#191919",
         "accent-soft": "#333333",
         ring: "#DEDEDE",
+        "chart-series-1": "#DEDEDE",
       },
     },
   }),
@@ -115,6 +129,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#FFFFFF",
         "accent-soft": "#E9E1CD",
         ring: "#665934",
+        "chart-series-1": "#665934",
       },
       dark: {
         ...dark,
@@ -123,6 +138,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#282217",
         "accent-soft": "#393222",
         ring: "#D5C18D",
+        "chart-series-1": "#D5C18D",
       },
     },
   }),
@@ -138,6 +154,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#FFFFFF",
         "accent-soft": "#DCEDEF",
         ring: "#0C626F",
+        "chart-series-1": "#0C626F",
       },
       dark: {
         ...dark,
@@ -146,6 +163,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#102C34",
         "accent-soft": "#193740",
         ring: "#80CBD1",
+        "chart-series-1": "#80CBD1",
       },
     },
   }),
@@ -161,6 +179,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#FFFFFF",
         "accent-soft": "#E9DFF2",
         ring: "#6C478B",
+        "chart-series-1": "#6C478B",
       },
       dark: {
         ...dark,
@@ -169,6 +188,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#2B163C",
         "accent-soft": "#3F2A4D",
         ring: "#CFACF0",
+        "chart-series-1": "#CFACF0",
       },
     },
   }),
@@ -184,6 +204,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#FFFFFF",
         "accent-soft": "#F0DFD3",
         ring: "#914525",
+        "chart-series-1": "#914525",
       },
       dark: {
         ...dark,
@@ -192,6 +213,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#3A2113",
         "accent-soft": "#452D1D",
         ring: "#E7B18C",
+        "chart-series-1": "#E7B18C",
       },
     },
   }),
@@ -207,6 +229,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#FFFFFF",
         "accent-soft": "#F1DFE7",
         ring: "#934362",
+        "chart-series-1": "#934362",
       },
       dark: {
         ...dark,
@@ -215,6 +238,7 @@ export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
         "on-accent": "#381C29",
         "accent-soft": "#492A3A",
         ring: "#E8A4C1",
+        "chart-series-1": "#E8A4C1",
       },
     },
   }),
