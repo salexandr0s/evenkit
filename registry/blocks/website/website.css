@@ -1,0 +1,124 @@
+/* Editable website composition styles. Load after @evenkit/ui/css. */
+.pk-website-section,
+.pk-website-footer {
+  box-sizing: border-box;
+  container: pk-website / inline-size;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  padding: var(--pk-space-12) var(--pk-space-6);
+  color: var(--pk-color-fg);
+  background: var(--pk-color-bg);
+  font-family: var(--pk-font-family-sans);
+  font-size: var(--pk-font-size-base);
+  line-height: var(--pk-font-line-height-normal);
+  overflow-wrap: anywhere;
+}
+.pk-website-section :where(figure) { margin: 0; }
+.pk-website-section :where(figcaption) {
+  margin-block-start: var(--pk-space-3);
+  color: var(--pk-color-fg-muted);
+  font-size: var(--pk-font-size-sm);
+}
+.pk-website-section :where(img, video, iframe, svg) { max-inline-size: 100%; }
+.pk-website-section-intro { margin-block-end: var(--pk-space-8); }
+.pk-website-description { color: var(--pk-color-fg-muted); }
+.pk-website-eyebrow {
+  margin: 0;
+  color: var(--pk-color-accent);
+  font-size: var(--pk-font-size-sm);
+  font-weight: var(--pk-font-weight-medium);
+  line-height: var(--pk-font-line-height-snug);
+}
+.pk-website-hero-layout { display: grid; gap: var(--pk-space-8); align-items: center; }
+.pk-website-hero-copy { max-inline-size: var(--pk-layout-reading); }
+.pk-website-hero .pk-heading { text-wrap: balance; }
+.pk-website-hero-layout > *,
+.pk-website-media > *,
+.pk-website-alternating-item > *,
+.pk-website-cta-layout > *,
+.pk-website-footer-main > * { min-inline-size: 0; max-inline-size: 100%; }
+.pk-website-media { min-inline-size: 0; }
+.pk-website-media .pk-image { border-radius: var(--pk-radius-lg); }
+.pk-website-actions { display: flex; flex-wrap: wrap; gap: var(--pk-space-3); align-items: center; }
+.pk-website-actions > * { min-inline-size: 0; max-inline-size: 100%; }
+.pk-website-actions :where(.pk-button) { white-space: normal; text-align: center; }
+.pk-website-link {
+  color: var(--pk-color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: var(--pk-border-width-hairline);
+  text-underline-offset: var(--pk-space-1);
+  border-radius: var(--pk-radius-sm);
+}
+.pk-website-link:hover { text-decoration-thickness: var(--pk-border-width-thick); }
+.pk-website-link:focus-visible,
+.pk-website-footer :where(summary):focus-visible {
+  outline: var(--pk-border-width-thick) solid var(--pk-color-ring);
+  outline-offset: var(--pk-space-0-5);
+}
+.pk-website-features {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--pk-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pk-website-feature { display: grid; align-content: start; gap: var(--pk-space-4); min-inline-size: 0; }
+.pk-website-feature-icon { display: inline-flex; color: var(--pk-color-accent); }
+.pk-website-features[data-presentation="list"] { gap: 0; }
+.pk-website-features[data-presentation="list"] > .pk-website-feature {
+  padding-block: var(--pk-space-6);
+  border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border);
+}
+.pk-website-alternating { display: grid; gap: var(--pk-space-12); }
+.pk-website-alternating-item { display: grid; gap: var(--pk-space-6); align-items: center; }
+.pk-website-cta {
+  border-block: var(--pk-border-width-hairline) solid var(--pk-color-border);
+  background: var(--pk-color-bg-muted);
+}
+.pk-website-cta-layout { display: grid; gap: var(--pk-space-6); align-items: center; }
+.pk-website-faq .pk-accordion-content > .pk-prose { padding-block: var(--pk-space-1); }
+.pk-website-footer { border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.pk-website-footer-main { display: grid; gap: var(--pk-space-8); }
+.pk-website-footer-brand { max-inline-size: var(--pk-layout-form); }
+.pk-website-footer-group ul { display: grid; gap: var(--pk-space-3); margin: var(--pk-space-4) 0 0; padding: 0; list-style: none; }
+.pk-website-footer-group .pk-heading { font-size: var(--pk-font-size-sm); }
+.pk-website-footer :where(a) {
+  color: var(--pk-color-fg);
+  text-decoration-thickness: var(--pk-border-width-hairline);
+  text-underline-offset: var(--pk-space-1);
+  border-radius: var(--pk-radius-sm);
+}
+.pk-website-footer :where(a):hover { color: var(--pk-color-accent); text-decoration-thickness: var(--pk-border-width-thick); }
+.pk-website-footer :where(a):focus-visible,
+.pk-website-section:focus-visible {
+  outline: var(--pk-border-width-thick) solid var(--pk-color-ring);
+  outline-offset: var(--pk-space-0-5);
+}
+.pk-website-footer-bottom {
+  margin-block-start: var(--pk-space-8);
+  padding-block-start: var(--pk-space-6);
+  border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border);
+  color: var(--pk-color-fg-muted);
+  font-size: var(--pk-font-size-sm);
+}
+.pk-website-footer-bottom :where(p) { margin: 0; }
+@container pk-website (min-width: 640px) {
+  .pk-website-features[data-presentation="grid"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pk-website-footer-main { grid-template-columns: repeat(auto-fit, minmax(var(--pk-layout-sidebar), 1fr)); }
+}
+@container pk-website (min-width: 768px) {
+  .pk-website-hero[data-variant="media"] > .pk-website-hero-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pk-website-features[data-presentation="list"] > .pk-website-feature { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--pk-space-8); }
+  .pk-website-alternating-item { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--pk-space-8); }
+  .pk-website-alternating-item:nth-child(even) > .pk-website-alternating-copy { grid-column: 2; grid-row: 1; }
+  .pk-website-alternating-item:nth-child(even) > .pk-website-media { grid-column: 1; grid-row: 1; }
+  .pk-website-cta-layout { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--pk-space-8); }
+}
+@container pk-website (min-width: 1024px) {
+  .pk-website-features[data-presentation="grid"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+/* Breakpoints match the kit foundation; narrower embedded previews use the container rules above. */
+@media (max-width: 639px) {
+  .pk-website-section, .pk-website-footer { padding: var(--pk-space-8) var(--pk-space-4); }
+}

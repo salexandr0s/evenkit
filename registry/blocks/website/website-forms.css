@@ -1,0 +1,29 @@
+.pk-website-form {
+  container: pk-website-form / inline-size;
+  display: grid;
+  gap: var(--pk-space-6);
+  min-inline-size: 0;
+  color: var(--pk-color-fg);
+  font-family: var(--pk-font-family-sans);
+  line-height: var(--pk-font-line-height-normal);
+  overflow-wrap: anywhere;
+}
+.pk-website-form-header { display: grid; gap: var(--pk-space-3); }
+.pk-website-form-description { max-inline-size: var(--pk-layout-prose); color: var(--pk-color-fg-muted); }
+.pk-website-form-description > :first-child { margin-block-start: 0; }
+.pk-website-form-description > :last-child { margin-block-end: 0; }
+.pk-website-form-fields { min-inline-size: 0; margin: 0; padding: 0; border: 0; }
+.pk-website-form-pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--pk-space-4); }
+.pk-website-form-label { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: var(--pk-space-2); }
+.pk-website-form-cue { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-regular); }
+/* The field primitives' English cues are replaced by the localized labels above. */
+.pk-website-form .pk-label > .pk-label-cue { display: none; }
+.pk-website-form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-3); }
+.pk-website-form-actions > * { min-inline-size: 0; max-inline-size: 100%; }
+.pk-website-form-status { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
+.pk-website-form :where(.pk-action-message, .pk-form-summary):focus { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-1); }
+.pk-website-form :where(.pk-choice-hint, .pk-website-form-description) a { color: var(--pk-color-accent); text-underline-offset: var(--pk-space-1); }
+.pk-website-form a:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-1); }
+@container pk-website-form (min-width: 640px) {
+  .pk-website-form-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
