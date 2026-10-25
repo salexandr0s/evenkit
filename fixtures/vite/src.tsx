@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, ChatWidget, DataTable, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserIcon, type AdminSidebarState, type ButtonShape, type ChatMessage, type DataTableColumn, type DialogSize, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
 import "@project-kit/tokens/css";
 import "@project-kit/ui/css";
-import { ActionMessage, CircleCheckIcon, EmptyState, Skeleton, Spinner, type ActionMessageProps, type BadgeProps, type EmptyStateProps, type SkeletonProps, type SpinnerProps } from "@project-kit/ui";
+import { ActionMessage, CircleCheckIcon, EmptyState, Skeleton, Spinner, type ActionMessageProps, type BadgeProps, type DataTableSelection, type EmptyStateProps, type SkeletonProps, type SpinnerProps } from "@project-kit/ui";
 
 const element = document.getElementById("root");
 if (!element) throw new Error("Missing fixture root.");
@@ -24,9 +24,20 @@ const emptyRef = createRef<HTMLDivElement>();
 const notesProps: TextareaFieldProps = { label: "Notes", name: "notes", optional: true, hint: "Details for the team.", rows: 3 };
 const templates: SelectOptionGroup = { id: "team", label: "Team templates", options: [{ value: "blank", label: "Blank project", description: "Start with an empty project." }] };
 const columns: readonly DataTableColumn<(typeof records)[number]>[] = [
-  { id: "name", header: "Project", accessor: row => row.name },
+  { id: "name", header: "Project", accessor: row => row.name, overflow: "wrap" },
   { id: "members", header: "Members", accessor: row => row.members, align: "end" },
+  { id: "review", header: "Actions", accessor: row => row.name, searchable: false, sortable: false, cell: () => <ButtonLink size="sm" href="#projects">Review</ButtonLink> },
 ];
+
+function PreviewTable() {
+  const [selectedIds, setSelectedIds] = useState<readonly string[]>([]);
+  const [reviewed, setReviewed] = useState(false);
+  const selection: DataTableSelection<(typeof records)[number]> = {
+    selectedIds, onSelectionChange: setSelectedIds,
+    actions: <Button size="sm" onClick={() => setReviewed(true)}>Review selection</Button>,
+  };
+  return <><p role="status">{reviewed ? "Selection reviewed in this fixture." : ""}</p><DataTable caption="Packed projects" data={records} columns={columns} getRowId={row => row.id} selection={selection} /></>;
+}
 
 function PreviewChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -72,7 +83,7 @@ createRoot(element).render(<main>
   </Dialog>
   <TooltipProvider><Tooltip><TooltipTrigger asChild><Button shape="icon" aria-label="Profile"><UserIcon /></Button></TooltipTrigger><TooltipContent>Open profile</TooltipContent></Tooltip></TooltipProvider>
   <AdminShell defaultSidebarState={sidebarState} compactBrand={<FolderIcon />} contentAs="section" brand="Package kit" header="Projects" activeItemId="projects" navigation={[{ items: [{ id: "projects", label: "Projects", href: "#projects", icon: <FolderIcon /> }] }]}>
-    <DataTable caption="Packed projects" data={records} columns={columns} getRowId={row => row.id} />
+    <PreviewTable />
   </AdminShell>
   <PreviewChat />
 </main>);

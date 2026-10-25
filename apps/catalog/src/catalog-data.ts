@@ -104,11 +104,11 @@ export const entries: readonly CatalogEntry[] = [
     id: "data-table",
     name: "Data table",
     group: "Compositions",
-    description: "Client-side sorting, search, pagination, and selection with stable row IDs and explicit loading, error, and empty states.",
+    description: "Search, sort, and review records with wrapped text, accessible truncation tooltips, row actions, and selection across pages. Try bulk archiving and state recovery.",
     tags: ["table", "data", "list", "sort", "search", "pagination", "select", "rows", "loading", "error", "empty", "composition"],
     source: "TanStack Table · original kit rendering",
     sourceUrl: "https://tanstack.com/table/latest/docs/introduction",
-    usage: 'import { DataTable, type DataTableColumn } from "@project-kit/ui";\n\ninterface Project { id: string; name: string }\nconst columns: readonly DataTableColumn<Project>[] = [\n  { id: "name", header: "Project", accessor: (row) => row.name }\n];\nconst rows = [{ id: "project-01", name: "Spring launch" }];\n\n<DataTable\n  columns={columns}\n  data={rows}\n  getRowId={(row) => row.id}\n  caption="Projects"\n  searchLabel="Search projects"\n  initialPageSize={5}\n  pageSizeOptions={[5, 10, 25]}\n/>\n\n// Applications supply records, permissions, and persistence.'
+    usage: "import { useState } from \"react\";\nimport { Button, ButtonLink, DataTable, type DataTableColumn } from \"@project-kit/ui\";\n\ninterface Project { id: string; name: string; members: number }\nconst columns: readonly DataTableColumn<Project>[] = [\n  { id: \"name\", header: \"Project\", accessor: row => row.name, overflow: \"wrap\" },\n  { id: \"members\", header: \"Members\", accessor: row => row.members, align: \"end\" },\n  { id: \"open\", header: \"Actions\", accessor: () => \"\", sortable: false, searchable: false,\n    cell: row => <ButtonLink size=\"sm\" href={`/projects/${row.id}`}>Open project</ButtonLink> },\n];\n\nexport function ProjectTable({ projects, onReview }: {\n  projects: readonly Project[];\n  onReview: (ids: readonly string[]) => void;\n}) {\n  const [selectedIds, setSelectedIds] = useState<readonly string[]>([]);\n  return <DataTable\n    caption=\"Projects\" data={projects} columns={columns} getRowId={row => row.id}\n    searchLabel=\"Search projects\" initialPageSize={5} pageSizeOptions={[5, 10, 25]}\n    selection={{\n      selectedIds, onSelectionChange: setSelectedIds,\n      actions: <Button size=\"sm\" onClick={() => onReview(selectedIds)}>Review selected</Button>,\n    }}\n  />;\n}\n\n// Your app owns records, deleted-ID cleanup, and bulk-action behavior.\n// Custom cell renderers stay unclipped; overflow controls primitive cells."
   },
   {
     id: "chat",

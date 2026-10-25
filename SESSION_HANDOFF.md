@@ -2,7 +2,17 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
-## Current continuation: EmptyState complete
+## Current continuation: DataTable complete
+
+All twelve planned component areas are implemented and verified individually. DataTable now supports primitive wrap/truncate behavior with tooltips only for actual overflow, unclipped custom cells, nonsearchable columns, clear-search focus, displayed ranges, host selection actions, and clearing IDs across pages/filters. IDs survive temporary unavailable data. The preview demonstrates local archiving, rich rows, row review, state recovery, and reset. Public types, docs, and both packed fixtures cover the additions.
+
+Async focus handling recovers disabled or removed table controls to the stable scroll region while preserving outside focus. Select closes an open popup when disabled. Two focused host-fixture journeys cover the page-size portal, search, row actions, and external focus; the fixture is bundled in memory without adding a product route. Overflow text opens its keyboard tooltip after focus-triggered scrolling settles. Custom dates stay on one line in the preview.
+
+Verification passed: plan/source review, production build, configured type checks, ESLint, 22 affected Chromium journeys, and packed Vite/Next builds plus HTTP/CSS checks. After the final preview polish, seven table/admin/host journeys passed again. The table usage snippet passed independent TypeScript compilation. Package report: `.artifacts/table-package-verification.json`; temporary consumers and owned servers were cleaned. Screenshots: `.artifacts/table-dark-reference.png`, `.artifacts/table-light-reference.png`. Dark appearance was restored and the temporary tab closed. Firefox/Safari remain untested.
+
+Only final integration remains. Audit found stale icon counts and package-verification scope in README, obsolete compatibility evidence, and copied examples with adjacent JSX roots or module-scope hooks. Correct those, check every usage snippet against actual exports, include tooltip CSS in the existing packed stylesheet check, then run the combined `npm run verify` and `npm run verify:packages`. Include separately added themes/chat and tooltip/status refinements. Keep the goal active until that evidence and final review pass.
+
+## Earlier continuation: EmptyState complete
 
 Eleven of twelve component areas are verified. EmptyState adds decorative icons, secondary actions (including secondary-only panels), small/medium sizing, logical start/center alignment, and `titleAs` for paragraphs, block content, or headings. The root div, native attributes/ref, and existing caller defaults remain compatible. Descriptions respect the reading-width token. No new dependency or token was added, and the component does not manage announcements or focus.
 
@@ -66,7 +76,7 @@ The theme work is separate from the earlier component-improvement queue below. P
 
 ## Earlier component work
 
-The user's active goal is to substantially improve every component one by one. Eleven of twelve areas are complete: Tokens, Icons, Buttons, Fields, Select, Dialog, Tooltips, AdminShell, Badge/ActionMessage, Spinner/Skeleton, and EmptyState. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. DataTable and final integration remain unfinished. The goal stays active; queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
+The user's active goal is to substantially improve every component one by one. All twelve areas are complete, including DataTable. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. Final integration remains unfinished. The goal stays active; queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
 
 ## Completed
 
@@ -105,7 +115,7 @@ Unrelated chat-component work is occurring concurrently in this same checkout, i
 
 ## Remaining work
 
-Next: DataTable. Read `packages/ui/src/data-table.tsx/css`, table preview and project data, table contracts, and existing admin journeys. Known issue: every cell truncates arbitrary controls and can clip focus rings. Planned improvements include per-column wrapping, usable action cells, clear search, row ranges, selection clearing/bulk actions, and state presentation. After the queue, review catalog frame, snippets, exports, docs (including older `docs/compatibility.md` report), and independent packed consumers together.
+Next: final integration. Review catalog frame, all copied snippets, public exports, README and `docs/compatibility.md`, and independent packed consumers together. See the current continuation above for concrete audit findings. All twelve component areas are complete; their evidence is in `COMPONENT_IMPROVEMENTS.md`.
 
 Keep plan/review, relevant verification, and logical local commits. Shared source/CSS ownership must remain sequential.
 

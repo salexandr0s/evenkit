@@ -21,6 +21,6 @@ export {
   type IconProps, type IconSize,
 } from "./icons.js";
 export { AdminShell, type AdminShellProps, type AdminNavGroup, type AdminNavItem, type AdminLinkProps, type AdminSidebarState } from "./admin-shell.js";
-export { DataTable, type DataTableProps, type DataTableColumn, type DataTableSelection } from "./data-table.js";
+export { DataTable, type DataTableProps, type DataTableColumn, type DataTableSelection, type DataTableCellOverflow } from "./data-table.js";
 export { ChatWidget, ChatPanel } from "./chat.js";
 export type { ChatMessage, ChatConversation, ChatStatus, ChatLabels, ChatPanelProps, ChatWidgetProps } from "./chat-types.js";

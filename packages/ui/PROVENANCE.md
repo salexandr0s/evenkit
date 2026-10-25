@@ -40,6 +40,8 @@ Spinner reuses the existing 16/20/24px icon tokens and preserves its 20px defaul
 
 TanStack's React and core packages use MIT licenses; their installed notices are included in `licenses`. This package does not provide fetching, server pagination, virtualization, authorization, or persistence.
 
+Primitive cells retain the inherited table contract's single-line default, with the kit tooltip available only for overflowing text. Explicit wrapping and unclipped custom cells depart from that default where longer content or interactive controls require it. Focus rings stay outside the ellipsis wrapper. Row heights remain minimums, and horizontal scrolling is confined to the table region. Selection actions belong to the host; the built-in clear action clears all controlled IDs without pruning them on data changes.
+
 ## AI chat
 
 `ChatWidget` and `ChatPanel` are original kit compositions using the existing Radix Dialog dependency and kit controls. Brainwave's launcher, compact/fullscreen transitions, composer, message actions, and scroll behavior supplied the interaction reference. The kit adds host-supplied conversation history and uses the kit's existing semantic tokens throughout. Brainwave's branding, content protocol, AI transport, and storage implementation are not included.

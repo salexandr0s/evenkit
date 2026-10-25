@@ -1,0 +1,20 @@
+.table-preview { display: grid; gap: var(--pk-space-5); min-width: 0; max-width: 100%; }
+.table-preview-heading { display: grid; gap: var(--pk-space-2); max-width: var(--pk-layout-reading); }
+.table-preview-heading h3 { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-lg); line-height: var(--pk-font-line-height-snug); font-weight: var(--pk-font-weight-semibold); }
+.table-preview-heading > p { margin: 0; color: var(--pk-color-fg-muted); }
+.table-preview-settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--pk-space-16) * 3)), 1fr)); gap: var(--pk-space-4); min-width: 0; }
+.table-preview-field { display: grid; gap: var(--pk-space-2); min-width: 0; }
+.table-preview-owner { display: grid; gap: var(--pk-space-1); min-width: calc(var(--pk-space-16) * 2); max-width: var(--pk-layout-sidebar); overflow-wrap: anywhere; }
+.table-preview-owner > :last-child { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
+.table-preview-date { white-space: nowrap; }
+.table-preview-error { display: grid; gap: var(--pk-space-2); max-width: var(--pk-layout-form); }
+.table-preview-error > p { margin: 0; }
+.table-preview-result { min-height: calc(var(--pk-font-size-sm) * var(--pk-font-line-height-normal)); margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
+.table-preview-review { display: grid; gap: var(--pk-space-4); min-width: 0; padding: var(--pk-space-5); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-bg-muted); }
+.table-preview-review h4 { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-base); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
+.table-preview-review h4:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-1); border-radius: var(--pk-radius-sm); }
+.table-preview-review > p { margin: 0; color: var(--pk-color-fg-muted); overflow-wrap: anywhere; }
+.table-preview-review dl { display: flex; flex-wrap: wrap; gap: var(--pk-space-4) var(--pk-space-8); margin: 0; }
+.table-preview-review dl > div { display: grid; gap: var(--pk-space-1); min-width: 0; }
+.table-preview-review dt { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
+.table-preview-review dd { margin: 0; font-weight: var(--pk-font-weight-medium); overflow-wrap: anywhere; }

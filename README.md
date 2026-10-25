@@ -169,6 +169,8 @@ SelectField adds the same label, hint, error, optional cue, and external-descrip
 
 Use `defaultValue` for an uncontrolled selection or `value` with `onValueChange` for application state. An empty value displays the placeholder. A named control participates in its containing form, or the form identified by `form`. Applications own validation and controlled reset behavior; the catalog demonstrates focusing an invalid field and clearing it with a reset action.
 
+Disabling Select closes an open popup; re-enabling it keeps the popup closed. If an asynchronous update disables the focused control, the host should choose a useful remaining focus target. DataTable handles this for its own search, row, and pagination controls.
+
 ## Dialog
 
 DialogContent accepts `size="sm" | "md" | "lg"` (420/560/720px, constrained to the viewport) and `scroll="content" | "body"`. Defaults preserve the original medium dialog with whole-content scrolling. Use DialogHeader, DialogBody, and DialogFooter as direct children with `scroll="body"` to keep the heading and actions visible while long content scrolls. At viewport heights of 640px or less, the entire dialog scrolls so every section remains reachable.
@@ -241,12 +243,16 @@ Give each navigation item a distinct `icon`. Legacy items without one receive a 
 
 `DataTable` takes the entire client dataset, columns with scalar accessors, and a stable `getRowId`. It supplies sorting, search, pagination, optional controlled selection, numeric alignment, and loading/error/empty states. Selection uses IDs and persists across sorting, search, and page changes. Its select-all control applies to the visible page. Server pagination, fetching, and bulk actions belong to the application; this release does not include a server table adapter.
 
+Set a column's `overflow="wrap"` for longer text. Primitive accessor cells truncate by default and expose a custom tooltip on hover or keyboard focus only when the text overflows. Custom `cell` renderers remain unclipped regardless of `overflow`, so buttons and their focus rings stay visible; compose any specialized truncation inside your renderer. Set `searchable={false}` and `sortable={false}` on action columns. Accessors still supply the scalar sorting and search values for other custom cells.
+
+The footer reports the displayed row range and filtered total. Clear search resets the page and returns focus to the search field. Controlled selection can include IDs hidden by filtering or absent from the current dataset. Clear selection clears every selected ID; your application must also remove deleted IDs when it changes the dataset. Pass bulk controls through `selection.actions` and disable them when appropriate for your request state. The table disables its own data controls while unavailable, but does not change the behavior of host toolbar or selection actions.
+
 ```tsx
 import { DataTable, type DataTableColumn } from "@project-kit/ui";
 
 interface Project { id: string; name: string; members: number }
 const columns: readonly DataTableColumn<Project>[] = [
-  { id: "name", header: "Project", accessor: row => row.name },
+  { id: "name", header: "Project", accessor: row => row.name, overflow: "wrap" },
   { id: "members", header: "Members", accessor: row => row.members, align: "end" },
 ];
 

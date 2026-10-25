@@ -19,7 +19,7 @@ Keep the existing public API compatible. Preserve all built-in themes, document-
 | 9 | Badge, ActionMessage | Status icons, wrapping labels, message titles/actions, warning feedback, and a retry/dismiss example. | Complete |
 | 10 | Spinner, Skeleton | Token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. | Complete |
 | 11 | EmptyState | Icon slot, heading semantics, secondary action, compact layout, and distinct first-use, no-results, and failure examples. | Complete |
-| 12 | DataTable | Per-column wrapping, usable custom action cells, clear search, displayed-row range, selection clearing/bulk actions, and improved state presentation. | Pending |
+| 12 | DataTable | Per-column wrapping, usable custom action cells, clear search, displayed-row range, selection clearing/bulk actions, and improved state presentation. | Complete |
 
 On 25 October the user moved sidebar work next, requested a reusable tooltip design, and asked for more icon variety. Tooltip and AdminShell therefore precede feedback, and the icon family was expanded as part of that work.
 
@@ -130,4 +130,12 @@ The dedicated preview demonstrates first use, template creation, archived search
 
 Plan and source reviews passed. Production build, workspace/test typecheck, ESLint, and 13 relevant Chromium journeys passed. Independent packed Vite and Next consumers built and passed HTTP/CSS checks; temporary servers and files were cleaned. The initial icon journey exposed a test race with Radix close autofocus; its helper now waits for trigger focus before the next keyboard interaction, retaining the search-focus assertion. Light/dark layouts were inspected; screenshots: `.artifacts/empty-dark-reference.png` and `.artifacts/empty-light-reference.png`. Firefox and Safari were not tested.
 
-Next: DataTable. Eleven of twelve planned areas are complete. The goal remains active; item 12 and final integration review are unfinished. Include the separately added chat, themes, and later tooltip/status styling in that final integration review.
+### 12. DataTable
+
+Primitive cells support wrapping or default truncation. Only overflowing text becomes a keyboard stop with a custom tooltip; focus rings and custom cell controls remain unclipped. Columns can opt out of search. Search clearing restores focus, the footer announces the displayed row range and selected count, and the selection bar accepts host actions and clears IDs across pages and filters. Controlled IDs survive temporary loading, error, and empty data; the host owns record deletion and ID cleanup.
+
+The preview demonstrates wrapped summaries, rich owner cells, semantic dates, row review, selection across pages, bulk archiving, and state recovery with fictional records. Removing the last page recovers to valid rows. Error descriptions support block content. Async loading recovers focus from disabled or removed table controls without taking focus from the host. Disabling Select now closes its open popup and keeps it closed when reenabled.
+
+Plan and source reviews passed. Review and runtime checks resolved midword action wrapping, focus-triggered scrolling that dismissed overflow tooltips, and a page-size popup left open during loading. Production build, workspace/test type checks, ESLint, 22 affected Chromium journeys, and independent packed Vite/Next builds plus HTTP/CSS checks passed. Seven table/admin/async-host journeys passed again after the date-layout polish and removal of an ignored test-build option. The copied table usage example also passed TypeScript independently. No dependency or token was added. Package verification cleaned its temporary consumers and servers; report: `.artifacts/table-package-verification.json`. Light/dark references: `.artifacts/table-light-reference.png`, `.artifacts/table-dark-reference.png`. Firefox and Safari remain untested.
+
+All twelve planned areas are complete. The goal remains active until the catalog frame, copied examples, exports, documentation, and combined checks pass final integration, including the separate chat, theme, and tooltip/status additions.

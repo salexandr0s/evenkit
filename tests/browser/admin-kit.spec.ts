@@ -1,8 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 
 async function choose(page: Page, label: string, value: string) {
-  await page.getByRole("combobox", { name: label, exact: true }).click();
+  const trigger = page.getByRole("combobox", { name: label, exact: true });
+  await trigger.click();
   await page.getByRole("option", { name: value, exact: true }).click();
+  await expect(trigger).toBeFocused();
 }
 
 test("table keeps selection with IDs through numeric sorting, search, and pagination", async ({ page }) => {
@@ -21,11 +23,12 @@ test("table keeps selection with IDs through numeric sorting, search, and pagina
   await search.fill("missing-project");
   await expect(table.getByText("No matching records", { exact: true })).toBeVisible();
   await table.getByRole("button", { name: "Clear search", exact: true }).click();
+  await expect(search).toBeFocused();
   await expect(table.getByText("Page 1 of 3", { exact: true })).toBeVisible();
   await table.getByRole("checkbox", { name: "Select all rows on this page", exact: true }).check();
-  await expect(table.getByText("12 records · 6 selected", { exact: true })).toBeVisible();
+  await expect(table.getByRole("status")).toHaveText("1–5 of 12 records · 6 selected");
   await table.getByRole("checkbox", { name: "Select all rows on this page", exact: true }).uncheck();
-  await expect(table.getByText("12 records · 1 selected", { exact: true })).toBeVisible();
+  await expect(table.getByRole("status")).toHaveText("1–5 of 12 records · 1 selected");
   await table.getByRole("button", { name: "Sort by Members", exact: true }).click();
   await expect(table.locator("tbody tr").first()).toContainText("Client portal");
   await table.getByRole("combobox", { name: "Rows per page", exact: true }).click();
@@ -39,19 +42,29 @@ test("table keeps selection with IDs through numeric sorting, search, and pagina
 test("table states recover and narrow layouts confine horizontal scrolling", async ({ page }) => {
   await page.goto("/#data-table");
   const table = page.locator(".pk-data-table");
+  const scroll = table.getByRole("region", { name: "Projects table", exact: true });
+  await table.getByRole("checkbox", { name: "Select Spring launch", exact: true }).check();
   await choose(page, "Preview state", "Loading");
-  await expect(table).toHaveAttribute("aria-busy", "true");
+  await expect(scroll).toHaveAttribute("aria-busy", "true");
+  await expect(table.getByRole("status")).toHaveText("Loading records…");
+  expect(await table.getByRole("status").evaluate(element => element.closest('[aria-busy="true"]') === null)).toBe(true);
+  await expect(table.getByRole("button", { name: "Clear selection" })).toBeDisabled();
+  await expect(table.getByRole("button", { name: "Archive selected" })).toBeDisabled();
   await expect(table.getByRole("searchbox", { name: "Search projects" })).toBeDisabled();
   await expect(table.getByRole("button", { name: "Sort by Project", exact: true })).toBeDisabled();
   await choose(page, "Preview state", "Error");
-  await expect(table.getByRole("alert")).toContainText("projects could not be loaded");
+  await expect(table.getByRole("alert")).toContainText("Projects could not be loaded");
   await table.getByRole("button", { name: "Try again", exact: true }).click();
-  await expect(table.getByRole("checkbox", { name: "Select Spring launch", exact: true })).toBeVisible();
+  await expect(scroll).toBeFocused();
+  await expect(table.getByRole("checkbox", { name: "Select Spring launch", exact: true })).toBeChecked();
   await choose(page, "Preview state", "Empty");
   await expect(table.getByText("No projects in this preview", { exact: true })).toBeVisible();
   await choose(page, "Preview state", "Ready");
+  await expect(table.getByRole("checkbox", { name: "Select Spring launch", exact: true })).toBeChecked();
   await choose(page, "Table density", "Compact");
-  expect((await table.locator("tbody tr").first().boundingBox())?.height).toBe(36);
+  await expect(table).toHaveAttribute("data-density", "compact");
+  // Rich cells and actions must be allowed to grow beyond the compact minimum.
+  expect((await table.locator("tbody tr").first().boundingBox())?.height).toBeGreaterThanOrEqual(36);
   await page.setViewportSize({ width: 360, height: 800 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   expect(await table.locator(".pk-data-table-scroll").evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);

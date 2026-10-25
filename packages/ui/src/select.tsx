@@ -2,7 +2,7 @@
 
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { foundation } from "@project-kit/tokens";
-import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
+import { forwardRef, useEffect, useId, useState, type ComponentPropsWithoutRef } from "react";
 import { classes } from "./classes.js";
 import type { ControlSize } from "./button.js";
 import { FieldFrame, useFieldDescription, type FieldContentProps } from "./field-frame.js";
@@ -52,6 +52,12 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
   { options, value, defaultValue, onValueChange, name, form, disabled = false, required = false, placeholder = "Choose an option", emptyMessage = "No options available.", className, controlSize = "md", dir, container, ...props },
   ref,
 ) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
+
   const rootProps = {
     ...(value !== undefined ? { value } : {}),
     ...(defaultValue !== undefined ? { defaultValue } : {}),
@@ -65,7 +71,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
   const hasOptions = options.some((option) => !("options" in option) || option.options.length > 0);
 
   return (
-    <SelectPrimitive.Root {...rootProps}>
+    <SelectPrimitive.Root {...rootProps} open={open && !disabled} onOpenChange={(nextOpen) => setOpen(!disabled && nextOpen)}>
       <SelectPrimitive.Trigger {...props} ref={ref} type="button" className={classes("pk-select", className)} data-size={controlSize}>
         <span className="pk-select-value"><SelectPrimitive.Value placeholder={placeholder} /></span>
         <SelectPrimitive.Icon className="pk-select-chevron" aria-hidden="true"><ChevronDownIcon /></SelectPrimitive.Icon>
