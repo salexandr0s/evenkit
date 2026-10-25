@@ -10,7 +10,7 @@ Keep the existing public API compatible. Preserve the Neutral and Grove themes, 
 |---|---|---|---|
 | 1 | Design tokens | Search every resolved CSS variable, copy its usage, inspect visual scales and defined contrast pairs for the current theme. | Complete |
 | 2 | Icons: all named wrappers | Search categories and aliases, select preview size, copy named imports, and demonstrate decorative, labelled, and action use. | Complete |
-| 3 | Button, ButtonLink | Icon-only sizing, leading/trailing icons, full-width layout, clearer variant hierarchy, and a working asynchronous loading example. | Pending |
+| 3 | Button, ButtonLink | Icon-only sizing, leading/trailing icons, full-width layout, clearer variant hierarchy, and a working asynchronous loading example. | Complete |
 | 4 | Label, Input, Textarea, TextField | Shared field composition, textarea field, required/optional cues, adornments, read-only styling, and validation focus recovery. | Pending |
 | 5 | Select | Grouped and described options, empty-options feedback, shared field composition, and long-label handling while preserving compact rows. | Pending |
 | 6 | Dialog, DialogTrigger, DialogClose, DialogContent, DialogTitle, DialogDescription, DialogFooter | Size and layout composition, long-content scrolling, reachable actions, mobile presentation, and logical RTL positioning. | Pending |
@@ -47,4 +47,12 @@ All 31 public wrappers appear in a reference with readable names, category and a
 
 Plan and implementation reviews passed. Catalog build, workspace/test type checks, ESLint, and the focused Chromium icon journey passed. The journey checks the gallery against public icon exports, alias/category intersection, keyboard copying and denial recovery, size changes, reset focus, accessible names, and 360px wrapping/touch targets. Light and dark views were inspected. Screenshot: `.artifacts/icon-reference.png`.
 
-Next: Buttons. The goal remains active; items 3–11 and final integration review are unfinished.
+### 3. Buttons
+
+Button and ButtonLink now share explicit icon-only sizing, leading/trailing icon slots, and full-width layout. Icon shape takes precedence over full width. Decorative icons remain outside accessible names. Loading retains the label and dimensions, disables duplicate activation, and reports busy state; caller-supplied busy state also works independently. Pressed buttons have a visible inset state. Default sizes remain 32/40/48px, with at least 44px targets on narrow screens and coarse pointers.
+
+The catalog demonstrates asynchronous saving, toggle state, icon actions, native links, and wrapping full-width labels. Other actions give local feedback. Existing usages, refs, native attributes, and inline children remain compatible. Documentation and both packed consumer fixtures cover the new composition props and exported ButtonShape type.
+
+Plan and implementation reviews passed. Production build, workspace/test type checks, ESLint, seven token tests, and all 13 Chromium journeys passed. Two new button journeys cover loading dimensions and names, duplicate prevention, pressed/busy semantics, decorative slots, desktop/narrow/coarse-pointer sizing, icon/full-width precedence, wrapping, and keyboard link navigation. Independent packed Vite and Next consumers built and passed HTTP/stylesheet checks; their temporary directories and server processes were removed. Light and dark views were inspected. Screenshot: `.artifacts/button-reference.png`.
+
+Next: Fields. The goal remains active; items 4–11 and final integration review are unfinished.

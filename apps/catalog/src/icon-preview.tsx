@@ -111,9 +111,9 @@ export function IconPreview() {
           </div>
           <div className="icon-pattern">
             <h4>Icon button</h4>
-            <div className="icon-pattern-example"><Button aria-label="Add preview project" onClick={() => setActivated("icon")}><PlusIcon /></Button></div>
+            <div className="icon-pattern-example"><Button shape="icon" aria-label="Add preview project" onClick={() => setActivated("icon")}><PlusIcon /></Button></div>
             <p>Put the accessible name on the button, leaving its icon decorative.</p>
-            <code>{'<Button aria-label="Add project"><PlusIcon /></Button>'}</code>
+            <code>{'<Button shape="icon" aria-label="Add project"><PlusIcon /></Button>'}</code>
           </div>
           <div className="icon-pattern">
             <h4>Independent meaning</h4>

@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import {
-  ActionMessage, Badge, Button, ButtonLink, Dialog, DialogClose,
+  ActionMessage, Badge, Button, Dialog, DialogClose,
   DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger,
   EmptyState, Label, Select, Skeleton, Spinner, TextField
 } from "@project-kit/ui";
@@ -11,44 +11,6 @@ const visibilityOptions = [
   { value: "public", label: "Public" }
 ] as const;
 const regionOptions = [{ value: "eu", label: "Europe" }] as const;
-
-export function ButtonPreview() {
-  const [clicks, setClicks] = useState(0);
-  return (
-    <div className="catalog-demo-stack">
-      <div>
-        <p className="catalog-state-label">Variants</p>
-        <div className="catalog-demo-actions">
-          <Button onClick={() => setClicks((value) => value + 1)}>Primary action</Button>
-          <Button variant="secondary">Secondary</Button>
-          <Button variant="outline">Outline</Button>
-          <Button variant="ghost">Ghost</Button>
-          <Button variant="destructive">Destructive</Button>
-          <ButtonLink variant="link" href="#fields">View fields</ButtonLink>
-        </div>
-        <p className="catalog-caption" role="status">
-          {clicks ? `Primary action activated ${clicks} ${clicks === 1 ? "time" : "times"}.` : "Try the primary action. This example stays in your browser."}
-        </p>
-      </div>
-      <div className="catalog-demo-divider">
-        <p className="catalog-state-label">Sizes</p>
-        <div className="catalog-demo-actions catalog-align-end">
-          <Button size="sm" variant="outline">Small</Button>
-          <Button size="md" variant="outline">Medium</Button>
-          <Button size="lg" variant="outline">Large</Button>
-        </div>
-      </div>
-      <div className="catalog-demo-divider">
-        <p className="catalog-state-label">Disabled and busy</p>
-        <div className="catalog-demo-actions">
-          <Button disabled>Disabled action</Button>
-          <Button loading>Loading state</Button>
-          <ButtonLink variant="outline" href="#tokens">Explore tokens</ButtonLink>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function SelectPreview() {
   const [visibility, setVisibility] = useState("private");

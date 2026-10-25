@@ -28,17 +28,17 @@ export const entries: readonly CatalogEntry[] = [
     tags: ["icon", "lucide", "search", "folder", "navigation", "arrow", "glyph", "svg"],
     source: "Lucide React · named kit wrappers",
     sourceUrl: "https://lucide.dev/guide/packages/lucide-react",
-    usage: 'import { Button, PlusIcon, SearchIcon } from "@project-kit/ui";\n\n// Decorative beside visible button text.\n<Button><PlusIcon />Add project</Button>\n\n// Label an icon-only action on the button.\n<Button aria-label="Add project"><PlusIcon /></Button>\n\n// A standalone icon supplies its own label.\n<SearchIcon size="lg" label="Search projects" />'
+    usage: 'import { Button, PlusIcon, SearchIcon } from "@project-kit/ui";\n\n// Decorative beside visible button text.\n<Button><PlusIcon />Add project</Button>\n\n// Label an icon-only action on the button.\n<Button shape="icon" aria-label="Add project"><PlusIcon /></Button>\n\n// A standalone icon supplies its own label.\n<SearchIcon size="lg" label="Search projects" />'
   },
   {
     id: "buttons",
     name: "Buttons",
     group: "Controls",
     description: "Actions and links with consistent sizing, visible focus, and explicit busy states.",
-    tags: ["button", "action", "link", "disabled", "loading", "primary", "secondary"],
+    tags: ["button", "action", "link", "disabled", "loading", "primary", "secondary", "icon only", "full width", "toggle"],
     source: "Original implementation · shadcn composition reference",
     sourceUrl: "https://ui.shadcn.com/docs/components/radix/button",
-    usage: 'import { Button, ButtonLink } from "@project-kit/ui";\n\n<Button variant="primary" onClick={save}>\n  Save changes\n</Button>\n<Button loading>Saving changes</Button>\n<ButtonLink href="/projects" variant="outline">\n  View projects\n</ButtonLink>'
+    usage: 'import { Button, ButtonLink, CheckIcon, PlusIcon, ArrowRightIcon } from "@project-kit/ui";\n\n<Button startIcon={<CheckIcon />} loading={saving} onClick={save}>\n  Save changes\n</Button>\n<Button shape="icon" size="sm" aria-label="Add project" onClick={add}>\n  <PlusIcon size="sm" />\n</Button>\n<Button fullWidth type="submit">Create workspace</Button>\n<ButtonLink href="/projects" variant="outline" endIcon={<ArrowRightIcon />}>\n  View projects\n</ButtonLink>'
   },
   {
     id: "fields",
