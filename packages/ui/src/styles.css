@@ -161,18 +161,17 @@
 .pk-field-hint > :last-child, .pk-field-error > div > :last-child { margin-bottom: 0; }
 .pk-feedback-symbol { display: inline-flex; flex: none; align-items: center; justify-content: center; min-width: var(--pk-layout-icon); font-weight: var(--pk-font-weight-semibold); }
 
-.pk-badge { display: inline-flex; align-items: center; gap: var(--pk-space-1); min-height: var(--pk-space-6); min-width: 0; max-width: 100%; padding: var(--pk-space-0-5) var(--pk-space-2); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-full); background: var(--pk-color-bg-muted); color: var(--pk-color-fg); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-medium); white-space: normal; overflow-wrap: anywhere; }
-.pk-badge[data-size="sm"] { min-height: var(--pk-space-5); padding: 0 var(--pk-space-1-5); }
-.pk-badge-label { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-1); min-width: 0; max-width: 100%; }
-.pk-badge-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); }
-.pk-badge-icon > svg, .pk-badge-label > svg { flex: none; width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); }
+.pk-badge { display: inline-flex; align-items: center; gap: var(--pk-space-1-5); width: fit-content; min-height: var(--pk-space-6); min-width: 0; max-width: 100%; padding: var(--pk-space-0-5) var(--pk-space-2); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-full); background: var(--pk-color-bg-muted); color: var(--pk-color-fg); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-semibold); line-height: var(--pk-font-line-height-normal); font-variant-numeric: tabular-nums; vertical-align: middle; white-space: normal; overflow-wrap: anywhere; }
+.pk-badge[data-size="sm"] { gap: var(--pk-space-1); min-height: var(--pk-space-5); padding: 0 var(--pk-space-1-5); }
+.pk-badge-label { display: inline-flex; flex-wrap: wrap; align-items: center; gap: inherit; min-width: 0; max-width: 100%; }
+.pk-badge-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); overflow: hidden; }
+.pk-badge-icon > *, .pk-badge-label > svg { flex: none; width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); max-width: var(--pk-icon-size-sm); max-height: var(--pk-icon-size-sm); object-fit: contain; }
 .pk-badge-dot { flex: none; width: var(--pk-space-1-5); height: var(--pk-space-1-5); border-radius: var(--pk-radius-full); background: currentColor; }
-.pk-badge[data-tone="accent"] { background: var(--pk-color-accent-soft); color: var(--pk-color-accent); border-color: transparent; }
-.pk-badge[data-tone="success"] { background: var(--pk-color-success-bg); color: var(--pk-color-success); border-color: transparent; }
-.pk-badge[data-tone="warning"] { background: var(--pk-color-warning-bg); color: var(--pk-color-warning); border-color: transparent; }
-.pk-badge[data-tone="danger"] { background: var(--pk-color-danger-bg); color: var(--pk-color-danger); border-color: transparent; }
-.pk-badge[data-variant="outline"] { background: transparent; border-color: currentColor; }
-.pk-badge[data-variant="outline"][data-tone="neutral"] { border-color: var(--pk-color-border-strong); }
+.pk-badge[data-tone="accent"] { background: var(--pk-color-accent-soft); color: var(--pk-color-accent); }
+.pk-badge[data-tone="success"] { background: var(--pk-color-success-bg); color: var(--pk-color-success); }
+.pk-badge[data-tone="warning"] { background: var(--pk-color-warning-bg); color: var(--pk-color-warning); }
+.pk-badge[data-tone="danger"] { background: var(--pk-color-danger-bg); color: var(--pk-color-danger); }
+.pk-badge[data-variant="outline"] { background: transparent; border-color: var(--pk-color-border); }
 
 .pk-spinner { --pk-spinner-size: var(--pk-icon-size-md); display: inline-block; box-sizing: border-box; flex: none; width: var(--pk-spinner-size); height: var(--pk-spinner-size); border: var(--pk-border-width-thick) solid currentColor; border-right-color: transparent; border-radius: var(--pk-radius-full); color: var(--pk-color-accent); animation: pk-spin var(--pk-motion-duration-spinner) linear infinite; }
 .pk-spinner:where([data-size="sm"]) { --pk-spinner-size: var(--pk-icon-size-sm); }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ActionMessage, Badge, Button, CheckIcon, ClockIcon, MailIcon } from "@project-kit/ui";
+import { ActionMessage, Badge, Button, CheckIcon, CircleAlertIcon, CircleCheckIcon, ClockIcon, MailIcon, TriangleAlertIcon } from "@project-kit/ui";
 import "./status-preview.css";
 
 type ExportState = "error" | "retrying" | "success" | "dismissed";
@@ -44,6 +44,33 @@ export function StatusPreview() {
 
   return (
     <div className="status-workbench">
+      <section className="status-section" aria-label="Badge examples">
+        <div className="status-section-heading"><h3>Labels for state and progress</h3><p>Pair a short label with a tone, dot, or decorative icon.</p></div>
+        <div className="status-badge-group">
+          <span className="status-sample-label">Soft tones</span>
+          <div className="status-badge-row"><Badge>Draft</Badge><Badge tone="accent" icon={<ClockIcon />}>In progress</Badge><Badge tone="success" dot>Active</Badge><Badge tone="warning" icon={<TriangleAlertIcon />}>Needs review</Badge><Badge tone="danger" icon={<CircleAlertIcon />}>Failed</Badge></div>
+        </div>
+        <div className="status-badge-group">
+          <span className="status-sample-label">Outline and icons</span>
+          <div className="status-badge-row"><Badge variant="outline">Archived</Badge><Badge tone="accent" variant="outline" icon={<ClockIcon />}>Scheduled</Badge><Badge tone="success" variant="outline" icon={<CircleCheckIcon />} dot>Approved</Badge><Badge tone="warning" variant="outline">Pending</Badge><Badge tone="danger" variant="outline" icon={<CircleAlertIcon />}>Blocked</Badge></div>
+        </div>
+        <div className="status-badge-details">
+          <div className="status-badge-group"><span className="status-sample-label">Sizes</span><div className="status-badge-row"><Badge size="sm">Small</Badge><Badge size="md">Medium</Badge></div></div>
+          <div className="status-badge-group"><span className="status-sample-label">Counts</span><div className="status-badge-row"><span className="status-badge-count">Open tasks <Badge size="sm" tone="accent">12</Badge></span><span className="status-badge-count">Reviews <Badge size="sm">3</Badge></span></div></div>
+          <div className="status-badge-group"><span className="status-sample-label">Inline icon children</span><div className="status-badge-row"><Badge tone="success"><CheckIcon size="sm" />Reviewed</Badge></div></div>
+          <div className="status-badge-group"><span className="status-sample-label">Right to left</span><Badge tone="success" icon={<CircleCheckIcon />} dir="rtl" lang="he">אושר</Badge></div>
+          <div className="status-badge-group status-long-badge"><span className="status-sample-label">Longer labels</span><Badge tone="warning" icon={<ClockIcon />}>Awaiting approval from the regional operations team</Badge></div>
+        </div>
+        <div className="status-badge-group status-project-group">
+          <span className="status-sample-label">In a project list</span>
+          <ul className="status-project-list" aria-label="Example project statuses">
+            <li><span>Website refresh</span><Badge tone="warning" icon={<TriangleAlertIcon />}>In review</Badge></li>
+            <li><span>Customer portal</span><Badge tone="success" icon={<CircleCheckIcon />}>Ready</Badge></li>
+            <li><span>Billing migration</span><Badge tone="accent" icon={<ClockIcon />}>Scheduled</Badge></li>
+          </ul>
+        </div>
+      </section>
+
       <section className="status-section" aria-label="Message tone examples">
         <div className="status-section-heading"><h3>Short status messages</h3><p>Icons distinguish success, information, warnings, and errors.</p></div>
         <div className="status-message-stack">
@@ -51,23 +78,6 @@ export function StatusPreview() {
           <ActionMessage role="note" tone="info">Changes remain in this preview.</ActionMessage>
           <ActionMessage role="note" tone="warning">Check the project name and recipients before sharing.</ActionMessage>
           <ActionMessage role="note" tone="error">Example failure: your changes could not be saved. Try again.</ActionMessage>
-        </div>
-      </section>
-
-      <section className="status-section" aria-label="Badge examples">
-        <div className="status-section-heading"><h3>Labels for state and progress</h3><p>Pair a short label with a tone, dot, or decorative icon.</p></div>
-        <div className="status-badge-group">
-          <span className="status-sample-label">Soft tones</span>
-          <div className="status-badge-row"><Badge>Draft</Badge><Badge tone="accent">In progress</Badge><Badge tone="success" dot>Active</Badge><Badge tone="warning">Needs review</Badge><Badge tone="danger">Failed</Badge></div>
-        </div>
-        <div className="status-badge-group">
-          <span className="status-sample-label">Outline and icons</span>
-          <div className="status-badge-row"><Badge variant="outline">Archived</Badge><Badge tone="accent" variant="outline" icon={<ClockIcon />}>Scheduled</Badge><Badge tone="success" variant="outline" icon={<CheckIcon />} dot>Approved</Badge><Badge tone="warning" variant="outline">Pending</Badge><Badge tone="danger" variant="outline">Blocked</Badge></div>
-        </div>
-        <div className="status-badge-details">
-          <div className="status-badge-group"><span className="status-sample-label">Sizes</span><div className="status-badge-row"><Badge size="sm">Small</Badge><Badge size="md">Medium</Badge></div></div>
-          <div className="status-badge-group"><span className="status-sample-label">Inline icon children</span><div className="status-badge-row"><Badge tone="success"><CheckIcon size="sm" />Reviewed</Badge></div></div>
-          <div className="status-badge-group status-long-badge"><span className="status-sample-label">Longer labels</span><Badge tone="warning" icon={<ClockIcon />}>Awaiting approval from the regional operations team</Badge></div>
         </div>
       </section>
 

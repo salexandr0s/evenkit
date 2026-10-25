@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Badge design pass: 25 October 2026
+
+Badges now use quiet semantic borders for both soft and outline variants, semibold labels, tabular numerals, and consistent 6px medium / 4px small icon gaps. Decorative content stays within its 16px slot; intrinsic width and inline alignment keep badges compact in lists and surrounding text. Existing 20/24px short-label sizes, semantic fills, long-label wrapping, native span semantics, and public props remain intact.
+
+Changes are limited to the Badge block in `packages/ui/src/styles.css` and badge examples in `apps/catalog/src/status-preview.tsx/css`. Badge examples appear first and include status icons, contextual counts, RTL, longer text, and a small project list. Message examples and recovery behavior remain available.
+
+Verification passed: plan/source review, `npm run build`, `npm run typecheck`, focused ESLint, eight token tests, and five Chromium journeys in `status.spec.ts` and `admin-kit.spec.ts`. Manual inspection covered light/dark appearance and 360px layouts. Firefox and Safari were not tested. References: `.artifacts/badge-design-light.jpg` and `.artifacts/badge-design-dark.jpg`. The stopped local preview was restarted on port 5173; Dark appearance was restored and temporary viewport emulation cleared. No badge work remains.
+
+Focused verification command: `KIT_CATALOG_PORT=5317 npx playwright test tests/browser/status.spec.ts tests/browser/admin-kit.spec.ts --workers=1 --output=.artifacts/badge-design-browser-results`.
+
 ## Current state: component goal complete
 
 All twelve planned areas and final integration are complete. The user-requested sidebar has expanded, icon-only, and hidden states, magnetic edge dragging, quick smooth transitions, one changing display button, custom icon tooltips, and distinct team/person icons. The broader queue and evidence are in `COMPONENT_IMPROVEMENTS.md`; earlier sections below preserve the history of separate work.
