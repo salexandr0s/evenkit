@@ -1,3 +1,14 @@
 .notification-center-preview { display: grid; gap: var(--pk-space-5); min-width: 0; }
-.notification-center-workspace { margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
-.notification-center-demo-options { display: grid; gap: var(--pk-space-3); padding-block-start: var(--pk-space-5); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.notification-center-workspace { display: flex; align-items: center; gap: var(--pk-space-2); margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
+.notification-center-demo-options { border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); }
+.notification-center-demo-options > summary { box-sizing: border-box; display: flex; align-items: center; gap: var(--pk-space-2); min-height: var(--pk-control-height-md); padding: var(--pk-space-3) var(--pk-space-4); border-radius: inherit; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-medium); cursor: pointer; list-style: none; }
+.notification-center-demo-options > summary::-webkit-details-marker { display: none; }
+.notification-center-demo-options > summary:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
+.notification-center-demo-chevron { margin-inline-start: auto; }
+.notification-center-demo-options[open] .notification-center-demo-chevron { transform: rotate(180deg); }
+.notification-center-demo-body { display: grid; gap: var(--pk-space-4); padding: 0 var(--pk-space-4) var(--pk-space-4); }
+.notification-center-demo-description { margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
+.notification-center-demo-toggles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--pk-space-2) var(--pk-space-4); }
+.notification-center-demo-toggles .pk-choice-label { font-size: var(--pk-font-size-xs); }
+@media (max-width: 640px) { .notification-center-demo-toggles { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px), (pointer: coarse) { .notification-center-demo-options > summary { min-height: var(--pk-layout-touch); } }

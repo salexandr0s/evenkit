@@ -1,4 +1,11 @@
 .notification-preferences-preview { display: grid; gap: var(--pk-space-6); min-width: 0; }
+.notification-preferences-workspace { display: flex; align-items: center; gap: var(--pk-space-3); min-width: 0; padding-block-end: var(--pk-space-5); border-block-end: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.notification-preferences-workspace > div { display: grid; gap: var(--pk-space-0-5); flex: 1; min-width: 0; }
+.notification-preferences-workspace > div > span { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); line-height: var(--pk-font-line-height-normal); }
+.notification-preferences-workspace strong { color: var(--pk-color-fg); font-size: var(--pk-font-size-sm); font-weight: var(--pk-font-weight-medium); overflow-wrap: anywhere; }
+.notification-preferences-workspace > .pk-icon { flex: none; color: var(--pk-color-accent); }
+.notification-preferences-demo-result { display: flex; align-items: center; gap: var(--pk-space-2); margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
+.notification-preferences-demo-result output { color: var(--pk-color-fg); font-variant-numeric: tabular-nums; }
 .notification-preferences-demo-controls { padding-block-start: var(--pk-space-4); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .notification-preferences-demo-controls summary { cursor: pointer; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); min-height: var(--pk-control-height-md); overflow-wrap: anywhere; }
 .notification-preferences-demo-controls summary:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); border-radius: var(--pk-radius-sm); }

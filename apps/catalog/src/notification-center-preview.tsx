@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Button, Checkbox, type NotificationGroup, type NotificationOperation } from "@evenkit/ui";
+import { Building2Icon, Button, Checkbox, ChevronDownIcon, SlidersHorizontalIcon, type NotificationGroup, type NotificationOperation } from "@evenkit/ui";
 import { NotificationCenter } from "../../../registry/blocks/notification-center";
 import "./notification-center-preview.css";
 
@@ -39,20 +39,26 @@ export function NotificationCenterPreview() {
   }
   function reset() { setPages(initialPages); setPage(1); setLoadError(undefined); setOpened(""); setRevision(value => value + 1); }
   return <div className="notification-center-preview">
-    <p className="notification-center-workspace">{workspace === "meridian" ? "Meridian Studio" : "Aster Research"}</p>
+    <p className="notification-center-workspace"><Building2Icon size="sm" aria-hidden="true" />{workspace === "meridian" ? "Meridian Studio" : "Aster Research"}</p>
     <NotificationCenter groups={groups} page={page} pageCount={pages.length} contextKey={workspace} revision={revision} disabled={disabled} {...(loadError ? { error: loadError } : {})} onOperation={prepare} onCommit={commit} onLoadPage={async next => { const result = { groups: pages[next - 1] ?? [], page: next, pageCount: pages.length }; await prepare(); return result; }} onPageLoaded={result => { setPage(result.page); setLoadError(undefined); }} />
     {opened ? <p role="status">{opened}</p> : null}
-    <div className="notification-center-demo-options" aria-label="Notification example controls">
-      <Checkbox label="Fail the next notification request" checked={fail} onCheckedChange={checked => { failNext.current = checked === true; setFail(checked === true); }} />
-      <Checkbox label="Use a slow notification response" checked={slow} onCheckedChange={checked => setSlow(checked === true)} />
-      <Checkbox label="Revoke notification permissions" checked={disabled} onCheckedChange={checked => setDisabled(checked === true)} />
-      <Checkbox label="Use long notification labels" checked={longLabels} onCheckedChange={checked => setLongLabels(checked === true)} />
+    <details className="notification-center-demo-options">
+      <summary><SlidersHorizontalIcon size="sm" aria-hidden="true" /><span>Example controls</span><ChevronDownIcon className="notification-center-demo-chevron" size="sm" aria-hidden="true" /></summary>
+      <div className="notification-center-demo-body" aria-label="Notification example controls">
+      <p className="notification-center-demo-description">Try loading, recovery and context changes.</p>
+      <div className="notification-center-demo-toggles">
+        <Checkbox label="Fail the next notification request" checked={fail} onCheckedChange={checked => { failNext.current = checked === true; setFail(checked === true); }} />
+        <Checkbox label="Use a slow notification response" checked={slow} onCheckedChange={checked => setSlow(checked === true)} />
+        <Checkbox label="Revoke notification permissions" checked={disabled} onCheckedChange={checked => setDisabled(checked === true)} />
+        <Checkbox label="Use long notification labels" checked={longLabels} onCheckedChange={checked => setLongLabels(checked === true)} />
+      </div>
       <div className="catalog-demo-actions">
         <Button size="sm" variant="outline" onClick={() => { setWorkspace(current => current === "meridian" ? "aster" : "meridian"); reset(); }}>Change notification workspace</Button>
         <Button size="sm" variant="outline" onClick={() => setLoadError("Notifications could not be refreshed. Existing items remain available.")}>Show notification loading failure</Button>
         <Button size="sm" variant="outline" onClick={() => { setPages([[]]); setPage(1); setLoadError(undefined); setRevision(value => value + 1); }}>Show empty inbox</Button>
         <Button size="sm" variant="ghost" onClick={reset}>Reset notifications</Button>
       </div>
-    </div>
+      </div>
+    </details>
   </div>;
 }

@@ -24,6 +24,7 @@ test("notification selection is page scoped and preserves unavailable notificati
 
 test("notification actions retain focus while pending and offer persistent retry", async ({ page }) => {
   await page.goto("/#notification-center");
+  await page.locator(".notification-center-demo-options > summary").click();
   await page.clock.install();
   const center = page.getByRole("region", { name: "Notifications", exact: true });
   await page.getByRole("checkbox", { name: "Fail the next notification request", exact: true }).check();
@@ -46,6 +47,7 @@ test("notification actions retain focus while pending and offer persistent retry
 
 test("late notification results cannot cross context or permission changes", async ({ page }) => {
   await page.goto("/#notification-center");
+  await page.locator(".notification-center-demo-options > summary").click();
   await page.clock.install();
   const center = page.getByRole("region", { name: "Notifications", exact: true });
   await page.getByRole("checkbox", { name: "Use a slow notification response", exact: true }).check();
@@ -74,6 +76,7 @@ test("late notification results cannot cross context or permission changes", asy
 
 test("notification page failures recover and empty state remains available", async ({ page }) => {
   await page.goto("/#notification-center");
+  await page.locator(".notification-center-demo-options > summary").click();
   const center = page.getByRole("region", { name: "Notifications", exact: true });
   await page.getByRole("checkbox", { name: "Fail the next notification request", exact: true }).check();
   await center.getByRole("button", { name: "Next page", exact: true }).click();

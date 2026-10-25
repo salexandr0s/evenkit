@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Button, Checkbox, DataList, DataListItem } from "@evenkit/ui";
+import { Avatar, BellIcon, Button, Checkbox } from "@evenkit/ui";
 import { NotificationPreferences, type NotificationCategory, type NotificationChannel, type NotificationPreferenceValue } from "../../../registry/blocks/notification-preferences";
 import "./notification-preferences-preview.css";
 
@@ -37,7 +37,7 @@ export function NotificationPreferencesPreview() {
   const failNext = useRef(false);
   const displayedCategories = longLabels ? categories.map(category => category.id === "projects" ? { ...category, label: "Project changes, review assignments and scheduled handovers across all teams in this workspace" } : category) : categories;
   return <div className="notification-preferences-preview" dir={rtl ? "rtl" : undefined}>
-    <DataList><DataListItem term="Workspace">{workspace}</DataListItem><DataListItem term="Completed saves"><output aria-label="Completed preference saves">{savedCount}</output></DataListItem></DataList>
+    <header className="notification-preferences-workspace"><Avatar name={workspace} size="sm" decorative /><div><span>Workspace settings</span><strong>{workspace}</strong></div><BellIcon size="sm" /></header>
     <NotificationPreferences contextKey={workspace} revision={revision} channels={hideEmail ? channels.filter(channel => channel.id !== "email") : channels} categories={displayedCategories} value={values[workspace] ?? initial}
       {...(readOnly ? { readOnlyReason: "You can view these preferences. A workspace administrator can change them." } : {})}
       onSave={async (draft, { signal }) => {
@@ -51,6 +51,7 @@ export function NotificationPreferencesPreview() {
       onSaved={(next, context) => { setValues(current => ({ ...current, [context.contextKey]: next })); setSavedCount(current => current + 1); }} />
     <details className="notification-preferences-demo-controls"><summary>Example controls</summary>
       <div className="notification-preferences-demo-options">
+        <p className="notification-preferences-demo-result">Completed saves <output aria-label="Completed preference saves">{savedCount}</output></p>
         <Checkbox label="Fail the next preference save" checked={fail} onCheckedChange={checked => { failNext.current = checked === true; setFail(checked === true); }} />
         <Checkbox label="Use a slow preference response" checked={slow} onCheckedChange={checked => setSlow(checked === true)} />
         <Checkbox label="Ignore cancellation in sample request" checked={ignoreAbort} onCheckedChange={checked => setIgnoreAbort(checked === true)} />

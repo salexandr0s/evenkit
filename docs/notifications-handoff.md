@@ -2,6 +2,32 @@
 
 Completed 25 October 2026 on `codex/notifications` in `/Users/nationalbank/.codex/worktrees/notifications/design-tokens`. Feature commit: `b3ca9c7` (`feat(notifications): add inbox preferences and persistent status`). Base: `b588b1b1964ba2b26ee8453606f354f2c33eb10d` on local `codex/component-improvements`. The remote branch was fetched before worktree creation; the local base was seven commits ahead and contained the latest available component changes. No push, package publication or deployment occurred.
 
+## Design pass: 25 October 2026
+
+The follow-up design pass starts from `cda0196` and is included in the current `codex/notifications` branch tip. Integrate it with the original feature. This section supersedes the visual and verification evidence below for the updated files.
+
+The inbox now uses one framed neutral surface, a page unread count, separated page/selection actions, title-first rows, selected-row accents and an attached pagination footer. Preferences use category descriptions beside aligned channel tiles, shared channel guidance, visible policy labels and a compact save footer. Banners adapt their message/action layout to available width and accept an optional decorative `icon`; connection states supply appropriate default icons. Catalog examples show workspace content and team members, with fault controls in native disclosures. Successful maintenance actions reveal preparation details.
+
+Public async, selection and focus contracts are unchanged. Full visible bulk-action labels match accessible names for voice control. Preference category headings remain available to screen-reader heading navigation. No shared primitives, tokens, dependencies, lockfiles or unrelated agent files changed. CSS and markup changes are confined to the family and its examples.
+
+Validation on the design pass:
+
+| Check | Result and evidence |
+| --- | --- |
+| Production build | Passed; `.artifacts/notifications-design-build.log` |
+| Configured typecheck and full ESLint | Passed; `.artifacts/notifications-design-typecheck.log`, `.artifacts/notifications-design-lint.log`; scoped lint also passed after the final label correction |
+| Unit suite | 23 passed; `.artifacts/notifications-design-unit.log` |
+| Copied examples | 91 examples and 77 inventory mappings passed; `.artifacts/notifications-design-examples.log` |
+| Focused Chromium suite | All 14 cases passed together in 21.5 seconds; `.artifacts/notifications-design-browser.log` |
+| Packed Vite and Next consumers | Production build, HTTP, SSR and CSS checks passed; `.artifacts/notifications-design-packages.log`, `.artifacts/package-verification.json`; owned consumer servers/scratch cleaned |
+| Independent source review | No outstanding findings after label, heading, policy-priority, CSS-scoping and preview-outcome corrections; reviewer did not run tests |
+
+The browser matrix covers eight themes in light/dark, neutral surfaces and theme accents, 360/768/1024/1440px widths, RTL, long notification and banner-action labels, 44px mobile controls and reduced motion. Existing preference coverage also exercises narrow RTL with long categories. Updated test selectors identify the new actual panel surfaces and open example-control disclosures; behavior assertions were retained.
+
+Visual inspection covered Ocean light desktop layouts across the family, mobile center/preferences/banner layouts, selected and empty inboxes, Linen dark preferences with unsaved changes, and Rose dark mobile RTL banners with a visible action result. Captures are `.artifacts/design-*-desktop.png`, `.artifacts/design-*-mobile.png`, `.artifacts/design-notification-center-selected.png`, `.artifacts/design-notification-center-empty.png`, `.artifacts/design-notification-preferences-linen-dark.png` and `.artifacts/design-persistent-banner-rose-dark-rtl.png`. The screenshot helper was corrected to wait for lazy-loaded content and restore the catalog header between routes; its initial partial captures were replaced. These ignored artifacts remain local to this worktree.
+
+Manual screen-reader listening, Safari/Firefox and physical devices remain unverified. No required design work remains. The local production preview is available at `http://127.0.0.1:59475/#notification-center` for review. Nothing was pushed, published or deployed.
+
 ## Delivered scope
 
 | Inventory | Delivery | Main source |
