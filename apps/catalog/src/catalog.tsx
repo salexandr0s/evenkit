@@ -32,9 +32,9 @@ import { DialogPreview } from "./dialog-preview";
 import { SelectPreview } from "./select-preview";
 import { ButtonPreview } from "./button-preview";
 import { TokenPreview } from "./token-preview";
-import { IconPreview } from "./icon-preview";
 import { ThemePreview } from "./theme-preview";
 
+const IconPreview = lazy(() => import("./icon-preview").then((module) => ({ default: module.IconPreview })));
 const ShellPreview = lazy(() => import("./shell-preview").then((module) => ({ default: module.ShellPreview })));
 const TablePreview = lazy(() => import("./table-preview").then((module) => ({ default: module.TablePreview })));
 const ChatPreview = lazy(() => import("./chat-preview").then((module) => ({ default: module.ChatPreview })));

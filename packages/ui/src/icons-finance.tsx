@@ -1,0 +1,36 @@
+"use client";
+
+import { Wallet, CreditCard, Banknote, Coins, PiggyBank, Landmark, Receipt, ReceiptText, Calculator, Percent, BadgePercent, DollarSign, Euro, PoundSterling, JapaneseYen, Bitcoin, HandCoins, CircleDollarSign, BadgeDollarSign, BanknoteArrowUp } from "lucide-react";
+import { createKitIcon } from "./create-kit-icon.js";
+import { WalletMotion } from "./animated-icons/wallet.js";
+import { CreditCardMotion } from "./animated-icons/credit-card.js";
+import { ReceiptMotion } from "./animated-icons/receipt.js";
+import { ReceiptTextMotion } from "./animated-icons/receipt-text.js";
+import { BadgePercentMotion } from "./animated-icons/badge-percent.js";
+import { DollarSignMotion } from "./animated-icons/dollar-sign.js";
+import { EuroMotion } from "./animated-icons/euro.js";
+import { PoundSterlingMotion } from "./animated-icons/pound-sterling.js";
+import { JapaneseYenMotion } from "./animated-icons/japanese-yen.js";
+import { HandCoinsMotion } from "./animated-icons/hand-coins.js";
+import { CircleDollarSignMotion } from "./animated-icons/circle-dollar-sign.js";
+
+export const WalletIcon = /* @__PURE__ */ createKitIcon(Wallet, "WalletIcon", WalletMotion);
+export const CreditCardIcon = /* @__PURE__ */ createKitIcon(CreditCard, "CreditCardIcon", CreditCardMotion);
+export const BanknoteIcon = /* @__PURE__ */ createKitIcon(Banknote, "BanknoteIcon", "detail");
+export const CoinsIcon = /* @__PURE__ */ createKitIcon(Coins, "CoinsIcon", "turn");
+export const PiggyBankIcon = /* @__PURE__ */ createKitIcon(PiggyBank, "PiggyBankIcon", "pulse");
+export const LandmarkIcon = /* @__PURE__ */ createKitIcon(Landmark, "LandmarkIcon", "columns");
+export const ReceiptIcon = /* @__PURE__ */ createKitIcon(Receipt, "ReceiptIcon", ReceiptMotion);
+export const ReceiptTextIcon = /* @__PURE__ */ createKitIcon(ReceiptText, "ReceiptTextIcon", ReceiptTextMotion);
+export const CalculatorIcon = /* @__PURE__ */ createKitIcon(Calculator, "CalculatorIcon", "detail");
+export const PercentIcon = /* @__PURE__ */ createKitIcon(Percent, "PercentIcon", "turn");
+export const BadgePercentIcon = /* @__PURE__ */ createKitIcon(BadgePercent, "BadgePercentIcon", BadgePercentMotion);
+export const DollarSignIcon = /* @__PURE__ */ createKitIcon(DollarSign, "DollarSignIcon", DollarSignMotion);
+export const EuroIcon = /* @__PURE__ */ createKitIcon(Euro, "EuroIcon", EuroMotion);
+export const PoundSterlingIcon = /* @__PURE__ */ createKitIcon(PoundSterling, "PoundSterlingIcon", PoundSterlingMotion);
+export const JapaneseYenIcon = /* @__PURE__ */ createKitIcon(JapaneseYen, "JapaneseYenIcon", JapaneseYenMotion);
+export const BitcoinIcon = /* @__PURE__ */ createKitIcon(Bitcoin, "BitcoinIcon", "turn");
+export const HandCoinsIcon = /* @__PURE__ */ createKitIcon(HandCoins, "HandCoinsIcon", HandCoinsMotion);
+export const CircleDollarSignIcon = /* @__PURE__ */ createKitIcon(CircleDollarSign, "CircleDollarSignIcon", CircleDollarSignMotion);
+export const BadgeDollarSignIcon = /* @__PURE__ */ createKitIcon(BadgeDollarSign, "BadgeDollarSignIcon", "detail");
+export const BanknoteArrowUpIcon = /* @__PURE__ */ createKitIcon(BanknoteArrowUp, "BanknoteArrowUpIcon", "columns");

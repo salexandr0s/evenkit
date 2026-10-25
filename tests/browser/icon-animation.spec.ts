@@ -1,4 +1,5 @@
 import { expect, test, type Locator } from "@playwright/test";
+import * as kit from "@project-kit/ui";
 
 async function artwork(icon: Locator) {
   return icon.evaluate(svg => [...svg.querySelectorAll("*")].map(element => {
@@ -9,7 +10,7 @@ async function artwork(icon: Locator) {
 
 test("every catalog icon stays still at rest, animates its artwork, and resets on leave", async ({ page }) => {
   await page.goto("/#icons");
-  await expect(page.locator(".icon-card")).toHaveCount(99);
+  await expect(page.locator(".icon-card")).toHaveCount(Object.keys(kit).filter(name => name.endsWith("Icon")).length);
   const result = await page.locator(".icon-gallery").evaluate(async gallery => {
     const cards = [...gallery.querySelectorAll<HTMLElement>(".icon-card")];
     const icons = cards.map(card => card.querySelector<SVGSVGElement>(".icon-card-sample svg")!);

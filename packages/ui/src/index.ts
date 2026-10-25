@@ -29,6 +29,52 @@ export {
   ShapesIcon,
   type IconProps, type IconSize,
 } from "./icons.js";
+export {
+  UtensilsIcon, UtensilsCrossedIcon, ChefHatIcon, CookingPotIcon,
+  SoupIcon, SaladIcon, SandwichIcon, PizzaIcon,
+  HamburgerIcon, BeefIcon, FishIcon, EggFriedIcon,
+  CroissantIcon, CakeSliceIcon, IceCreamBowlIcon, CookieIcon,
+  AppleIcon, BananaIcon, CarrotIcon, WheatIcon,
+  CoffeeIcon, CupSodaIcon, WineIcon, BeerIcon,
+} from "./icons-food.js";
+export {
+  WalletIcon, CreditCardIcon, BanknoteIcon, CoinsIcon,
+  PiggyBankIcon, LandmarkIcon, ReceiptIcon, ReceiptTextIcon,
+  CalculatorIcon, PercentIcon, BadgePercentIcon, DollarSignIcon,
+  EuroIcon, PoundSterlingIcon, JapaneseYenIcon, BitcoinIcon,
+  HandCoinsIcon, CircleDollarSignIcon, BadgeDollarSignIcon, BanknoteArrowUpIcon,
+} from "./icons-finance.js";
+export {
+  ChartColumnIcon, ChartBarIcon, ChartBarIncreasingIcon, ChartColumnIncreasingIcon,
+  ChartLineIcon, ChartAreaIcon, ChartPieIcon, ChartScatterIcon,
+  ChartCandlestickIcon, ChartSplineIcon, ChartNetworkIcon, ChartNoAxesColumnIcon,
+  ChartColumnStackedIcon, TrendingUpIcon, TrendingDownIcon, ChartGanttIcon,
+} from "./icons-charts.js";
+export {
+  ShoppingCartIcon, ShoppingBagIcon, ShoppingBasketIcon, StoreIcon,
+  TagIcon, TicketIcon, GiftIcon, PackageIcon,
+  PackageCheckIcon, TruckIcon, ScanBarcodeIcon, QrCodeIcon,
+} from "./icons-commerce.js";
+export {
+  MapPinIcon, MapIcon, NavigationIcon, CompassIcon,
+  PlaneIcon, TrainFrontIcon, BusIcon, CarIcon,
+  BikeIcon, ShipIcon, HotelIcon, LuggageIcon,
+} from "./icons-travel.js";
+export {
+  HeartIcon, HeartPulseIcon, StethoscopeIcon, PillIcon,
+  SyringeIcon, HospitalIcon, CrossIcon, DumbbellIcon,
+  FootprintsIcon, BrainIcon,
+} from "./icons-health.js";
+export {
+  LeafIcon, SproutIcon, TreePineIcon, Flower2Icon,
+  CloudSunIcon, CloudRainIcon, CloudSnowIcon, CloudLightningIcon,
+  ThermometerIcon, DropletsIcon,
+} from "./icons-nature.js";
+export {
+  MonitorIcon, LaptopIcon, SmartphoneIcon, TabletIcon,
+  CameraIcon, VideoIcon, HeadphonesIcon, MicIcon,
+  WifiIcon, BluetoothIcon, DatabaseIcon, CodeXmlIcon,
+} from "./icons-technology.js";
 export { AdminShell, type AdminShellProps, type AdminNavGroup, type AdminNavItem, type AdminLinkProps, type AdminSidebarState } from "./admin-shell.js";
 export { DataTable, type DataTableProps, type DataTableColumn, type DataTableSelection, type DataTableCellOverflow } from "./data-table.js";
 export { ChatWidget, ChatPanel } from "./chat.js";

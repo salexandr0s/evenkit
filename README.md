@@ -22,7 +22,7 @@ The catalog uses AdminShell for its own navigation. Each entry has an icon. Drag
 | Package | Contents | Public imports |
 |---|---|---|
 | `@project-kit/tokens` | Typed scales, palettes, eight themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
-| `@project-kit/ui` | Controls, layouts, forms, navigation, overlays, files and feedback; 99 Lucide icons, AdminShell, DataTable and chat | Main export, `/css` |
+| `@project-kit/ui` | Controls, layouts, forms, navigation, overlays, files and feedback; 215 Lucide icons, AdminShell, DataTable and chat | Main export, `/css` |
 | `@project-kit/catalog` | Searchable examples and usage reference | Local application |
 
 Both libraries export built files and declarations. UI styles use `pk-` classes and `--pk-` variables, with no global reset. Consumers need React 19 and React DOM 19; no Tailwind, Next.js, database, or authentication dependency is required by the UI package.
@@ -224,7 +224,7 @@ import { Button, UserIcon, TooltipProvider, Tooltip, TooltipTrigger, TooltipCont
 </TooltipProvider>
 ```
 
-TooltipContent includes the compact surface, text wrapper, and matching arrow. It supports Radix positioning props, a forwarded ref, `container`, and `showArrow`; it owns its markup and does not expose `asChild`. Text wraps within the viewport, with a 280px maximum width. The inverse foreground/background colors follow the document theme. Opening and closing fade with a 2px movement over 120ms; reduced motion removes both animations. Provider timings are overridable. The catalog and shared component icon actions use this same tooltip. Use `UserIcon` for a person and `UsersIcon` for a team; the icon reference includes all 99 named wrappers.
+TooltipContent includes the compact surface, text wrapper, and matching arrow. It supports Radix positioning props, a forwarded ref, `container`, and `showArrow`; it owns its markup and does not expose `asChild`. Text wraps within the viewport, with a 280px maximum width. The inverse foreground/background colors follow the document theme. Opening and closing fade with a 2px movement over 120ms; reduced motion removes both animations. Provider timings are overridable. The catalog and shared component icon actions use this same tooltip. Use `UserIcon` for a person and `UsersIcon` for a team; the icon reference includes all 215 named wrappers.
 
 ## Admin shell and tables
 
@@ -268,7 +268,7 @@ const columns: readonly DataTableColumn<Project>[] = [
 
 Table rows use 44px default or 36px compact density, growing when custom content needs more room. Dropdown options use 36px desktop rows. Interactive targets use at least 44px in touch layouts. See [icons](docs/icons.md) for the chosen library, alternatives, import names, and accessible usage.
 
-All 99 icons animate once when hovered, including when the pointer enters their containing button or link. They reset on exit and respect reduced motion. Use `<BellIcon animation="static" />` for a still icon, or wrap a section in `<IconProvider animation="static">` to set its default. An explicit icon prop overrides the provider. The Icons catalog compares both modes and shows the matching JSX. See [icon motion](docs/icons.md#hover-animation-and-static-icons) for usage.
+All 215 icons animate once when hovered, including when the pointer enters their containing button or link. They reset on exit and respect reduced motion. Use `<BellIcon animation="static" />` for a still icon, or wrap a section in `<IconProvider animation="static">` to set its default. An explicit icon prop overrides the provider. The Icons catalog compares both modes and shows the matching JSX, with categories for food, payments, charts, shopping, travel, health, weather, and technology. Search terms such as "breakfast", "revenue", and "portfolio" help find an icon by intent. See [icon motion](docs/icons.md#hover-animation-and-static-icons) for usage.
 
 ## Check the kit
 

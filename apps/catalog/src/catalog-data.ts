@@ -33,7 +33,7 @@ const baseEntries: readonly CatalogEntry[] = [
     name: "Icons",
     group: "Foundations",
     description: "Named icons that animate on hover, with static versions, shared sizes, and accessible labeling patterns.",
-    tags: ["icon", "lucide", "animated", "hover", "static", "motion", "search", "folder", "navigation", "arrow", "glyph", "svg"],
+    tags: ["icon", "lucide", "animated", "hover", "static", "motion", "search", "folder", "navigation", "arrow", "glyph", "svg", "food", "drink", "finance", "payment", "chart", "analytics", "shopping", "travel", "health", "weather", "device"],
     source: "Lucide · Lucide Animated · kit motion",
     sourceUrl: "https://lucide-animated.com/",
     usage: "\"use client\";\n\nimport \"@project-kit/tokens/css\";\nimport \"@project-kit/ui/css\";\nimport { Button, IconProvider, PlusIcon, SearchIcon } from \"@project-kit/ui\";\n\nexport function IconExamples({ onAdd }: { onAdd: () => void }) {\n  return (\n    <IconProvider animation=\"hover\">\n      {/* Hover the button to animate its decorative icon. */}\n      <Button startIcon={<PlusIcon />} onClick={onAdd}>Add project</Button>\n      {/* Name an icon-only action on its button. */}\n      <Button shape=\"icon\" aria-label=\"Add project\" onClick={onAdd}>\n        <PlusIcon />\n      </Button>\n      {/* An explicit static icon stays still within the provider. */}\n      <SearchIcon animation=\"static\" size=\"lg\" label=\"Search projects\" />\n    </IconProvider>\n  );\n}\n"

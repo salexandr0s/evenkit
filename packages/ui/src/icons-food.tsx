@@ -1,0 +1,34 @@
+"use client";
+
+import { Utensils, UtensilsCrossed, ChefHat, CookingPot, Soup, Salad, Sandwich, Pizza, Hamburger, Beef, Fish, EggFried, Croissant, CakeSlice, IceCreamBowl, Cookie, Apple, Banana, Carrot, Wheat, Coffee, CupSoda, Wine, Beer } from "lucide-react";
+import { createKitIcon } from "./create-kit-icon.js";
+import { CookingPotMotion } from "./animated-icons/cooking-pot.js";
+import { SoupMotion } from "./animated-icons/soup.js";
+import { BananaMotion } from "./animated-icons/banana.js";
+import { CoffeeMotion } from "./animated-icons/coffee.js";
+import { CupSodaMotion } from "./animated-icons/cup-soda.js";
+
+export const UtensilsIcon = /* @__PURE__ */ createKitIcon(Utensils, "UtensilsIcon", "turn");
+export const UtensilsCrossedIcon = /* @__PURE__ */ createKitIcon(UtensilsCrossed, "UtensilsCrossedIcon", "turn");
+export const ChefHatIcon = /* @__PURE__ */ createKitIcon(ChefHat, "ChefHatIcon", "pulse");
+export const CookingPotIcon = /* @__PURE__ */ createKitIcon(CookingPot, "CookingPotIcon", CookingPotMotion);
+export const SoupIcon = /* @__PURE__ */ createKitIcon(Soup, "SoupIcon", SoupMotion);
+export const SaladIcon = /* @__PURE__ */ createKitIcon(Salad, "SaladIcon", "pulse");
+export const SandwichIcon = /* @__PURE__ */ createKitIcon(Sandwich, "SandwichIcon", "rows");
+export const PizzaIcon = /* @__PURE__ */ createKitIcon(Pizza, "PizzaIcon", "turn");
+export const HamburgerIcon = /* @__PURE__ */ createKitIcon(Hamburger, "HamburgerIcon", "columns");
+export const BeefIcon = /* @__PURE__ */ createKitIcon(Beef, "BeefIcon", "pulse");
+export const FishIcon = /* @__PURE__ */ createKitIcon(Fish, "FishIcon", "turn");
+export const EggFriedIcon = /* @__PURE__ */ createKitIcon(EggFried, "EggFriedIcon", "pulse");
+export const CroissantIcon = /* @__PURE__ */ createKitIcon(Croissant, "CroissantIcon", "turn");
+export const CakeSliceIcon = /* @__PURE__ */ createKitIcon(CakeSlice, "CakeSliceIcon", "detail");
+export const IceCreamBowlIcon = /* @__PURE__ */ createKitIcon(IceCreamBowl, "IceCreamBowlIcon", "detail");
+export const CookieIcon = /* @__PURE__ */ createKitIcon(Cookie, "CookieIcon", "turn");
+export const AppleIcon = /* @__PURE__ */ createKitIcon(Apple, "AppleIcon", "pulse");
+export const BananaIcon = /* @__PURE__ */ createKitIcon(Banana, "BananaIcon", BananaMotion);
+export const CarrotIcon = /* @__PURE__ */ createKitIcon(Carrot, "CarrotIcon", "turn");
+export const WheatIcon = /* @__PURE__ */ createKitIcon(Wheat, "WheatIcon", "rows");
+export const CoffeeIcon = /* @__PURE__ */ createKitIcon(Coffee, "CoffeeIcon", CoffeeMotion);
+export const CupSodaIcon = /* @__PURE__ */ createKitIcon(CupSoda, "CupSodaIcon", CupSodaMotion);
+export const WineIcon = /* @__PURE__ */ createKitIcon(Wine, "WineIcon", "turn");
+export const BeerIcon = /* @__PURE__ */ createKitIcon(Beer, "BeerIcon", "turn");

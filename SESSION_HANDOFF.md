@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Icon scenario expansion: 25 October 2026
+
+Added 116 named icons, bringing the library to 215. New categories cover food/drink (24), money/payments (20), charts (16 added; 17 including the existing combined chart), shopping/delivery (12), travel/places (12), health/fitness (10), nature/weather (10), and devices/technology (12). Every addition uses the existing hover/static/reduced-motion contract. Forty-five new glyph bodies adapt the same pinned Lucide Animated source; 71 use original CSS motion on installed Lucide artwork. Totals are now 95 adapted bodies and 120 CSS animations. Syringe retains the installed 24-unit outline because upstream uses incompatible filled artwork.
+
+Extracted the unchanged shared factory and icon types into `packages/ui/src/create-kit-icon.tsx`; original imports and public types remain compatible. Eight `icons-*.tsx` domain modules have explicit public exports. `apps/catalog/src/scenario-icon-data.ts` supplies searchable labels/aliases and eight categories; catalog data remains outside the UI runtime. Icons now load through the catalog's existing lazy/Suspense pattern, moving the expanded gallery into its own chunk. Updated `docs/icons.md`, README and provenance. The existing all-icon browser sweep derives its inventory from public exports.
+
+Verification passed: final production build, configured TypeScript and ESLint, all three icon Chromium journeys (including idle/hover/reset for all 215), 62 copied examples and 48 priority mappings, and independent packed Vite/Next builds with SSR/HTTP/CSS checks. Packed fixtures explicitly render new Coffee and BanknoteArrowUp exports. Manifest/public export/category audits match all 116 additions; all 71 CSS presets target visible SVG geometry. Category and breakfast/revenue/portfolio searches, dark/light rendering, and 360px overflow checks passed with no page errors. Independent source review found no actionable issues. An initial sweep used a build predating the final MapPin reset fix; rebuilding the final source resolved it. Firefox/Safari and physical touch were not tested.
+
+Evidence: `.artifacts/icon-expansion-implementation.json`, `icon-expansion-smoke.json`, `icon-expansion-package-verification.json`, `icon-expansion-test-results/`, and `icon-expansion-*.png`. Fixed-build tests use `.artifacts/icon-expansion-playwright.config.ts` to avoid concurrent catalog rebuilds. No required icon-expansion work remains. Concurrent design changes remain separate. Resume with `git status --short`; view `http://127.0.0.1:5173/#icons`.
+
 ## Inline utility actions: 25 October 2026
 
 Completed the compact-layout follow-up. Toast icon actions now sit beside the title and dismiss control in one row. Ghost buttons remove the resting outline; controls are 24px on desktop with 16px glyphs and expand to 44px for narrow/coarse-pointer input. Added ButtonSize/xs without changing field ControlSize. Applied xs to the previously converted copy, password, file, chat, selection and status utilities, plus SearchField clearing. Icon import copying now sits beside wrapping code. Text-only toast actions retain their existing visible-label layout. This supersedes the lower-row square toast shown in the earlier utility-icon pass.

@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import { scenarioIcons } from "./scenario-icon-data.js";
 import {
   ActivityIcon, ArrowDownIcon, ArrowUpIcon, ArrowUpDownIcon, ArrowLeftIcon,
   ArrowRightIcon, CheckIcon, ChevronDownIcon, ChevronUpIcon, ChevronLeftIcon,
@@ -34,6 +35,14 @@ export const iconCategories = [
   { value: "communication", label: "Communication" },
   { value: "workspace", label: "Workspace" },
   { value: "appearance", label: "Appearance" },
+  { value: "food", label: "Food & drink" },
+  { value: "finance", label: "Money & payments" },
+  { value: "charts", label: "Charts & analytics" },
+  { value: "commerce", label: "Shopping & delivery" },
+  { value: "travel", label: "Travel & places" },
+  { value: "health", label: "Health & fitness" },
+  { value: "nature", label: "Nature & weather" },
+  { value: "technology", label: "Devices & technology" },
 ] as const;
 export type IconCategory = (typeof iconCategories)[number]["value"];
 
@@ -91,7 +100,7 @@ export const icons: readonly IconEntry[] = [
   { name: "CalendarDaysIcon", label: "Calendar", category: "content", aliases: ["schedule", "date", "event", "appointment"], Icon: CalendarDaysIcon },
   { name: "InboxIcon", label: "Inbox", category: "communication", aliases: ["mail", "incoming", "received"], Icon: InboxIcon },
   { name: "MessageSquareIcon", label: "Message", category: "communication", aliases: ["chat", "comment", "conversation", "reply"], Icon: MessageSquareIcon },
-  { name: "ChartNoAxesCombinedIcon", label: "Analytics", category: "workspace", aliases: ["chart", "report", "metrics", "trend"], Icon: ChartNoAxesCombinedIcon },
+  { name: "ChartNoAxesCombinedIcon", label: "Combined chart", category: "charts", aliases: ["analytics", "report", "metrics", "trend", "revenue"], Icon: ChartNoAxesCombinedIcon },
   { name: "ClockIcon", label: "Time", category: "content", aliases: ["clock", "history", "recent", "duration"], Icon: ClockIcon },
   { name: "BookmarkIcon", label: "Bookmark", category: "content", aliases: ["saved", "favorite", "collection"], Icon: BookmarkIcon },
   { name: "ArchiveIcon", label: "Archive", category: "content", aliases: ["storage", "box", "file away"], Icon: ArchiveIcon },
@@ -146,4 +155,5 @@ export const icons: readonly IconEntry[] = [
   { name: "TagsIcon", label: "Tags", category: "content", aliases: ["tag groups", "labels", "chips"], Icon: TagsIcon },
   { name: "ToggleRightIcon", label: "Switch", category: "controls", aliases: ["toggle", "on", "off", "setting"], Icon: ToggleRightIcon },
   { name: "TypeIcon", label: "Typography", category: "content", aliases: ["prose", "text", "font", "type"], Icon: TypeIcon },
+  ...scenarioIcons,
 ];

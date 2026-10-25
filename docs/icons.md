@@ -32,12 +32,12 @@ import { UserIcon, UsersIcon } from "@project-kit/ui";
 <span><UsersIcon />Team</span>
 ```
 
-The set contains 99 named wrappers, including these families:
+The set contains 215 named wrappers, including these families:
 
 | Purpose | Icons |
 |---|---|
 | People and teams | `UserIcon`, `UsersIcon`, `UserPlusIcon`, `UserCheckIcon`, `ContactRoundIcon` |
-| Workspace and reporting | `Building2Icon`, `BriefcaseBusinessIcon`, `ChartNoAxesCombinedIcon`, `LayoutDashboardIcon` |
+| Workspace | `Building2Icon`, `BriefcaseBusinessIcon`, `LayoutDashboardIcon` |
 | Communication | `BellIcon`, `InboxIcon`, `MailIcon`, `MessageSquareIcon` |
 | Time and saved content | `CalendarDaysIcon`, `ClockIcon`, `BookmarkIcon`, `ArchiveIcon` |
 | Common actions | `UploadIcon`, `DownloadIcon`, `CopyIcon`, `PencilIcon`, `FilterIcon`, `Undo2Icon` |
@@ -49,6 +49,25 @@ The set contains 99 named wrappers, including these families:
 | Layout and content | `TypeIcon`, `RectangleHorizontalIcon`, `LayoutGridIcon`, `SeparatorHorizontalIcon`, `PanelTopIcon`, `HeadingIcon`, `TagsIcon`, `ListIcon`, `ListTreeIcon`, `Table2Icon`, `FilePenLineIcon` |
 | Navigation and overlays | `PanelsTopLeftIcon`, `ListCollapseIcon`, `ChevronsUpDownIcon`, `PanelTopDashedIcon`, `ArrowLeftRightIcon`, `MessageSquareTextIcon`, `PanelRightIcon` |
 | Helpers and tools | `AccessibilityIcon`, `KeyboardIcon`, `SlidersHorizontalIcon`, `GaugeIcon`, `FilterXIcon`, `ShapesIcon` |
+| Food & drink | `UtensilsIcon`, `ChefHatIcon`, `PizzaIcon`, `CroissantIcon`, `CoffeeIcon`, `WineIcon` |
+| Money & payments | `WalletIcon`, `CreditCardIcon`, `PiggyBankIcon`, `ReceiptTextIcon`, `EuroIcon`, `BitcoinIcon` |
+| Charts & analytics | `ChartNoAxesCombinedIcon`, `ChartLineIcon`, `ChartPieIcon`, `ChartCandlestickIcon`, `ChartScatterIcon`, `ChartGanttIcon` |
+| Shopping & delivery | `ShoppingCartIcon`, `StoreIcon`, `GiftIcon`, `PackageCheckIcon`, `TruckIcon`, `QrCodeIcon` |
+| Travel & places | `MapPinIcon`, `CompassIcon`, `PlaneIcon`, `TrainFrontIcon`, `HotelIcon`, `LuggageIcon` |
+| Health & fitness | `HeartPulseIcon`, `StethoscopeIcon`, `PillIcon`, `HospitalIcon`, `DumbbellIcon`, `BrainIcon` |
+| Nature & weather | `LeafIcon`, `SproutIcon`, `TreePineIcon`, `CloudRainIcon`, `CloudSnowIcon`, `ThermometerIcon` |
+| Devices & technology | `LaptopIcon`, `SmartphoneIcon`, `CameraIcon`, `HeadphonesIcon`, `WifiIcon`, `CodeXmlIcon` |
+
+Choose a category to browse a scenario, or search for the task: "breakfast" finds coffee, croissants, eggs, and bananas; "revenue" finds money and charts; "portfolio" finds line, pie, and candlestick charts. Search and category filters work together.
+
+```tsx
+import { Button, CoffeeIcon, CreditCardIcon, ChartPieIcon, TruckIcon } from "@project-kit/ui";
+
+<Button startIcon={<CoffeeIcon />}>Breakfast menu</Button>
+<Button startIcon={<CreditCardIcon />}>Payment methods</Button>
+<span><ChartPieIcon animation="static" />Portfolio allocation</span>
+<span><TruckIcon />Delivery tracking</span>
+```
 
 Use `PanelLeftCloseIcon` for collapsing the sidebar and `PanelLeftOpenIcon` for expanding it. Keep the action's accessible name on its button; a tooltip can also show that action to pointer users.
 
@@ -78,7 +97,9 @@ The catalog lets you filter by category, search names and related words such as 
 
 Every catalog sidebar entry has an explicit icon in `apps/catalog/src/catalog.tsx`. The icon reference includes a Controls category and component search terms such as "checkbox", "fieldset", and "combobox".
 
-Add new named wrappers to `packages/ui/src/icons.tsx` when a product needs them, export them from `packages/ui/src/index.ts`, and include them in the catalog inventory in `apps/catalog/src/icon-data.ts`. Assign an icon when adding a catalog sidebar entry. Keep imports static; a runtime map of every library icon would include unnecessary assets.
+Add named wrappers to the matching `packages/ui/src/icons-*.tsx` module, such as `icons-food.tsx` or `icons-charts.tsx`; general interface wrappers remain in `icons.tsx`. Use the shared factory in `create-kit-icon.tsx` and export each icon from `packages/ui/src/index.ts`.
+
+Include each icon in the catalog inventory. General interface entries live in `apps/catalog/src/icon-data.ts`; food, finance, charts, shopping, travel, health, nature, and device entries live in `apps/catalog/src/scenario-icon-data.ts`. Keep labels and search aliases in the catalog. Assign an icon when adding a catalog sidebar entry. Keep imports static; a runtime map of every library icon would include unnecessary assets.
 
 ## Alternatives inspected
 
