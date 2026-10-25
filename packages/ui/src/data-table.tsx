@@ -70,6 +70,8 @@ export interface DataTableProps<T extends object> {
   density?: "default" | "compact";
   searchable?: boolean;
   searchLabel?: string;
+  /** External search controls can clear their query and restore focus here. */
+  onClearSearch?: () => void;
   initialPageSize?: number;
   pageSizeOptions?: readonly number[];
   selection?: DataTableSelection<T>;
@@ -87,7 +89,7 @@ export interface DataTableProps<T extends object> {
 
 export function DataTable<T extends object>({
   data, columns, getRowId, caption, density = "default", searchable = true,
-  searchLabel = "Search records", initialPageSize = 10, pageSizeOptions = defaultPageSizes,
+  searchLabel = "Search records", onClearSearch, initialPageSize = 10, pageSizeOptions = defaultPageSizes,
   selection, loading = false, error, onRetry, emptyTitle = "No records yet",
   emptyDescription = "Add a record to get started.", emptyAction, toolbar, className, remote, hiddenColumnIds,
 }: DataTableProps<T>) {
@@ -148,7 +150,7 @@ export function DataTable<T extends object>({
     if (remote) remote.onQueryChange({ ...remote.query, search: value, pageIndex: 0 });
     else { table.setGlobalFilter(value); table.firstPage(); }
   }
-  const resetSearch = () => { searchRef.current?.focus(); changeSearch(""); };
+  const resetSearch = () => { if (onClearSearch) { onClearSearch(); return; } searchRef.current?.focus(); changeSearch(""); };
   useLayoutEffect(() => {
     if (!remote || unavailable) return;
     if (remote.query.pageIndex > lastPage) remote.onQueryChange({ ...remote.query, pageIndex: lastPage });
