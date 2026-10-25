@@ -1,0 +1,391 @@
+# Session handoff: 25 October 2026
+
+## Reporting implementation completed
+
+Status: DONE. Worktree: `/Users/nationalbank/.codex/worktrees/reporting/design-tokens`. Branch: `codex/reporting`. Started from local `codex/component-improvements` at `b588b1b1964ba2b26ee8453606f354f2c33eb10d`, seven commits ahead of the fetched remote at the start. The original checkout and concurrent worktrees were preserved. No publishing, deployment, push or existing application change was performed.
+
+Local implementation commits:
+
+- `6f084ef4334fcc2bec576b9f8e35e59c92199acb` — `feat(tokens): add validated chart series palette`
+- `bd3023ef5b1e0499633aef4adaca91250c9d2a8a` — `feat(reporting): add accessible charts and dashboard blocks`
+
+### APIs and ownership
+
+| Inventory | Public surface | Contract |
+| --- | --- | --- |
+| H05 | `Statistic`, `StatisticProps`, `StatisticComparison` | Values, units, periods, explicit trend text and independent direction/tone; zero, missing, loading and error states. |
+| K01 | `ChartFrame`, `ChartLegend`, `ChartTooltip`, `ChartDataTable`, shared chart types | Stable row/series IDs, six color slots, named figure, state recovery, keyboard/pointer inspection and semantic table. |
+| K02 | `LineChart`, `AreaChart` | Ordered categories with missing-value gaps and explicit period/aggregation/unit context. |
+| K03 | `BarChart` | Horizontal/vertical grouped or signed stacked bars, matching patterned legends and full labels in the inspector/table. |
+| K07 | `ReportingControls`, `ExportAction`, `ExportState` | Controlled period/comparison/unit/filter fields and idle/preparing/progress/ready/error export states; retry/cancel and focus recovery. |
+| O01 | `DashboardBlock` in `registry/blocks/dashboard.tsx` | Copy and edit the source; supply statistics, controls and optional chart, activity, export action and data section. |
+
+Applications own queries, metric definitions, comparison arithmetic, time aggregation, permissions, export jobs, file generation and download URL lifetime. The catalog uses fictional data and an existing CSV fixture. See [reporting APIs and examples](docs/reporting.md), [dependency decision](docs/chart-dependency.md), [UI provenance](packages/ui/PROVENANCE.md) and [token provenance](packages/tokens/PROVENANCE.md).
+
+Charts use pinned `d3-shape` 3.2.0 for line/area paths, with `d3-path` 3.1.0 resolved in the lockfile; development types are `@types/d3-shape` 3.2.0. Official D3 and Recharts documentation informed the bounded dependency evaluation. React owns rendering, interactions and accessibility. ISC/MIT notices are retained under `packages/ui/licenses`.
+
+The six required mode roles `chart-series-1` through `chart-series-6` emit `--pk-chart-series-1` through `--pk-chart-series-6`; series 1 follows each theme accent. `--pk-chart-area-opacity` controls supplementary area fill. Existing neutral surfaces remain unchanged. Custom brands must now provide all six chart roles in both modes or extend built-in modes. Validation checks all 384 series/background pairs across eight themes and two modes; the lowest built-in ratio is 4.48:1 against a 3:1 graphics threshold. Series colors do not promise pairwise distinguishability; labels, dashes, markers, patterns and table values provide additional cues.
+
+### Verification evidence
+
+All required checks passed. Logs and screenshots are local ignored artifacts under `.artifacts/reporting/`.
+
+| Check | Result / evidence |
+| --- | --- |
+| `npm run build` | Package declarations/CSS and catalog production build passed; `build.log`. |
+| `npm run typecheck` / `npm run lint` | Configured workspace checks passed; `typecheck.log`, `lint.log`. |
+| `npm test` | 33 tests in six files passed, including five chart geometry, four reporting and ten token tests; `unit.log`. |
+| Reporting, theme and token browser checks | Ten Chromium journeys passed; `browser.log`. Includes zero/missing values, signed stacks, table data, keyboard inspection, retry/table/export focus recovery and prepared-file invalidation. |
+| Six requested catalog routes | Six journeys passed across eight themes, light/dark and 360/768/1024/1440px: 384 combinations; `catalog-matrix.log`. |
+| Supplemental chart matrix | 192 combinations covering eight themes, both modes/directions and 360/1440px, reduced motion, neutral surfaces, series paint and visible focus; included in `browser.log`. |
+| `npm run verify:examples` | All 92 copied catalog examples and 78 inventory mappings passed, including custom ChartFrame and copied DashboardBlock; `examples.log`, `.artifacts/catalog-examples.json`. |
+| `npm run verify:packages` | Independent packed Vite and Next production builds, HTTP/CSS checks, Next server rendering, copied dashboard and retained D3 notices passed; `packages.log`, `.artifacts/package-verification.json`. Temporary consumers and servers were removed. |
+| Visual and CSS review | Ten desktop/narrow light/dark captures, no overflow/runtime errors, no undefined CSS variables; `visuals.json`, `css-token-audit.json`, PNGs. Independent source/visual review found no remaining actionable issue. |
+
+Visual review corrected narrow line-label fragmentation: charts below the container threshold show readable endpoint labels, while all categories remain available in the inspector and table. The final CSS and documentation change was followed by another production build, all 16 affected browser journeys and packed-consumer verification. TypeScript, lint, unit and copied-example inputs were unchanged by that CSS-only correction. `final-inputs.json` records final implementation hashes. Screenshot capture temporarily made the catalog header static to avoid occluding the component; production CSS was not changed for capture. The owned preview on port 49234 was stopped; other agents' previews were preserved.
+
+### Limits and remaining work
+
+No required reporting work remains. Charts support up to six series, finite values bounded by `Number.MAX_SAFE_INTEGER / 6`, and ordered categorical/time buckets. They do not infer elapsed time, timezones or missing dates. Large datasets need host aggregation; continuous time scales, zoom, virtualization and export generation are outside this adapter. Area series overlap rather than stack. Firefox, Safari, assistive-technology application testing and physical touch devices were not tested; Chromium covers the required keyboard, RTL, theme, layout and motion contracts.
+
+### Resume commands
+
+```sh
+cd /Users/nationalbank/.codex/worktrees/reporting/design-tokens
+git status --short
+git log -4 --oneline
+npm run build
+npm run typecheck
+npm run lint
+npm test
+npm run verify:examples
+npm run verify:packages
+KIT_CATALOG_PORT=5397 npx playwright test tests/browser/reporting.spec.ts tests/browser/reporting-matrix.spec.ts tests/browser/token-reference.spec.ts tests/browser/themes.spec.ts --workers=1
+KIT_CATALOG_PORT=5397 npx playwright test tests/browser/priority-catalog.spec.ts --grep '(Statistic / KPI|Chart frame and data|Line and area charts|Bar charts|Reporting controls and export|Dashboard block) loads' --workers=1
+```
+
+Use an available test port if 5397 is occupied. The reporting worktree remains attached for review. Earlier session history follows.
+
+## Previous component-improvements work
+
+Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
+
+## Component accent details: 25 October 2026
+
+Implemented the five accent additions approved after the component audit. Applied filter chips use accent text and soft fills, and enabled upload icon tiles use the same pairing. Sorted table columns have an accent arrow. The homepage's three collection icons use the theme accent. Command results gain an accented leading icon on hover or keyboard focus, with a soft row fill on keyboard focus. Error and disabled states retain their semantic or neutral styling. Large surfaces, utility icons, APIs and layout remain unchanged. The optional first-use empty-state treatment was not included in this five-part pass.
+
+Changed `packages/ui/src/data-workflows.css`, `data-table.css`, `command-palette.css` and `apps/catalog/src/homepage.css`. Production build passed, including package TypeScript compilation. All nine targeted Chromium journeys passed across homepage, tables, command search, applied filters and uploads. Nine token tests passed, covering required contrast pairs across all eight themes in both modes. A temporary Chromium fixture passed 44 upload/filter style checks in Ocean light and dark. Independent review found no actionable issues. No permanent tests were added for these CSS changes.
+
+Visual review covered all five additions in Grove, including light/dark upload and command views. The user's light appearance was restored after checking dark mode. Captures and verification logs are in `.artifacts/component-accents/`. Firefox, Safari and physical touch were not tested. The local preview at `http://127.0.0.1:5390/` is rebuilt; production was not deployed. No required work remains. Resume with `git status --short` and `git log -3 --oneline`.
+
+## Theme colour on selected states: 25 October 2026
+
+Rebalanced themes after the user found the first pass too muted. Selected sidebar rows now use a tinted background with accent labels and icons. The same treatment covers selected settings/workspace navigation, pill tabs, radio rows, toggles, segmented choices and current dropdown/mobile destinations. Horizontal active links keep their underline and gain accent text; the current pagination page has an accent fill. Selected neutral tags use the theme accent, while semantic tag tones retain their meaning. Selected colours persist on hover. Large surfaces, body text and structural borders remain neutral.
+
+Strengthened `accent-soft` across the eight themes; Grove light uses `#E0F2E6`. All existing text contrast checks pass, with a minimum of 4.89:1. Runtime changes are in `packages/tokens/src/themes.ts` and the UI stylesheets `admin-shell.css`, `foundations.css`, `navigation.css`, `selection-controls.css` and `workspace-settings.css`. Three component guides describe the selected-state treatment. APIs, layout and interaction behaviour are unchanged.
+
+Verification passed: production build, configured workspace TypeScript, ESLint and nine token tests. The browser run passed 39 of 40 journeys; the remaining switch journey froze the clock before its lazy preview loaded. Added a visibility wait before pausing the clock, preserving every timing and behaviour assertion; all eight selection journeys then passed. The other 32 passing journeys cover themes, sidebar, foundations, navigation, navbar and settings. A temporary Chromium fixture passed 61 selected/hover/focus style assertions. Visual review covered Grove light and Ocean dark sidebar, tabs and selections, with before/after captures in `.artifacts/theme-selection/`. Independent reviews approved the styling and test readiness fix. Firefox, Safari and physical touch were not tested.
+
+The local preview at `http://127.0.0.1:5390/` is rebuilt. The user's tab was refreshed; its Grove light preference was restored after checking a separate temporary tab. No required work remains; this change has not been deployed. Resume with `git status --short` and `git log -3 --oneline`.
+
+## Subtle theme accents: 25 October 2026
+
+Completed the goal to keep themes from recolouring the whole site. All eight built-in themes share neutral page backgrounds, surfaces, text and borders within each appearance mode. Theme colours apply to actions, focus rings and softer hover/selection highlights. Existing accent identities, semantic status colours, custom-brand support and Linen's serif headings remain. The gallery compares Canvas, Accent, Hover, Highlight and Focus swatches; homepage and package guidance describe the new behaviour.
+
+Changed `packages/tokens/src/themes.ts`, its existing token tests, `apps/catalog/src/theme-preview.tsx`, the homepage theme description, both READMEs and `tests/browser/themes.spec.ts`. Concurrent homepage copy and heading commits were preserved. Token coverage now guards shared neutral colours; the existing browser journey checks neutral surfaces and changing accents, including dialog portals.
+
+Verification passed: production builds, configured workspace TypeScript, full ESLint, nine token tests and all 16 Chromium journeys across themes, homepage, token reference, catalog and settings. A separate 64-case browser check covered all eight themes in both modes on homepage/catalog at 360/1440px, with no overflow or runtime errors. Before/after screenshots confirm the restrained colouring. Independent review found no actionable issues; every contrast check passes, with the lowest text contrast at 4.87:1 against a 4.5:1 requirement. Evidence: `.artifacts/subtle-themes/`. Firefox, Safari and physical touch were not tested.
+
+No required implementation work remains. The rebuilt local preview is `http://127.0.0.1:5390/#themes`; production has not been deployed for this change. Resume with `git status --short` and `git log -3 --oneline`. If needed, restart the preview with `npm run preview --workspace @evenkit/catalog -- --port 5390 --strictPort`.
+
+## Theme heading wording: 25 October 2026
+
+Changed the homepage heading to the user's exact wording, "Multiple color themes". Catalog build, TypeScript and focused ESLint passed; the rebuilt preview includes the new text. Concurrent palette changes were preserved and excluded from this wording commit. No remaining work for this request.
+
+## Homepage copy cleanup: 25 October 2026
+
+Applied the requested `avoid-ai-writing` pass to homepage text. The hero now reads "React components and design tokens." Replaced vague theme, library, setup and footer wording, shortened the introduction, and made the demo instructions and checklist labels specific. Only ten selected copy spans in `apps/catalog/src/homepage.tsx` changed; component behavior, links, IDs and styling are preserved.
+
+One editing pass completed, with no further justified copy changes found on review. The skill's quote normalizer and detector ran on changed prose; the detector reported no findings. An exact reverse comparison confirmed no source edits outside the selected spans. Catalog build, TypeScript and focused ESLint passed. Chromium checks and screenshots at 1440/360px confirmed the new heading, working checklist, no horizontal overflow and no runtime errors. Evidence: `.artifacts/homepage/copy-desktop.png`, `copy-mobile.png` and `copy-build.log`. No new tests were added for copy changes.
+
+The rebuilt preview is at `http://127.0.0.1:5390/`; refresh an already-open tab to see it. No remaining work for this copy request. Changes are local and have not been deployed. Resume with `git status --short` and `git log -2 --oneline`.
+
+## Homepage and default landing page: 25 October 2026
+
+Completed the homepage goal. The root URL now opens a dedicated Evenkit homepage with an interactive project form and checklist, eight theme choices, links into the component library, and copyable starter code. Existing component URLs such as `/#buttons`, `/#themes` and `/#tokens` still open the catalog. Catalog branding returns to `/`; theme, appearance and sidebar preferences retain their existing storage keys. The homepage accurately describes the packages as unpublished pilots.
+
+Key files: `apps/catalog/src/homepage.tsx`, `homepage.css`, `app.tsx`, `use-catalog-preferences.ts`, `catalog.tsx`, `main.tsx`, `apps/catalog/index.html`, `README.md`, and the homepage/catalog/sidebar browser tests. The catalog loads on entry through a lazy boundary; homepage section anchors use `#home-*` to keep them separate from component routes.
+
+Verification passed: production package/catalog builds, configured workspace TypeScript, full ESLint, and all 19 Chromium journeys across homepage, catalog, catalog-sidebar, themes and sidebar-tooltip. Additional production-preview checks covered form validation/submission, visibility selection, checklist state, copied clipboard text, overflow at 360/768/1024/1440px, action text across all eight palettes and dark Ocean, 44px brand links, skip-link focus, and runtime errors. Independent review found no remaining actionable issue. Corrected the CopyAction prop and homepage anchor specificity during verification. Evidence is under `.artifacts/homepage/`. Firefox, Safari and physical touch were not tested.
+
+Local preview: `http://127.0.0.1:5390/`. The homepage has not been pushed or deployed to production. No required implementation work remains. Resume with `git status --short` and `git log -2 --oneline`. If the preview stops, run `npm run preview --workspace @evenkit/catalog -- --port 5390 --strictPort`. Deployment remains a separate action using `vercel deploy --prod --scope blockconsult`; the current production deployment is recorded below.
+
+## Private repository and production deployment: 25 October 2026
+
+Committed all remaining navigation and catalog design changes as `f2eff93` and `20d89eb`. Created the private GitHub repository `https://github.com/salexandr0s/evenkit`, added it as `origin`, and pushed all three local branches with upstream tracking. The default branch is `codex/component-improvements`; `main` and `codex/auth-pages` retain their existing histories. The concurrent sidebar fix `d8dfd23` is also pushed.
+
+Production is live at `https://evenkit.dev` and `https://www.evenkit.dev`. Deployment `dpl_BpM2DTiz5MM2MH3UETMKDEEuX6Uw` is READY at `https://evenkit-6ol25r9wc-blockconsult.vercel.app`, built from clean source commit `d8dfd238036a514b7904af0f3220699c5be240ed`. It uses the existing Block Consult GmbH project `evenkit`, ID `prj_5K4UrqWVGwIWPIxGYAe8OkwfpxBW`. The Vercel connector lacks access to this team; the authorized local CLI session deployed successfully with explicit scope `blockconsult`.
+
+Reused the applicable build, type, lint, unit, browser and packed-consumer verification recorded below. Vercel completed a fresh production build. Live Chromium checks confirmed the 86-entry catalog, calendar month navigation and remote table at 1440/360px without runtime errors or horizontal overflow. A final production check confirmed the sidebar handle stays at y=468 after scrolling 300px in a 1000px-high viewport. Evidence is in `.artifacts/repository-publish/`. This handoff-only commit is excluded from deployment by `.vercelignore`.
+
+No requested work remains. Resume with `git status --short`, `git remote -v` and `git log -4 --oneline`. Deploy future changes from this checkout with `vercel deploy --prod --scope blockconsult`; automatic Git deployment was not configured. The package artifacts remain unpublished.
+
+## Sidebar resize handle: 25 October 2026
+
+Fixed the resize handle moving upward with the main content. In `packages/ui/src/admin-shell.css`, its sticky top offset now matches its initial position at the sidebar midpoint. Before the fix, scrolling 300px moved the handle from y=448 to y=148 while the sidebar remained at y=0. After the fix, the handle stays at y=448 throughout the 960px-high page, including at the bottom. Confidence in the localized CSS fix is high.
+
+Verification passed: `npm run build`, all 10 existing Chromium tests in `catalog-sidebar.spec.ts` and `sidebar-tooltip.spec.ts`, and direct scroll geometry checks for expanded, collapsed and hidden states plus a viewport resize to 1024x700. The build retains its existing chunk-size advisory. No new tests were added for this CSS adjustment; Firefox and Safari were not tested. No required work remains. The local preview at `http://127.0.0.1:5390/#stack` includes the fix; production was not deployed. Resume with `git log -1 --oneline` and `git status --short`.
+
+## Calendar design refinement: 25 October 2026
+
+Completed the requested Calendar design pass. The month title now leads paired navigation arrows; selected days use filled circles, today uses an outline and dot, and range bands join endpoint centers in either direction. Shorter keyboard guidance aligns with Today. Forced-color mode uses system highlight colors for selection and hover. The standalone catalog example has one framed calendar with a localized selected-date summary and a matching-width language field below it. Existing props, date constraints, keyboard behavior and form contracts are preserved.
+
+Changed `packages/ui/src/date-calendar.tsx`, `date-controls.css`, `apps/catalog/src/dates-preview.tsx`, `dates-preview.css` and `docs/dates.md`. Verification passed: production builds, configured TypeScript, focused ESLint and all four existing date Chromium journeys. Thirty-two theme/mode/width combinations passed selected/hover contrast, focus, target-size and overflow checks. Before/after captures cover Calendar, DatePicker and DateRangePicker in light/dark at 360/1440px. Independent review confirmed 44×44 touch targets, RTL arrows and multi-row range continuity. Forced-color selection/hover and scroll access to presets passed at 360×700px. Firefox/Safari and physical touch were not tested.
+
+No required work remains. Evidence and the isolated patch are under `.artifacts/calendar-design/`. Preview: `http://127.0.0.1:5390/#calendar`; the existing preview server remains running. This pass is committed separately from the earlier application-component work. Pre-existing Navbar, Hallmark and other design edits remain untouched. Resume with `git log -1 --oneline`, `git status --short` and `cat docs/dates.md`.
+
+## Application components and design pass: 25 October 2026
+
+Completed the requested nine groups covering 24 inventory additions: dates/time/formatting, MultiSelect/token input, locale numbers and unit recipes, remote tables and controls, record details/activity, workspace/settings/profile/appearance, upload queues/images, command search, and steps/onboarding. Public APIs and source blocks are in commit `907a53c`; catalog integration, browser coverage and completion records follow in a separate commit. Earlier Navbar, Hallmark and design edits remain in the working tree and were excluded through selective patches. No production deployment or package publication was performed for this work.
+
+The catalog now has 86 examples and exactly 72 inventory mappings. `apps/catalog/src/roadmap-entries.ts` and `roadmap-preview.tsx` integrate six feature families. New maintained controls are exported from `packages/ui/src/index.ts`; `registry/blocks/record-detail.tsx`, `account-settings.tsx` and `onboarding-wizard.tsx` are copyable application blocks. API guides are `docs/dates.md`, `value-fields.md`, `remote-tables.md`, `records-settings.md`, `uploads.md` and `commands-wizard.md`. The completed plan and design evidence are in `docs/component-roadmap-plan.md` and `component-roadmap-design.md`.
+
+Date-only and local-time strings remain distinct from timezone-bearing instants. Numeric drafts preserve invalid/partial input and submit canonical values. Applications own API transports, routing, authorization, storage scope and mutations. Async controls cancel requests and reject stale completions. Remote tables expose query/total/selection scope; source blocks preserve drafts and focus. Appearance settings include supported locales and density. Document themes use root attributes; nested samples apply explicit `cssVariables` and resolved system mode.
+
+The design pass improved selected-calendar contrast, bounded form width, mobile step density and action wrapping, upload empty states and stable command-search positioning. Reviewed all 24 additions at 360/1440px in light Neutral and dark Ocean; 96 captures and follow-up appearance/MultiSelect captures found no page overflow or runtime errors. The final appearance journey asserts actual computed theme colors.
+
+Verification passed: production builds, configured TypeScript and ESLint, 22 unit tests, all 86 copied examples/72 mappings, independent packed Vite/Next production builds and SSR/HTTP/stylesheet checks. The full Chromium run passed 183 of 184 journeys; its required-number-field failure was fixed and all ten affected value/account journeys passed after rebuilding. The final catalog color refinement passed the extended settings journey. No known test failure remains. Firefox, Safari, physical touch and a complete RTL visual matrix were not tested. Vite retains its initial-chunk size advisory.
+
+No required implementation remains. Evidence is under `.artifacts/component-roadmap/`, including `*-complete.log`, `unit-final.log`, `browser-final.log`, screenshots and selective patches. The local preview is `http://127.0.0.1:5390/#calendar` (owned session 77066). Resume with `git log -2 --oneline`, `git status --short` and `cat docs/component-roadmap-design.md`. If the preview has stopped, run `npm run preview --workspace @evenkit/catalog -- --port 5390 --strictPort`.
+
+## Evenkit rename and production launch: 25 October 2026
+
+Renamed the kit and workspace packages to Evenkit / `@evenkit/*`, updated examples and documentation, and created an original transparent logo from scratch. The catalog uses the logo silhouette with the active theme foreground and supplies it as the favicon. Existing `pk-` CSS and `data-kit-*` contracts remain stable; catalog preferences migrate from the former storage keys.
+
+Production is live at https://evenkit.dev, with https://www.evenkit.dev also verified in a browser. Vercel project `evenkit` belongs to Block Consult GmbH (`blockconsult`), ID `prj_5K4UrqWVGwIWPIxGYAe8OkwfpxBW`. Deployment `dpl_DHELtJHtgpfQQX3WN19QoNm2Beei` is READY. Cloudflare retains DNS with DNS-only CNAME records for `@` and `www` pointing to `af34aa774455dc22.vercel-dns-016.com`; Vercel reports both domains configured correctly. The connector uses a different account; deployment used the user's confirmed local CLI account/team.
+
+Verification passed on the deployed working tree: production build, configured TypeScript and ESLint, eight token tests, all 135 Chromium journeys, 62 copied examples/all 48 mappings, and independent packed Vite/Next.js builds and HTTP/CSS checks. Live browser checks confirmed branding, search and light/dark switching. Screenshot: `.artifacts/evenkit/live-evenkit.png`. Branding/deployment changes form a focused commit separate from the pre-existing design/Navbar work; working files were preserved. An isolated copy of the staged source also passed build, TypeScript and ESLint. No Git remote is configured. The library packages remain unpublished.
+
+Key files: `vercel.json`, `.vercelignore`, root/workspace package manifests and lockfile, `apps/catalog/index.html`, `apps/catalog/src/catalog.tsx`, `apps/catalog/src/catalog.css`, and `apps/catalog/public/evenkit-logo.png`. Redeploy from the repository root with `vercel deploy --prod --scope blockconsult`. Inspect with `vercel project inspect evenkit --scope blockconsult` and `vercel domains verify evenkit.dev --scope blockconsult`. Existing pending component edits remain separate and are preserved below.
+
+## Design commit series: 25 October 2026
+
+Committed this chat's completed 48-item design pass and popup-footer follow-up in four logical units: foundations/forms, navigation, overlays/data workflows, and popup actions. Separate Navbar implementation/design, Hallmark, field-error and other pre-existing edits remain in the working tree. Shared navigation, catalog CSS, global CSS and handoff contents were staged selectively; no work-tree source files were replaced. The commits were not pushed.
+
+An isolated copy of the exact runtime commit contents passed production build, configured TypeScript, full ESLint, eight token tests, all 130 included Chromium journeys, 62 copied examples/exactly 48 mappings and independent packed Next/Vite builds with SSR/HTTP/CSS/copied-block checks. The excluded Navbar work has five additional journeys; its absence explains the 130-test count versus the earlier combined 135-test run. Evidence: `.artifacts/design-commits/isolated-*.log`, `manifest.json`, planned patches and the saved preservation hashes. No additional implementation work was performed for packaging. Resume with `git log -4 --oneline` and `git status --short`; remaining edits belong to other work.
+
+## Menu bar refinement: 25 October 2026
+
+Completed the requested additional design pass. Compact headers retain Contact when their container is at least 640px and the brand, actions, account, Contact and menu control fit. Phones and longer content keep Contact in the drawer. Focus remains on a visible Contact control when navigation collapses and moves to the menu only when its control becomes hidden. Account controls now keep an accent border and muted surface while open; grouped mobile links have a logical inset and leading border. Navbar dropdowns use a 24px token offset to clear the header divider. Existing design tokens and public APIs are preserved.
+
+Runtime edits are limited to `packages/ui/src/navigation.tsx`, `navigation.css` and `navbar-parts.tsx`. Updated `docs/navigation.md` and extended the existing resize journey in `tests/browser/navbar-header.spec.ts`. The extended journey failed against the baseline at the missing tablet Contact action and passes after this change.
+
+Verification passed: production build, configured TypeScript and ESLint, all 11 navigation/header Chromium journeys, and independent packed Vite/Next.js builds with HTTP/stylesheet smoke checks. Visual geometry checks covered both website and application headers at 360/768/1440px across all eight themes and both modes (48 combinations). No header overlap, page overflow or runtime errors were found. Desktop group/account menus clear the divider by 9px; long action and brand labels hide Contact when needed, and hiding a focused action recovers to the menu. Before/after desktop, tablet, phone, drawer and light/dark account-menu captures were inspected. Firefox/Safari and physical touch were not tested.
+
+Evidence, source hashes and the isolated five-file patch are in `.artifacts/navbar-refinement/`. Preview: `http://127.0.0.1:5311/#navbar`. No required implementation work remains. Changes remain uncommitted alongside earlier navigation and concurrent component work. The existing preview server and concurrent popup-footer handoff were preserved. Resume with `git status --short`, `cat docs/navigation.md` and `.artifacts/navbar-refinement/owned-changes.patch`.
+
+## Popup footer refinement: 25 October 2026
+
+Refined the popup button area requested in the attached edit-project screenshot. Dialog, AlertDialog and Sheet now share a same-surface footer with a content-width hairline, 16px top padding and 8px action gaps. Removed the full-bleed dark band and negative margins; the existing 24/20px outer gutters, motion and scrolling remain. In RecordWorkflow, Reset changes is a small explicit non-submit button after Notes. The footer pairs persistent status with Cancel/Save on desktop, expands errors across the row, and puts an equal-width/equal-height action pair below status on mobile. Long desktop labels move to another row before compressing status.
+
+Runtime changes are limited to `packages/ui/src/styles.css`, `packages/ui/src/data-workflows.css` and `registry/blocks/record-workflow.tsx`. Updated README, overlay and data-workflow contracts. Native form ID/submission, callbacks, draft/request cancellation, pending focus and the single SaveStatus node are preserved. Existing and concurrent changes remain intact; this refinement is included in the local design commit series.
+
+Verification passed: production builds, configured TypeScript, full ESLint, seven existing dialog/confirmation/sheet/workflow Chromium journeys, and two affected record reruns after the wrapping fix. Twelve default popup captures cover Ocean dark/Neutral light desktop and dark mobile; three final editor views and active-state captures cover pending, failure/retry, cancellation, discard, short 360×600 windows, eight themes/both modes and long LTR/RTL labels. Runtime reports have no errors or overflow. Review caught and fixed a zero-width desktop status under very long actions and unequal mobile button heights. The final stress case retains a 510px-wide status on desktop and equal 123px-high mobile buttons. Firefox/Safari and physical touch were not tested; no permanent tests were added for the styling change.
+
+Evidence is in `.artifacts/popup-footers/`: `source-changes.patch` isolates the three runtime-file edits from their starting state; `before/`, `after/`, `final/`, `runtime-final/` and `alignment-final/` contain comparisons and reports; logs record the exact checks. Independent review is in `review.md`. The owned temporary preview on 5313 is confirmed closed; other previews were preserved. No required implementation work remains. Resume with `git status --short` and that patch before committing overlapping files.
+
+## Menu bar design pass: 25 October 2026
+
+Completed the design improvement goal. The Navbar now uses a 72px desktop / 64px compact minimum row height, aligned 44px navigation and action controls, consistent 32px brand logos, and a single active-route underline for links and groups. Menus have more padding, stronger account-name hierarchy, and one account/avatar boundary. The mobile drawer has a grouped heading, independently scrolling links and a bottom Contact footer; opening it focuses the active enabled destination or first enabled link. All dimensions and colors use existing tokens; public APIs and host-owned routing/account/contact behavior remain compatible.
+
+Changed `packages/ui/src/navigation.css` and `navigation.tsx`, `apps/catalog/src/navbar-preview.tsx` and `navigation-preview.css`, `docs/navigation.md`, and the existing mobile journey in `tests/browser/navbar-header.spec.ts`. Catalog controls now stay with the compact specimen and include derived default/selected-group/signed-in/unavailable presets. Reduced example-body spacing keeps the header visible. Other component families and the earlier uncommitted work were preserved.
+
+Verification passed: production build, configured TypeScript and ESLint, all 11 navigation/header Chromium journeys, independent packed Next.js and Vite builds with SSR/HTTP/CSS checks, 64 theme/mode/width combinations for both website and app headers, and 32 themed dropdown/account-menu combinations. Checks found no overlap, page overflow, clipping, runtime errors or contrast failures in the checked pairs. Verified preview presets, disabled-link keyboard skipping, long brand/localized labels at 360/768/1024/1440/1920px, reduced motion, and mobile autofocus plus last-link/Contact reachability at 360×420px. Independent source and before/after visual review accepted the pass with no remaining finding. Firefox/Safari and physical touch were not tested.
+
+Before/after captures, verification logs, JSON results and the design-pass patch are in `.artifacts/navbar-design/`. The existing preview remains at `http://127.0.0.1:5311/#navbar`. No required design work remains. The work remains uncommitted alongside the previous navigation implementation and overlapping design changes. Resume with `git status --short`, `cat docs/navigation.md`, and `.artifacts/navbar-design/owned-changes.patch`.
+
+## Complete top navigation: 25 October 2026
+
+Extended the public Navbar without replacing its existing flat-link API. Added NavbarBrand, one-level link groups, named login/account controls, host-owned signed-in menus, and a Contact action. Desktop layout follows the supplied header reference using existing tokens. The header collapses below md or when its contents need more space; the account control stays visible and Contact moves into the mobile drawer. Hidden measurement content is inert. Resize, menu dismissal, host dialog handoff and account replacement preserve usable focus. Native link callbacks run before navigation, while callback-only popup actions run after dismissal.
+
+Core changes are in `packages/ui/src/navigation.tsx`, `navigation.css` and new `navbar-parts.tsx`. New `apps/catalog/src/navbar-preview.tsx` contains working website and application/sidebar specimens; the navigation preview, styles, copied usage and `docs/navigation.md` document integration. Existing navigation regression specimens remain available. `tests/browser/navbar-header.spec.ts` adds five interaction journeys. The packed consumer fixture and package verifier now exercise the complete header.
+
+Final verification passed: production build, configured TypeScript and ESLint, all 11 navigation/header Chromium journeys, packed Next.js and Vite builds with SSR/HTTP/CSS checks, and 64 visual/geometry combinations across eight themes, both modes and 360/768/1024/1440px. The initial integration run also passed all 10 sidebar/tooltip journeys. All 62 copied examples compiled, and eight token tests passed. Additional runtime checks confirm visible keyboard focus, reduced motion, long brand/localized labels at five widths, and no horizontal overflow or runtime errors. Independent source review accepted the implementation; desktop, mobile, dropdown, drawer and application captures were inspected. Firefox/Safari and physical touch were not tested.
+
+Evidence and the goal-only patch are in `.artifacts/navbar/`. The preview is available at `http://127.0.0.1:5311/#navbar` (owned preview session 96461). No required implementation work remains. Changes remain uncommitted: a dry-run applying the goal-only patch to the index failed on four files containing overlapping pre-existing design edits; those edits and the index were preserved. Resume with `git status --short`, `cat docs/navigation.md`, and `.artifacts/navbar/owned-changes.patch`.
+
+## Icon motion clipping pass: 25 October 2026
+
+Fixed the outer SVG viewport clipping moving artwork across all 215 icons. `packages/ui/src/icons.css` allows visible overflow while preserving token dimensions and the 24-unit viewBox. A narrow `:has(> .pk-icon)` override in `styles.css` also allows kit SVG motion through Badge's icon slot; arbitrary custom images retain their existing clipping. The padded ActionMessage frame and intentional scroll-container clipping remain unchanged.
+
+Shortened the outlying coin drops in HandCoins and speed trails in Car/Truck, and slightly reduced Leaf's upward travel. Normal artwork, reset states, durations and easing remain intact. Updated `docs/icons.md`. The new regression in `tests/browser/icon-animation.spec.ts` renders real public icons/buttons/badges, freezes representative hover poses, hit-tests painted strokes beyond the original SVG viewport, and asserts unchanged layout geometry.
+
+Verification passed: production package/catalog build, configured TypeScript and ESLint, four icon Chromium tests (including the live idle/hover/reset sweep for all 215 icons), and the existing Badge geometry/RTL/narrow-layout journey. The new clipping regression failed against the pre-fix build and passes after the fix. A separate bounds audit sampled all catalog icons: maximum measured excursion is now four artwork units, down from nineteen for HandCoins and over eleven for Car; all sampled overflowing artwork uses visible overflow. Inspected seven motion captures, including Search and CreditCard, and checked 360px layout for horizontal overflow. Independent source review found no actionable issues. Firefox/Safari and physical touch were not tested.
+
+Evidence: `.artifacts/icon-motion-bounds-before.json`, `icon-motion-bounds-after.json`, `icon-motion-before-test-results/`, `icon-motion-test-results/`, `icon-motion-*.png`, and `icon-motion-playwright.config.ts`. No required clipping work remains. Existing dev preview on port 5173 serves the updated icons. Concurrent design edits remain separate. Resume with `git status --short`; view `http://127.0.0.1:5173/#icons`.
+
+## Icon scenario expansion: 25 October 2026
+
+Added 116 named icons, bringing the library to 215. New categories cover food/drink (24), money/payments (20), charts (16 added; 17 including the existing combined chart), shopping/delivery (12), travel/places (12), health/fitness (10), nature/weather (10), and devices/technology (12). Every addition uses the existing hover/static/reduced-motion contract. Forty-five new glyph bodies adapt the same pinned Lucide Animated source; 71 use original CSS motion on installed Lucide artwork. Totals are now 95 adapted bodies and 120 CSS animations. Syringe retains the installed 24-unit outline because upstream uses incompatible filled artwork.
+
+Extracted the unchanged shared factory and icon types into `packages/ui/src/create-kit-icon.tsx`; original imports and public types remain compatible. Eight `icons-*.tsx` domain modules have explicit public exports. `apps/catalog/src/scenario-icon-data.ts` supplies searchable labels/aliases and eight categories; catalog data remains outside the UI runtime. Icons now load through the catalog's existing lazy/Suspense pattern, moving the expanded gallery into its own chunk. Updated `docs/icons.md`, README and provenance. The existing all-icon browser sweep derives its inventory from public exports.
+
+Verification passed: final production build, configured TypeScript and ESLint, all three icon Chromium journeys (including idle/hover/reset for all 215), 62 copied examples and 48 priority mappings, and independent packed Vite/Next builds with SSR/HTTP/CSS checks. Packed fixtures explicitly render new Coffee and BanknoteArrowUp exports. Manifest/public export/category audits match all 116 additions; all 71 CSS presets target visible SVG geometry. Category and breakfast/revenue/portfolio searches, dark/light rendering, and 360px overflow checks passed with no page errors. Independent source review found no actionable issues. An initial sweep used a build predating the final MapPin reset fix; rebuilding the final source resolved it. Firefox/Safari and physical touch were not tested.
+
+Evidence: `.artifacts/icon-expansion-implementation.json`, `icon-expansion-smoke.json`, `icon-expansion-package-verification.json`, `icon-expansion-test-results/`, and `icon-expansion-*.png`. Fixed-build tests use `.artifacts/icon-expansion-playwright.config.ts` to avoid concurrent catalog rebuilds. No required icon-expansion work remains. Concurrent design changes remain separate. Resume with `git status --short`; view `http://127.0.0.1:5173/#icons`.
+
+## Inline utility actions: 25 October 2026
+
+Completed the compact-layout follow-up. Toast icon actions now sit beside the title and dismiss control in one row. Ghost buttons remove the resting outline; controls are 24px on desktop with 16px glyphs and expand to 44px for narrow/coarse-pointer input. Added ButtonSize/xs without changing field ControlSize. Applied xs to the previously converted copy, password, file, chat, selection and status utilities, plus SearchField clearing. Icon import copying now sits beside wrapping code. Text-only toast actions retain their existing visible-label layout. This supersedes the lower-row square toast shown in the earlier utility-icon pass.
+
+Production build, configured TypeScript and ESLint passed. The relevant browser suite passed 27/29 initially; the chat streaming test passed on serial rerun, leaving only the concurrent AlertDialog exit-guard regression at tests/browser/overlays.spec.ts:100. This follow-up does not alter that dialog or test. Both extended button/toast journeys passed, including inline alignment, 24px desktop sizing, 44px narrow/wide-touch sizing, keyboard focus and undo behavior. Eighteen light/dark/mobile visual checks plus keyboard code-copy verification passed. Source review accepted the change. Firefox/Safari and physical touch input were not tested.
+
+Evidence is in `.artifacts/inline-icon-actions/`; `undo-archive.png` shows the final resting toast. Concurrent design and animated-icon work remains preserved. Existing preview on port 5173 remains available. No required compact-layout work remains.
+
+## Animated icons: 25 October 2026
+
+Completed the icon-animation goal. All 99 named icons animate only on pointer hover, including their containing controls. Fifty SVG bodies adapt Lucide Animated at commit `4662fff2b60fdcf4751b32013606756caf7c4c26`; 49 use original CSS motion on the installed Lucide artwork. `animation="static"` and `IconProvider` provide per-icon and subtree settings. Reduced motion, touch contact, disabled/busy controls, exit and unmount are handled centrally. Sizes, currentColor, accessible labels, native SVG refs/props and canonical Lucide classes remain available. Spinner keeps its existing progress behavior.
+
+The Icons catalog has a mode selector, side-by-side examples and matching JSX. Documentation, provenance and MIT notices accompany pinned Motion 14.6.0. Main sources: `packages/ui/src/icons.tsx`, `icon-provider.tsx`, `use-icon-animation.ts`, `icons.css`, `animated-icons/`; catalog and docs changes are limited to icons.
+
+Verification passed: production build, configured TypeScript and ESLint, eight token tests, all 62 copied examples/48 mappings, packed Vite and Next production builds with HTTP/CSS smoke, SSR/native-prop smoke and independent source review. The 99-glyph browser sweep checks idle state, actual path/geometry motion and complete reset. All three focused icon journeys passed after replacing timing-sensitive polling with an observer (`.artifacts/animated-icons-focused-final.log`). Light/dark desktop and narrow screenshots show no overflow; a development hover-then-unmount check recorded no runtime errors.
+
+The fixed-build full Chromium run passed 127 of 129 journeys (`.artifacts/animated-icons-browser-final.log`). One failure was the short-animation polling assertion, fixed and rerun successfully without runtime changes. The remaining failure is unrelated: `tests/browser/overlays.spec.ts:100` detects Enter activating confirmation while AlertDialog exits. Review confirmed its content wrapper matches HEAD, lacks the closed-state input guards of DialogContent, and the failing dialog has no icon. Concurrent overlay work is preserved. Vite still reports its chunk-size advisory. Firefox/Safari and physical touch devices were not tested.
+
+No required icon work remains. Existing Hallmark/design, compact-button and overlay edits are outside this commit. The owned patch is `.artifacts/animated-icons-owned.patch`; screenshots are `.artifacts/animated-icons-{desktop,mobile,dark}.png`. Resume with `git status --short` and `cat docs/icons.md`. Existing catalog preview on port 5173 remains available at `/#icons`.
+
+## Utility icon buttons: 25 October 2026
+
+Completed the utility-icon goal. Undo archive, code/import/token copy, password visibility, chat copy/idle retry/jump, file-row actions, status dismissal and table selection clearing use named square icon buttons with shared tooltips. Primary actions, confirmation labels, empty-state recovery and filter resets retain text. Added Undo2Icon, EyeIcon and EyeOffIcon (99 wrappers). Toast actions accept an optional icon while retaining label, altText, callbacks and the existing text fallback. Updated copied examples and family docs.
+
+Verification passed: production build, full configured typecheck and ESLint, 29 existing Chromium journeys, all 62 copied snippets, independent source review, and 18 light/dark/mobile visual/geometry checks plus keyboard code copying. Mobile controls meet 44px targets. Evidence and the owned change patch are in `.artifacts/icon-actions/`; `undo-archive.png` shows the requested toast. The build retains its existing chunk-size warning. No required work remains for this goal; Firefox/Safari and physical mobile input were not tested.
+
+Concurrent icon-animation edits began during verification and temporarily introduced missing IconProvider/IconAnimation exports in the shared checkout. Final build/typecheck/lint passed in a snapshot of the starting working tree plus only this goal's changes. The successful browser run and visual checks used the completed icon-button build. Existing design and animation work was preserved; their integration remains owned by those chats. The password reveal is now square, superseding the earlier 64px Show/Hide description below. The commit includes only this goal's changes and the password-specific styling needed for its new control.
+
+Resume with `git status --short` and `.artifacts/icon-actions/changed-files.txt`. Existing preview on port 5173 was preserved; the temporary verification server and snapshot were removed.
+
+## Completed 48-item design goal: 25 October 2026
+
+All 48 implemented Next inventory items were significantly improved in inventory order and independently reviewed. This completes the design goal based on user-confirmed implementation commit `686055c`. The authoritative per-item checklist and evidence are in `docs/component-design-elevation.md`. No required implementation or verification work remains.
+
+Changes cover the six shared family modules/styles (`foundations`, `selection-controls`, `form-controls`, `navigation`, `overlays`, `data-workflows`), their catalog previews and family docs, the two editable record/recovery blocks, and a zero-specificity catalog margin reset. Existing switch and overlay browser journeys now cover reproduced RTL direction, confirmation exit-activation and AccountMenu keyboard pending-focus defects. Narrow rich/file rows use container width to keep text readable and actions reachable. Progress has a real indeterminate segment and reduced-motion state; SaveStatus preserves one lifecycle node. List Notes retain a readable width inside contained table scrolling. The page editor preserves native submission, drafts, aborts and focus while improving sections and save feedback.
+
+Verification passed: production builds; configured TypeScript and full ESLint; eight token tests; all 135 Chromium journeys including 48 routes across eight themes, two modes and four widths; 62 copied examples/exactly 48 priority mappings; independent packed Next/Vite builds, SSR/native-prop, HTTP/CSS and copied-block checks. After the full run, the sole source change was the block-local Notes renderer. Its six affected journeys, build/typecheck/focused lint and packed consumers passed again. All 291 source/config hashes were stable at the final checkpoint. During handoff, concurrent Navbar follow-up changes reached its shared component, catalog preview and browser test files. Those later contents are preserved and were not reverified by this goal. See `final-input-stability.json` for observed paths. No undefined CSS token references remain across 32 shared/catalog stylesheets. Independent source/pixel review signed off all 48; supplemental states include keyboard/reduced-motion/RTL, long names and narrow containers, five recovery variants and short-window save/retry/cancel/discard.
+
+Evidence is under `.artifacts/design-elevation/`: `review-completion.md`, `final-*.log`, `o-final-*.log`, `o-final-package-verification.json`, `final-input-stability.json` and family screenshots/runtime reports. The tracker describes intermediate reproduced failures and harness corrections separately from product fixes. Firefox/Safari and physical touch were not tested.
+
+Concurrent complete-Navbar, Hallmark, compact utility and animated-icon work is preserved. The completed Navbar behavior and fixtures superseded the earlier E05 specimen and passed final integration before that later follow-up. This pass and its popup follow-up are committed locally; no deployment or push was performed. Separate Navbar and Hallmark work remains uncommitted. Root's temporary 5307 preview and M fixture 5393 are confirmed closed; independent consumers removed their own servers/directories; other previews are preserved.
+
+Resume for review: `cat docs/component-design-elevation.md`, `cat .artifacts/design-elevation/review-completion.md`, `git status --short`. No further design implementation is required for this goal.
+
+## Sidebar icon coverage: 25 October 2026
+
+All 62 catalog entries now have explicit sidebar icons. The 48 entries added after the original catalog had used AdminShell's circle fallback. Added 36 static Lucide wrappers and public exports, bringing the searchable icon inventory to 96. The icon reference includes a Controls category and component aliases such as checkbox, fieldset and combobox. Existing icon sizing, stroke, color and accessibility behavior remain intact; no dependency was added.
+
+Changed files: `packages/ui/src/icons.tsx`, `packages/ui/src/index.ts`, `apps/catalog/src/catalog.tsx`, `apps/catalog/src/icon-data.ts`, `docs/icons.md` and `README.md`. Production build, configured typecheck, focused ESLint, all three existing sidebar/icon Chromium journeys, an AST coverage/inventory check and independent code review passed. Live preview inspection confirmed 62 decorative 20px icons with no fallback circles, all 96 gallery entries, component search and category filtering. Dark and light sidebar captures passed visual review. An initial gallery smoke assertion expected 12 Controls entries; the actual 11-entry category was correct, and the corrected smoke passed. The build reports a chunk-size warning.
+
+Evidence is in `.artifacts/sidebar-icons/`: `build.log`, `typecheck.log`, `lint.log`, `browser.log`, `gallery.log`, `sidebar-dark.png`, `sidebar-light.png` and `controls-gallery.png`. No required work remains. Firefox/Safari were not tested. Existing design-pass edits and concurrent forms/selection work remain outside this change. Resume with `git status --short`; the existing preview at `http://127.0.0.1:5173` remains running.
+
+## Completed 48-priority build
+
+All 48 Next priorities are implemented and verified. The catalog has 62 entries with complete copied examples. Six public UI modules cover foundations, selection/progress, forms, navigation, overlays, data/files; editable record and recovery blocks are in `registry/blocks`. Every ID has source, contract and verification evidence in `docs/priority-build-plan.md`. No required implementation or verification work remains for this goal.
+
+Final checks passed: production build; configured TypeScript and ESLint; eight token tests; all 127 Chromium journeys; all 62 copied snippets and exactly 48 priority mappings; independent packed Next/Vite builds, SSR/HTTP/CSS and copied-block checks. Every priority route fits all eight themes, both modes and 360/768/1024/1440px layouts. Seventeen representative captures had no runtime errors; independent review of seven captures found no actionable visual defect. The kit has 211 resolved variables and 560 validated contrast pairs.
+
+Review resolved native required validation/focus, controlled choice-label and search clearing, popup Escape ordering, responsive Navbar focus, compact pagination hints, deferred filter-removal focus, native file cancellation/removal state, and stale async results. C07 deliberately follows Base UI's disabled-option discovery model: disabled rows may be highlighted and announced but cannot be selected. Its dialog popup uses the parent content as container plus the shared Radix DismissableLayer.
+
+Evidence: `.artifacts/priority-build-confirm.log`, `priority-typecheck-confirm.log`, `priority-lint-confirm.log`, `priority-examples-confirm.log`, `priority-release-browser.log`, `priority-token-final.log`, `priority-packages-confirm.log`, `catalog-examples.json`, `package-verification.json`, and `priority-visual/report.json`. The 98 source hashes in `priority-verification-inputs.json` remained unchanged during the final checks. Owned diagnostic/fixture servers and temporary consumers were cleaned; the existing 5173 preview remains available.
+
+Firefox/Safari, physical mobile keyboards and production adoption remain unverified. Packages remain local/unpublished. Other chats' dialog/dropdown/tooltip commits through `2ba4a8b` and their pre-existing design-pass edits were preserved. Inspect `git status --short` for those remaining parallel changes; the goal's commit isolates its own source, docs and tests.
+
+Resume reference: `cat docs/priority-build-plan.md`, `cat docs/compatibility.md`, `git log -1 --oneline`.
+
+## Shared dialog design: 25 October 2026
+
+Dialogs now share an elevated frame, more space between sections, an inset close control and a separated action footer. Shared surface/backdrop motion opens in 160ms and closes in 120ms. ChatWidget now uses the same Dialog wrapper as the catalog and AdminShell drawers, retaining its compact/maximized viewport layout and Escape order. Drawer motion uses logical direction with build-safe RTL selectors. All visual values reuse existing tokens.
+
+Closing controls block keyboard and pointer activation. Rapid reopening restores focus inside the retained content without remounting or losing drafts, while honoring caller autofocus cancellation and forwarded refs. Reduced motion uses zero-duration animations with stable names so changing the preference during exit still lets Radix Presence release focus/scroll locks. Core changes: `packages/ui/src/dialog.tsx`, shared dialog styles, chat composition/styles, and drawer motion rules. README/UI provenance describe the design; two existing browser specs cover lifecycle and settled geometry.
+
+Source review and manual light/dark inspection passed. An isolated snapshot of HEAD `95ea8cf` plus only these dialog changes passed production build, configured typecheck, full ESLint, eight token tests, all 44 Chromium journeys, and packed Vite/Next production builds with HTTP/stylesheet smoke checks. Logs and screenshots are in `.artifacts/dialog-design/`: `isolated-*.log`, `package-verification.json`, `dark.png`, and `light.png`. The isolated check was necessary because other component implementation was changing the same checkout; the mixed checkout run passed dialog/chat/drawer journeys but had three table-related failures and catalog import type errors from that other work. Those files were preserved.
+
+No required work remains for this dialog request. Firefox and Safari were not tested. Temporary verification tabs and owned preview servers on ports 5303/5305 are closed; the existing preview on 5173 was preserved. Concurrent Hallmark, field-error, inventory and new-component changes remain outside this commit. Resume with `git status --short` and this handoff; do not assume the ongoing broader working tree is fully verified by this dialog check.
+
+## Shared dropdown design: 25 October 2026
+
+Updated the shared Select/SelectField design used by all 15 direct catalog dropdowns and DataTable pagination. Popups have 6px padding and trigger spacing, layered shadows, trailing selected checkmarks, distinct selected and highlighted rows, and a rotating chevron. Existing tokens provide every visual value. Opening fades with 4px directional movement over 160ms; closing uses 120ms. Reduced motion removes popup and chevron motion. Public props, grouped descriptions, form integration, long-label wrapping, RTL and 36px desktop / 44px touch rows remain intact.
+
+Radix Presence retains closing content for the animation. Pointer interaction and keyboard selection are blocked during exit, including Escape followed immediately by Enter inside a dialog. Disabling a control skips the exit to preserve asynchronous focus recovery. Core changes are in `packages/ui/src/select.tsx` and the select rules in `packages/ui/src/styles.css`; README and UI provenance document the behavior. Usage audit found no separate native or custom dropdown implementations to migrate.
+
+Source review, production build, configured typecheck, ESLint, eight token tests, and packed Vite/Next consumers passed. The 11 focused browser journeys passed. The full Chromium run passed 42 of 43 journeys; one exact row-height assertion caught floating-point rounding during the entrance animation. That test now waits for the actual animation to finish and still checks exactly 36px/44px. Both affected catalog journeys passed afterward, including the modal exit check made deterministic by pausing/resuming its animation around real keyboard input. Runtime source did not change after the full run. Logs: `.artifacts/dropdown-design-build.log`, `.artifacts/dropdown-design-focused.log`, `.artifacts/dropdown-design-browser.log`, `.artifacts/select-geometry-exit-browser.log`, `.artifacts/dropdown-design-tokens.log`, and `.artifacts/dropdown-design-packages.log`. Package report: `.artifacts/dropdown-design-package-verification.json`.
+
+Manual light/dark inspection passed; screenshots are `.artifacts/dropdown-design-dark.png` and `.artifacts/dropdown-design-light.png`. The temporary visual preview on port 5303 and its tab were closed; the existing preview on port 5173 was preserved. Firefox and Safari were not tested. No required work remains for this dropdown request. Concurrent Hallmark, field-error-icon and inventory changes remain outside this commit. Resume with `git status --short` and this handoff before selecting the next component.
+
+## Shared tooltip design: 25 October 2026
+
+Tooltips now share a compact inverse surface, matching arrow, 220ms hover delay, and 120ms directional fade with 2px movement. Both opening and closing animate; reduced motion removes both animations. Existing tokens provide colors, spacing, radius, typography, shadow and motion. The shared tooltip is used for sidebar controls and compact branding, catalog icon examples, field clear actions, table search/pagination, dialog close buttons, and chat controls. Removed the redundant native title from the static sharing message. README and token provenance describe the design.
+
+The shared root controls Radix internally to preserve rapid reopening during exit. Focused tooltips ignore queued scroll events only when trigger geometry and all scroll offsets remain unchanged during that event's dispatch; genuine scrolling still dismisses them. Dialog autofocus and chat/sidebar focus restoration avoid unsolicited hints. Opening the mobile drawer removes its superseded menu hint immediately so the drawer owns Escape. Existing focus loops and activation behavior remain intact.
+
+Verification passed: source review, production build, configured typecheck, ESLint, eight token tests, and all 43 Chromium journeys. Regressions cover animated exit, rapid reopening, keyboard descriptions, real-scroll dismissal, tooltip-first Escape, modal pointer behavior, RTL, reduced motion, and drawer focus restoration. Packed Vite and Next consumers passed production builds, HTTP 200 and stylesheet checks; owned servers and temporary directories were cleaned. Logs: `.artifacts/tooltip-design-final-build.log`, `.artifacts/tooltip-design-complete-browser.log`, `.artifacts/tooltip-design-tokens.log`, and `.artifacts/tooltip-design-final-packages.log`. Package report: `.artifacts/tooltip-design-package-verification.json`.
+
+Manual light/dark inspection passed. Screenshots: `.artifacts/tooltip-design-dark.png` and `.artifacts/tooltip-design-light.png`. Dark appearance and expanded navigation were restored; the temporary browser tab was closed and the existing preview on port 5173 preserved. Firefox and Safari were not tested. No required work remains for this tooltip request; the earlier component goal remains complete. Concurrent Hallmark, field-error-icon and component-inventory edits are preserved outside the tooltip commit. Resume with `git status --short` and this handoff before starting the next component.
+
+## Component inventory research
+
+Added `docs/component-inventory.md` in response to the request for a full list of components and compositions to prepare. It compares the 14 existing catalog sections and public exports with the original local project review, Apple Minimal contracts, and current shadcn, Radix, Mantine, HeroUI, Chakra, React Aria, Uiverse and Supabase references.
+
+The inventory contains 183 proposed additions/extensions across 18 groups: 48 Next, 90 Follow-up and 45 Optional. Each row identifies its delivery as UI, recipe, editable block or integration adapter. It records sources, current capabilities, common design requirements and a dependency-based preparation order. Card, Tabs, Toast, DropdownMenu and standalone Navbar have internal contracts but no public implementation; Checkbox and Pagination currently exist inside DataTable.
+
+Documentation checks passed for unique/sequential IDs, priority counts, inventory table columns and all local link targets. External source pages were inspected during research. No runtime tests were run for this documentation-only change, and no component implementation was added. Existing application edits and the earlier handoff content below were preserved. Implementation of the proposed inventory remains future work.
+
+Resume with `cat docs/component-inventory.md` and select a complete flow from its recommended waves. The research did not select new runtime dependencies, publish packages or migrate a consuming application.
+
+## Field error icon follow-up
+
+Replaced the plain exclamation mark in `packages/ui/src/field-frame.tsx` with the existing 16px CircleAlertIcon. Updated the error-row styles in `packages/ui/src/styles.css` to align the icon with the first text line, including wrapped messages; removed the unused symbol class. This applies to text, textarea and select field errors. The icon is decorative; error text, alert semantics and control associations remain intact.
+
+Production build, configured typecheck, focused ESLint and all four existing field/select Chromium journeys passed. Dark desktop and mobile inspection passed; the mobile icon is 16px square, centered on the first line, without overflow. Screenshots: `.artifacts/field-error-icon-dark.png` and `.artifacts/field-error-icon-mobile.png`. No required follow-up remains. Other uncommitted work was preserved.
+
+## Completed
+
+Completed a Hallmark design polish across all 14 catalog entries and every public component family. The complete audit, copy changes, remaining linter findings and evidence are in `docs/hallmark-design-pass.md`. Hallmark source: version 2.0.0, commit `7ec868225c6caa040558c321ee0fefa0e73f83a8`, cloned outside the project at `/tmp/design-tokens-hallmark-20261025`.
+
+The catalog now uses fewer nested frames and decorative labels; theme selection, control emphasis, disabled fields, empty states, and component specimens are clearer. Existing token palettes, typography, APIs, state handling, semantic feedback and requested sidebar/chat motion remain. No dependencies were added to the project, no tests changed for this pass, and nothing was published.
+
+## Key files changed
+
+- Catalog chrome and foundations: `apps/catalog/src/catalog.tsx/css`, theme/token/icon preview files.
+- Controls: `packages/ui/src/styles.css`, button and dialog preview files.
+- Compositions: `packages/ui/src/admin-shell.css`, `chat.css`, `data-table.css`, `tooltip.tsx`; chat and table preview files.
+- Feedback: loading and empty preview files. Badge, ActionMessage and Tooltip visual designs were audited and retained.
+- Audit records: `docs/hallmark-design-pass.md`, `.hallmark/preflight.json`, `.hallmark/log.json`.
+
+## Verification state
+
+Production build, configured TypeScript checks, ESLint, eight token tests and all 41 Chromium browser journeys passed. Two button journeys passed after final CSS adjustments; two dialog journeys and focused ESLint/typecheck passed after the review's final badge/copy cleanup. Packed Vite and Next consumers passed production builds and stylesheet/HTTP checks on the final package artifacts.
+
+Hallmark rendered all 14 routes across eight widths, with a separate 56-capture light/dark desktop/mobile check. No document overflow or runtime errors were found by that capture check. Preserved inventory: 41 links, 29 fields, 138 handlers, two figures. One chat heading was replaced and recorded.
+
+Raw Hallmark confirmation: 18 FAIL, 16 REFLEX, four WARN. These are documented, not hidden: requested layout motion; separate-column sticky, disabled-cascade and scrolling/closed-content false positives; state rules defined outside preview CSS; existing apostrophe style; and intentional table horizontal scrolling on phones. No claim of a clean raw linter run is made.
+
+Independent finish review inspected all route areas. It requested removal of one redundant dialog badge, then checked the recapture and returned `ship`; the mobile table tradeoff was answered. Logs are in `.artifacts/hallmark/`; before/after comparison is `.hallmark/compare.html`.
+
+## Remaining / known gaps
+
+No required work remains for this design pass. Firefox/Safari and physical mobile keyboards were not tested. The table still requires horizontal scrolling on small screens. Packages remain local/unpublished.
+
+Concurrent sidebar work was preserved and committed separately as `702f00e feat(catalog): reuse draggable sidebar for library navigation` during this pass. The design-pass files are uncommitted. The initial working-tree diff is `.artifacts/hallmark/pre-existing.patch`; do not attribute that prior sidebar work to this pass.
+
+## Resume commands
+
+```sh
+git status --short
+git diff --stat
+cat docs/hallmark-design-pass.md
+```
+
+Preview remains available at `http://127.0.0.1:5173/#buttons`. Before/after screenshots and logs are ignored artifacts; the audit and Hallmark metadata are source records.
+
+## Decisions
+
+Use Hallmark's app-screen polish criteria within the existing system. Preserve explicit prior requests for sidebar and chat motion, report mechanical exceptions honestly, retain functional field/modal/table/theme boundaries, and change components only where the audit found a useful improvement.
