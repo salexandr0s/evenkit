@@ -106,3 +106,5 @@ export { SignupPage, type SignupPageProps } from "./auth-signup-page.js";
 export { PasswordResetPage, type PasswordResetPageProps } from "./auth-password-reset-page.js";
 export { NewPasswordPage, type NewPasswordPageProps } from "./auth-new-password-page.js";
 export type { AuthSubmissionContext, AuthError, AuthResult, LoginValues, SignupValues, PasswordResetValues, NewPasswordValues, LoginField, SignupField, PasswordResetField, NewPasswordField, SignupResult, AuthPageProps, PasswordPolicyProps } from "./auth-types.js";
+export * from "./media-preview.js";
+export * from "./document-library.js";
