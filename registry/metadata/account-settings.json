@@ -1,0 +1,45 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "account-settings",
+  "title": "Account settings",
+  "description": "Editable profile and appearance settings with application-owned persistence.",
+  "inventoryIds": [
+    "M03",
+    "M04",
+    "M05"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/tokens",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    },
+    {
+      "name": "react-dom",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/account-settings.tsx",
+      "target": "account-settings.tsx"
+    }
+  ]
+}

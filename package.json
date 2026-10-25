@@ -16,7 +16,10 @@
     "test:browser": "playwright test",
     "verify": "npm run build && npm run typecheck && npm run lint && npm test && npm run test:browser",
     "verify:packages": "node scripts/verify-packages.mjs",
-    "verify:examples": "node scripts/verify-catalog-examples.mjs"
+    "verify:examples": "node scripts/verify-catalog-examples.mjs",
+    "registry": "node scripts/registry/cli.mjs",
+    "test:registry": "node --test scripts/registry/*.test.mjs",
+    "verify:registry": "npm run test:registry && npm run build:packages && node scripts/verify-packages.mjs --registry"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -25,11 +28,14 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "6.1.2",
+    "ajv": "8.20.0",
     "eslint": "10.13.0",
     "globals": "^17.0.0",
+    "semver": "7.8.5",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.0",
     "vite": "8.3.5",
-    "vitest": "5.0.5"
+    "vitest": "5.0.5",
+    "zod": "4.6.7"
   }
 }

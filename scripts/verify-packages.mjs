@@ -4,12 +4,15 @@ import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildRegistry } from "./registry/build.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const scratch = await mkdtemp(join(tmpdir(), "evenkit-consumers-"));
 const artifacts = join(root, ".artifacts");
 const environment = { ...process.env, NEXT_TELEMETRY_DISABLED: "1" };
 const report = { status: "running", allocatedDirectory: scratch, consumers: [], resources: [] };
+const verifyRegistry = process.argv.includes("--registry");
+const reportFilename = verifyRegistry ? "registry-package-verification.json" : "package-verification.json";
 
 function run(command, args, cwd) {
   try {
@@ -80,7 +83,7 @@ async function smoke(kind, directory) {
   let smokeResult;
   let failure;
   try {
-    await writeFile(join(artifacts, "package-verification.json"), JSON.stringify(report, null, 2));
+    await writeFile(join(artifacts, reportFilename), JSON.stringify(report, null, 2));
     const deadline = Date.now() + 30_000;
     let response;
     while (Date.now() < deadline) {
@@ -141,6 +144,7 @@ async function smoke(kind, directory) {
 
 try {
   await mkdir(artifacts, { recursive: true });
+  const registry = verifyRegistry ? await buildRegistry({ root, output: join(scratch, "registry") }) : null;
   const tarballs = {};
   for (const name of ["tokens", "ui"]) {
     const packed = JSON.parse(run("npm", ["pack", join(root, "packages", name), "--pack-destination", scratch, "--json", "--ignore-scripts"], root));
@@ -157,13 +161,22 @@ try {
     await cp(join(root, "fixtures", kind), directory, { recursive: true });
     await cp(join(root, "fixtures", "priority-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "priority-fixture.tsx"));
     await cp(join(root, "fixtures", "roadmap-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "roadmap-fixture.tsx"));
-    await cp(join(root, "registry", "blocks"), join(directory, kind === "next" ? "app" : "", "blocks"), { recursive: true });
+    if (!verifyRegistry) await cp(join(root, "registry", "blocks"), join(directory, kind === "next" ? "app" : "", "blocks"), { recursive: true });
     const manifestPath = join(directory, "package.json");
     const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
     manifest.dependencies["@evenkit/tokens"] = `file:${tarballs.tokens}`;
     manifest.dependencies["@evenkit/ui"] = `file:${tarballs.ui}`;
     await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
     run("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund"], directory);
+    if (registry) {
+      const args = [join(root, "scripts/registry/cli.mjs"), "install", ...registry.items.map(item => item.name), "--registry", join(scratch, "registry"), "--cwd", directory, "--dir", kind === "next" ? "app/blocks" : "blocks"];
+      const preview = JSON.parse(run(process.execPath, [...args, "--dry-run"], root));
+      const installed = JSON.parse(run(process.execPath, args, root));
+      const repeated = JSON.parse(run(process.execPath, args, root));
+      if (preview.blocked || !installed.applied || repeated.applied) throw new Error(`Registry lifecycle failed in ${kind}.`);
+      report.registry ??= [];
+      report.registry.push({ kind, items: registry.items.map(item => item.name), sourceRevision: registry.items[0].meta.evenkit.sourceRevision, files: installed.files, dependencies: installed.dependencies, dryRun: "passed", install: "passed", repeated: "passed" });
+    }
     run("npm", ["run", "build"], directory);
     const result = await smoke(kind, directory);
     report.consumers.push({ kind, build: "passed", ...result });
@@ -185,5 +198,5 @@ try {
     process.exitCode = 1;
     console.error(`Preserved ${scratch} because server cleanup could not be confirmed.`);
   }
-  await writeFile(join(artifacts, "package-verification.json"), JSON.stringify(report, null, 2) + "\n");
+  await writeFile(join(artifacts, reportFilename), JSON.stringify(report, null, 2) + "\n");
 }

@@ -1,0 +1,22 @@
+{
+  "retrievedOn": "2026-10-25",
+  "upstream": "https://github.com/shadcn-ui/ui",
+  "license": "MIT",
+  "files": [
+    {
+      "file": "registry.json",
+      "url": "https://ui.shadcn.com/schema/registry.json",
+      "sha256": "e716ebe595bbc189db2627cb75f0484cd765a09eb397a89b1f1c49074220d4bb"
+    },
+    {
+      "file": "registry-item.json",
+      "url": "https://ui.shadcn.com/schema/registry-item.json",
+      "sha256": "cdf0fba75a26ebf594018264eff2d55407ec14deb3071d0fce0e2b20848e5d44"
+    },
+    {
+      "file": "shadcn-license.txt",
+      "url": "https://raw.githubusercontent.com/shadcn-ui/ui/main/LICENSE.md",
+      "sha256": "1564074e13439397221ffd522e2e504d56561994a23d371aa5e3ad43e4f5423f"
+    }
+  ]
+}

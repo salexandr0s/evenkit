@@ -1,0 +1,43 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "onboarding-wizard",
+  "title": "Onboarding wizard",
+  "description": "Editable setup steps with validation, review, submission and retry.",
+  "inventoryIds": [
+    "O06"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/tokens",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    },
+    {
+      "name": "react-dom",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/onboarding-wizard.tsx",
+      "target": "onboarding-wizard.tsx"
+    }
+  ]
+}
