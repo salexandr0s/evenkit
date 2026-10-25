@@ -73,3 +73,25 @@ DataTable now consumes the public Checkbox and Pagination rather than maintainin
 The 24-item roadmap adds original calendar arithmetic and keyboard navigation, date/time controls, Intl formatting, multi-value and number fields, remote table controls, activity and settings compositions, upload queues, images, command search and wizard progress. It adds no runtime dependencies. MultiSelect uses the existing Base UI Combobox; date and workspace popups use the existing Radix Popover; command search uses the existing Dialog. Calendar dates remain separate from zoned timestamps, and number drafts remain separate from stored numeric values.
 
 The upload queue receives a host transport and protects each attempt from stale callbacks. Command search accepts a host search callback. The additional `record-detail`, `account-settings` and `onboarding-wizard` blocks are distributed as source alongside the existing blocks; applications own data validation, storage, authentication, navigation and network services. The catalog uses fictional local records and simulated requests.
+
+## Document library and media previews
+
+J05–J07 add original `media-preview` and `document-library` modules plus editable
+`avatar-upload` and `document-library` blocks. They compose existing FileInput,
+FileRow, UploadQueue, Image, DataTable remote mode, toolbar controls, Dialog and
+settings feedback. No runtime dependencies or copied third-party source were
+added. The base revision is `b588b1b1964ba2b26ee8453606f354f2c33eb10d` on
+`codex/component-improvements`; implementation is on `codex/document-library`.
+
+Inline previews accept an explicit raster-image MIME list and escaped plain text.
+Other types use file actions. Applications supply authorized URLs, validate
+content, own transfers and storage, and refresh expired access. Avatar drafts
+own and release their temporary object URLs. The document block scopes existing
+upload queues to folders and uses abort signals plus request identity checks for
+mutation recovery. The sample PDF in the catalog is an original one-page fixture.
+
+These additions remain pilots owned by the kit maintainer. Named example
+consumers are the catalog and independent packed Vite/Next fixtures. Internal
+source remains unlicensed for public distribution; existing dependency notices
+retain their terms. Contracts, copyable examples and verification references
+are in `docs/document-library.md` and `docs/document-library-handoff.md`.

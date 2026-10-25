@@ -1,6 +1,28 @@
 # Session handoff: 25 October 2026
 
-Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
+Current worktree: `/Users/nationalbank/.codex/worktrees/document-library/design-tokens`.
+Branch: `codex/document-library`. Base: `b588b1b` from `codex/component-improvements`.
+
+## Document library: 25 October 2026
+
+Completed J05, J06 and J07 with maintained media-preview/document-library modules,
+editable avatar-upload/document-library blocks, catalog examples and focused
+tests. Implementation commit: `27eb10e`. The following catalog/docs commit
+completes this branch. The original checkout and concurrent worktrees are preserved.
+
+Build, TypeScript, ESLint, 25 unit tests, 89 copied examples/75 mappings and packed
+Vite/Next checks passed. Ten new Chromium journeys and eleven existing regressions
+passed. A 281-check appearance/layout pass covered all themes/modes, four widths,
+RTL, list/grid and reduced-motion portals. Independent review findings are resolved.
+No J05–J07 implementation work remains; Safari, Firefox, physical mobile keyboards
+and production storage were not tested. No push, publication or deployment occurred.
+
+See [the integration handoff](docs/document-library-handoff.md) for contracts,
+shared-file merge notes, evidence and resume commands; the [API guide](docs/document-library.md)
+documents application ownership and copyable usage. Evidence is in
+`.artifacts/document-library/`. Local preview: `http://127.0.0.1:5497/#document-library`.
+Resume with `git status --short` and `git log --oneline b588b1b..codex/document-library`
+from the current worktree. Previous integration history follows.
 
 ## Component accent details: 25 October 2026
 

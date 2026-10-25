@@ -5,6 +5,7 @@ import * as Kit from "@evenkit/ui";
 import { RecordDetail } from "./blocks/record-detail";
 import { ProfileSettings, AppearanceSettings } from "./blocks/account-settings";
 import { OnboardingWizard } from "./blocks/onboarding-wizard";
+import { DocumentLibraryFixture } from "./document-library-fixture";
 
 const requiredExports: readonly (keyof typeof Kit)[] = [
   "Calendar", "DateField", "DatePicker", "DateRangePicker", "TimeField",
@@ -13,6 +14,7 @@ const requiredExports: readonly (keyof typeof Kit)[] = [
   "SortControl", "BulkActionBar", "ColumnSettings", "useRemoteTable", "useTableSelection",
   "ActivityTimeline", "WorkspaceSwitcher", "SettingsLayout", "AppearancePreferences",
   "UploadQueue", "useUploadQueue", "Image", "Thumbnail", "CommandPalette", "StepIndicator",
+  "FilePreview", "FileLightbox", "DocumentLibrary", "useDocumentLibrary",
 ];
 
 const record = { id: "packed-detail", name: "Packed record detail", notes: "Package fixture", status: "draft" as const };
@@ -26,6 +28,7 @@ export function RoadmapFixture() {
   for (const name of requiredExports) if (Kit[name] === undefined) throw new Error(`Missing roadmap export: ${name}`);
   return <Kit.Stack aria-label="Packed roadmap controls">
     <h2>Roadmap package controls</h2>
+    <DocumentLibraryFixture />
     <Kit.Calendar value={date} onValueChange={setDate} today="2026-10-25" />
     <Kit.DatePicker label="Packed deadline" value={date} onValueChange={setDate} today="2026-10-25" />
     <Kit.DateRangePicker label="Packed reporting period" today="2026-10-25" />

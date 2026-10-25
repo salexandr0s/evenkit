@@ -12,8 +12,14 @@ const RemoteTablePreview = lazy(() => import("./remote-table-preview.js").then(m
 const AccountRecordPreview = lazy(() => import("./account-record-preview.js").then(module => ({ default: module.AccountRecordPreview })));
 const UploadsPreview = lazy(() => import("./uploads-preview.js").then(module => ({ default: module.UploadsPreview })));
 const CommandWizardPreview = lazy(() => import("./command-wizard-preview.js").then(module => ({ default: module.CommandWizardPreview })));
+const MediaPreviewPreview = lazy(() => import("./media-preview-preview.js").then(module => ({ default: module.MediaPreviewPreview })));
+const AvatarUploadPreview = lazy(() => import("./avatar-upload-preview.js").then(module => ({ default: module.AvatarUploadPreview })));
+const DocumentLibraryPreview = lazy(() => import("./document-library-preview.js").then(module => ({ default: module.DocumentLibraryPreview })));
 
 export function RoadmapPreview({ id }: { id: string }) {
+  if (id === "file-preview") return <MediaPreviewPreview />;
+  if (id === "avatar-upload") return <AvatarUploadPreview />;
+  if (id === "document-library") return <DocumentLibraryPreview />;
   if (datesEntries.some(entry => entry.id === id)) return <DatesPreview id={id} />;
   if (valueFieldsEntries.some(entry => entry.id === id)) return <ValueFieldsPreview id={id} />;
   if (remoteTableEntries.some(entry => entry.id === id)) return <RemoteTablePreview id={id} />;

@@ -12,6 +12,10 @@ Include external filters, workspace/account identity and permission context in `
 
 The table requires exact totals. Cursor pagination, unknown totals and automatic selection of every matching server record are outside this API. Those contracts need separate endpoint support.
 
+When `searchable={false}` uses an external search field, pass `onClearSearch` to
+clear the controlled query and focus that field. The filtered-empty recovery
+button calls this callback; without it, the table clears its own search as before.
+
 ## Selection and bulk actions
 
 Selection always consists of explicit stable row IDs. The header checkbox selects the loaded page. Existing IDs from other pages remain selected. `useTableSelection(scopeKey)` clears IDs when the scope changes, including when returning to an earlier scope. Use a key containing the active search, filters, workspace and permission context; omit page/sort when they do not change membership. Remove deleted or newly inaccessible IDs in your application.

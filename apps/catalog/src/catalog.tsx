@@ -84,6 +84,7 @@ const navigationIcons: Record<string, ReactNode> = {
   "profile-settings": <UserIcon />, "appearance-preferences": <SunIcon />, "upload-queue": <UploadIcon />,
   image: <CameraIcon />, "command-palette": <SearchIcon />, "step-indicator": <ListChecksIcon />,
   "onboarding-wizard": <PanelsTopLeftIcon />,
+  "avatar-upload": <UserIcon />, "file-preview": <CameraIcon />, "document-library": <FileTextIcon />,
 };
 
 function selectedFromHash() {
