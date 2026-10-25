@@ -103,6 +103,7 @@ async function smoke(kind, directory) {
     if (kind === "next" && !html.includes("Priority package controls")) throw new Error("Next server did not render the new priority control families.");
     if (kind === "next" && !html.includes("Roadmap package controls")) throw new Error("Next server did not render the roadmap controls and blocks.");
     if (kind === "next" && !html.includes("Document library package controls")) throw new Error("Next server did not render the document library fixture.");
+    if (kind === "next" && !html.includes("Packed notification family")) throw new Error("Next server did not render notification exports and copied blocks.");
     if (kind === "next" && !html.includes("Packed primary navigation")) throw new Error("Next server did not render the complete navbar fixture.");
     if (kind === "next" && !html.includes("Packed editable projects")) throw new Error("Next server did not render the independently copied page blocks.");
     if (kind === "vite" && !html.includes('id="root"')) throw new Error("Vite did not serve the package fixture.");
@@ -122,6 +123,7 @@ async function smoke(kind, directory) {
     const teamSelectors = [".pk-team-members", ".pk-invitation-acceptance", ".pk-role-editor", ".pk-audit-viewer"];
     if (!teamSelectors.every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship the team administration styles.`);
     if (kind === "next" && !html.includes("Team administration package controls")) throw new Error("Next server did not render team administration controls.");
+    if (![".pk-notification-list", ".pk-notification-preferences", ".pk-persistent-banner", ".pk-presence-indicator"].every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship notification family styles.`);
     smokeResult = { httpStatus: response.status, stylesheetCount: stylesheets.length };
   } catch (error) {
     failure = error;

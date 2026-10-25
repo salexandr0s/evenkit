@@ -10,6 +10,9 @@ import { avatarUploadEntries } from "./avatar-upload-entries.js";
 import { documentLibraryEntries } from "./document-library-entries.js";
 
 import { teamAdminEntries } from "./team-admin-entries.js";
+import { notificationCenterEntries } from "./notification-center-entries.js";
+import { notificationPreferencesEntries } from "./notification-preferences-entries.js";
+import { persistentFeedbackEntries } from "./persistent-feedback-entries.js";
 
 export const roadmapEntries: readonly CatalogEntry[] = [
   ...datesEntries,
@@ -22,4 +25,7 @@ export const roadmapEntries: readonly CatalogEntry[] = [
   ...avatarUploadEntries,
   ...documentLibraryEntries,
   ...teamAdminEntries,
+  ...notificationCenterEntries,
+  ...notificationPreferencesEntries,
+  ...persistentFeedbackEntries,
 ];

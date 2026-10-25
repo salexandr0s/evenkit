@@ -1,0 +1,8 @@
+.pk-notification-preferences { box-sizing: border-box; display: grid; gap: var(--pk-space-6); min-width: 0; max-width: 100%; color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); }
+.pk-notification-preference-category { min-inline-size: 0; margin: 0; padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); }
+.pk-notification-preference-category legend { max-width: 100%; padding-inline: var(--pk-space-1); font-weight: var(--pk-font-weight-medium); font-size: var(--pk-font-size-sm); overflow-wrap: anywhere; }
+.pk-notification-preference-category > p { margin: 0 0 var(--pk-space-3); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); overflow-wrap: anywhere; }
+.pk-notification-preference-channels { display: grid; gap: var(--pk-space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--pk-layout-sidebar)), 1fr)); }
+.pk-notification-preference-channels > * { min-width: 0; }
+.pk-notification-preferences [aria-disabled="true"] { cursor: not-allowed; }
+.pk-notification-preferences [aria-disabled="true"]:not(:focus) { opacity: var(--pk-opacity-disabled); }

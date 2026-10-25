@@ -33,7 +33,7 @@ try {
     "J03", "J04", "E10", "E08", "O06",
   ];
   const inventoryIds = [...inventory.matchAll(/^\| ([A-R]\d{2}) \|/gm)].map(match => match[1]);
-  const workstreamIds = ["L01", "L08", "L09", "J05", "J06", "J07", "M07", "L04", "M08", "O09"];
+  const workstreamIds = ["L01", "L08", "L09", "J05", "J06", "J07", "M07", "L04", "M08", "O09", "O08", "M06", "H10", "G03", "G06"];
   const expected = [...original, ...additions, ...workstreamIds];
   if (new Set([...original, ...additions]).size !== 72 || expected.some(id => !inventoryIds.includes(id)) || new Set(expected).size !== expected.length) {
     throw new Error("The baseline and workstream mappings must be distinct inventory entries.");

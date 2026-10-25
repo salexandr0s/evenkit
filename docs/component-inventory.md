@@ -167,10 +167,10 @@ The [internal toast contract](/Users/nationalbank/GitHub/ai-config/claude/uiux-c
 | --- | --- | --- | --- |
 | G01 | Toast | Next / UI | Queue/limit, dismiss/action, paused timing, accessible announcement, context cleanup. |
 | G02 | Progress and meter | Next / UI | Determinate/indeterminate progress and separate bounded measurement semantics. |
-| G03 | Banner/announcement bar | Follow-up / UI | Persistent page/app notice, optional action/dismissal, reserved layout space. |
+| G03 | Banner/announcement bar | Built / UI | Persistent page/app notice, optional action/dismissal, reserved layout space. |
 | G04 | Save/submission status | Next / Recipe | Saving, saved, failed, retry and unsaved changes; reuse ActionMessage. |
 | G05 | Task progress | Follow-up / UI | Multi-stage work, completed/failed/cancelled outcomes, retry/cancel actions. |
-| G06 | Connection/session status | Follow-up / UI | Offline/reconnecting/stale/session-expiring states with recovery. |
+| G06 | Connection/session status | Built / UI | Offline/reconnecting/stale/session-expiring states with recovery. |
 | G07 | Loading overlay and local busy region | Follow-up / Recipe | Defined blocking scope, persistent announcements and focus preservation. |
 | G08 | Undo feedback | Follow-up / Recipe | Confirmed reversible action, explicit availability window, failure handling. |
 
@@ -189,7 +189,7 @@ Use [Chakra's display catalog](https://chakra-ui.com/docs/components/concepts/ov
 | H07 | Code block and inline code | Follow-up / UI | Overflow, copy, language label, long lines; optional highlighting. |
 | H08 | Keyboard shortcut/Kbd | Next / UI | Platform-aware shortcut display and accessible descriptions. |
 | H09 | Text overflow/read-more | Follow-up / Recipe | Wrapping first, deliberate truncation, full-content access. |
-| H10 | Presence/unread indicator | Follow-up / UI | Text equivalents for state; no color-only meaning. |
+| H10 | Presence/unread indicator | Built / UI | Text equivalents for state; no color-only meaning. |
 
 ## Lists, filtering, and tables
 
@@ -267,7 +267,7 @@ These extend the original invitation/settings candidates into explicit UI blocks
 | M03 | Settings layout and section | Built / Block | Navigation, grouped fields, save behavior, deep links and mobile layout. |
 | M04 | Profile settings | Built / Block | Name, email, avatar, validation and save recovery. |
 | M05 | Appearance/language preferences | Built / Block | Theme/mode, density and locale; compose existing token options. |
-| M06 | Notification preferences | Follow-up / Block | Per-channel/category preferences, pending and failed saves. |
+| M06 | Notification preferences | Built / Block | Per-channel/category preferences, pending and failed saves. |
 | M07 | Members and invitations | Built / Block | Member list, invite/resend/revoke, pending/expired and action feedback. |
 | M08 | Role/capability editor | Built / Block | Application-defined grants, read-only/denied states and confirmation. |
 | M09 | Security and active sessions | Optional / Block | MFA, sessions/devices, revoke and reauthentication requirements. |
@@ -301,7 +301,7 @@ Keep [existing chat](./chat.md) as the base. The [shadcn AI Elements references]
 | O05 | Detail drawer/master-detail | Follow-up / Block | List context, selected record, focus/URL boundary and narrow-screen flow. |
 | O06 | Onboarding/wizard | Built / Block | Steps, per-step validation, back/forward, review, draft recovery. |
 | O07 | Search results page | Follow-up / Block | Query, facets, counts, result rows, no-results and unavailable search. |
-| O08 | Notification center | Follow-up / Block | Unread/read, groups, actions, pagination and empty/error states. |
+| O08 | Notification center | Built / Block | Unread/read, groups, actions, pagination and empty/error states. |
 | O09 | Activity/audit viewer | Built / Block | Event filters, actors, timestamps, details and export; no audit storage engine. |
 | O10 | Help/support page | Follow-up / Block | Search, FAQ, contact/support entry and documented availability. |
 | O11 | Error/access/offline pages | Next / Block | 404, unavailable/500, denied, offline and maintenance with useful recovery. |

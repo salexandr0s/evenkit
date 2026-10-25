@@ -5,6 +5,7 @@ import { remoteTableEntries } from "./remote-table-entries.js";
 import { accountRecordEntries } from "./account-record-entries.js";
 import { uploadsEntries } from "./uploads-entries.js";
 import { commandWizardEntries } from "./command-wizard-entries.js";
+import { persistentFeedbackEntries } from "./persistent-feedback-entries.js";
 
 import { teamAdminEntries } from "./team-admin-entries.js";
 
@@ -18,11 +19,17 @@ const CommandWizardPreview = lazy(() => import("./command-wizard-preview.js").th
 const MediaPreviewPreview = lazy(() => import("./media-preview-preview.js").then(module => ({ default: module.MediaPreviewPreview })));
 const AvatarUploadPreview = lazy(() => import("./avatar-upload-preview.js").then(module => ({ default: module.AvatarUploadPreview })));
 const DocumentLibraryPreview = lazy(() => import("./document-library-preview.js").then(module => ({ default: module.DocumentLibraryPreview })));
+const NotificationCenterPreview = lazy(() => import("./notification-center-preview.js").then(module => ({ default: module.NotificationCenterPreview })));
+const NotificationPreferencesPreview = lazy(() => import("./notification-preferences-preview.js").then(module => ({ default: module.NotificationPreferencesPreview })));
+const PersistentFeedbackPreview = lazy(() => import("./persistent-feedback-preview.js").then(module => ({ default: module.PersistentFeedbackPreview })));
 
 export function RoadmapPreview({ id }: { id: string }) {
   if (id === "file-preview") return <MediaPreviewPreview />;
   if (id === "avatar-upload") return <AvatarUploadPreview />;
   if (id === "document-library") return <DocumentLibraryPreview />;
+  if (id === "notification-center") return <NotificationCenterPreview />;
+  if (id === "notification-preferences") return <NotificationPreferencesPreview />;
+  if (persistentFeedbackEntries.some(entry => entry.id === id)) return <PersistentFeedbackPreview key={id} id={id} />;
   if (datesEntries.some(entry => entry.id === id)) return <DatesPreview id={id} />;
   if (valueFieldsEntries.some(entry => entry.id === id)) return <ValueFieldsPreview id={id} />;
   if (remoteTableEntries.some(entry => entry.id === id)) return <RemoteTablePreview id={id} />;

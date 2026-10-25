@@ -317,4 +317,6 @@ The [component roadmap](docs/component-roadmap-plan.md) tracks the 24 additional
 
 The [document-library guide](docs/document-library.md) covers J05–J07: avatar/logo replacement and save recovery, file previews/lightbox, and a remote document list/grid. Copy `avatar-upload.tsx` or `document-library.tsx` from `registry/blocks` and supply application callbacks for storage and authorization.
 
-Run `npm run verify:examples` to compile all 89 copied catalog examples and check all 75 inventory ID mappings. Run `npm run verify:packages` after building to install packed packages in independent Vite/Next consumers, copy the editable blocks, and check builds, server rendering and delivered styles.
+Run `npm run verify:examples` to compile all copied catalog examples and inventory mappings. Run `npm run verify:packages` after building for independent packed Vite/Next builds, server rendering and stylesheet checks.
+The [notification and persistent-feedback guide](docs/notifications.md) covers O08, M06, H10, G03 and G06. Copy `notification-center.tsx` and `notification-preferences.tsx` from `registry/blocks` for application-owned inboxes and settings; the UI package supplies persistent banners, connection/session status and presence/unread indicators.
+
