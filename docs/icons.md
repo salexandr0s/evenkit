@@ -3,16 +3,23 @@
 Use the named Lucide wrappers exported by `@project-kit/ui`. The kit pins `lucide-react` 1.61.0. Its outlined icons suit controls, navigation, and table actions, and its static React imports support tree shaking. [Lucide React documentation](https://lucide.dev/guide/react).
 
 ```tsx
-import { Button, PlusIcon, SearchIcon } from "@project-kit/ui";
+import { Button, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@project-kit/ui";
 
 <Button><PlusIcon size="sm" />Create project</Button>
-<Button variant="ghost" shape="icon" aria-label="Search projects">
-  <SearchIcon />
-</Button>
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button variant="ghost" shape="icon" aria-label="Search projects"><SearchIcon /></Button>
+    </TooltipTrigger>
+    <TooltipContent>Search projects</TooltipContent>
+  </Tooltip>
+</TooltipProvider>
 <SearchIcon label="Search" />
 ```
 
 Icons are decorative by default. Use `shape="icon"` for a square icon button and put its accessible label on the button itself. Use an icon's `label` only when the icon independently conveys meaning. Pair status icons with visible text. Sizes are `sm` (16px), `md` (20px, default), and `lg` (24px), with a shared stroke width of 2 and inherited text color.
+
+Use icon buttons for familiar actions whose context is visible, such as copying a code block, downloading a file, revealing a password, or undoing an archive notice. Show the action name in a shared tooltip on hover and keyboard focus. Keep visible labels for primary actions, critical confirmations, recovery instructions, and choices an icon cannot explain. Use `Undo2Icon` to reverse an action, `RotateCcwIcon` to retry, and `EyeIcon` / `EyeOffIcon` to show or hide a password.
 
 Use `UserIcon` for one person, an account, or a profile. Use `UsersIcon` for a team or group. The silhouettes differ, so a person row does not look like the destination for the whole team.
 
@@ -23,7 +30,7 @@ import { UserIcon, UsersIcon } from "@project-kit/ui";
 <span><UsersIcon />Team</span>
 ```
 
-The set contains 96 named wrappers, including these families:
+The set contains 99 named wrappers, including these families:
 
 | Purpose | Icons |
 |---|---|
@@ -31,12 +38,12 @@ The set contains 96 named wrappers, including these families:
 | Workspace and reporting | `Building2Icon`, `BriefcaseBusinessIcon`, `ChartNoAxesCombinedIcon`, `LayoutDashboardIcon` |
 | Communication | `BellIcon`, `InboxIcon`, `MailIcon`, `MessageSquareIcon` |
 | Time and saved content | `CalendarDaysIcon`, `ClockIcon`, `BookmarkIcon`, `ArchiveIcon` |
-| Common actions | `UploadIcon`, `DownloadIcon`, `CopyIcon`, `PencilIcon`, `FilterIcon` |
+| Common actions | `UploadIcon`, `DownloadIcon`, `CopyIcon`, `PencilIcon`, `FilterIcon`, `Undo2Icon` |
 | Sidebar controls | `PanelLeftIcon`, `PanelLeftCloseIcon`, `PanelLeftOpenIcon` |
 | Status | `ActivityIcon`, `CheckIcon`, `CircleCheckIcon`, `CircleAlertIcon`, `TriangleAlertIcon`, `InfoIcon`, `CircleHelpIcon`, `CircleIcon` |
 | Chat actions | `MaximizeIcon`, `MinimizeIcon`, `SquareIcon`, `RotateCcwIcon` |
 | Selection controls | `SquareCheckIcon`, `CircleDotIcon`, `ToggleRightIcon`, `BoldIcon`, `Columns3Icon`, `GroupIcon` |
-| Forms | `ListChecksIcon`, `ListXIcon`, `KeyRoundIcon`, `ListFilterIcon`, `SaveIcon`, `CloudCheckIcon` |
+| Forms | `ListChecksIcon`, `ListXIcon`, `KeyRoundIcon`, `EyeIcon`, `EyeOffIcon`, `ListFilterIcon`, `SaveIcon`, `CloudCheckIcon` |
 | Layout and content | `TypeIcon`, `RectangleHorizontalIcon`, `LayoutGridIcon`, `SeparatorHorizontalIcon`, `PanelTopIcon`, `HeadingIcon`, `TagsIcon`, `ListIcon`, `ListTreeIcon`, `Table2Icon`, `FilePenLineIcon` |
 | Navigation and overlays | `PanelsTopLeftIcon`, `ListCollapseIcon`, `ChevronsUpDownIcon`, `PanelTopDashedIcon`, `ArrowLeftRightIcon`, `MessageSquareTextIcon`, `PanelRightIcon` |
 | Helpers and tools | `AccessibilityIcon`, `KeyboardIcon`, `SlidersHorizontalIcon`, `GaugeIcon`, `FilterXIcon`, `ShapesIcon` |

@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { foundation } from "@project-kit/tokens";
-import { ActionMessage, Badge, Button, EmptyState, Input, Label, PlusIcon, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconSize } from "@project-kit/ui";
+import { ActionMessage, Badge, Button, CheckIcon, CopyIcon, EmptyState, Input, Label, PlusIcon, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconSize } from "@project-kit/ui";
 import { iconCategories, icons, type IconCategory } from "./icon-data";
 import "./icon-preview.css";
 
@@ -92,7 +92,7 @@ export function IconPreview() {
                 <code className="icon-export-name">{name}</code>
                 <div className="icon-import">
                   <code>{`import { ${name} } from "@project-kit/ui";`}</code>
-                  <Button size="sm" variant="ghost" aria-label={`Copy import for ${name}`} onClick={() => void copyImport(name)}>{copied === name ? "Copied" : "Copy import"}</Button>
+                  <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" shape="icon" aria-label={`Copy import for ${name}`} onClick={() => void copyImport(name)}>{copied === name ? <CheckIcon size="sm" /> : <CopyIcon size="sm" />}</Button></TooltipTrigger><TooltipContent>{copied === name ? "Copied" : `Copy import for ${name}`}</TooltipContent></Tooltip>
                 </div>
               </li>
             ))}

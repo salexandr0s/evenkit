@@ -172,7 +172,9 @@ test("file row recovery and editable recovery page actions remain usable at narr
   await page.goto("/#file-row");
   await page.setViewportSize({ width: 360, height: 900 });
   const retry = page.getByRole("button", { name: "Retry Quarterly project handover and delivery notes.txt" });
-  await retry.click();
+  await retry.focus();
+  await expect(page.getByRole("tooltip", { name: "Retry Quarterly project handover and delivery notes.txt", exact: true }).and(page.locator(".pk-tooltip-content"))).toBeVisible();
+  await retry.press("Enter");
   await expect(page.getByRole("status").filter({ hasText: "Sample retry completed." })).toBeVisible();
   await page.getByRole("button", { name: "Remove Quarterly project handover and delivery notes.txt" }).click();
   await expect(page.getByRole("button", { name: "Reset file examples" })).toBeFocused();

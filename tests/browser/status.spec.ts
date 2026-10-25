@@ -9,7 +9,7 @@ test("persistent feedback supports keyboard recovery, dismissal and cancellation
   const dismiss = recovery.getByRole("button", { name: "Dismiss message", exact: true });
   const reset = recovery.getByRole("button", { name: "Reset example", exact: true });
   await expect(recovery.getByRole("alert")).toContainText("Export did not finish");
-  await expect(recovery.getByRole("alert").locator("svg")).toHaveAttribute("aria-hidden", "true");
+  await expect(recovery.getByRole("alert").locator(".pk-action-message-icon svg")).toHaveAttribute("aria-hidden", "true");
   const notes = page.getByRole("region", { name: "Static message examples" });
   await expect(notes.getByRole("note")).toHaveCount(4);
   await expect(notes.getByRole("note").filter({ hasText: "Text without an icon" }).locator("svg")).toHaveCount(0);

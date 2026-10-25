@@ -178,6 +178,12 @@ test("streaming respects reading position and finished responses can be copied a
   await expect(chat.getByRole("button", { name: "Stop response", exact: true })).toHaveCount(0, { timeout: 10_000 });
   expect(await log.evaluate(element => element.scrollTop)).toBeLessThanOrEqual(1);
   await jump.focus();
+  const jumpTip = page.getByRole("tooltip", { name: "Jump to latest", exact: true }).and(page.locator(".pk-tooltip-content"));
+  await expect(jumpTip).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(jumpTip).toHaveCount(0);
+  await expect(chat).toBeVisible();
+  await expect(jump).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(log).toBeFocused();
   await expect.poll(() => log.evaluate(element => element.scrollHeight - element.scrollTop - element.clientHeight)).toBeLessThanOrEqual(1);

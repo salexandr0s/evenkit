@@ -61,6 +61,9 @@ import {
   Minimize,
   Square,
   RotateCcw,
+  Undo2,
+  Eye,
+  EyeOff,
   Type,
   RectangleHorizontal,
   LayoutGrid,
@@ -199,6 +202,9 @@ export const MaximizeIcon = /* @__PURE__ */ createKitIcon(Maximize, "MaximizeIco
 export const MinimizeIcon = /* @__PURE__ */ createKitIcon(Minimize, "MinimizeIcon");
 export const SquareIcon = /* @__PURE__ */ createKitIcon(Square, "SquareIcon");
 export const RotateCcwIcon = /* @__PURE__ */ createKitIcon(RotateCcw, "RotateCcwIcon");
+export const Undo2Icon = /* @__PURE__ */ createKitIcon(Undo2, "Undo2Icon");
+export const EyeIcon = /* @__PURE__ */ createKitIcon(Eye, "EyeIcon");
+export const EyeOffIcon = /* @__PURE__ */ createKitIcon(EyeOff, "EyeOffIcon");
 export const TypeIcon = /* @__PURE__ */ createKitIcon(Type, "TypeIcon");
 export const RectangleHorizontalIcon = /* @__PURE__ */ createKitIcon(RectangleHorizontal, "RectangleHorizontalIcon");
 export const LayoutGridIcon = /* @__PURE__ */ createKitIcon(LayoutGrid, "LayoutGridIcon");

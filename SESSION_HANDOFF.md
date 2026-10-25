@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Utility icon buttons: 25 October 2026
+
+Completed the utility-icon goal. Undo archive, code/import/token copy, password visibility, chat copy/idle retry/jump, file-row actions, status dismissal and table selection clearing use named square icon buttons with shared tooltips. Primary actions, confirmation labels, empty-state recovery and filter resets retain text. Added Undo2Icon, EyeIcon and EyeOffIcon (99 wrappers). Toast actions accept an optional icon while retaining label, altText, callbacks and the existing text fallback. Updated copied examples and family docs.
+
+Verification passed: production build, full configured typecheck and ESLint, 29 existing Chromium journeys, all 62 copied snippets, independent source review, and 18 light/dark/mobile visual/geometry checks plus keyboard code copying. Mobile controls meet 44px targets. Evidence and the owned change patch are in `.artifacts/icon-actions/`; `undo-archive.png` shows the requested toast. The build retains its existing chunk-size warning. No required work remains for this goal; Firefox/Safari and physical mobile input were not tested.
+
+Concurrent icon-animation edits began during verification and temporarily introduced missing IconProvider/IconAnimation exports in the shared checkout. Final build/typecheck/lint passed in a snapshot of the starting working tree plus only this goal's changes. The successful browser run and visual checks used the completed icon-button build. Existing design and animation work was preserved; their integration remains owned by those chats. The password reveal is now square, superseding the earlier 64px Show/Hide description below. The commit includes only this goal's changes and the password-specific styling needed for its new control.
+
+Resume with `git status --short` and `.artifacts/icon-actions/changed-files.txt`. Existing preview on port 5173 was preserved; the temporary verification server and snapshot were removed.
+
 ## Sidebar icon coverage: 25 October 2026
 
 All 62 catalog entries now have explicit sidebar icons. The 48 entries added after the original catalog had used AdminShell's circle fallback. Added 36 static Lucide wrappers and public exports, bringing the searchable icon inventory to 96. The icon reference includes a Controls category and component aliases such as checkbox, fieldset and combobox. Existing icon sizing, stroke, color and accessibility behavior remain intact; no dependency was added.

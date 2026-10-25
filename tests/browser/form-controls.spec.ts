@@ -123,6 +123,12 @@ test("search clear and password visibility preserve native input identity and fo
   await password.press("Tab");
   const hide = page.getByRole("button", { name: "Hide password", exact: true }).first();
   await expect(hide).toBeFocused();
+  const hideTip = page.getByRole("tooltip", { name: "Hide password", exact: true }).and(page.locator(".pk-tooltip-content"));
+  await expect(hideTip).toBeVisible();
+  await hide.press("Escape");
+  await expect(hideTip).toHaveCount(0);
+  await expect(hide).toBeFocused();
+  await expect(password).toHaveAttribute("type", "text");
   await hide.press("Enter");
   await expect(password).toHaveAttribute("type", "password");
   await expect(password).toHaveValue("sample-secret");

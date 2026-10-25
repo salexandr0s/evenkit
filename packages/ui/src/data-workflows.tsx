@@ -3,7 +3,8 @@
 import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, type ComponentPropsWithoutRef, type FormEvent, type ReactNode } from "react";
 import { Button, ButtonLink } from "./button.js";
 import { classes } from "./classes.js";
-import { FileTextIcon, UploadIcon } from "./icons.js";
+import { DownloadIcon, ExternalLinkIcon, FileTextIcon, RotateCcwIcon, TrashIcon, UploadIcon, XIcon } from "./icons.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 export interface SemanticTableProps extends ComponentPropsWithoutRef<"table"> { density?: "default" | "compact" }
 export const SemanticTable = forwardRef<HTMLTableElement, SemanticTableProps>(function SemanticTable({ className, density = "default", ...props }, ref) {
@@ -205,6 +206,11 @@ export const FileRow = forwardRef<HTMLLIElement, FileRowProps>(function FileRow(
   const stateLabel = { ready: "Ready", uploading: "Uploading", complete: "Complete", error: "Failed" }[state];
   return <li {...props} ref={ref} className={classes("pk-file-row", className)} data-state={state}>
     <FileTextIcon /><div className="pk-file-row-content"><span className="pk-file-name">{name}</span><span className="pk-file-metadata">{[fileType, formattedSize, stateLabel].filter(Boolean).join(" · ")}</span>{message ? <span className="pk-file-message" role={state === "error" ? "alert" : "status"}>{message}</span> : null}{state === "uploading" ? <progress aria-label={`Upload progress for ${name}`} max={100} {...(progress === undefined ? {} : { value: Math.min(100, Math.max(0, progress)) })} /> : null}</div>
-    <div className="pk-file-actions">{href ? <ButtonLink href={href} size="sm" variant="ghost" aria-label={`Open ${name}`}>Open</ButtonLink> : null}{downloadHref ? <ButtonLink href={downloadHref} download={name} size="sm" variant="ghost" aria-label={`Download ${name}`}>Download</ButtonLink> : null}{state === "error" && onRetry ? <Button size="sm" variant="outline" aria-label={`Retry ${name}`} onClick={onRetry}>Retry</Button> : null}{state === "uploading" && onCancel ? <Button size="sm" variant="outline" aria-label={`Cancel ${name}`} onClick={onCancel}>Cancel</Button> : onRemove ? <Button size="sm" variant="ghost" aria-label={`Remove ${name}`} onClick={onRemove}>Remove</Button> : null}</div>
+    <TooltipProvider><div className="pk-file-actions">
+      {href ? <Tooltip><TooltipTrigger asChild><ButtonLink href={href} size="sm" variant="ghost" shape="icon" aria-label={`Open ${name}`}><ExternalLinkIcon size="sm" /></ButtonLink></TooltipTrigger><TooltipContent>{`Open ${name}`}</TooltipContent></Tooltip> : null}
+      {downloadHref ? <Tooltip><TooltipTrigger asChild><ButtonLink href={downloadHref} download={name} size="sm" variant="ghost" shape="icon" aria-label={`Download ${name}`}><DownloadIcon size="sm" /></ButtonLink></TooltipTrigger><TooltipContent>{`Download ${name}`}</TooltipContent></Tooltip> : null}
+      {state === "error" && onRetry ? <Tooltip><TooltipTrigger asChild><Button size="sm" variant="outline" shape="icon" aria-label={`Retry ${name}`} onClick={onRetry}><RotateCcwIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Retry ${name}`}</TooltipContent></Tooltip> : null}
+      {state === "uploading" && onCancel ? <Tooltip><TooltipTrigger asChild><Button size="sm" variant="outline" shape="icon" aria-label={`Cancel ${name}`} onClick={onCancel}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Cancel ${name}`}</TooltipContent></Tooltip> : onRemove ? <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" shape="icon" aria-label={`Remove ${name}`} onClick={onRemove}><TrashIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Remove ${name}`}</TooltipContent></Tooltip> : null}
+    </div></TooltipProvider>
   </li>;
 });

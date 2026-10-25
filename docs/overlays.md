@@ -29,6 +29,8 @@ Sheet reexports familiar header/body/footer/title/description/close parts. `side
 
 `useToast()` returns `toast(options)`, `dismiss(id)`, and `clear()`. A notice needs a title; optional description, tone, duration, action and returnFocusTo are explicit. The returned ID is null if the provider is unmounted or the callback belongs to an old scope. Default lifetimes come from the inherited contract: success 3000ms, info 3500ms, warning 4500ms, error 6000ms. `duration: Infinity` keeps a notice until dismissal. Keep unresolved errors and required decisions visible in their original context. Action callbacks may prevent default dismissal when the host needs to keep a notice open.
 
+Toast actions accept `label`, `altText`, `onClick`, and an optional `icon`. Supplying an icon renders a square icon button; `label` remains its accessible name and tooltip. Without an icon, the label stays visible. Use `icon: <Undo2Icon size="sm" />` for undo. Keep `altText` as the description of the alternative action announced with the notice. ToastProvider supplies the tooltip context for its actions and dismiss controls.
+
 AccountMenu accepts a stable ID for each link, a visible name, and an optional description. The optional appearance value is controlled by the host; theme changes remain application code. Sign-out feedback is host-supplied. Routing, safe destinations, identity eligibility and server authorization remain outside these components.
 
 ## Source and verification

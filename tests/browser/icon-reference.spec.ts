@@ -21,8 +21,8 @@ test("icon reference combines aliases and categories, copies imports, and preser
   await expect(gallery.locator("[data-icon]")).toHaveCount(1);
   const trash = gallery.locator('[data-icon="TrashIcon"]');
   await choose(page, "Icon size", "Large · 24px");
-  await expect(trash.locator("svg")).toHaveCSS("width", "24px");
-  await expect(trash.locator("svg")).toHaveAttribute("aria-hidden", "true");
+  await expect(trash.locator(".icon-card-sample svg")).toHaveCSS("width", "24px");
+  await expect(trash.locator(".icon-card-sample svg")).toHaveAttribute("aria-hidden", "true");
 
   const copy = trash.getByRole("button", { name: "Copy import for TrashIcon", exact: true });
   await copy.press("Enter");

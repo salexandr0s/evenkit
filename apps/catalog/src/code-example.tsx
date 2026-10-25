@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@project-kit/ui";
+import { Button, CopyIcon, Tooltip, TooltipContent, TooltipTrigger } from "@project-kit/ui";
 
 export function CodeExample({ code }: { code: string }) {
   const [notice, setNotice] = useState("");
@@ -17,7 +17,7 @@ export function CodeExample({ code }: { code: string }) {
     <section className="catalog-code" aria-label="Usage example">
       <div className="catalog-code-header">
         <span>Usage</span>
-        <Button size="sm" variant="ghost" onClick={() => void copy()}>Copy code</Button>
+        <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" shape="icon" aria-label="Copy code" onClick={() => void copy()}><CopyIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Copy code</TooltipContent></Tooltip>
       </div>
       <pre tabIndex={0}><code>{code}</code></pre>
       <p className="catalog-copy-notice" role="status">{notice}</p>

@@ -134,7 +134,8 @@ export function ProjectNotes({ onSave }: { onSave: (notes: string) => void }) {
     description: "Brief notifications with actions, a three-notice limit, paused expiry, keyboard access, and context cleanup.",
     tags: ["toast", "notification", "undo", "timer", "feedback", "G01"],
     source: "Radix Toast with original kit notification manager", sourceUrl: "https://www.radix-ui.com/primitives/docs/components/toast",
-    usage: imports + `import { Button, ToastProvider, useToast } from "@project-kit/ui";
+    usage: imports + `import { useState } from "react";
+import { Button, ToastProvider, Undo2Icon, useToast } from "@project-kit/ui";
 
 function SaveAction({ save }: { save: () => Promise<void> }) {
   const { toast } = useToast();
@@ -153,6 +154,25 @@ export function ProjectSave({ projectId, save }: { projectId: string; save: () =
   return <ToastProvider scopeKey={projectId}><SaveAction save={save} /></ToastProvider>;
 }
 
+function ArchiveAction() {
+  const { toast } = useToast();
+  const [archived, setArchived] = useState(false);
+  return <>
+    <Button variant="outline" onClick={event => {
+      setArchived(true);
+      toast({ title: "Project archived", duration: Infinity, returnFocusTo: event.currentTarget,
+        action: { label: "Undo archive", altText: "Restore the project from its archive action",
+          icon: <Undo2Icon size="sm" />, onClick: () => setArchived(false) } });
+    }}>Archive sample project</Button>
+    <p role="status">{archived ? "The sample project is archived." : "The sample project is active."}</p>
+  </>;
+}
+
+export function ProjectArchive({ projectId }: { projectId: string }) {
+  return <ToastProvider scopeKey={projectId}><ArchiveAction /></ToastProvider>;
+}
+
+// Omit action.icon when the action needs a visible label.
 // Keep unresolved field errors visible in the form. Toasts supplement that feedback.
 `,
   },

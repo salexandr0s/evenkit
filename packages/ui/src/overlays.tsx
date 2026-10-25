@@ -11,6 +11,7 @@ import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, type DialogContentProps } from "./dialog.js";
 import { CheckIcon, ChevronDownIcon, ChevronRightIcon, CircleAlertIcon, CircleCheckIcon, InfoIcon, LogOutIcon, TriangleAlertIcon, UserIcon, XIcon } from "./icons.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 const popupGap = Number.parseFloat(foundation.space["2"]);
 const popupInset = Number.parseFloat(foundation.space["3"]);
@@ -113,7 +114,13 @@ export interface ToastOptions {
   tone?: ToastTone;
   /** Positive milliseconds, or Infinity for explicit dismissal. */
   duration?: number;
-  action?: { label: string; altText: string; onClick: (event: MouseEvent<HTMLButtonElement>) => void };
+  action?: {
+    label: string;
+    altText: string;
+    /** A familiar action glyph; label remains its accessible name and tooltip. */
+    icon?: ReactNode;
+    onClick: (event: MouseEvent<HTMLButtonElement>) => void;
+  };
   returnFocusTo?: HTMLElement | null;
 }
 export interface ToastApi {
@@ -142,7 +149,7 @@ function focusIfAvailable(target: HTMLElement | null) {
   if (target?.isConnected && !target.matches(":disabled,[inert],[aria-hidden='true']") && !target.closest("[inert],[aria-hidden='true']")) target.focus({ preventScroll: true });
 }
 
-function ToastNotice({ notice, dismiss, dismissLabel, viewport }: { notice: ToastRecord; dismiss: (id: string) => void; dismissLabel: string; viewport: HTMLOListElement | null }) {
+function ToastNotice({ notice, dismiss, dismissLabel, viewport, container }: { notice: ToastRecord; dismiss: (id: string) => void; dismissLabel: string; viewport: HTMLOListElement | null; container: HTMLElement }) {
   const root = useRef<HTMLLIElement>(null);
   const fallback = notice.returnFocusTo ?? notice.fallback;
   useLayoutEffect(() => {
@@ -163,9 +170,12 @@ function ToastNotice({ notice, dismiss, dismissLabel, viewport }: { notice: Toas
   }}>
     <span className="pk-toast-icon" aria-hidden="true"><Icon /></span>
     <div className="pk-toast-content"><ToastPrimitive.Title className="pk-toast-title">{notice.title}</ToastPrimitive.Title>{notice.description ? <ToastPrimitive.Description className="pk-toast-description">{notice.description}</ToastPrimitive.Description> : null}
-      {notice.action ? <ToastPrimitive.Action asChild altText={notice.action.altText}><Button size="sm" variant="outline" onClick={notice.action.onClick}>{notice.action.label}</Button></ToastPrimitive.Action> : null}
+      {notice.action ? notice.action.icon ? <Tooltip>
+        <TooltipTrigger asChild><ToastPrimitive.Action asChild altText={notice.action.altText}><Button size="sm" variant="outline" shape="icon" aria-label={notice.action.label} onClick={notice.action.onClick}>{notice.action.icon}</Button></ToastPrimitive.Action></TooltipTrigger>
+        <TooltipContent container={container}>{notice.action.label}</TooltipContent>
+      </Tooltip> : <ToastPrimitive.Action asChild altText={notice.action.altText}><Button size="sm" variant="outline" onClick={notice.action.onClick}>{notice.action.label}</Button></ToastPrimitive.Action> : null}
     </div>
-    <ToastPrimitive.Close asChild><Button className="pk-toast-dismiss" size="sm" variant="ghost" shape="icon" aria-label={dismissLabel}><XIcon size="sm" /></Button></ToastPrimitive.Close>
+    <Tooltip><TooltipTrigger asChild><ToastPrimitive.Close asChild><Button className="pk-toast-dismiss" size="sm" variant="ghost" shape="icon" aria-label={dismissLabel}><XIcon size="sm" /></Button></ToastPrimitive.Close></TooltipTrigger><TooltipContent container={container}>{dismissLabel}</TooltipContent></Tooltip>
   </ToastPrimitive.Root>;
 }
 
@@ -200,7 +210,7 @@ export function ToastProvider({ children, scopeKey, container, label = "Notifica
   const api = useMemo(() => ({ toast, dismiss, clear }), [toast, dismiss, clear]);
   return <ToastContext.Provider value={api}><ToastPrimitive.Provider label={label} {...(container ? { announcerContainer: container } : {})} swipeDirection={dir === "rtl" ? "left" : "right"}>
     {children}
-    {host ? createPortal(<div className="pk-toast-stack" dir={dir}>{notices.filter(notice => notice.scope === scope).map(notice => <ToastNotice key={notice.id} notice={notice} dismiss={dismiss} dismissLabel={dismissLabel} viewport={viewport} />)}<ToastPrimitive.Viewport ref={setViewport} className="pk-toast-viewport" label={viewportLabel} /></div>, host) : null}
+    {host ? createPortal(<TooltipProvider><div className="pk-toast-stack" dir={dir}>{notices.filter(notice => notice.scope === scope).map(notice => <ToastNotice key={notice.id} notice={notice} dismiss={dismiss} dismissLabel={dismissLabel} viewport={viewport} container={host} />)}<ToastPrimitive.Viewport ref={setViewport} className="pk-toast-viewport" label={viewportLabel} /></div></TooltipProvider>, host) : null}
   </ToastPrimitive.Provider></ToastContext.Provider>;
 }
 

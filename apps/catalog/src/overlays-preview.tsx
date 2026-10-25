@@ -7,7 +7,7 @@ import {
   DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent,
   DropdownMenuSubTrigger, DropdownMenuTrigger, Popover, PopoverClose, PopoverContent, PopoverDescription,
   PopoverTitle, PopoverTrigger, Sheet, SheetBody, SheetClose, SheetContent, SheetDescription, SheetFooter,
-  SheetHeader, SheetTitle, SheetTrigger, TextField, TextareaField, ToastProvider, useToast,
+  SheetHeader, SheetTitle, SheetTrigger, TextField, TextareaField, ToastProvider, Undo2Icon, useToast,
 } from "@project-kit/ui";
 import "./overlays-preview.css";
 
@@ -136,7 +136,7 @@ function ToastActions({ changeContext }: { changeContext: () => void }) {
   }, []);
   return <div className="overlays-preview-stack"><p>Notifications pause while hovered or focused. Press F8 to reach them. Changing context clears old notices.</p>
     <div className="overlays-preview-actions"><Button ref={save} onClick={() => toast({ title: "Project saved", description: "Your local example is up to date.", tone: "success", returnFocusTo: save.current })}>Show saved notice</Button>
-      <Button variant="outline" onClick={event => { const target = event.currentTarget; setState("The sample project is archived."); toast({ title: "Project archived", duration: Infinity, returnFocusTo: target, action: { label: "Undo archive", altText: "Restore the project from its archive action", onClick: () => setState("The sample project is active.") } }); }}>Show action notice</Button>
+      <Button variant="outline" onClick={event => { const target = event.currentTarget; setState("The sample project is archived."); toast({ title: "Project archived", duration: Infinity, returnFocusTo: target, action: { label: "Undo archive", altText: "Restore the project from its archive action", icon: <Undo2Icon size="sm" />, onClick: () => setState("The sample project is active.") } }); }}>Show action notice</Button>
       <Button variant="outline" onClick={() => { for (let index = 1; index <= 4; index++) toast({ title: `Current notice ${index}`, duration: Infinity }); }}>Show four notices</Button>
       <Button variant="outline" onClick={() => { const timer = setTimeout(() => { delayed.current.delete(timer); toast({ title: "Delayed review ready", duration: Infinity }); }, 400); delayed.current.add(timer); }}>Schedule delayed notice</Button>
       <Button variant="ghost" onClick={clear}>Clear notifications</Button><Button variant="ghost" onClick={changeContext}>Change notification context</Button>

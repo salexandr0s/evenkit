@@ -175,7 +175,7 @@ export function DataTable<T extends object>({
           {toolbar ? <div className="pk-data-table-actions">{toolbar}</div> : null}
         </div>
       ) : null}
-      {selection && selectedCount > 0 ? <div className="pk-data-table-selection-bar" role="group" aria-label="Selected records"><p>{selectedCount} selected</p><div className="pk-data-table-selection-actions">{selection.actions}<Button size="sm" variant="ghost" data-table-control="clear-selection" disabled={controlsDisabled} onClick={() => { scrollRef.current?.focus(); selection.onSelectionChange([]); }}>Clear selection</Button></div></div> : null}
+      {selection && selectedCount > 0 ? <div className="pk-data-table-selection-bar" role="group" aria-label="Selected records"><p>{selectedCount} selected</p><div className="pk-data-table-selection-actions">{selection.actions}<Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" shape="icon" aria-label="Clear selection" data-table-control="clear-selection" disabled={controlsDisabled} onClick={() => { scrollRef.current?.focus(); selection.onSelectionChange([]); }}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Clear selection</TooltipContent></Tooltip></div></div> : null}
       <div ref={scrollRef} className="pk-data-table-scroll" tabIndex={0} role="region" aria-label={`${caption} table`} aria-busy={loading || undefined}>
         <table>
           <caption>{caption}</caption>

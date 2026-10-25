@@ -13,7 +13,8 @@ import { classes } from "./classes.js";
 import { ActionMessage, type ActionMessageProps } from "./feedback.js";
 import { FieldFrame, useFieldDescription, type FieldContentProps } from "./field-frame.js";
 import { TextField, type TextFieldProps } from "./field.js";
-import { CheckIcon, ChevronDownIcon, CircleAlertIcon, SearchIcon, XIcon } from "./icons.js";
+import { CheckIcon, ChevronDownIcon, CircleAlertIcon, EyeIcon, EyeOffIcon, SearchIcon, XIcon } from "./icons.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 function useInputHandle(forwardedRef: ForwardedRef<HTMLInputElement>) {
   const input = useRef<HTMLInputElement>(null);
@@ -153,18 +154,18 @@ export interface PasswordFieldProps extends Omit<TextFieldProps, "type" | "endAd
 }
 
 export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(function PasswordField(
-  { showLabel = "Show password", hideLabel = "Hide password", disabled, readOnly, ...props }, ref,
+  { showLabel = "Show password", hideLabel = "Hide password", disabled, readOnly, fieldClassName, ...props }, ref,
 ) {
   const [visible, setVisible] = useState(false);
   const { input, setInput } = useInputHandle(ref);
-  return <TextField {...props} ref={setInput} type={visible ? "text" : "password"} disabled={disabled} readOnly={readOnly}
-    endAdornment={<Button className="pk-field-action" size="sm" variant="ghost" aria-label={visible ? hideLabel : showLabel} aria-pressed={visible} disabled={disabled}
+  return <TextField {...props} ref={setInput} fieldClassName={classes("pk-password-field", fieldClassName)} type={visible ? "text" : "password"} disabled={disabled} readOnly={readOnly}
+    endAdornment={<TooltipProvider><Tooltip><TooltipTrigger asChild><Button className="pk-field-action pk-password-action" size="sm" variant="ghost" shape="icon" aria-label={visible ? hideLabel : showLabel} aria-pressed={visible} disabled={disabled}
       onMouseDown={event => event.preventDefault()} onClick={() => {
         const start = input.current?.selectionStart ?? null;
         const end = input.current?.selectionEnd ?? null;
         setVisible(current => !current);
         queueMicrotask(() => { if (start !== null && end !== null) input.current?.setSelectionRange(start, end); });
-      }}>{visible ? "Hide" : "Show"}</Button>} />;
+      }}>{visible ? <EyeOffIcon size="sm" /> : <EyeIcon size="sm" />}</Button></TooltipTrigger><TooltipContent>{visible ? hideLabel : showLabel}</TooltipContent></Tooltip></TooltipProvider>} />;
 });
 
 export interface ComboboxOption {

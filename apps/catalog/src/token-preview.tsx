@@ -1,6 +1,6 @@
 import { useId, useRef, useState, type CSSProperties } from "react";
 import { contrastChecks, contrastRatio, cssVariables, themes, type ColorMode, type ThemeName } from "@project-kit/tokens";
-import { Badge, Button, CheckIcon, EmptyState, Input, Label, SearchIcon, Select, TextField } from "@project-kit/ui";
+import { Badge, Button, CheckIcon, CopyIcon, EmptyState, Input, Label, SearchIcon, Select, TextField, Tooltip, TooltipContent, TooltipTrigger } from "@project-kit/ui";
 import "./token-preview.css";
 
 const categories = [
@@ -145,7 +145,7 @@ export function TokenPreview({ theme, mode }: { theme: ThemeName; mode: ColorMod
                 <code className="token-value">{value}</code>
                 <div className="token-card-footer">
                   <code className="token-usage">var({name})</code>
-                  <Button size="sm" variant="ghost" aria-label={`Copy ${name}`} onClick={() => void copy(name)}>Copy</Button>
+                  <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" shape="icon" aria-label={`Copy ${name}`} onClick={() => void copy(name)}><CopyIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Copy ${name}`}</TooltipContent></Tooltip>
                 </div>
               </li>
             ))}

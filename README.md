@@ -22,7 +22,7 @@ The catalog uses AdminShell for its own navigation. Each entry has an icon. Drag
 | Package | Contents | Public imports |
 |---|---|---|
 | `@project-kit/tokens` | Typed scales, palettes, eight themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
-| `@project-kit/ui` | Controls, layouts, forms, navigation, overlays, files and feedback; 96 Lucide icons, AdminShell, DataTable and chat | Main export, `/css` |
+| `@project-kit/ui` | Controls, layouts, forms, navigation, overlays, files and feedback; 99 Lucide icons, AdminShell, DataTable and chat | Main export, `/css` |
 | `@project-kit/catalog` | Searchable examples and usage reference | Local application |
 
 Both libraries export built files and declarations. UI styles use `pk-` classes and `--pk-` variables, with no global reset. Consumers need React 19 and React DOM 19; no Tailwind, Next.js, database, or authentication dependency is required by the UI package.
@@ -224,7 +224,7 @@ import { Button, UserIcon, TooltipProvider, Tooltip, TooltipTrigger, TooltipCont
 </TooltipProvider>
 ```
 
-TooltipContent includes the compact surface, text wrapper, and matching arrow. It supports Radix positioning props, a forwarded ref, `container`, and `showArrow`; it owns its markup and does not expose `asChild`. Text wraps within the viewport, with a 280px maximum width. The inverse foreground/background colors follow the document theme. Opening and closing fade with a 2px movement over 120ms; reduced motion removes both animations. Provider timings are overridable. The catalog and shared component icon actions use this same tooltip. Use `UserIcon` for a person and `UsersIcon` for a team; the icon reference includes all 96 named wrappers.
+TooltipContent includes the compact surface, text wrapper, and matching arrow. It supports Radix positioning props, a forwarded ref, `container`, and `showArrow`; it owns its markup and does not expose `asChild`. Text wraps within the viewport, with a 280px maximum width. The inverse foreground/background colors follow the document theme. Opening and closing fade with a 2px movement over 120ms; reduced motion removes both animations. Provider timings are overridable. The catalog and shared component icon actions use this same tooltip. Use `UserIcon` for a person and `UsersIcon` for a team; the icon reference includes all 99 named wrappers.
 
 ## Admin shell and tables
 

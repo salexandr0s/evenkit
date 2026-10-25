@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ActionMessage, Badge, Button, CheckIcon, CircleAlertIcon, CircleCheckIcon, ClockIcon, MailIcon, TriangleAlertIcon } from "@project-kit/ui";
+import { ActionMessage, Badge, Button, CheckIcon, CircleAlertIcon, CircleCheckIcon, ClockIcon, MailIcon, Tooltip, TooltipContent, TooltipTrigger, TriangleAlertIcon, XIcon } from "@project-kit/ui";
 import "./status-preview.css";
 
 type ExportState = "error" | "retrying" | "success" | "dismissed";
@@ -89,7 +89,7 @@ export function StatusPreview() {
             heading={<h4>{ready ? "Export ready" : retrying ? "Retrying export" : "Export did not finish"}</h4>}
             actions={<>
               {!ready && <Button key="retry" ref={retryRef} size="sm" variant="outline" loading={retrying} onClick={retryExport}>Retry export</Button>}
-              <Button key="dismiss" ref={dismissRef} size="sm" variant="ghost" onClick={dismiss}>Dismiss message</Button>
+              <Tooltip key="dismiss"><TooltipTrigger asChild><Button ref={dismissRef} size="sm" variant="ghost" shape="icon" aria-label="Dismiss message" onClick={dismiss}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Dismiss message</TooltipContent></Tooltip>
             </>}
           >
             {ready ? "The sample export is ready. No file was created or downloaded." : retrying ? "Preparing the fictional project export in this preview…" : "The fictional project export could not be prepared. Retry to preview recovery; no service is contacted."}

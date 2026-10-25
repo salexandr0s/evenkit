@@ -17,7 +17,7 @@ export {
   BellIcon, CalendarDaysIcon, InboxIcon, MessageSquareIcon, ChartNoAxesCombinedIcon, ClockIcon,
   BookmarkIcon, ArchiveIcon, UploadIcon, CopyIcon, PencilIcon, FilterIcon,
   PanelLeftIcon, PanelLeftCloseIcon, PanelLeftOpenIcon, CircleIcon,
-  MaximizeIcon, MinimizeIcon, SquareIcon, RotateCcwIcon,
+  MaximizeIcon, MinimizeIcon, SquareIcon, RotateCcwIcon, Undo2Icon, EyeIcon, EyeOffIcon,
   TypeIcon, RectangleHorizontalIcon, LayoutGridIcon, SeparatorHorizontalIcon,
   PanelTopIcon, HeadingIcon, SlidersHorizontalIcon, AccessibilityIcon, TagsIcon,
   ListIcon, ListTreeIcon, ListCollapseIcon, KeyboardIcon, SquareCheckIcon,
