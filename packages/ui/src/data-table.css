@@ -31,6 +31,7 @@
 .pk-data-table-sort:hover:not(:disabled) { color: var(--pk-color-accent); }
 .pk-data-table-sort:disabled { cursor: not-allowed; opacity: var(--pk-opacity-disabled); }
 .pk-data-table-sort .pk-icon { color: var(--pk-color-fg-muted); }
+.pk-data-table th:is([aria-sort="ascending"], [aria-sort="descending"]) .pk-data-table-sort:not(:disabled) .pk-icon { color: var(--pk-color-accent); }
 .pk-data-table-selection { width: var(--pk-control-height-lg); }
 .pk-data-table th.pk-data-table-selection, .pk-data-table td.pk-data-table-selection { padding-inline: var(--pk-space-2); }
 .pk-data-table td.pk-data-table-selection { padding-block: 0; }

@@ -63,6 +63,7 @@
 .home-collection-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--pk-space-10); }
 .home-collection { min-width: 0; padding-top: var(--pk-space-5); border-top: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .home-collection-top { display: flex; justify-content: space-between; align-items: center; gap: var(--pk-space-3); margin-bottom: var(--pk-space-6); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-family: var(--pk-font-family-mono); }
+.home-collection-top > .pk-icon { color: var(--pk-color-accent); }
 .home-collection h3 { font-size: var(--pk-font-size-xl); margin-bottom: var(--pk-space-3); }
 .home-collection p { color: var(--pk-color-fg-muted); line-height: var(--pk-font-line-height-relaxed); min-height: calc(var(--pk-space-6) * 3); }
 .home-collection ul { margin: var(--pk-space-5) 0 0; padding: 0; list-style: none; }

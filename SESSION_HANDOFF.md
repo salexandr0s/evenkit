@@ -2,6 +2,14 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Component accent details: 25 October 2026
+
+Implemented the five accent additions approved after the component audit. Applied filter chips use accent text and soft fills, and enabled upload icon tiles use the same pairing. Sorted table columns have an accent arrow. The homepage's three collection icons use the theme accent. Command results gain an accented leading icon on hover or keyboard focus, with a soft row fill on keyboard focus. Error and disabled states retain their semantic or neutral styling. Large surfaces, utility icons, APIs and layout remain unchanged. The optional first-use empty-state treatment was not included in this five-part pass.
+
+Changed `packages/ui/src/data-workflows.css`, `data-table.css`, `command-palette.css` and `apps/catalog/src/homepage.css`. Production build passed, including package TypeScript compilation. All nine targeted Chromium journeys passed across homepage, tables, command search, applied filters and uploads. Nine token tests passed, covering required contrast pairs across all eight themes in both modes. A temporary Chromium fixture passed 44 upload/filter style checks in Ocean light and dark. Independent review found no actionable issues. No permanent tests were added for these CSS changes.
+
+Visual review covered all five additions in Grove, including light/dark upload and command views. The user's light appearance was restored after checking dark mode. Captures and verification logs are in `.artifacts/component-accents/`. Firefox, Safari and physical touch were not tested. The local preview at `http://127.0.0.1:5390/` is rebuilt; production was not deployed. No required work remains. Resume with `git status --short` and `git log -3 --oneline`.
+
 ## Theme colour on selected states: 25 October 2026
 
 Rebalanced themes after the user found the first pass too muted. Selected sidebar rows now use a tinted background with accent labels and icons. The same treatment covers selected settings/workspace navigation, pill tabs, radio rows, toggles, segmented choices and current dropdown/mobile destinations. Horizontal active links keep their underline and gain accent text; the current pagination page has an accent fill. Selected neutral tags use the theme accent, while semantic tag tones retain their meaning. Selected colours persist on hover. Large surfaces, body text and structural borders remain neutral.
