@@ -165,9 +165,10 @@ test("controlled corrections and constraint changes clear native feedback while 
 test("pending switches preserve focus, reject repeated activation, recover errors and reset native forms", async ({ page }) => {
   await page.clock.install({ time: new Date("2026-10-25T08:00:00Z") });
   await page.goto("/#switch");
-  await page.clock.pauseAt(new Date("2026-10-25T09:00:00Z"));
   const region = page.getByRole("region", { name: "Switch recovery example" });
   const preference = region.getByRole("switch", { name: "Project notifications", exact: true });
+  await expect(preference).toBeVisible();
+  await page.clock.pauseAt(new Date("2026-10-25T09:00:00Z"));
   await preference.press("Space");
   await expect(preference).toHaveAttribute("aria-busy", "true");
   await expect(preference).toBeFocused();
