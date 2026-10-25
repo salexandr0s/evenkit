@@ -26,11 +26,11 @@ export function TooltipPreview() {
           <p role="status" className="tooltip-preview-notice">{notice}</p>
         </section>
         <section className="tooltip-example" aria-label="Long tooltip example">
-          <div><h3>Hints that wrap</h3><p>Private projects are visible only to invited people. The tooltip adds detail without hiding the basic rule.</p></div>
-          <div>
+          <div><h3>Hints that wrap</h3><p>Private projects are visible only to invited people. Review each member's permissions before inviting someone new.</p></div>
+          <div className="tooltip-help-action">
             <Tooltip>
               <TooltipTrigger asChild><Button variant="outline" startIcon={<CircleHelpIcon />}>Sharing help</Button></TooltipTrigger>
-              <TooltipContent side="right">Only invited people can open a private project. Changing its visibility does not change the permissions of existing members. Review those permissions before inviting someone new.</TooltipContent>
+              <TooltipContent side="bottom" align="start">Changing visibility keeps existing members' permissions.</TooltipContent>
             </Tooltip>
           </div>
         </section>

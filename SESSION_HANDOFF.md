@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Tooltip design pass: 25 October 2026
+
+The separate tooltip design goal is complete. `packages/ui/src/tooltip.tsx/css` now uses the theme's elevated surface and foreground, a fine border, medium radius, and an outlined arrow. The existing medium shadow keeps the light surface distinct from adjacent controls. The inner height cap accounts for both borders. The public API, 280px width cap, hover delay, keyboard behavior, and collision handling are unchanged.
+
+`apps/catalog/src/tooltip-preview.tsx/css` places the sharing hint below its trigger, shortens it to the supplemental visibility detail, and keeps invitation and permissions guidance visible. Space below the trigger keeps the hint clear of the next section.
+
+Verification passed: production build, configured workspace/test typecheck, focused ESLint, eight token tests including theme contrast, and all six Chromium journeys in `tests/browser/sidebar-tooltip.spec.ts`. Plan and source review found no remaining issues. Manual inspection covered all four arrow directions and light/dark appearance. A final shadow-only adjustment was rebuilt and inspected. Firefox and Safari suites were not run. References: `.artifacts/tooltip-design-light.jpg` and `.artifacts/tooltip-design-dark.jpg`.
+
+Preview: `http://127.0.0.1:5173/#tooltips`; original Neutral/Light selection restored. This goal does not complete the broader component queue below. Resume with `git status --short` and `npm run build`; focused browser command: `KIT_CATALOG_PORT=5317 npx playwright test tests/browser/sidebar-tooltip.spec.ts --workers=1 --output=.artifacts/tooltip-design-browser-results`.
+
 ## Current continuation: feedback complete
 
 Badge and ActionMessage are complete, bringing the component goal to nine of twelve areas. `packages/ui/src/feedback.tsx` and the targeted shared CSS add badge sizes/variants/icon/dot/wrapping and message warning/heading/actions/custom-icon composition. Root element/ref/native-title/role contracts remain compatible. Three feedback icons and their exports/catalog metadata bring the icon set to 60. README, UI provenance, icon guidance, and both packed fixtures cover the public API.

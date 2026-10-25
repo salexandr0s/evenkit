@@ -5,4 +5,5 @@
 .tooltip-example p { margin: 0; max-width: var(--pk-layout-reading); color: var(--pk-color-fg-muted); }
 .tooltip-example-action, .tooltip-placement-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-3); }
 .tooltip-example-action > span { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
+.tooltip-help-action { padding-block-end: var(--pk-space-12); }
 .tooltip-preview-notice:empty { display: none; }

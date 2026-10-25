@@ -41,11 +41,17 @@ export const TooltipContent = forwardRef<ComponentRef<typeof TooltipPrimitive.Co
         <div className="pk-tooltip-text">{children}</div>
         {showArrow ? (
           <TooltipPrimitive.Arrow
+            asChild
             className="pk-tooltip-arrow"
             width={Number.parseFloat(foundation.space["2"])}
             height={Number.parseFloat(foundation.space["1"])}
             aria-hidden="true"
-          />
+          >
+            <svg viewBox="0 0 30 10" preserveAspectRatio="none">
+              <path d="M0 0H30L15 10Z" />
+              <path className="pk-tooltip-arrow-outline" d="M0 0L15 10L30 0" vectorEffect="non-scaling-stroke" />
+            </svg>
+          </TooltipPrimitive.Arrow>
         ) : null}
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
