@@ -43,6 +43,9 @@ export const foundation = {
     "xl": "0 24px 60px rgba(0,0,0,0.20)"
   },
   "motion": {
+    "delay": {
+      "tooltip": "400ms"
+    },
     "duration": {
       "fast": "120ms",
       "base": "160ms",
@@ -225,6 +228,8 @@ export const foundation = {
   },
   "layout": {
     "sidebar": "260px",
+    "sidebarCollapsed": "72px",
+    "tooltip": "280px",
     "content": "1280px",
     "reading": "720px",
     "form": "480px",

@@ -1,11 +1,12 @@
 import { createRoot } from "react-dom/client";
-import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, DataTable, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, type ButtonShape, type DataTableColumn, type DialogSize, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
+import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, DataTable, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserIcon, type AdminSidebarState, type ButtonShape, type DataTableColumn, type DialogSize, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
 import "@project-kit/tokens/css";
 import "@project-kit/ui/css";
 
 const element = document.getElementById("root");
 if (!element) throw new Error("Missing fixture root.");
 const records = [{ id: "one", name: "Independent consumer", members: 3 }];
+const sidebarState: AdminSidebarState = "collapsed";
 const dialogSize: DialogSize = "sm";
 const iconShape: ButtonShape = "icon";
 const notesProps: TextareaFieldProps = { label: "Notes", name: "notes", optional: true, hint: "Details for the team.", rows: 3 };
@@ -36,7 +37,8 @@ createRoot(element).render(<main>
       <DialogFooter><DialogClose asChild><Button>Close preview</Button></DialogClose></DialogFooter>
     </DialogContent>
   </Dialog>
-  <AdminShell contentAs="section" brand="Package kit" header="Projects" activeItemId="projects" navigation={[{ items: [{ id: "projects", label: "Projects", href: "#projects", icon: <FolderIcon /> }] }]}>
+  <TooltipProvider><Tooltip><TooltipTrigger asChild><Button shape="icon" aria-label="Profile"><UserIcon /></Button></TooltipTrigger><TooltipContent>Open profile</TooltipContent></Tooltip></TooltipProvider>
+  <AdminShell defaultSidebarState={sidebarState} compactBrand={<FolderIcon />} contentAs="section" brand="Package kit" header="Projects" activeItemId="projects" navigation={[{ items: [{ id: "projects", label: "Projects", href: "#projects", icon: <FolderIcon /> }] }]}>
     <DataTable caption="Packed projects" data={records} columns={columns} getRowId={row => row.id} />
   </AdminShell>
 </main>);

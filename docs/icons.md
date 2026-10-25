@@ -14,6 +14,29 @@ import { Button, PlusIcon, SearchIcon } from "@project-kit/ui";
 
 Icons are decorative by default. Use `shape="icon"` for a square icon button and put its accessible label on the button itself. Use an icon's `label` only when the icon independently conveys meaning. Pair status icons with visible text. Sizes are `sm` (16px), `md` (20px, default), and `lg` (24px), with a shared stroke width of 2 and inherited text color.
 
+Use `UserIcon` for one person, an account, or a profile. Use `UsersIcon` for a team or group. The silhouettes differ, so a person row does not look like the destination for the whole team.
+
+```tsx
+import { UserIcon, UsersIcon } from "@project-kit/ui";
+
+<span><UserIcon />Alex Morgan</span>
+<span><UsersIcon />Team</span>
+```
+
+The set contains 53 named wrappers, including these families:
+
+| Purpose | Icons |
+|---|---|
+| People and teams | `UserIcon`, `UsersIcon`, `UserPlusIcon`, `UserCheckIcon`, `ContactRoundIcon` |
+| Workspace and reporting | `Building2Icon`, `BriefcaseBusinessIcon`, `ChartNoAxesCombinedIcon`, `LayoutDashboardIcon` |
+| Communication | `BellIcon`, `InboxIcon`, `MailIcon`, `MessageSquareIcon` |
+| Time and saved content | `CalendarDaysIcon`, `ClockIcon`, `BookmarkIcon`, `ArchiveIcon` |
+| Common actions | `UploadIcon`, `DownloadIcon`, `CopyIcon`, `PencilIcon`, `FilterIcon` |
+| Sidebar controls | `PanelLeftIcon`, `PanelLeftCloseIcon`, `PanelLeftOpenIcon` |
+| Status | `ActivityIcon`, `CheckIcon`, `CircleAlertIcon`, `CircleHelpIcon`, `CircleIcon` |
+
+Use `PanelLeftCloseIcon` for collapsing the sidebar and `PanelLeftOpenIcon` for expanding it. Keep the action's accessible name on its button; a tooltip can also show that action to pointer users.
+
 The catalog lets you filter by category, search names and related words such as "delete" or "directory", compare the three token sizes, and copy a named import. Each card keeps its import selectable when clipboard access is unavailable. Examples show decorative icons beside text, labelled icon buttons, and icons with independent meaning.
 
 Add new named wrappers to `packages/ui/src/icons.tsx` when a product needs them, and include them in the catalog inventory in `apps/catalog/src/icon-data.ts`. Keep imports static; a runtime map of every library icon would include unnecessary assets.

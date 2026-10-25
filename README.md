@@ -13,14 +13,14 @@ npm run dev
 
 Open `http://127.0.0.1:5173`. The dev command builds the packages first. If you edit package source while the catalog is running, run `npm run build:packages` to update its public artifacts. The catalog itself has Vite hot reload.
 
-The catalog has eleven entries: design tokens, icons, buttons, fields, custom select, dialog, status, loading, empty state, admin shell, and data table. Search by component or state, switch between Neutral and Grove, and try light, dark, or system appearance. Forms, navigation, table state changes, and retry actions are local previews.
+The catalog has twelve entries: design tokens, icons, buttons, fields, custom select, dialog, tooltips, status, loading, empty state, admin shell, and data table. Search by component or state, switch between Neutral and Grove, and try light, dark, or system appearance. Forms, navigation, table state changes, and retry actions are local previews.
 
 ## Packages
 
 | Package | Contents | Public imports |
 |---|---|---|
 | `@project-kit/tokens` | Typed scales, palettes, two themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
-| `@project-kit/ui` | Controls and feedback, 31 Lucide icons, responsive AdminShell, TanStack-backed DataTable | Main export, `/css` |
+| `@project-kit/ui` | Controls and feedback, 53 Lucide icons, responsive AdminShell, TanStack-backed DataTable | Main export, `/css` |
 | `@project-kit/catalog` | Searchable examples and usage reference | Local application |
 
 Both libraries export built files and declarations. UI styles use `pk-` classes and `--pk-` variables, with no global reset. Consumers need React 19 and React DOM 19; no Tailwind, Next.js, database, or authentication dependency is required by the UI package.
@@ -141,9 +141,43 @@ import {
 
 Use a unique form ID (for example, from React's `useId`) to connect a footer submit button to its form inside the body. Keep validation and unsaved-draft behavior in the application. The catalog demonstrates first-invalid focus, saving, and discarding changes when dismissed. Radix manages focus containment, Escape, outside dismissal, and trigger focus restoration. Native Radix callbacks and refs remain available. Set `dir="rtl"` on DialogContent for logical close-button positioning; use `closeLabel` to name the close control or `showCloseButton={false}` when providing another clear dismissal action.
 
+## Tooltips
+
+Wrap related triggers in TooltipProvider. TooltipTrigger supports `asChild` so the button or link keeps its native semantics. Every icon-only trigger needs its own accessible label; a tooltip is supplementary. Tooltips open on hover after 400ms or immediately on keyboard focus, remain open while hovered, and close on Escape or activation. Keep actions and essential instructions outside the tooltip.
+
+```tsx
+import { Button, UserIcon, TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@project-kit/ui";
+
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button shape="icon" aria-label="Open profile"><UserIcon /></Button>
+    </TooltipTrigger>
+    <TooltipContent side="right">Open your profile</TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+```
+
+TooltipContent includes the styled surface, text wrapper, and arrow. It supports Radix positioning props, a forwarded ref, `container`, and `showArrow`; it owns its markup and does not expose `asChild`. Text wraps within the viewport, with a 280px maximum width. The high-contrast colors follow the document theme. Provider timings are overridable. Use `UserIcon` for a person and `UsersIcon` for a team; the icon reference includes all 53 named wrappers.
+
 ## Admin shell and tables
 
-`AdminShell` provides a sidebar, header, content area, skip link, and a drawer for narrow containers. Supply navigation items, the active item ID, branding, actions, and footer content. Native links work by default; `renderLink` lets a consuming router receive the same link props. Authentication and route matching belong to the application. Use `contentAs="section"` when embedding a shell inside an existing main landmark.
+`AdminShell` provides expanded (260px), collapsed (72px icon rail), and hidden desktop sidebar states. Header controls stay available when hidden so the sidebar can be restored. Use `defaultSidebarState` for an uncontrolled shell, or `sidebarState` and `onSidebarStateChange` for application state. The shell keeps that desktop choice while narrow containers use a full-label drawer.
+
+```tsx
+import { useState } from "react";
+import { AdminShell, FolderIcon, LayoutDashboardIcon, type AdminSidebarState } from "@project-kit/ui";
+
+const [sidebar, setSidebar] = useState<AdminSidebarState>("expanded");
+<AdminShell
+  brand="Demo workspace" compactBrand={<LayoutDashboardIcon />}
+  sidebarState={sidebar} onSidebarStateChange={setSidebar}
+  navigation={[{ items: [{ id: "projects", label: "Projects", href: "/projects", icon: <FolderIcon /> }] }]}
+  activeItemId="projects" header="Projects"
+>{children}</AdminShell>
+```
+
+Give each navigation item a distinct `icon`. Legacy items without one receive a neutral circle. Collapsed links retain accessible names and show custom tooltips on hover or focus. Optional `end` content supports counts or badges in expanded links and the drawer. `compactBrand` and `compactFooter` provide icon-rail content; the full footer is hidden when collapsed. Native links work by default. A custom `renderLink` must spread all supplied props and forward the anchor ref, including events and ARIA attributes, so routing, tooltips, and focus work together. Route matching and persistence belong to the application. Use `contentAs="section"` when embedding inside an existing main landmark.
 
 `DataTable` takes the entire client dataset, columns with scalar accessors, and a stable `getRowId`. It supplies sorting, search, pagination, optional controlled selection, numeric alignment, and loading/error/empty states. Selection uses IDs and persists across sorting, search, and page changes. Its select-all control applies to the visible page. Server pagination, fetching, and bulk actions belong to the application; this release does not include a server table adapter.
 

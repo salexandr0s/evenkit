@@ -1,0 +1,8 @@
+.tooltip-workbench { display: grid; gap: var(--pk-space-8); min-width: 0; }
+.tooltip-example { display: grid; gap: var(--pk-space-4); min-width: 0; }
+.tooltip-example + .tooltip-example { padding-block-start: var(--pk-space-6); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.tooltip-example h3 { margin: 0 0 var(--pk-space-2); font-size: var(--pk-font-size-lg); font-weight: var(--pk-font-weight-semibold); }
+.tooltip-example p { margin: 0; max-width: var(--pk-layout-reading); color: var(--pk-color-fg-muted); }
+.tooltip-example-action, .tooltip-placement-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-3); }
+.tooltip-example-action > span { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
+.tooltip-preview-notice:empty { display: none; }

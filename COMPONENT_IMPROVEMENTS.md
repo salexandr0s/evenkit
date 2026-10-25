@@ -14,11 +14,14 @@ Keep the existing public API compatible. Preserve the Neutral and Grove themes, 
 | 4 | Label, Input, Textarea, TextField, TextareaField | Shared field composition, textarea field, required/optional cues, adornments, read-only styling, and validation focus recovery. | Complete |
 | 5 | Select, SelectField | Grouped and described options, empty-options feedback, shared field composition, and long-label handling while preserving compact rows. | Complete |
 | 6 | Dialog, DialogTrigger, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter | Size and layout composition, long-content scrolling, reachable actions, mobile presentation, and logical RTL positioning. | Complete |
-| 7 | Badge, ActionMessage | Status icons, wrapping labels, message titles/actions, warning feedback, and a retry/dismiss example. | Pending |
-| 8 | Spinner, Skeleton | Token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. | Pending |
-| 9 | EmptyState | Icon slot, heading semantics, secondary action, compact layout, and distinct first-use, no-results, and failure examples. | Pending |
-| 10 | AdminShell | Navigation badges/end content, stronger active state, narrow-header action layout, and focused review of compact navigation and drawer focus. | Pending |
-| 11 | DataTable | Per-column wrapping, usable custom action cells, clear search, displayed-row range, selection clearing/bulk actions, and improved state presentation. | Pending |
+| 7 | TooltipProvider, Tooltip, TooltipTrigger, TooltipContent | Custom theme-aware surfaces, hover/focus behavior, dismissal, wrapping, and reusable positioning. | Complete |
+| 8 | AdminShell | Expanded, icon-only, and hidden modes; restore controls, navigation icons/tooltips, compact slots, badges, mobile and focus recovery. | Complete |
+| 9 | Badge, ActionMessage | Status icons, wrapping labels, message titles/actions, warning feedback, and a retry/dismiss example. | Pending |
+| 10 | Spinner, Skeleton | Token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. | Pending |
+| 11 | EmptyState | Icon slot, heading semantics, secondary action, compact layout, and distinct first-use, no-results, and failure examples. | Pending |
+| 12 | DataTable | Per-column wrapping, usable custom action cells, clear search, displayed-row range, selection clearing/bulk actions, and improved state presentation. | Pending |
+
+On 25 October the user moved sidebar work next, requested a reusable tooltip design, and asked for more icon variety. Tooltip and AdminShell therefore precede feedback, and the icon family was expanded as part of that work.
 
 After the queue, review the catalog frame, usage snippets, exports, documentation, and packed consumers together. Record any justified departures from this plan beside the affected item.
 
@@ -79,4 +82,20 @@ Close controls use logical placement and 44px narrow/coarse-pointer targets. Tit
 
 Plan, source, and integration reviews passed. Production build, workspace/test type checks, ESLint, seven token tests, all 19 Chromium journeys, and independent packed Vite/Next consumers passed. New and extended journeys cover first-invalid focus, draft recovery, footer form association, focus containment/restoration, Select layering, body scrolling with stable actions, short-window field/action reachability, 360/768/1024/1440px sizing, RTL title clearance, coarse-pointer close targets, and RTL drawer positioning. Package verification removed its servers and temporary directory. Light and dark dialogs and the RTL example were inspected. Screenshot: `.artifacts/dialog-reference.png`.
 
-Next: Badge and ActionMessage. The goal remains active; items 7–11 and final integration review are unfinished.
+### 7. Tooltips
+
+The new Tooltip family uses Radix hover/focus and dismissal behavior with a custom inverse surface, rounded corners, shadow, and optional arrow. Text wraps to a token-defined 280px maximum and available viewport space. Hover opens after 400ms; keyboard focus opens immediately. Existing accessible descriptions are preserved, content remains hoverable, and reduced motion disables the entrance animation. Provider timings, positioning, portal container, refs, and forceMount remain configurable.
+
+The catalog includes a working bookmark action, long help text, and four placements. README, package provenance, bundled CSS, public exports, and both packed consumers cover the new API. Two tooltip tokens and the 72px sidebar token bring the resolved reference to 204 variables.
+
+### 8. Admin shell and icon expansion
+
+AdminShell now supports controlled or uncontrolled expanded (260px), collapsed (72px), and hidden states. Header display controls remain available to restore a hidden sidebar. Every navigation item has an icon, with a neutral fallback for existing iconless consumers. Collapsed links retain accessible names and show the custom tooltip on hover or focus. Compact brand/footer slots, optional navigation end content, and a stronger active state support application composition. Custom link renderers receive native props, events, ARIA attributes, and the anchor ref.
+
+Narrow containers retain the full-label drawer without losing the selected desktop mode. Review found and resolved focus loss when CSS hides a desktop control, plus a race that dropped tooltip focus intent before the resize state committed. Focus now moves to the visible mobile menu, controlled hiding restores focus, and newly visible desktop links and controls retain tooltip intent. RTL tooltips use the navigation's actual direction.
+
+Twenty-two named wrappers expand the icon reference from 31 to 53. New choices cover individual people, teams, organisations, communication, dates, charts, editing, storage, and sidebar controls. UserIcon represents each person in the team preview; UsersIcon represents the team navigation item. Metadata, aliases, categories, exports, and icon guidance were updated together.
+
+Plan and source reviews passed. Production build, workspace/test type checks, ESLint, seven token tests, all 23 Chromium journeys, and independent packed Vite/Next consumers passed during this update. After the final focus and resize fixes, UI/catalog builds, type checks, lint, and all seven affected sidebar/tooltip/admin journeys passed again. Coverage includes all three widths/states, hoverable and keyboard tooltips, Escape and activation, distinct person/team glyphs, hidden-space removal, controlled focus recovery, mobile restoration, immediate focus after resizing, RTL placement, external descriptions, reduced motion, and viewport bounds at 360/768/1024/1440px. Package verification removed its own servers and temporary directory. Light and dark views were inspected; screenshot: `.artifacts/sidebar-reference.png`.
+
+Next: Badge and ActionMessage. Eight of twelve areas are complete. The goal remains active; items 9–12 and final integration review are unfinished.

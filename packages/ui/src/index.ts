@@ -4,6 +4,7 @@ export { Button, ButtonLink, type ButtonProps, type ButtonLinkProps, type Button
 export { Input, Textarea, Label, TextField, TextareaField, type InputProps, type TextareaProps, type LabelProps, type TextFieldProps, type TextareaFieldProps } from "./field.js";
 export { Select, SelectField, type SelectProps, type SelectFieldProps, type SelectOption, type SelectOptionGroup } from "./select.js";
 export { Dialog, DialogTrigger, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter, type DialogContentProps, type DialogSize } from "./dialog.js";
+export { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent, type TooltipProviderProps, type TooltipContentProps } from "./tooltip.js";
 export { Badge, Spinner, Skeleton, EmptyState, ActionMessage, type BadgeProps, type SpinnerProps, type EmptyStateProps, type ActionMessageProps } from "./feedback.js";
 export {
   ActivityIcon, ArrowDownIcon, ArrowUpIcon, ArrowUpDownIcon, ArrowLeftIcon, ArrowRightIcon,
@@ -11,7 +12,11 @@ export {
   CircleAlertIcon, CircleHelpIcon, DownloadIcon, ExternalLinkIcon, FileTextIcon, FolderIcon,
   LayoutDashboardIcon, LogOutIcon, MailIcon, MenuIcon, MoreHorizontalIcon, PlusIcon,
   SearchIcon, SettingsIcon, ShieldIcon, TrashIcon, UsersIcon, XIcon, SunIcon, MoonIcon,
+  UserIcon, UserPlusIcon, UserCheckIcon, ContactRoundIcon, Building2Icon, BriefcaseBusinessIcon,
+  BellIcon, CalendarDaysIcon, InboxIcon, MessageSquareIcon, ChartNoAxesCombinedIcon, ClockIcon,
+  BookmarkIcon, ArchiveIcon, UploadIcon, CopyIcon, PencilIcon, FilterIcon,
+  PanelLeftIcon, PanelLeftCloseIcon, PanelLeftOpenIcon, CircleIcon,
   type IconProps, type IconSize,
 } from "./icons.js";
-export { AdminShell, type AdminShellProps, type AdminNavGroup, type AdminNavItem, type AdminLinkProps } from "./admin-shell.js";
+export { AdminShell, type AdminShellProps, type AdminNavGroup, type AdminNavItem, type AdminLinkProps, type AdminSidebarState } from "./admin-shell.js";
 export { DataTable, type DataTableProps, type DataTableColumn, type DataTableSelection } from "./data-table.js";

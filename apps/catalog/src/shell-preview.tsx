@@ -1,23 +1,24 @@
 import { useState, type MouseEvent } from "react";
 import {
   ActionMessage, AdminShell, Badge, Button, DataTable, FolderIcon, LayoutDashboardIcon,
-  SettingsIcon, UsersIcon, type AdminLinkProps, type AdminNavGroup
+  SettingsIcon, UserIcon, UsersIcon, type AdminLinkProps, type AdminNavGroup, type AdminSidebarState
 } from "@project-kit/ui";
 import { getProjectId, projectColumns, projects } from "./project-data";
 
+const owners = [...new Set(projects.map((project) => project.owner))];
 const navigation: readonly AdminNavGroup[] = [
   { label: "Workspace", items: [
     { id: "overview", label: "Overview", href: "#admin-overview", icon: <LayoutDashboardIcon /> },
-    { id: "projects", label: "Projects", href: "#admin-projects", icon: <FolderIcon /> },
-    { id: "team", label: "Team", href: "#admin-team", icon: <UsersIcon /> }
+    { id: "projects", label: "Projects", href: "#admin-projects", icon: <FolderIcon />, end: <Badge>{projects.length}</Badge> },
+    { id: "team", label: "Team", href: "#admin-team", icon: <UsersIcon />, end: <Badge>{owners.length}</Badge> }
   ] },
   { label: "Manage", items: [{ id: "settings", label: "Settings", href: "#admin-settings", icon: <SettingsIcon /> }] }
 ];
 const items = navigation.flatMap((group) => group.items);
-const owners = [...new Set(projects.map((project) => project.owner))];
 
 export function ShellPreview() {
   const [activeId, setActiveId] = useState("overview");
+  const [sidebarState, setSidebarState] = useState<AdminSidebarState>("expanded");
   const active = items.find((item) => item.id === activeId) ?? items[0];
 
   function renderLink(props: AdminLinkProps) {
@@ -35,6 +36,9 @@ export function ShellPreview() {
     <div className="catalog-admin-preview">
       <AdminShell
         brand={<span className="catalog-demo-brand"><LayoutDashboardIcon /><strong>Demo workspace</strong></span>}
+        compactBrand={<><LayoutDashboardIcon /><span className="pk-admin-visually-hidden">Demo workspace</span></>}
+        sidebarState={sidebarState}
+        onSidebarStateChange={setSidebarState}
         navigation={navigation}
         activeItemId={activeId}
         header={<strong>{active?.label ?? "Overview"}</strong>}
@@ -55,7 +59,7 @@ export function ShellPreview() {
           <div className="catalog-recent-projects"><h4>Recently updated</h4>{projects.slice(0, 3).map((project) => <div key={project.id}><span><strong>{project.name}</strong><small>{project.owner}</small></span><Badge tone={project.status === "Active" ? "success" : project.status === "Review" ? "warning" : "neutral"}>{project.status}</Badge></div>)}</div>
         </div>}
         {activeId === "projects" && <div className="catalog-shell-page"><div><h3>Workspace projects</h3><p className="catalog-caption">Search, sort, and page through the same fictional records.</p></div><DataTable columns={projectColumns} data={projects} getRowId={getProjectId} caption="Workspace projects" searchLabel="Search workspace projects" initialPageSize={5} pageSizeOptions={[5, 10]} /></div>}
-        {activeId === "team" && <div className="catalog-shell-page"><div><h3>Workspace team</h3><p className="catalog-caption">Owners shown in the fictional project records.</p></div><ul className="catalog-team-list">{owners.map((owner) => <li key={owner}><UsersIcon /><span><strong>{owner}</strong><small>{projects.filter((project) => project.owner === owner).length} projects</small></span></li>)}</ul></div>}
+        {activeId === "team" && <div className="catalog-shell-page"><div><h3>Workspace team</h3><p className="catalog-caption">Owners shown in the fictional project records.</p></div><ul className="catalog-team-list" role="list">{owners.map((owner) => <li key={owner}><UserIcon /><span><strong>{owner}</strong><small>{projects.filter((project) => project.owner === owner).length} projects</small></span></li>)}</ul></div>}
         {activeId === "settings" && <div className="catalog-shell-page"><div><h3>Workspace settings</h3><p className="catalog-caption">This page demonstrates a navigation destination.</p></div><ActionMessage tone="info">The shell supplies layout and navigation. Your application owns settings, permissions, and persistence.</ActionMessage></div>}
       </AdminShell>
     </div>

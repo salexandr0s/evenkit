@@ -71,14 +71,24 @@ export const entries: readonly CatalogEntry[] = [
     usage: 'import {\n  Button, Dialog, DialogTrigger, DialogContent,\n  DialogHeader, DialogTitle, DialogDescription,\n  DialogBody, DialogFooter, DialogClose\n} from "@project-kit/ui";\n\n<Dialog>\n  <DialogTrigger asChild><Button>Edit project</Button></DialogTrigger>\n  <DialogContent size="lg" scroll="body">\n    <DialogHeader>\n      <DialogTitle>Edit project</DialogTitle>\n      <DialogDescription>Update this preview.</DialogDescription>\n    </DialogHeader>\n    <DialogBody>\n      <form id={formId} onSubmit={saveProject}>{/* Fields */}</form>\n    </DialogBody>\n    <DialogFooter>\n      <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>\n      <Button type="submit" form={formId}>Save preview</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>\n\n// Generate a unique formId with useId().\n// size: sm | md (default) | lg\n// scroll: content (default) | body'
   },
   {
+    id: "tooltips",
+    name: "Tooltips",
+    group: "Controls",
+    description: "Custom hints for hover and keyboard focus, with an arrow, wrapping text, and placement that follows available space.",
+    tags: ["tooltip", "hint", "hover", "focus", "label", "help", "overlay"],
+    source: "Radix Tooltip · kit surface and timing",
+    sourceUrl: "https://www.radix-ui.com/primitives/docs/components/tooltip",
+    usage: 'import { Button, UserIcon, TooltipProvider, Tooltip,\n  TooltipTrigger, TooltipContent } from "@project-kit/ui";\n\n<TooltipProvider>\n  <Tooltip>\n    <TooltipTrigger asChild>\n      <Button shape="icon" aria-label="Open profile"><UserIcon /></Button>\n    </TooltipTrigger>\n    <TooltipContent side="right">Open your profile</TooltipContent>\n  </Tooltip>\n</TooltipProvider>\n\n// Keep a label on the trigger. Tooltips add context.\n// Hover, keyboard focus, and Escape are supported.'
+  },
+  {
     id: "admin-shell",
     name: "Admin shell",
     group: "Compositions",
-    description: "A responsive application frame with grouped navigation, header slots, and a mobile drawer. Routing stays in your app.",
-    tags: ["admin", "shell", "dashboard", "sidebar", "navigation", "layout", "mobile", "drawer", "composition"],
+    description: "An application frame with expanded, icon-only, and hidden sidebar modes. Custom tooltips label the icon rail; narrow screens use a drawer.",
+    tags: ["admin", "shell", "dashboard", "sidebar", "navigation", "layout", "mobile", "drawer", "composition", "collapse", "hide", "tooltip"],
     source: "Original kit composition · Radix mobile drawer",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dialog",
-    usage: 'import { AdminShell, FolderIcon } from "@project-kit/ui";\n\n<AdminShell\n  brand={<strong>Demo workspace</strong>}\n  navigation={[{ label: "Workspace", items: [{\n    id: "projects", label: "Projects", href: "/projects",\n    icon: <FolderIcon />\n  }] }]}\n  activeItemId="projects"\n  header={<strong>Projects</strong>}\n>\n  <h1>Your projects</h1>\n</AdminShell>\n\n// When embedding inside an existing main, set contentAs="section".\n// Supply renderLink to connect your application router.'
+    usage: 'import { useState } from "react";\nimport { AdminShell, FolderIcon, LayoutDashboardIcon,\n  type AdminSidebarState } from "@project-kit/ui";\n\nconst [sidebar, setSidebar] = useState<AdminSidebarState>("expanded");\n\n<AdminShell\n  brand="Demo workspace"\n  compactBrand={<LayoutDashboardIcon />}\n  sidebarState={sidebar}\n  onSidebarStateChange={setSidebar}\n  navigation={[{ label: "Workspace", items: [{\n    id: "projects", label: "Projects", href: "/projects",\n    icon: <FolderIcon />\n  }] }]}\n  activeItemId="projects"\n  header="Projects"\n>\n  <h1>Your projects</h1>\n</AdminShell>\n\n// States: expanded | collapsed | hidden\n// Or use defaultSidebarState for an uncontrolled shell.\n// Custom renderLink must forward supplied props and the anchor ref.\n// Use contentAs="section" inside an existing main.'
   },
   {
     id: "data-table",

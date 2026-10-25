@@ -32,6 +32,28 @@ import {
   X,
   Sun,
   Moon,
+  User,
+  UserPlus,
+  UserCheck,
+  ContactRound,
+  Building2,
+  BriefcaseBusiness,
+  Bell,
+  CalendarDays,
+  Inbox,
+  MessageSquare,
+  ChartNoAxesCombined,
+  Clock,
+  Bookmark,
+  Archive,
+  Upload,
+  Copy,
+  Pencil,
+  Filter,
+  PanelLeft,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Circle,
   type LucideIcon,
   type LucideProps,
 } from "lucide-react";
@@ -105,3 +127,25 @@ export const UsersIcon = /* @__PURE__ */ createKitIcon(Users, "UsersIcon");
 export const XIcon = /* @__PURE__ */ createKitIcon(X, "XIcon");
 export const SunIcon = /* @__PURE__ */ createKitIcon(Sun, "SunIcon");
 export const MoonIcon = /* @__PURE__ */ createKitIcon(Moon, "MoonIcon");
+export const UserIcon = /* @__PURE__ */ createKitIcon(User, "UserIcon");
+export const UserPlusIcon = /* @__PURE__ */ createKitIcon(UserPlus, "UserPlusIcon");
+export const UserCheckIcon = /* @__PURE__ */ createKitIcon(UserCheck, "UserCheckIcon");
+export const ContactRoundIcon = /* @__PURE__ */ createKitIcon(ContactRound, "ContactRoundIcon");
+export const Building2Icon = /* @__PURE__ */ createKitIcon(Building2, "Building2Icon");
+export const BriefcaseBusinessIcon = /* @__PURE__ */ createKitIcon(BriefcaseBusiness, "BriefcaseBusinessIcon");
+export const BellIcon = /* @__PURE__ */ createKitIcon(Bell, "BellIcon");
+export const CalendarDaysIcon = /* @__PURE__ */ createKitIcon(CalendarDays, "CalendarDaysIcon");
+export const InboxIcon = /* @__PURE__ */ createKitIcon(Inbox, "InboxIcon");
+export const MessageSquareIcon = /* @__PURE__ */ createKitIcon(MessageSquare, "MessageSquareIcon");
+export const ChartNoAxesCombinedIcon = /* @__PURE__ */ createKitIcon(ChartNoAxesCombined, "ChartNoAxesCombinedIcon");
+export const ClockIcon = /* @__PURE__ */ createKitIcon(Clock, "ClockIcon");
+export const BookmarkIcon = /* @__PURE__ */ createKitIcon(Bookmark, "BookmarkIcon");
+export const ArchiveIcon = /* @__PURE__ */ createKitIcon(Archive, "ArchiveIcon");
+export const UploadIcon = /* @__PURE__ */ createKitIcon(Upload, "UploadIcon");
+export const CopyIcon = /* @__PURE__ */ createKitIcon(Copy, "CopyIcon");
+export const PencilIcon = /* @__PURE__ */ createKitIcon(Pencil, "PencilIcon");
+export const FilterIcon = /* @__PURE__ */ createKitIcon(Filter, "FilterIcon");
+export const PanelLeftIcon = /* @__PURE__ */ createKitIcon(PanelLeft, "PanelLeftIcon");
+export const PanelLeftCloseIcon = /* @__PURE__ */ createKitIcon(PanelLeftClose, "PanelLeftCloseIcon");
+export const PanelLeftOpenIcon = /* @__PURE__ */ createKitIcon(PanelLeftOpen, "PanelLeftOpenIcon");
+export const CircleIcon = /* @__PURE__ */ createKitIcon(Circle, "CircleIcon");
