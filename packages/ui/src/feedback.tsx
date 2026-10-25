@@ -70,21 +70,35 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(function Skele
   return <div {...props} ref={ref} className={classes("pk-skeleton", className)} data-variant={variant} data-size={size} aria-hidden="true" />;
 });
 
+export type EmptyStateSize = "sm" | "md";
+export type EmptyStateAlign = "center" | "start";
+export type EmptyStateTitleTag = "p" | "div" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+
 export interface EmptyStateProps extends Omit<ComponentPropsWithoutRef<"div">, "title"> {
   title: ReactNode;
   description?: ReactNode;
   action?: ReactNode;
+  secondaryAction?: ReactNode;
+  /** Decorative content above the title. */
+  icon?: ReactNode;
+  size?: EmptyStateSize;
+  align?: EmptyStateAlign;
+  /** Use div for block content, or a heading tag that fits the page hierarchy. */
+  titleAs?: EmptyStateTitleTag;
 }
 
 export const EmptyState = forwardRef<HTMLDivElement, EmptyStateProps>(function EmptyState(
-  { className, title, description, action, ...props },
+  { className, title, description, action, secondaryAction, icon, size = "md", align = "center", titleAs: Title = "p", ...props },
   ref,
 ) {
+  const hasAction = action !== undefined && action !== null && action !== false;
+  const hasSecondaryAction = secondaryAction !== undefined && secondaryAction !== null && secondaryAction !== false;
   return (
-    <div {...props} ref={ref} className={classes("pk-empty-state", className)}>
-      <p className="pk-empty-title">{title}</p>
+    <div {...props} ref={ref} className={classes("pk-empty-state", className)} data-size={size} data-align={align}>
+      {icon !== undefined && icon !== null && icon !== false ? <div className="pk-empty-icon" aria-hidden="true">{icon}</div> : null}
+      <Title className="pk-empty-title">{title}</Title>
       {description ? <div className="pk-empty-description">{description}</div> : null}
-      {action ? <div className="pk-empty-action">{action}</div> : null}
+      {hasAction || hasSecondaryAction ? <div className="pk-empty-action">{action}{secondaryAction}</div> : null}
     </div>
   );
 });

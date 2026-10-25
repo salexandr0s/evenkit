@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Current continuation: EmptyState complete
+
+Eleven of twelve component areas are verified. EmptyState adds decorative icons, secondary actions (including secondary-only panels), small/medium sizing, logical start/center alignment, and `titleAs` for paragraphs, block content, or headings. The root div, native attributes/ref, and existing caller defaults remain compatible. Descriptions respect the reading-width token. No new dependency or token was added, and the component does not manage announcements or focus.
+
+Key changes: `packages/ui/src/feedback.tsx`, the EmptyState block in `styles.css`, public exports, README, both packed fixtures, and new `apps/catalog/src/empty-preview.tsx/css`. The preview has working first-use/template/search/retry/troubleshooting examples with explicit focus recovery. `catalog.tsx` now returns focus to Search components after Clear search, reopening hidden mobile navigation first. The obsolete `control-previews.tsx` was removed.
+
+Verification passed: plan/source review, production build, workspace/test typecheck, ESLint, 13 relevant Chromium journeys, and independent packed Vite/Next builds plus HTTP/stylesheet checks. The icon journey initially failed because its next keyboard action ran before Radix completed close autofocus; its choose helper now waits for trigger focus, preserving the final reset/search assertion. New tests cover both actions, focus, search counts/results, retry/help, secondary-only RTL recovery, and 360px overflow. Package report: `.artifacts/empty-package-verification.json`; temporary consumers and servers were cleaned. Light/dark screenshots: `.artifacts/empty-dark-reference.png`, `.artifacts/empty-light-reference.png`. Original Dark appearance was restored and the temporary browser tab closed. Firefox/Safari remain untested.
+
+Next: DataTable, then final integration including separately added chat, themes, and tooltip/status styling. The goal remains active. Other chats committed `2f6ad38` (chat opening/closing) and `a0131d8` (message styling) during this work; their changes were preserved. Recheck git status before editing. Focused browser command: `KIT_CATALOG_PORT=5298 npx playwright test tests/browser/empty.spec.ts tests/browser/catalog.spec.ts tests/browser/admin-kit.spec.ts tests/browser/icon-reference.spec.ts tests/browser/token-reference.spec.ts --workers=1 --output=.artifacts/empty-browser-final`.
+
 ## Status message design pass: 25 October 2026
 
 The status banners now have neutral surfaces, fine borders with a colored leading edge, and consistent 32px tinted icon tiles around the existing 20px SVG status symbols. Standalone text aligns with the icon; messages with headings use quieter body text and retain their action layout. The leading edge follows RTL and preserves tone when the icon is hidden. The ActionMessage API and announcement/retry/dismiss behavior are unchanged.
@@ -12,7 +22,7 @@ Verification passed: production build, workspace/test typecheck, focused ESLint,
 
 Concurrent EmptyState and chat work belongs to other chats. Preserve those edits, especially adjacent shared CSS and `feedback.tsx`. Focused check: `KIT_CATALOG_PORT=5317 npx playwright test tests/browser/status.spec.ts --workers=1 --output=.artifacts/message-design-browser-results`.
 
-## Current continuation: loading complete
+## Earlier continuation: loading complete
 
 Spinner and Skeleton are complete; ten of twelve component areas are now verified. `packages/ui/src/feedback.tsx` adds Spinner size/ref support and Skeleton variant/size props; shared CSS preserves the 20px spinner and 40px block defaults, fixes text-line minimum heights, and keeps avatars square when narrow. Low-specificity selectors preserve custom class overrides. Public exports, README/provenance, and packed Vite/Next fixtures cover the additions. No new dependency or token was added.
 
@@ -56,7 +66,7 @@ The theme work is separate from the earlier component-improvement queue below. P
 
 ## Earlier component work
 
-The user's active goal is to substantially improve every component one by one. Ten of twelve areas are complete: Tokens, Icons, Buttons, Fields, Select, Dialog, Tooltips, AdminShell, Badge/ActionMessage, and Spinner/Skeleton. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. Empty states, DataTable, and final integration remain unfinished. The goal stays active; queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
+The user's active goal is to substantially improve every component one by one. Eleven of twelve areas are complete: Tokens, Icons, Buttons, Fields, Select, Dialog, Tooltips, AdminShell, Badge/ActionMessage, Spinner/Skeleton, and EmptyState. The user explicitly moved sidebar work next and added reusable tooltips and more icon variety. DataTable and final integration remain unfinished. The goal stays active; queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
 
 ## Completed
 
@@ -95,9 +105,7 @@ Unrelated chat-component work is occurring concurrently in this same checkout, i
 
 ## Remaining work
 
-Next: EmptyState. Read its implementation in `packages/ui/src/feedback.tsx`, targeted shared styles, EmptyPreview in `control-previews.tsx`, DataTable consumers, and applicable contracts. Planned improvements: icon slot, configurable heading semantics, secondary action, compact layout, and distinct first-use/no-results/failure examples. Preserve native div refs and current title/description/action callers.
-
-Then DataTable. Known table issue: every cell truncates arbitrary controls and can clip focus rings. After the queue, review catalog frame, snippets, exports, docs (including older `docs/compatibility.md` report), and independent packed consumers together.
+Next: DataTable. Read `packages/ui/src/data-table.tsx/css`, table preview and project data, table contracts, and existing admin journeys. Known issue: every cell truncates arbitrary controls and can clip focus rings. Planned improvements include per-column wrapping, usable action cells, clear search, row ranges, selection clearing/bulk actions, and state presentation. After the queue, review catalog frame, snippets, exports, docs (including older `docs/compatibility.md` report), and independent packed consumers together.
 
 Keep plan/review, relevant verification, and logical local commits. Shared source/CSS ownership must remain sequential.
 

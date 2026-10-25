@@ -18,7 +18,7 @@ Keep the existing public API compatible. Preserve all built-in themes, document-
 | 8 | AdminShell | Expanded, icon-only, and hidden modes; restore controls, navigation icons/tooltips, compact slots, badges, mobile and focus recovery. | Complete |
 | 9 | Badge, ActionMessage | Status icons, wrapping labels, message titles/actions, warning feedback, and a retry/dismiss example. | Complete |
 | 10 | Spinner, Skeleton | Token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. | Complete |
-| 11 | EmptyState | Icon slot, heading semantics, secondary action, compact layout, and distinct first-use, no-results, and failure examples. | Pending |
+| 11 | EmptyState | Icon slot, heading semantics, secondary action, compact layout, and distinct first-use, no-results, and failure examples. | Complete |
 | 12 | DataTable | Per-column wrapping, usable custom action cells, clear search, displayed-row range, selection clearing/bulk actions, and improved state presentation. | Pending |
 
 On 25 October the user moved sidebar work next, requested a reusable tooltip design, and asked for more icon variety. Tooltip and AdminShell therefore precede feedback, and the icon family was expanded as part of that work.
@@ -122,4 +122,12 @@ The new Loading preview replaces placeholders with a fictional project card. One
 
 Plan and source reviews passed without remaining findings. Reviewer checks confirmed square shrinking avatars and host class overrides. Production build, configured workspace/test type checks, ESLint, all 12 relevant Chromium journeys, and independent packed Vite/Next builds plus HTTP/CSS checks passed. The loading journey covers timer restarts, one status, hidden placeholders, focus preservation, dimensions at 360/768/1024/1440px, and all size mappings. Existing button, table, and catalog journeys protect their loading states and reduced-motion behavior. Light/dark views were inspected; screenshots: `.artifacts/loading-reference.png` and `.artifacts/loading-dark-reference.png`. Package verification cleaned its servers and temporary directory. Firefox and Safari were not tested.
 
-Next: EmptyState, then DataTable. Ten of twelve planned areas are complete. The goal remains active; items 11–12 and final integration review are unfinished. Include the separately added chat and theme components in that final integration review.
+### 11. EmptyState
+
+EmptyState now accepts a decorative icon, an independent secondary action, compact sizing, logical start alignment, and a configurable title element. Existing title/description/action callers, root div refs, and native attributes remain compatible. Default titles remain paragraphs; hosts choose the heading level. Descriptions use the reading-width token, and actions wrap safely. The component remains passive so consuming search interfaces can own announcements and focus.
+
+The dedicated preview demonstrates first use, template creation, archived search recovery, troubleshooting/retry, and a compact RTL secondary action. Every action works with fictional local data and restores focus to a persistent control when it replaces content. Catalog Clear search now restores focus and reopens hidden mobile navigation. The obsolete control-previews module was removed; exports, documentation, and packed fixtures cover the new API.
+
+Plan and source reviews passed. Production build, workspace/test typecheck, ESLint, and 13 relevant Chromium journeys passed. Independent packed Vite and Next consumers built and passed HTTP/CSS checks; temporary servers and files were cleaned. The initial icon journey exposed a test race with Radix close autofocus; its helper now waits for trigger focus before the next keyboard interaction, retaining the search-focus assertion. Light/dark layouts were inspected; screenshots: `.artifacts/empty-dark-reference.png` and `.artifacts/empty-light-reference.png`. Firefox and Safari were not tested.
+
+Next: DataTable. Eleven of twelve planned areas are complete. The goal remains active; item 12 and final integration review are unfinished. Include the separately added chat, themes, and later tooltip/status styling in that final integration review.

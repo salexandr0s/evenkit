@@ -2,8 +2,10 @@ import { expect, test, type Page } from "@playwright/test";
 import * as kit from "@project-kit/ui";
 
 async function choose(page: Page, label: string, value: string) {
-  await page.getByRole("combobox", { name: label, exact: true }).click();
+  const trigger = page.getByRole("combobox", { name: label, exact: true });
+  await trigger.click();
   await page.getByRole("option", { name: value, exact: true }).click();
+  await expect(trigger).toBeFocused();
 }
 
 test("icon reference combines aliases and categories, copies imports, and preserves accessible patterns", async ({ page, context }) => {

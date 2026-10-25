@@ -14,7 +14,18 @@ test("search finds controls and recovers from no results", async ({ page }) => {
   await expect(page.getByText("No components match your search", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Clear search" }).click();
   await expect(search).toHaveValue("");
+  await expect(search).toBeFocused();
   await expect(page.getByRole("heading", { name: "Buttons", exact: true })).toBeVisible();
+
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.getByRole("button", { name: "Browse components" }).click();
+  await search.fill("unmatched-component");
+  await page.getByRole("button", { name: "Close components" }).click();
+  await expect(search).not.toBeVisible();
+  await page.getByRole("button", { name: "Clear search" }).click();
+  await expect(search).toBeVisible();
+  await expect(search).toHaveValue("");
+  await expect(search).toBeFocused();
 });
 
 test("explicit appearance overrides the system and theme selection changes actual colors", async ({ page }) => {

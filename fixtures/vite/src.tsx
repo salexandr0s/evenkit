@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, ChatWidget, DataTable, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserIcon, type AdminSidebarState, type ButtonShape, type ChatMessage, type DataTableColumn, type DialogSize, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
 import "@project-kit/tokens/css";
 import "@project-kit/ui/css";
-import { ActionMessage, CircleCheckIcon, Skeleton, Spinner, type ActionMessageProps, type BadgeProps, type SkeletonProps, type SpinnerProps } from "@project-kit/ui";
+import { ActionMessage, CircleCheckIcon, EmptyState, Skeleton, Spinner, type ActionMessageProps, type BadgeProps, type EmptyStateProps, type SkeletonProps, type SpinnerProps } from "@project-kit/ui";
 
 const element = document.getElementById("root");
 if (!element) throw new Error("Missing fixture root.");
@@ -19,6 +19,8 @@ const spinnerProps: SpinnerProps = { size: "lg", label: "Loading package preview
 const spinnerRef = createRef<HTMLSpanElement>();
 const skeletonProps: SkeletonProps = { variant: "text", size: "sm", title: "Packed placeholder" };
 const skeletonRef = createRef<HTMLDivElement>();
+const emptyProps: EmptyStateProps = { title: "No saved projects", titleAs: "h3", size: "sm", align: "start", icon: <FolderIcon />, role: "group", "aria-label": "Saved projects" };
+const emptyRef = createRef<HTMLDivElement>();
 const notesProps: TextareaFieldProps = { label: "Notes", name: "notes", optional: true, hint: "Details for the team.", rows: 3 };
 const templates: SelectOptionGroup = { id: "team", label: "Team templates", options: [{ value: "blank", label: "Blank project", description: "Start with an empty project." }] };
 const columns: readonly DataTableColumn<(typeof records)[number]>[] = [
@@ -48,6 +50,7 @@ createRoot(element).render(<main>
   <ActionMessage {...messageProps} ref={messageRef} actions={<ButtonLink href="#projects">Review projects</ButtonLink>}>Persistent feedback from the installed package.</ActionMessage>
   <Spinner {...spinnerProps} ref={spinnerRef} />
   <Skeleton {...skeletonProps} ref={skeletonRef} />
+  <EmptyState {...emptyProps} ref={emptyRef} secondaryAction={<ButtonLink href="#projects">Browse projects</ButtonLink>} />
   <TextField label="Project name" defaultValue="Independent consumer" required startAdornment={<FolderIcon />} />
   <TextareaField {...notesProps} />
   <SelectField label="Project template" name="template" options={[templates]} defaultValue="blank" hint="Choose a starting point." required />

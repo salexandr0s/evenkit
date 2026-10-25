@@ -144,11 +144,11 @@ export const entries: readonly CatalogEntry[] = [
     id: "empty",
     name: "Empty state",
     group: "Feedback",
-    description: "Explain what is missing and offer a useful next action. Keep a recoverable failure in context.",
+    description: "Guide first use, recover an empty search, or retry a failed request. Add a decorative icon, choose a heading level, and offer a second way forward.",
     tags: ["empty", "no results", "retry", "error", "recovery", "placeholder"],
     source: "Original implementation · internal state patterns",
     sourceUrl: "https://ui.shadcn.com/docs/components/radix/empty",
-    usage: 'import { Button, EmptyState } from "@project-kit/ui";\n\n<EmptyState\n  title="No projects yet"\n  description="Create a project to bring your work together."\n  action={<Button onClick={createProject}>Create project</Button>}\n/>'
+    usage: 'import { Button, EmptyState, FolderIcon } from "@project-kit/ui";\n\n<EmptyState\n  icon={<FolderIcon />}\n  title="No projects yet"\n  titleAs="h3"\n  size="sm"\n  align="start"\n  description="Create a project or start from a template."\n  action={<Button onClick={createProject}>Create project</Button>}\n  secondaryAction={\n    <Button variant="outline" onClick={chooseTemplate}>Use a template</Button>\n  }\n/>\n\n// Choose a heading level that fits your page.\n// Your app owns announcements and focus when content is replaced.'
   }
 ];
 

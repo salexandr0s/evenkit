@@ -182,10 +182,19 @@
 .pk-skeleton:where([data-size="lg"]) { --pk-skeleton-control-size: var(--pk-control-height-lg); --pk-skeleton-text-size: var(--pk-font-size-base); }
 .pk-skeleton:where([data-variant="text"]) { min-height: 0; height: var(--pk-skeleton-text-size); }
 .pk-skeleton:where([data-variant="avatar"]) { align-self: start; width: var(--pk-skeleton-control-size); max-width: 100%; height: auto; min-height: 0; aspect-ratio: 1; border-radius: var(--pk-radius-full); }
-.pk-empty-state { padding: var(--pk-space-8) var(--pk-space-6); border: var(--pk-border-width-hairline) dashed var(--pk-color-border-strong); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); color: var(--pk-color-fg); text-align: center; }
-.pk-empty-title { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-lg); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
-.pk-empty-description { margin-top: var(--pk-space-2); color: var(--pk-color-fg-muted); overflow-wrap: anywhere; }
-.pk-empty-action { margin-top: var(--pk-space-4); }
+.pk-empty-state { --pk-empty-title-size: var(--pk-font-size-lg); --pk-empty-icon-frame: var(--pk-space-12); --pk-empty-icon-size: var(--pk-icon-size-lg); --pk-empty-icon-margin: auto; --pk-empty-actions-align: center; min-width: 0; max-width: 100%; padding: var(--pk-space-8) var(--pk-space-6); border: var(--pk-border-width-hairline) dashed var(--pk-color-border-strong); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); color: var(--pk-color-fg); text-align: center; }
+.pk-empty-state:where([data-size="sm"]) { --pk-empty-title-size: var(--pk-font-size-base); --pk-empty-icon-frame: var(--pk-space-8); --pk-empty-icon-size: var(--pk-icon-size-md); padding: var(--pk-space-4); }
+.pk-empty-state:where([data-align="start"]) { --pk-empty-icon-margin: 0; --pk-empty-actions-align: flex-start; text-align: start; }
+.pk-empty-icon { display: flex; align-items: center; justify-content: center; width: var(--pk-empty-icon-frame); height: var(--pk-empty-icon-frame); max-width: 100%; margin-inline: var(--pk-empty-icon-margin); margin-bottom: var(--pk-space-4); border-radius: var(--pk-radius-md); background: var(--pk-color-bg-muted); color: var(--pk-color-fg-muted); }
+.pk-empty-icon > * { max-width: 100%; max-height: 100%; }
+.pk-empty-icon > svg { width: var(--pk-empty-icon-size); height: var(--pk-empty-icon-size); }
+.pk-empty-title { min-width: 0; max-width: 100%; margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-empty-title-size); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
+.pk-empty-description { width: 100%; min-width: 0; max-width: min(100%, var(--pk-layout-reading)); margin-top: var(--pk-space-2); margin-inline: auto; color: var(--pk-color-fg-muted); overflow-wrap: anywhere; }
+:where(.pk-empty-state[data-align="start"]) .pk-empty-description { margin-inline: 0; }
+.pk-empty-title > :first-child, .pk-empty-description > :first-child { margin-top: 0; }
+.pk-empty-title > :last-child, .pk-empty-description > :last-child { margin-bottom: 0; }
+.pk-empty-action { display: flex; flex-wrap: wrap; align-items: center; justify-content: var(--pk-empty-actions-align); gap: var(--pk-space-3); min-width: 0; max-width: 100%; margin-top: var(--pk-space-4); overflow-wrap: anywhere; }
+.pk-empty-action > * { min-width: 0; max-width: 100%; }
 .pk-action-message { --pk-action-message-tone: var(--pk-color-accent); --pk-action-message-icon-bg: var(--pk-color-accent-soft); display: flex; align-items: flex-start; gap: var(--pk-space-3); min-width: 0; max-width: 100%; padding: var(--pk-space-3) var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-inline-start: var(--pk-border-width-thick) solid var(--pk-action-message-tone); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); color: var(--pk-color-fg); overflow-wrap: anywhere; }
 .pk-action-message-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; box-sizing: border-box; width: var(--pk-space-8); height: var(--pk-space-8); padding: var(--pk-space-1-5); overflow: hidden; border-radius: var(--pk-radius-sm); background: var(--pk-action-message-icon-bg); color: var(--pk-action-message-tone); }
 .pk-action-message-icon > * { flex: none; width: var(--pk-icon-size-md); height: var(--pk-icon-size-md); max-width: 100%; max-height: 100%; object-fit: contain; }

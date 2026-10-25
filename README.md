@@ -109,6 +109,19 @@ Use `aria-busy` on the content being replaced and one persistent status outside 
 
 Match the placeholder layout to the content it replaces. The catalog keeps the reload control mounted and cancels an earlier request when another reload starts.
 
+## Empty states
+
+EmptyState accepts a `title`, optional `description`, a decorative `icon`, and `action` and `secondaryAction` content. Either action can appear alone. Use `size="sm"` for compact panels and `align="start"` for logical alignment in either text direction; the defaults remain medium and centered. Actions and long text wrap within the available width.
+
+```tsx
+<EmptyState icon={<FolderIcon />} title="No projects yet" titleAs="h3"
+  description="Create a project or start from a template."
+  action={<Button onClick={createProject}>Create project</Button>}
+  secondaryAction={<Button variant="outline" onClick={chooseTemplate}>Use a template</Button>} />
+```
+
+`titleAs` accepts `p` (the default), `div`, or `h1` through `h6`. Choose a heading level that fits the page; use `div` for block content in the title slot. The root remains a div with native attributes and a forwarded ref. The `title` prop is visible React content, not the native hover attribute. EmptyState adds no live region or focus behavior. Keep search announcements outside it, and move focus to a persistent control when an action replaces the panel.
+
 ## AI chat
 
 Use `ChatWidget` for a floating launcher that opens a compact chat and expands into a workspace with conversation history. Use `ChatPanel` to embed the same interface in a page. Both include searchable history, suggested prompts, multiline input, streaming feedback, stop/retry controls, and answer copying. They inherit the kit's theme and tokens.

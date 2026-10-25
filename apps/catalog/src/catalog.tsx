@@ -1,10 +1,10 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { themes, themeNames, type ColorMode, type ThemeName } from "@project-kit/tokens";
 import { Badge, Button, ChevronRightIcon, EmptyState, ExternalLinkIcon, Input, Label, MenuIcon, SearchIcon, Select, Spinner } from "@project-kit/ui";
 import { entries, groups } from "./catalog-data";
 import { CodeExample } from "./code-example";
 import { FieldPreview } from "./field-preview";
-import { EmptyPreview } from "./control-previews";
+import { EmptyPreview } from "./empty-preview";
 import { LoadingPreview } from "./loading-preview";
 import { StatusPreview } from "./status-preview";
 import { DialogPreview } from "./dialog-preview";
@@ -65,10 +65,24 @@ export function Catalog() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(selectedFromHash);
   const [navigationOpen, setNavigationOpen] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const focusSearchAfterClear = useRef(false);
   const [theme, setTheme] = useState<ThemeName>(() => readPreference("theme", themeNames, "neutral"));
   const [appearance, setAppearance] = useState<Appearance>(() => readPreference("appearance", appearances, "system"));
   const [systemDark, setSystemDark] = useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches);
   const mode: ColorMode = appearance === "system" ? (systemDark ? "dark" : "light") : appearance;
+
+  useLayoutEffect(() => {
+    if (!focusSearchAfterClear.current) return;
+    focusSearchAfterClear.current = false;
+    searchRef.current?.focus();
+  }, [query, navigationOpen]);
+
+  function clearCatalogSearch() {
+    focusSearchAfterClear.current = true;
+    setQuery("");
+    if (!searchRef.current?.getClientRects().length) setNavigationOpen(true);
+  }
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
@@ -121,7 +135,7 @@ export function Catalog() {
         <div className="catalog-sidebar-body" id="catalog-navigation" data-open={navigationOpen}>
           <div className="catalog-search">
             <Label htmlFor="component-search">Search components</Label>
-            <div className="catalog-search-control"><SearchIcon size="sm" /><Input id="component-search" type="search" placeholder="Search the library…" value={query} onChange={(event) => setQuery(event.target.value)} aria-describedby="search-results" /></div>
+            <div className="catalog-search-control"><SearchIcon size="sm" /><Input ref={searchRef} id="component-search" type="search" placeholder="Search the library…" value={query} onChange={(event) => setQuery(event.target.value)} aria-describedby="search-results" /></div>
             <p id="search-results" className="catalog-search-count" role="status">{visible.length} {visible.length === 1 ? "entry" : "entries"}</p>
           </div>
           <nav aria-label="Components" className="catalog-navigation">
@@ -170,7 +184,7 @@ export function Catalog() {
               <footer className="catalog-detail-footer"><span>React controls · document-level themes</span><span>Application state and callbacks stay in your project.</span></footer>
             </article>
           ) : (
-            <div className="catalog-no-results"><EmptyState title="No components match your search" description={`No results for “${query.trim()}”. Try a component name or a state such as loading.`} action={<Button onClick={() => setQuery("")}>Clear search</Button>} /></div>
+            <div className="catalog-no-results"><EmptyState icon={<SearchIcon />} titleAs="h1" title="No components match your search" description={`No results for “${query.trim()}”. Try a component name or a state such as loading.`} action={<Button onClick={clearCatalogSearch}>Clear search</Button>} /></div>
           )}
         </main>
       </div>

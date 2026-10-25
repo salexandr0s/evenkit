@@ -2,7 +2,7 @@ import { ArrowRightIcon, Badge, Button, ButtonLink, PlusIcon, Select, SelectFiel
 import { PreviewDialog } from "./preview-dialog";
 import { PreviewAdmin } from "./preview-admin";
 import { PreviewChat } from "./preview-chat";
-import { ActionMessage, Skeleton, Spinner, type ActionMessageTone, type BadgeSize, type BadgeTone, type BadgeVariant, type SkeletonSize, type SkeletonVariant, type SpinnerSize } from "@project-kit/ui";
+import { ActionMessage, EmptyState, Skeleton, Spinner, type ActionMessageTone, type BadgeSize, type BadgeTone, type BadgeVariant, type EmptyStateAlign, type EmptyStateSize, type EmptyStateTitleTag, type SkeletonSize, type SkeletonVariant, type SpinnerSize } from "@project-kit/ui";
 
 export default function Page() {
   const iconShape: ButtonShape = "icon";
@@ -13,6 +13,9 @@ export default function Page() {
   const spinnerSize: SpinnerSize = "sm";
   const skeletonSize: SkeletonSize = "lg";
   const skeletonVariant: SkeletonVariant = "avatar";
+  const emptySize: EmptyStateSize = "sm";
+  const emptyAlign: EmptyStateAlign = "start";
+  const emptyTitleTag: EmptyStateTitleTag = "h2";
   const notesProps: TextareaFieldProps = { label: "Notes", name: "notes", optional: true, hint: "Details for the team.", rows: 3 };
   const templates: SelectOptionGroup = { id: "team", label: "Team templates", options: [{ value: "blank", label: "Blank project", description: "Start with an empty project." }] };
   return <main>
@@ -22,6 +25,10 @@ export default function Page() {
       actions={<ButtonLink href="#projects">Review projects</ButtonLink>}>Persistent feedback from the installed package.</ActionMessage>
     <p role="status"><Spinner size={spinnerSize} aria-hidden="true" />Loading package preview</p>
     <Skeleton size={skeletonSize} variant={skeletonVariant} />
+    <EmptyState title="No saved projects" titleAs={emptyTitleTag} size={emptySize} align={emptyAlign} icon={<PlusIcon />}
+      description="Choose a starting point for your workspace."
+      action={<ButtonLink href="#projects">Browse projects</ButtonLink>}
+      secondaryAction={<ButtonLink href="#templates" variant="outline">Browse templates</ButtonLink>} />
     <TextField label="Project name" defaultValue="Independent consumer" required startAdornment={<PlusIcon />} />
     <TextareaField {...notesProps} />
     <SelectField label="Project template" name="template" options={[templates]} defaultValue="blank" hint="Choose a starting point." required />
