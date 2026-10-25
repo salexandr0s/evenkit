@@ -79,11 +79,16 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
       <SelectPrimitive.Portal container={container}>
         <SelectPrimitive.Content
           className="pk-select-content"
+          data-disabled={disabled || undefined}
           tabIndex={-1}
           position="popper"
           align="start"
-          sideOffset={Number.parseFloat(foundation.space["1"])}
+          sideOffset={Number.parseFloat(foundation.space["1_5"])}
           collisionPadding={Number.parseFloat(foundation.space["3"])}
+          onKeyDownCapture={(event) => {
+            // Exit content stays mounted for motion but must not select again.
+            if (!open || disabled) { event.preventDefault(); event.stopPropagation(); }
+          }}
         >
           <SelectPrimitive.ScrollUpButton className="pk-select-scroll" aria-hidden="true"><ChevronUpIcon /></SelectPrimitive.ScrollUpButton>
           <SelectPrimitive.Viewport className="pk-select-viewport">

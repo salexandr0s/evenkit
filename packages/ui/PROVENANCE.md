@@ -10,6 +10,8 @@ The tooltip wrapper uses `@radix-ui/react-tooltip` 1.4.1 and its MIT license. Th
 
 `Select` renders a custom button trigger and kit-styled popup. Its chevron uses the shared interior spacing token. Options are supplied as `{ value, label, disabled? }` records; each option needs a unique nonempty value. Use `placeholder` for the empty selection and `onValueChange` for changes. The forwarded ref points to the trigger button. The `name`, `form`, `required`, and `disabled` properties go to Radix's form integration rather than a simulated native change event. The popup uses the shared popover layer above modal content and accepts an optional portal `container`.
 
+The dropdown design uses existing tokens for 6px popup padding and trigger spacing, 10px surface corners, and layered shadows. Selected options use the validated accent pair and a trailing checkmark; keyboard focus uses an inset ring. Radix Presence retains the popup for a 120ms closing fade, following a 160ms opening fade with 4px directional movement. Closed content blocks input, disabling skips the exit, and reduced motion removes popup and chevron motion. The same Select implementation serves every catalog dropdown and the table page-size control.
+
 Import `@project-kit/tokens/css`, then `@project-kit/ui/css`. Component styles are scoped to `pk-` classes and do not install a global reset. Set theme and mode attributes on the document root in this release so body-mounted dialog portals inherit them. Nested theme scopes are not a supported portal configuration yet.
 
 The root project records tested framework versions and checks. Usage in the local catalog alone does not establish production adoption.

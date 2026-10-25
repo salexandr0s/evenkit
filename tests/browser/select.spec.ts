@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("grouped select keeps descriptions separate and recovers from required errors", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/#select");
   const trigger = page.getByRole("combobox", { name: "Project template", exact: true });
   await page.getByRole("button", { name: "Use template", exact: true }).click();
@@ -11,6 +12,10 @@ test("grouped select keeps descriptions separate and recovers from required erro
   await trigger.press("ArrowDown");
   const popup = page.getByRole("listbox");
   await expect(popup).toBeVisible();
+  await expect(popup).toHaveClass(/pk-select-content/);
+  await expect(popup).toHaveAttribute("data-state", "open");
+  await expect(popup).toHaveCSS("animation-name", "pk-select-in");
+  await expect(popup).toHaveCSS("animation-duration", "0.16s");
   await expect(popup.getByRole("group", { name: "Team templates", exact: true })).toBeVisible();
   await expect(popup.getByRole("group", { name: "Delivery templates", exact: true })).toBeVisible();
   await expect(page.getByRole("option", { name: "Blank project", exact: true })).toBeFocused();
@@ -34,11 +39,22 @@ test("grouped select keeps descriptions separate and recovers from required erro
   await expect(trigger).not.toHaveAttribute("aria-invalid", "true");
   await expect(page.getByText("Template value: client.", { exact: true })).not.toBeVisible();
   await trigger.press("ArrowDown");
+  await expect(page.locator(".pk-select-content")).toHaveCount(1);
+  await expect(popup.getByRole("option")).toHaveCount(4);
   await expect(page.getByRole("option", { name: "Blank project", exact: true })).toBeFocused();
   await page.keyboard.press("p");
   await expect(product).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(trigger).toHaveText("Product launch");
+  await expect(popup).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await trigger.press("ArrowDown");
+  await expect(popup).toBeVisible();
+  await expect(popup).toHaveCSS("animation-name", "none");
+  await page.keyboard.press("Escape");
+  await expect(popup).toHaveCount(0);
+  await expect(trigger).toBeFocused();
 });
 
 test("empty grouped options are focusable and recover when options arrive", async ({ page }) => {

@@ -169,6 +169,8 @@ const templates: SelectOptionGroup = {
 
 SelectField adds the same label, hint, error, optional cue, and external-description support as TextField. Its ref points to the trigger button. Option descriptions are associated with their menu items; the closed trigger and native form option retain only the label. Plain rows stay 36px on desktop and at least 44px in touch layouts. Described or long rows grow to fit their text. Set `dir` for RTL control and popup layout.
 
+Every dropdown in the catalog uses this shared design: a padded popup, a tinted selected row with a trailing checkmark, and a rotating chevron. Opening fades with a 4px movement over 160ms; closing takes 120ms. Closed options ignore pointer and keyboard input during the exit. Reduced motion removes both popup animations and the chevron transition. Disabling an open control dismisses its popup immediately so the host can recover focus.
+
 Use `defaultValue` for an uncontrolled selection or `value` with `onValueChange` for application state. An empty value displays the placeholder. A named control participates in its containing form, or the form identified by `form`. Applications own validation and controlled reset behavior; the catalog demonstrates focusing an invalid field and clearing it with a reset action.
 
 Disabling Select closes an open popup; re-enabling it keeps the popup closed. If an asynchronous update disables the focused control, the host should choose a useful remaining focus target. DataTable handles this for its own search, row, and pagination controls.

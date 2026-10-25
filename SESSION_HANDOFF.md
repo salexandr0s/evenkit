@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Shared dropdown design: 25 October 2026
+
+Updated the shared Select/SelectField design used by all 15 direct catalog dropdowns and DataTable pagination. Popups have 6px padding and trigger spacing, layered shadows, trailing selected checkmarks, distinct selected and highlighted rows, and a rotating chevron. Existing tokens provide every visual value. Opening fades with 4px directional movement over 160ms; closing uses 120ms. Reduced motion removes popup and chevron motion. Public props, grouped descriptions, form integration, long-label wrapping, RTL and 36px desktop / 44px touch rows remain intact.
+
+Radix Presence retains closing content for the animation. Pointer interaction and keyboard selection are blocked during exit, including Escape followed immediately by Enter inside a dialog. Disabling a control skips the exit to preserve asynchronous focus recovery. Core changes are in `packages/ui/src/select.tsx` and the select rules in `packages/ui/src/styles.css`; README and UI provenance document the behavior. Usage audit found no separate native or custom dropdown implementations to migrate.
+
+Source review, production build, configured typecheck, ESLint, eight token tests, and packed Vite/Next consumers passed. The 11 focused browser journeys passed. The full Chromium run passed 42 of 43 journeys; one exact row-height assertion caught floating-point rounding during the entrance animation. That test now waits for the actual animation to finish and still checks exactly 36px/44px. Both affected catalog journeys passed afterward, including the modal exit check made deterministic by pausing/resuming its animation around real keyboard input. Runtime source did not change after the full run. Logs: `.artifacts/dropdown-design-build.log`, `.artifacts/dropdown-design-focused.log`, `.artifacts/dropdown-design-browser.log`, `.artifacts/select-geometry-exit-browser.log`, `.artifacts/dropdown-design-tokens.log`, and `.artifacts/dropdown-design-packages.log`. Package report: `.artifacts/dropdown-design-package-verification.json`.
+
+Manual light/dark inspection passed; screenshots are `.artifacts/dropdown-design-dark.png` and `.artifacts/dropdown-design-light.png`. The temporary visual preview on port 5303 and its tab were closed; the existing preview on port 5173 was preserved. Firefox and Safari were not tested. No required work remains for this dropdown request. Concurrent Hallmark, field-error-icon and inventory changes remain outside this commit. Resume with `git status --short` and this handoff before selecting the next component.
+
 ## Shared tooltip design: 25 October 2026
 
 Tooltips now share a compact inverse surface, matching arrow, 220ms hover delay, and 120ms directional fade with 2px movement. Both opening and closing animate; reduced motion removes both animations. Existing tokens provide colors, spacing, radius, typography, shadow and motion. The shared tooltip is used for sidebar controls and compact branding, catalog icon examples, field clear actions, table search/pagination, dialog close buttons, and chat controls. Removed the redundant native title from the static sharing message. README and token provenance describe the design.

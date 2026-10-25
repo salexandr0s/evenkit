@@ -1,8 +1,37 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 
 async function chooseOption(page: Page, label: string, option: string) {
   await page.getByRole("combobox", { name: label, exact: true }).click();
   await page.getByRole("option", { name: option, exact: true }).click();
+}
+
+async function observeSelectExit(popup: Locator) {
+  return popup.evaluateHandle(element => {
+    const result = { connected: false, pointerEvents: "", animation: "", duration: "", paused: false, endedWhileConnected: false, enterWhileClosed: false };
+    const observer = new MutationObserver(() => {
+      if (element.getAttribute("data-state") !== "closed") return;
+      const style = getComputedStyle(element);
+      Object.assign(result, { connected: element.isConnected, pointerEvents: style.pointerEvents, animation: style.animationName, duration: style.animationDuration });
+      for (const animation of element.getAnimations()) {
+        if (animation instanceof CSSAnimation && animation.animationName === "pk-select-out") {
+          animation.pause();
+          result.paused = animation.playState === "paused";
+        }
+      }
+      observer.disconnect();
+    });
+    observer.observe(element, { attributes: true, attributeFilter: ["data-state"] });
+    element.addEventListener("animationend", event => {
+      if (event.target === element && event instanceof AnimationEvent && event.animationName === "pk-select-out") result.endedWhileConnected = element.isConnected;
+    }, { capture: true });
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Enter") return;
+      result.enterWhileClosed = element.isConnected && element.getAttribute("data-state") === "closed" && element.contains(document.activeElement);
+      window.removeEventListener("keydown", onKeyDown, true);
+    }
+    window.addEventListener("keydown", onKeyDown, true);
+    return result;
+  });
 }
 
 test("search finds controls and recovers from no results", async ({ page }) => {
@@ -107,6 +136,7 @@ test("field validation associates descriptions, focuses the first error, and res
 });
 
 test("dialog contains focus, inherits the theme, closes with Escape and restores focus", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/#dialog");
   await chooseOption(page, "Theme", "Grove");
   await page.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
@@ -121,12 +151,39 @@ test("dialog contains focus, inherits the theme, closes with Escape and restores
   }));
   expect(inherited.dialog).toBe(inherited.root);
   const dialogLayer = Number(await dialog.evaluate(element => getComputedStyle(element).zIndex));
-  await dialog.getByRole("combobox", { name: "Project visibility", exact: true }).click();
+  const visibility = dialog.getByRole("combobox", { name: "Project visibility", exact: true });
+  await visibility.click();
   const popup = page.getByRole("listbox");
   await expect(popup).toBeVisible();
   expect(Number(await popup.evaluate(element => getComputedStyle(element).zIndex))).toBeGreaterThan(dialogLayer);
+  await expect(page.getByRole("option", { name: "Private", exact: true })).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(page.getByRole("option", { name: "Team", exact: true })).toBeFocused();
+  const exit = await observeSelectExit(popup);
+  try {
+    await page.keyboard.press("Escape");
+    await expect.poll(() => exit.jsonValue()).toMatchObject({ paused: true });
+    await page.keyboard.press("Enter");
+    await popup.evaluate(element => {
+      for (const animation of element.getAnimations()) {
+        if (animation instanceof CSSAnimation && animation.animationName === "pk-select-out") animation.play();
+      }
+    });
+    await expect.poll(() => exit.jsonValue()).toEqual({ connected: true, pointerEvents: "none", animation: "pk-select-out", duration: "0.12s", paused: true, endedWhileConnected: true, enterWhileClosed: true });
+    await expect(popup).toHaveCount(0);
+  } finally {
+    await exit.dispose();
+  }
+  await expect(dialog).toBeVisible();
+  await expect(visibility).toBeFocused();
+  await expect(visibility).toHaveText("Private");
+  await visibility.press("ArrowDown");
+  await expect(page.locator(".pk-select-content")).toHaveCount(1);
+  await expect(popup.getByRole("option")).toHaveCount(3);
   await page.getByRole("option", { name: "Team", exact: true }).click();
-  await expect(dialog.getByRole("combobox", { name: "Project visibility", exact: true })).toHaveText("Team");
+  await expect(visibility).toHaveText("Team");
+  await expect(popup).toHaveCount(0);
+  await expect(visibility).toBeFocused();
   for (let index = 0; index < 7; index += 1) {
     await page.keyboard.press("Tab");
     await expect(dialog).toContainText("Edit project");
@@ -210,8 +267,10 @@ test("custom select supports keyboard, form values, disabled state, and an inset
   await expect(page.getByRole("combobox", { name: "Region", exact: true })).toBeDisabled();
   await trigger.focus();
   await trigger.press("ArrowDown");
-  await expect(page.getByRole("listbox")).toBeVisible();
+  const popup = page.getByRole("listbox");
+  await expect(popup).toBeVisible();
   await expect(page.getByRole("option", { name: "Private", exact: true })).toBeFocused();
+  await popup.evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)));
   expect((await page.getByRole("option", { name: "Private", exact: true }).boundingBox())?.height).toBe(36);
   await page.keyboard.press("ArrowDown");
   // Radix schedules navigation focus; Enter acts on the currently focused item.
@@ -222,9 +281,9 @@ test("custom select supports keyboard, form values, disabled state, and an inset
   await expect(page.getByText("Form value: team.", { exact: true })).toBeVisible();
   await page.setViewportSize({ width: 360, height: 800 });
   await trigger.click();
-  const popup = page.getByRole("listbox");
   await expect(popup).toBeVisible();
   await expect(page.getByRole("option", { name: "Team", exact: true })).toBeFocused();
+  await popup.evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)));
   const popupBox = await popup.boundingBox();
   expect((await page.getByRole("option", { name: "Team", exact: true }).boundingBox())?.height).toBe(44);
   expect(popupBox).not.toBeNull();
