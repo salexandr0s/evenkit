@@ -33,10 +33,10 @@ try {
     "J03", "J04", "E10", "E08", "O06",
   ];
   const inventoryIds = [...inventory.matchAll(/^\| ([A-R]\d{2}) \|/gm)].map(match => match[1]);
-  const workstreamIds = ["L01", "L08", "L09"];
+  const workstreamIds = ["L01", "L08", "L09", "J05", "J06", "J07"];
   const expected = [...original, ...additions, ...workstreamIds];
-  if (new Set([...original, ...additions]).size !== 72 || additions.some(id => !inventoryIds.includes(id))) {
-    throw new Error("The requested roadmap must contain 24 distinct additions present in the inventory.");
+  if (new Set([...original, ...additions]).size !== 72 || expected.some(id => !inventoryIds.includes(id)) || new Set(expected).size !== expected.length) {
+    throw new Error("The baseline and workstream mappings must be distinct inventory entries.");
   }
   const mapped = entries.flatMap(entry => entry.inventoryIds ?? []);
   for (const id of expected) {

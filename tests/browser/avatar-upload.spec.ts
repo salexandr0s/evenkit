@@ -1,0 +1,98 @@
+import { expect, test } from "@playwright/test";
+
+const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a2ioAAAAASUVORK5CYII=", "base64");
+
+test("avatar removal is staged, undoable and recoverable after a failed save", async ({ page }) => {
+  await page.goto("/#avatar-upload");
+  const form = page.getByRole("form", { name: "Meridian workspace logo settings", exact: true });
+  const picker = form.getByLabel("Choose logo", { exact: true });
+  await form.getByRole("button", { name: "Remove logo", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(form.getByRole("button", { name: "Undo removal", exact: true })).toBeFocused();
+  await expect(page.getByText("Completed saves: 0. Saved image: Meridian logo.png.", { exact: true })).toBeVisible();
+  await page.keyboard.press("Enter");
+  await expect(picker).toBeFocused();
+  await expect(form.getByRole("img", { name: "Meridian workspace: saved logo", exact: true })).toBeVisible();
+  await page.getByRole("checkbox", { name: "Fail the next save", exact: true }).check();
+  await form.getByRole("button", { name: "Remove logo", exact: true }).click();
+  await form.getByRole("button", { name: "Save logo", exact: true }).click();
+  await expect(form.getByRole("button", { name: "Cancel save", exact: true })).toBeFocused();
+  await expect(form.getByRole("alert")).toContainText("Your changes are still here.");
+  await expect(picker).toBeFocused();
+  await expect(page.getByText("Completed saves: 0. Saved image: Meridian logo.png.", { exact: true })).toBeVisible();
+  await form.getByRole("button", { name: "Retry save", exact: true }).click();
+  await expect(page.getByText("Completed saves: 1. Saved image: None.", { exact: true })).toBeVisible();
+  await expect(form.getByRole("status")).toContainText("Logo removed.");
+  await expect(picker).toBeFocused();
+  await expect(form.getByRole("button", { name: "Save logo", exact: true })).toBeDisabled();
+  await picker.setInputFiles({ name: "unsaved.png", mimeType: "image/png", buffer: png });
+  await form.getByRole("button", { name: "Remove logo", exact: true }).click();
+  await expect(form.getByRole("button", { name: "Save logo", exact: true })).toBeDisabled();
+  await form.getByRole("button", { name: "Undo removal", exact: true }).click();
+  await expect(form.getByRole("list", { name: "Selected image", exact: true })).toContainText("unsaved.png");
+});
+
+test("avatar replacement keeps long filenames and releases selection URLs on reset, save and unmount", async ({ page }) => {
+  await page.addInitScript(() => {
+    const create = URL.createObjectURL.bind(URL);
+    const revoke = URL.revokeObjectURL.bind(URL);
+    const urls = new Set<string>();
+    Object.defineProperty(window, "__liveAvatarUrls", { value: urls });
+    URL.createObjectURL = object => { const url = create(object); urls.add(url); return url; };
+    URL.revokeObjectURL = url => { urls.delete(url); revoke(url); };
+  });
+  await page.goto("/#avatar-upload");
+  const form = page.getByRole("form", { name: "Meridian workspace logo settings", exact: true });
+  const picker = form.getByLabel("Choose logo", { exact: true });
+  const longName = `${"Workspace-logo-final-".repeat(8)}.png`;
+  await picker.setInputFiles({ name: longName, mimeType: "image/png", buffer: png });
+  await expect(form.locator(".pk-image")).toHaveAttribute("data-state", "loaded");
+  await expect(form.getByRole("list", { name: "Selected image", exact: true })).toContainText(longName);
+  await picker.setInputFiles({ name: "replacement.png", mimeType: "image/png", buffer: png });
+  await expect.poll(() => page.evaluate(() => Reflect.get(window, "__liveAvatarUrls").size as number)).toBe(1);
+  await picker.setInputFiles({ name: "unsafe.svg", mimeType: "image/svg+xml", buffer: Buffer.from("<svg></svg>") });
+  await expect(form.getByRole("alert")).toContainText("this file type is not accepted");
+  await expect(form.getByRole("list", { name: "Selected image", exact: true })).toContainText("replacement.png");
+  await form.getByRole("button", { name: "Reset changes", exact: true }).click();
+  await expect.poll(() => page.evaluate(() => Reflect.get(window, "__liveAvatarUrls").size as number)).toBe(0);
+  await picker.setInputFiles({ name: "saved.png", mimeType: "image/png", buffer: png });
+  await form.getByRole("button", { name: "Save logo", exact: true }).click();
+  await expect(page.getByText("Completed saves: 1. Saved image: saved.png.", { exact: true })).toBeVisible();
+  await expect(form.getByRole("status")).toContainText("Logo saved.");
+  await expect.poll(() => page.evaluate(() => Reflect.get(window, "__liveAvatarUrls").size as number)).toBe(0);
+  await picker.setInputFiles({ name: "unmounted.png", mimeType: "image/png", buffer: png });
+  await expect.poll(() => page.evaluate(() => Reflect.get(window, "__liveAvatarUrls").size as number)).toBe(1);
+  await page.evaluate(() => { location.hash = "image"; });
+  await expect(form).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => Reflect.get(window, "__liveAvatarUrls").size as number)).toBe(0);
+});
+
+test("late avatar saves cannot overwrite cancelled work or authoritative replacements", async ({ page }) => {
+  await page.goto("/#avatar-upload");
+  await page.getByRole("checkbox", { name: "Simulate a late save response", exact: true }).check();
+  await page.clock.install();
+  const form = page.getByRole("form", { name: "Meridian workspace logo settings", exact: true });
+  const picker = form.getByLabel("Choose logo", { exact: true });
+  await picker.setInputFiles({ name: "cancelled.png", mimeType: "image/png", buffer: png });
+  await form.getByRole("button", { name: "Save logo", exact: true }).click();
+  await form.getByRole("button", { name: "Cancel save", exact: true }).click();
+  await page.clock.fastForward(1500);
+  await expect(page.getByText("Completed saves: 0. Saved image: Meridian logo.png.", { exact: true })).toBeVisible();
+  await expect(form.getByRole("list", { name: "Selected image", exact: true })).toContainText("cancelled.png");
+  await expect(picker).toBeFocused();
+  await form.getByRole("button", { name: "Save logo", exact: true }).click();
+  await page.getByRole("button", { name: "Restore saved image", exact: true }).click();
+  await page.clock.fastForward(1500);
+  await expect(page.getByText("Completed saves: 0. Saved image: Meridian logo.png.", { exact: true })).toBeVisible();
+  await expect(form.getByRole("list", { name: "Selected image", exact: true })).toHaveCount(0);
+  await picker.setInputFiles({ name: "previous-owner.png", mimeType: "image/png", buffer: png });
+  await form.getByRole("button", { name: "Save logo", exact: true }).click();
+  await page.getByRole("button", { name: "Switch workspace", exact: true }).click();
+  await page.clock.fastForward(1500);
+  await expect(page.getByRole("form", { name: "Cedar workspace logo settings", exact: true })).toBeVisible();
+  await expect(page.getByText("Completed saves: 0. Saved image: Meridian logo.png.", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Expire preview", exact: true }).click();
+  await expect(page.getByText("This preview has expired. Your saved image is unchanged.", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Refresh preview", exact: true }).click();
+  await expect(page.getByRole("img", { name: "Cedar workspace: saved logo", exact: true })).toBeVisible();
+});

@@ -15,7 +15,7 @@ Open `http://127.0.0.1:5173` for the Evenkit homepage, with interactive componen
 
 The dev command builds the packages first. If you edit package source while the catalog is running, run `npm run build:packages` to update its public artifacts. The catalog itself has Vite hot reload.
 
-The catalog includes 86 sections: the original 14, 48 priority examples, and 24 additions for dates, multiple values, numbers, remote tables, records, accounts, uploads, search and onboarding. Search a component name or an inventory ID such as `D02`. Open `/#themes` to compare eight palettes and apply one across the library. The catalog follows your system appearance until you choose light or dark with the sun/moon button; your choice is remembered. Forms, navigation, table state changes, uploads and chat replies are local previews.
+The catalog includes 89 sections: the original 14, 48 priority examples, and 27 additions for dates, multiple values, numbers, remote tables, records, accounts, uploads, documents, search and onboarding. Search a component name or an inventory ID such as `J07`. Open `/#themes` to compare eight palettes and apply one across the library. The catalog follows your system appearance until you choose light or dark with the sun/moon button; your choice is remembered. Forms, navigation, table state changes, uploads and chat replies are local previews.
 
 The catalog uses AdminShell for its own navigation. Each entry has an icon. Drag the sidebar edge or use the single header button to expand, minimise, or hide it; the display mode is remembered. Search stays in the header, and narrow screens use a navigation drawer.
 
@@ -315,4 +315,6 @@ The editable blocks are [record-workflow.tsx](registry/blocks/record-workflow.ts
 
 The [component roadmap](docs/component-roadmap-plan.md) tracks the 24 additional inventory items. Their API contracts are in [dates and formatting](docs/dates.md), [multiple values and numbers](docs/value-fields.md), [remote tables](docs/remote-tables.md), [records and settings](docs/records-settings.md), [uploads and images](docs/uploads.md), and [commands and wizard flows](docs/commands-wizard.md). Copy `record-detail.tsx` alongside `record-workflow.tsx` for connected detail/edit pages; `account-settings.tsx` and `onboarding-wizard.tsx` provide editable account and setup flows.
 
-Run `npm run verify:examples` to compile all 86 copied catalog examples and check all 72 inventory ID mappings. Run `npm run verify:packages` after building to install packed packages in independent Vite/Next consumers, copy the editable blocks, and check builds, server rendering and delivered styles.
+The [document-library guide](docs/document-library.md) covers J05–J07: avatar/logo replacement and save recovery, file previews/lightbox, and a remote document list/grid. Copy `avatar-upload.tsx` or `document-library.tsx` from `registry/blocks` and supply application callbacks for storage and authorization.
+
+Run `npm run verify:examples` to compile all 89 copied catalog examples and check all 75 inventory ID mappings. Run `npm run verify:packages` after building to install packed packages in independent Vite/Next consumers, copy the editable blocks, and check builds, server rendering and delivered styles.

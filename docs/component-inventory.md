@@ -4,7 +4,7 @@ Research date: 25 October 2026. Project: `@evenkit` in `design-tokens`.
 
 The kit should cover complete application and website flows, from small controls to editable page templates. The research baseline had 14 catalog sections. The tables below preserve that baseline and the proposed expansion scope.
 
-The 48 entries marked Next have been implemented and verified; their completion evidence is in the [priority tracker](./priority-build-plan.md). The 24 requested additions marked Built bring the catalog to 86 entries. Their contracts and verification are tracked in the [component roadmap](./component-roadmap-plan.md). Remaining Follow-up and Optional entries are proposals.
+The 48 entries marked Next have been implemented and verified; their completion evidence is in the [priority tracker](./priority-build-plan.md). The original 24 additions are tracked in the [component roadmap](./component-roadmap-plan.md). The [document-library additions](./document-library.md) cover J05, J06 and J07, bringing the catalog to 89 entries and 75 inventory mappings. Remaining Follow-up and Optional entries are proposals.
 
 This is a proposed inventory, based on the original project review, the internal Apple Minimal contracts, current public exports, and fresh research of the original upstream libraries. Priorities are recommendations. An entry records a reusable family or work item; it does not promise a separate package, export, or ready implementation for every name.
 
@@ -219,9 +219,9 @@ References: [Leitspur upload picker](/Users/nationalbank/GitHub/leitspur/apps/in
 | J02 | File row and attachment | Next / UI | Name/type/size, open/download/remove, long names, accessible labels. |
 | J03 | Upload queue and progress | Built / UI | Per-file pending/uploading/done/error, retry/cancel and duplicates. |
 | J04 | Image and thumbnail | Built / UI | Loading/error/alt text, fit/crop presentation and stable dimensions. |
-| J05 | Avatar/logo upload | Follow-up / Block | Compose avatar, picker, preview, replace/remove and save feedback. |
-| J06 | File preview/lightbox | Follow-up / UI | Images/basic document previews, unsupported types and open/download fallback. |
-| J07 | Document list/grid | Follow-up / Block | File rows/cards, folder navigation, selection, filters and empty states. |
+| J05 | Avatar/logo upload | Built / Block | Picker, named preview, replace/remove, undo, save retry/cancel and object URL cleanup. |
+| J06 | File preview/lightbox | Built / UI | Raster images and escaped plain text, expired/unavailable states and open/download fallback. |
+| J07 | Document list/grid | Built / Block | File rows/cards, folders, scoped selection, filters/sort, remote states and removal recovery. |
 | J08 | Image cropper | Optional / Adapter | Crop/zoom/rotate, reset, keyboard alternative, output constraints. |
 | J09 | Media player | Optional / Adapter | Native audio/video first; captions, transcript and playback controls as needed. |
 
