@@ -26,16 +26,16 @@ Compare the themes in the catalog at `/#themes`, then apply one to see it on for
 
 | Theme ID | Palette direction |
 |---|---|
-| `neutral` | Neutral surfaces and blue actions; the default. |
-| `grove` | Neutral surfaces with green actions and selected backgrounds. |
-| `graphite` | Monochrome surfaces, charcoal text, and restrained actions. |
-| `linen` | Warm paper surfaces, brown ink, and Georgia serif headings. |
-| `ocean` | Cool blue surfaces, navy text, and teal actions. |
-| `dusk` | Violet surfaces, plum text, and purple actions. |
-| `clay` | Sand surfaces, umber text, and terracotta actions. |
-| `rose` | Warm mauve surfaces, rose-tinted text, and dusty rose actions. |
+| `neutral` | Blue accents; the default. |
+| `grove` | Green accents. |
+| `graphite` | Monochrome accents. |
+| `linen` | Olive-brown accents and Georgia serif headings. |
+| `ocean` | Teal accents. |
+| `dusk` | Violet accents. |
+| `clay` | Terracotta accents. |
+| `rose` | Berry accents. |
 
-Each theme has a complete light and dark palette. Dark palettes use tinted dark surfaces and lighter text and actions. Text, muted text, hover states, and focus rings are checked against the backgrounds used by the kit. Error, warning, and success colours retain their meanings across themes.
+Every built-in theme shares the same neutral page backgrounds, surfaces, text and borders within each appearance mode. Themes change actions, focus rings and soft selected or hover highlights. Dark appearance uses lighter accents on neutral dark surfaces. Text, muted text, hover states, and focus rings are checked against the backgrounds used by the kit. Error, warning, and success colours retain their meanings across themes.
 
 Body text uses the shared system font stack. Linen's heading stack is `Georgia, 'Times New Roman', serif`; it uses locally available fonts and requires no download. Other themes use the system stack for headings too. Spacing, type sizes, and control dimensions stay consistent when switching themes.
 
@@ -58,7 +58,7 @@ const css = createBrandCss({
 
 `brandSchema`, `themeSchema`, `validateBrand`, and `validateTheme` share this supported configuration shape. The typography and radius properties receive foundation defaults when omitted. The helpers emit every accepted visual property; unsupported properties are rejected.
 
-Validation includes secondary text (`fg-muted`, at least 4.5:1) and focus rings (`ring`, at least 3:1) against `accent-soft`, which the kit uses for selected and hovered surfaces. Custom brands accepted before these checks may need a darker or lighter `accent-soft` value. Grove's dark selected background is adjusted for the same secondary-text requirement.
+Validation includes secondary text (`fg-muted`, at least 4.5:1) and focus rings (`ring`, at least 3:1) against `accent-soft`, which the kit uses for selected and hovered surfaces. Custom brands accepted before these checks may need a darker or lighter `accent-soft` value. Built-in highlights meet these checks with the shared neutral text colours.
 
 ## Build and checks
 

@@ -82,7 +82,7 @@ Set theme attributes on the document root:
 <html lang="en" data-kit-theme="grove" data-kit-mode="dark">
 ```
 
-Choose from Neutral, Grove, Graphite, Linen, Ocean, Dusk, Clay, and Rose using their lowercase names. Each theme coordinates page and surface shades, primary and secondary text, borders, and actions. Linen also uses serif headings. See the [theme guide](packages/tokens/README.md#built-in-themes) for the palette directions.
+Choose from Neutral, Grove, Graphite, Linen, Ocean, Dusk, Clay, and Rose using their lowercase names. Themes colour actions, focus rings and subtle highlights while sharing neutral page backgrounds, surfaces, text and borders in each appearance mode. Linen also uses serif headings. See the [theme guide](packages/tokens/README.md#built-in-themes) for the accent colours.
 
 Omit `data-kit-mode` to follow the system. Neutral is the default theme. This release supports document-level themes; nested scopes are not supported for body-mounted dialog portals. Custom brands use the same validated model and contrast checks; see [token usage](packages/tokens/README.md).
 

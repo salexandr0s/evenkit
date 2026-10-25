@@ -22,7 +22,9 @@ test("theme gallery applies and remembers a palette across appearance changes an
   await apply.press("Enter");
   await expect(apply).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("combobox", { name: "Theme", exact: true })).toHaveText("Linen");
-  await expect(page.locator("body")).toHaveCSS("background-color", rgb(themes.linen.modes.light.bg));
+  await expect(page.locator("body")).toHaveCSS("background-color", rgb(themes.neutral.modes.light.bg));
+  await expect(linen).toHaveCSS("background-color", rgb(themes.neutral.modes.light.surface));
+  await expect(apply).toHaveCSS("background-color", rgb(themes.linen.modes.light.accent));
   await expect(linen.locator(".theme-specimen-heading")).toHaveCSS("font-family", /Georgia/);
 
   await page.reload();
@@ -31,16 +33,21 @@ test("theme gallery applies and remembers a palette across appearance changes an
   await page.emulateMedia({ colorScheme: "dark" });
   await expect(page.locator("html")).not.toHaveAttribute("data-kit-mode");
   await expect(linen).toHaveAttribute("data-mode", "dark");
-  await expect(page.locator("body")).toHaveCSS("background-color", rgb(themes.linen.modes.dark.bg));
+  await expect(page.locator("body")).toHaveCSS("background-color", rgb(themes.neutral.modes.dark.bg));
+  await expect(apply).toHaveCSS("background-color", rgb(themes.linen.modes.dark.accent));
   await page.getByRole("button", { name: "Switch to light mode", exact: true }).click();
   await expect(linen).toHaveAttribute("data-mode", "light");
-  await expect(page.locator("body")).toHaveCSS("color", rgb(themes.linen.modes.light.fg));
+  await expect(page.locator("body")).toHaveCSS("color", rgb(themes.neutral.modes.light.fg));
 
   // The toolbar and cards share one selection; an unapplied card keeps its own palette.
   await chooseOption(page, "Theme", "Ocean");
   await expect(apply).toHaveAttribute("aria-pressed", "false");
-  await expect(gallery.getByRole("button", { name: "Apply Ocean", exact: true })).toHaveAttribute("aria-pressed", "true");
-  await expect(linen.locator(".theme-specimen-body")).toHaveCSS("color", rgb(themes.linen.modes.light.fg));
+  const oceanApply = gallery.getByRole("button", { name: "Apply Ocean", exact: true });
+  await expect(oceanApply).toHaveAttribute("aria-pressed", "true");
+  await expect(oceanApply).toHaveCSS("background-color", rgb(themes.ocean.modes.light.accent));
+  await expect(page.locator("body")).toHaveCSS("background-color", rgb(themes.neutral.modes.light.bg));
+  await expect(linen.locator(".theme-specimen-body")).toHaveCSS("color", rgb(themes.neutral.modes.light.fg));
+  await expect(linen.locator(".theme-specimen-mark")).toHaveCSS("background-color", rgb(themes.linen.modes.light.accent));
   for (const width of [360, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -51,7 +58,8 @@ test("theme gallery applies and remembers a palette across appearance changes an
   await page.getByRole("navigation", { name: "Components", exact: true }).getByRole("link", { name: "Dialog", exact: true }).click();
   await page.getByRole("button", { name: "Edit project", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Edit project", exact: true });
-  await expect(dialog).toHaveCSS("background-color", rgb(themes.linen.modes.dark["surface-elevated"]));
-  await expect(dialog).toHaveCSS("color", rgb(themes.linen.modes.dark.fg));
+  await expect(dialog).toHaveCSS("background-color", rgb(themes.neutral.modes.dark["surface-elevated"]));
+  await expect(dialog).toHaveCSS("color", rgb(themes.neutral.modes.dark.fg));
+  await expect(dialog.getByRole("button", { name: "Save preview", exact: true })).toHaveCSS("background-color", rgb(themes.linen.modes.dark.accent));
   await expect(dialog.getByRole("heading", { name: "Edit project", exact: true })).toHaveCSS("font-family", /Georgia/);
 });

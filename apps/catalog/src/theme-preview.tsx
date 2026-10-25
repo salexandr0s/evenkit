@@ -5,10 +5,10 @@ import "./theme-preview.css";
 
 const swatches = [
   { role: "bg", label: "Canvas" },
-  { role: "surface", label: "Surface" },
-  { role: "fg", label: "Text" },
-  { role: "fg-muted", label: "Muted" },
   { role: "accent", label: "Accent" },
+  { role: "accent-hover", label: "Hover" },
+  { role: "accent-soft", label: "Highlight" },
+  { role: "ring", label: "Focus" },
 ] as const;
 
 interface ThemePreviewProps {
@@ -25,7 +25,7 @@ export function ThemePreview({ theme, mode, onThemeChange }: ThemePreviewProps) 
       <div className="theme-gallery-intro">
         <div>
           <h3>Choose a palette</h3>
-          <p>Compare the same workspace in every theme. Use the sun or moon button above to switch between light and dark colours.</p>
+          <p>Compare accent colours on neutral surfaces. Use the sun or moon button above to switch between light and dark appearance.</p>
         </div>
         <p className="theme-gallery-current" role="status">Using <strong>{themes[theme].name}</strong><span>{mode}</span></p>
       </div>
@@ -73,7 +73,7 @@ export function ThemePreview({ theme, mode, onThemeChange }: ThemePreviewProps) 
           );
         })}
       </div>
-      <p className="theme-gallery-guidance">Applying a theme updates every component in the catalog and saves your choice in this browser. Open Design tokens to inspect its colour values and contrast checks.</p>
+      <p className="theme-gallery-guidance">Themes colour actions, focus rings and subtle highlights. Page backgrounds, text and borders stay neutral. Your choice is saved in this browser. Open Design tokens to inspect colour values and contrast checks.</p>
     </div>
   );
 }

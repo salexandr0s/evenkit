@@ -51,6 +51,17 @@ describe("theme trust boundary", () => {
     }).success).toBe(false);
   });
 
+  it("keeps built-in themes neutral outside their distinct accents", () => {
+    const accentRoles = new Set(["accent", "accent-hover", "on-accent", "accent-soft", "ring"]);
+    for (const mode of colorModes) {
+      const sharedColors = Object.entries(themes.neutral.modes[mode]).filter(([role]) => !accentRoles.has(role));
+      for (const name of themeNames) {
+        expect(Object.entries(themes[name].modes[mode]).filter(([role]) => !accentRoles.has(role)), `${name}/${mode}`).toEqual(sharedColors);
+      }
+      expect(new Set(themeNames.map((name) => themes[name].modes[mode].accent)).size).toBe(themeNames.length);
+    }
+  });
+
   it("checks every required foreground/background pair in all themes and modes", () => {
     for (const name of themeNames) {
       for (const mode of colorModes) {

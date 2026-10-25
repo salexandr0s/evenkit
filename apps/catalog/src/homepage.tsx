@@ -116,7 +116,7 @@ export function Homepage({ theme, mode, onThemeChange, onToggleAppearance }: Hom
 
       <section className="home-theme-section" id="home-themes" aria-labelledby="home-themes-title">
         <div className="home-container home-theme-layout">
-          <div className="home-theme-intro"><h2 id="home-themes-title">Multiple color<br />themes</h2><p>Choose a theme to change this page.</p></div>
+          <div className="home-theme-intro"><h2 id="home-themes-title">Multiple color<br />themes</h2><p>Choose an accent for buttons, focus rings and subtle highlights.</p></div>
           <div className="home-palette-group" role="group" aria-label="Choose a theme">
             {themeNames.map(name => <button key={name} className="home-palette" type="button" aria-label={`Apply ${themes[name].name}`} aria-pressed={theme === name} onClick={() => onThemeChange(name)}>
               <span className="home-palette-swatch" style={{ backgroundColor: themes[name].modes[mode].accent }} aria-hidden="true">{theme === name && <CheckIcon size="sm" style={{ color: themes[name].modes[mode]["on-accent"] }} />}</span>

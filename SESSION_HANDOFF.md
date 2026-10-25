@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Subtle theme accents: 25 October 2026
+
+Completed the goal to keep themes from recolouring the whole site. All eight built-in themes share neutral page backgrounds, surfaces, text and borders within each appearance mode. Theme colours apply to actions, focus rings and softer hover/selection highlights. Existing accent identities, semantic status colours, custom-brand support and Linen's serif headings remain. The gallery compares Canvas, Accent, Hover, Highlight and Focus swatches; homepage and package guidance describe the new behaviour.
+
+Changed `packages/tokens/src/themes.ts`, its existing token tests, `apps/catalog/src/theme-preview.tsx`, the homepage theme description, both READMEs and `tests/browser/themes.spec.ts`. Concurrent homepage copy and heading commits were preserved. Token coverage now guards shared neutral colours; the existing browser journey checks neutral surfaces and changing accents, including dialog portals.
+
+Verification passed: production builds, configured workspace TypeScript, full ESLint, nine token tests and all 16 Chromium journeys across themes, homepage, token reference, catalog and settings. A separate 64-case browser check covered all eight themes in both modes on homepage/catalog at 360/1440px, with no overflow or runtime errors. Before/after screenshots confirm the restrained colouring. Independent review found no actionable issues; every contrast check passes, with the lowest text contrast at 4.87:1 against a 4.5:1 requirement. Evidence: `.artifacts/subtle-themes/`. Firefox, Safari and physical touch were not tested.
+
+No required implementation work remains. The rebuilt local preview is `http://127.0.0.1:5390/#themes`; production has not been deployed for this change. Resume with `git status --short` and `git log -3 --oneline`. If needed, restart the preview with `npm run preview --workspace @evenkit/catalog -- --port 5390 --strictPort`.
+
 ## Theme heading wording: 25 October 2026
 
 Changed the homepage heading to the user's exact wording, "Multiple color themes". Catalog build, TypeScript and focused ESLint passed; the rebuilt preview includes the new text. Concurrent palette changes were preserved and excluded from this wording commit. No remaining work for this request.
