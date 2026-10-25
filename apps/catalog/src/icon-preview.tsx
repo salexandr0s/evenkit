@@ -116,9 +116,11 @@ export function IconPreview() {
                   </div>
                   <code className="icon-export-name">{name}</code>
                   <div className="icon-import">
-                    <code>{`import { ${name} } from "@project-kit/ui";`}</code>
-                    <code>{`<${name} size="${size}" animation="${animation}" />`}</code>
-                    <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" shape="icon" aria-label={`Copy import for ${name}`} onClick={() => void copyImport(name)}>{copied === name ? <CheckIcon size="sm" /> : <CopyIcon size="sm" />}</Button></TooltipTrigger><TooltipContent>{copied === name ? "Copied" : `Copy import for ${name}`}</TooltipContent></Tooltip>
+                    <div className="icon-import-code">
+                      <code>{`import { ${name} } from "@project-kit/ui";`}</code>
+                      <code>{`<${name} size="${size}" animation="${animation}" />`}</code>
+                    </div>
+                    <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Copy import for ${name}`} onClick={() => void copyImport(name)}>{copied === name ? <CheckIcon size="sm" /> : <CopyIcon size="sm" />}</Button></TooltipTrigger><TooltipContent>{copied === name ? "Copied" : `Copy import for ${name}`}</TooltipContent></Tooltip>
                   </div>
                 </li>
               ))}

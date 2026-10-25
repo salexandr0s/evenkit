@@ -17,7 +17,7 @@ export function CodeExample({ code }: { code: string }) {
     <section className="catalog-code" aria-label="Usage example">
       <div className="catalog-code-header">
         <span>Usage</span>
-        <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" shape="icon" aria-label="Copy code" onClick={() => void copy()}><CopyIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Copy code</TooltipContent></Tooltip>
+        <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label="Copy code" onClick={() => void copy()}><CopyIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Copy code</TooltipContent></Tooltip>
       </div>
       <pre tabIndex={0}><code>{code}</code></pre>
       <p className="catalog-copy-notice" role="status">{notice}</p>

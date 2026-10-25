@@ -44,6 +44,7 @@
 .pk-button-label { display: inline-flex; align-items: center; justify-content: center; gap: var(--pk-space-2); min-width: 0; max-width: 100%; }
 .pk-button-text { display: inline-flex; align-items: center; justify-content: center; gap: var(--pk-space-2); min-width: 0; overflow-wrap: anywhere; }
 .pk-button-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.pk-button[data-size="xs"] { --pk-button-height: var(--pk-space-6); padding: var(--pk-space-0-5) var(--pk-space-2); border-radius: var(--pk-radius-sm); font-size: var(--pk-font-size-xs); }
 .pk-button[data-size="sm"] { --pk-button-height: var(--pk-control-height-sm); padding: var(--pk-space-1) var(--pk-control-padding-x-sm); border-radius: var(--pk-radius-sm); }
 .pk-button[data-size="lg"] { --pk-button-height: var(--pk-control-height-lg); padding: var(--pk-space-3) var(--pk-control-padding-x-lg); font-size: var(--pk-font-size-base); }
 .pk-button[data-full-width] { width: 100%; }

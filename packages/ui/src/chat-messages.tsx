@@ -35,7 +35,7 @@ function Message({ message, labels, copyable, renderMessage }: { message: ChatMe
     <div className="pk-chat-message-author">{message.role === "assistant" && <MessageSquareIcon size="sm" />}<span>{message.role === "user" ? labels.user : labels.assistant}</span></div>
     <div className="pk-chat-message-content">{renderMessage ? renderMessage(message) : message.content}</div>
     {copyable && message.content.trim() && <div className="pk-chat-message-actions">
-      <Tooltip><TooltipTrigger asChild><Button variant="ghost" size="sm" shape="icon" aria-label={copied ? labels.copied : labels.copy} onClick={() => { void copy(); }}>{copied ? <CheckIcon size="sm" /> : <CopyIcon size="sm" />}</Button></TooltipTrigger><TooltipContent>{copied ? labels.copied : labels.copy}</TooltipContent></Tooltip>
+      <Tooltip><TooltipTrigger asChild><Button variant="ghost" size="xs" shape="icon" aria-label={copied ? labels.copied : labels.copy} onClick={() => { void copy(); }}>{copied ? <CheckIcon size="sm" /> : <CopyIcon size="sm" />}</Button></TooltipTrigger><TooltipContent>{copied ? labels.copied : labels.copy}</TooltipContent></Tooltip>
       <span className={copyState === "error" ? "pk-chat-copy-error" : "pk-chat-visually-hidden"} role="status">{copyState === "error" ? labels.copyFailed : copied ? labels.copied : ""}</span>
     </div>}
   </article>;
@@ -95,10 +95,10 @@ export function ChatMessages({ messages, activeConversationId, status, error, la
         {messages.map(message => <Message key={message.id} message={message} labels={labels} renderMessage={renderMessage} copyable={message.role === "assistant" && message.id !== streamingMessageId} />)}
         {busy && <div className="pk-chat-responding"><Spinner aria-hidden="true" /><span>{labels.responding}</span></div>}
         {status === "error" && <div className="pk-chat-error" role="alert"><p>{error || labels.error}</p>{onRetry && <Button variant="outline" size="sm" startIcon={<RotateCcwIcon size="sm" />} onClick={onRetry}>{labels.retry}</Button>}</div>}
-        {status === "idle" && lastUser && onRetry && <div className="pk-chat-retry"><Tooltip><TooltipTrigger asChild><Button variant="ghost" size="sm" shape="icon" aria-label={labels.retry} onClick={onRetry}><RotateCcwIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{labels.retry}</TooltipContent></Tooltip></div>}
+        {status === "idle" && lastUser && onRetry && <div className="pk-chat-retry"><Tooltip><TooltipTrigger asChild><Button variant="ghost" size="xs" shape="icon" aria-label={labels.retry} onClick={onRetry}><RotateCcwIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{labels.retry}</TooltipContent></Tooltip></div>}
       </div>
     </div>
-    {showJump && <div className="pk-chat-jump"><Tooltip><TooltipTrigger asChild><Button variant="secondary" size="sm" shape="icon" aria-label={labels.jumpToLatest} onClick={() => { viewport.current?.focus({ preventScroll: true }); scrollToLatest(); }}><ArrowDownIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{labels.jumpToLatest}</TooltipContent></Tooltip></div>}
+    {showJump && <div className="pk-chat-jump"><Tooltip><TooltipTrigger asChild><Button variant="secondary" size="xs" shape="icon" aria-label={labels.jumpToLatest} onClick={() => { viewport.current?.focus({ preventScroll: true }); scrollToLatest(); }}><ArrowDownIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{labels.jumpToLatest}</TooltipContent></Tooltip></div>}
     <span className="pk-chat-visually-hidden" role="status">{busy ? labels.responding : status === "idle" ? lastAssistant?.content : ""}</span>
   </div>;
 }

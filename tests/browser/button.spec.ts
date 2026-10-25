@@ -38,7 +38,7 @@ test("buttons preserve names and geometry while busy and expose pressed state", 
 
 test("button shapes and adornments fit desktop, narrow, and wide touch layouts", async ({ page, browser }) => {
   await page.goto("/#buttons");
-  for (const [label, dimension] of [["Small", 32], ["Medium", 40], ["Large", 48]] as const) {
+  for (const [label, dimension] of [["Extra small", 24], ["Small", 32], ["Medium", 40], ["Large", 48]] as const) {
     await expectSquare(page.getByRole("button", { name: `${label} icon action`, exact: true }), dimension);
   }
   const iconLink = page.getByRole("link", { name: "Browse icons", exact: true });
@@ -49,7 +49,7 @@ test("button shapes and adornments fit desktop, narrow, and wide touch layouts",
   await expect(leading.locator("svg")).toHaveAttribute("aria-hidden", "true");
   await expect(trailing.locator("svg")).toHaveAttribute("aria-hidden", "true");
   await page.setViewportSize({ width: 360, height: 800 });
-  for (const [label, dimension] of [["Small", 44], ["Medium", 44], ["Large", 48]] as const) {
+  for (const [label, dimension] of [["Extra small", 44], ["Small", 44], ["Medium", 44], ["Large", 48]] as const) {
     await expectSquare(page.getByRole("button", { name: `${label} icon action`, exact: true }), dimension);
   }
   await expectSquare(iconLink, 44);
@@ -68,9 +68,10 @@ test("button shapes and adornments fit desktop, narrow, and wide touch layouts",
   try {
     const touchPage = await touch.newPage();
     await touchPage.goto(new URL("/#buttons", page.url()).href);
-    for (const [label, dimension] of [["Small", 44], ["Medium", 44], ["Large", 48]] as const) {
+    for (const [label, dimension] of [["Extra small", 44], ["Small", 44], ["Medium", 44], ["Large", 48]] as const) {
       await expectSquare(touchPage.getByRole("button", { name: `${label} icon action`, exact: true }), dimension);
     }
+    await expect(touchPage.getByRole("button", { name: "Extra small icon action", exact: true }).locator("svg")).toHaveCSS("width", "16px");
   } finally {
     await touch.close();
   }

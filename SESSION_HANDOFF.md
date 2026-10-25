@@ -2,6 +2,14 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Inline utility actions: 25 October 2026
+
+Completed the compact-layout follow-up. Toast icon actions now sit beside the title and dismiss control in one row. Ghost buttons remove the resting outline; controls are 24px on desktop with 16px glyphs and expand to 44px for narrow/coarse-pointer input. Added ButtonSize/xs without changing field ControlSize. Applied xs to the previously converted copy, password, file, chat, selection and status utilities, plus SearchField clearing. Icon import copying now sits beside wrapping code. Text-only toast actions retain their existing visible-label layout. This supersedes the lower-row square toast shown in the earlier utility-icon pass.
+
+Production build, configured TypeScript and ESLint passed. The relevant browser suite passed 27/29 initially; the chat streaming test passed on serial rerun, leaving only the concurrent AlertDialog exit-guard regression at tests/browser/overlays.spec.ts:100. This follow-up does not alter that dialog or test. Both extended button/toast journeys passed, including inline alignment, 24px desktop sizing, 44px narrow/wide-touch sizing, keyboard focus and undo behavior. Eighteen light/dark/mobile visual checks plus keyboard code-copy verification passed. Source review accepted the change. Firefox/Safari and physical touch input were not tested.
+
+Evidence is in `.artifacts/inline-icon-actions/`; `undo-archive.png` shows the final resting toast. Concurrent design and animated-icon work remains preserved. Existing preview on port 5173 remains available. No required compact-layout work remains.
+
 ## Animated icons: 25 October 2026
 
 Completed the icon-animation goal. All 99 named icons animate only on pointer hover, including their containing controls. Fifty SVG bodies adapt Lucide Animated at commit `4662fff2b60fdcf4751b32013606756caf7c4c26`; 49 use original CSS motion on the installed Lucide artwork. `animation="static"` and `IconProvider` provide per-icon and subtree settings. Reduced motion, touch contact, disabled/busy controls, exit and unmount are handled centrally. Sizes, currentColor, accessible labels, native SVG refs/props and canonical Lucide classes remain available. Spinner keeps its existing progress behavior.

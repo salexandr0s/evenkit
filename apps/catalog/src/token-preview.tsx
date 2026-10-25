@@ -145,7 +145,7 @@ export function TokenPreview({ theme, mode }: { theme: ThemeName; mode: ColorMod
                 <code className="token-value">{value}</code>
                 <div className="token-card-footer">
                   <code className="token-usage">var({name})</code>
-                  <Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" shape="icon" aria-label={`Copy ${name}`} onClick={() => void copy(name)}><CopyIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Copy ${name}`}</TooltipContent></Tooltip>
+                  <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Copy ${name}`} onClick={() => void copy(name)}><CopyIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Copy ${name}`}</TooltipContent></Tooltip>
                 </div>
               </li>
             ))}

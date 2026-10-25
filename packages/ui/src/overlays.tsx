@@ -168,14 +168,17 @@ function ToastNotice({ notice, dismiss, dismissLabel, viewport, container }: { n
     if (root.current?.contains(document.activeElement) || document.activeElement === viewport) focusIfAvailable(fallback);
     dismiss(notice.id);
   }}>
-    <span className="pk-toast-icon" aria-hidden="true"><Icon /></span>
+    <span className="pk-toast-icon" aria-hidden="true"><Icon size="sm" /></span>
     <div className="pk-toast-content"><ToastPrimitive.Title className="pk-toast-title">{notice.title}</ToastPrimitive.Title>{notice.description ? <ToastPrimitive.Description className="pk-toast-description">{notice.description}</ToastPrimitive.Description> : null}
-      {notice.action ? notice.action.icon ? <Tooltip>
-        <TooltipTrigger asChild><ToastPrimitive.Action asChild altText={notice.action.altText}><Button size="sm" variant="outline" shape="icon" aria-label={notice.action.label} onClick={notice.action.onClick}>{notice.action.icon}</Button></ToastPrimitive.Action></TooltipTrigger>
-        <TooltipContent container={container}>{notice.action.label}</TooltipContent>
-      </Tooltip> : <ToastPrimitive.Action asChild altText={notice.action.altText}><Button size="sm" variant="outline" onClick={notice.action.onClick}>{notice.action.label}</Button></ToastPrimitive.Action> : null}
+      {notice.action && !notice.action.icon ? <ToastPrimitive.Action asChild altText={notice.action.altText}><Button size="sm" variant="outline" onClick={notice.action.onClick}>{notice.action.label}</Button></ToastPrimitive.Action> : null}
     </div>
-    <Tooltip><TooltipTrigger asChild><ToastPrimitive.Close asChild><Button className="pk-toast-dismiss" size="sm" variant="ghost" shape="icon" aria-label={dismissLabel}><XIcon size="sm" /></Button></ToastPrimitive.Close></TooltipTrigger><TooltipContent container={container}>{dismissLabel}</TooltipContent></Tooltip>
+    <div className="pk-toast-actions">
+      {notice.action?.icon ? <Tooltip>
+        <TooltipTrigger asChild><ToastPrimitive.Action asChild altText={notice.action.altText}><Button size="xs" variant="ghost" shape="icon" aria-label={notice.action.label} onClick={notice.action.onClick}>{notice.action.icon}</Button></ToastPrimitive.Action></TooltipTrigger>
+        <TooltipContent container={container}>{notice.action.label}</TooltipContent>
+      </Tooltip> : null}
+      <Tooltip><TooltipTrigger asChild><ToastPrimitive.Close asChild><Button className="pk-toast-dismiss" size="xs" variant="ghost" shape="icon" aria-label={dismissLabel}><XIcon size="sm" /></Button></ToastPrimitive.Close></TooltipTrigger><TooltipContent container={container}>{dismissLabel}</TooltipContent></Tooltip>
+    </div>
   </ToastPrimitive.Root>;
 }
 

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { ActionMessage, ArrowRightIcon, Badge, Button, ButtonLink, CheckIcon, MailIcon, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipTrigger, type ControlSize } from "@project-kit/ui";
+import { ActionMessage, ArrowRightIcon, Badge, Button, ButtonLink, CheckIcon, MailIcon, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipTrigger, type ButtonSize } from "@project-kit/ui";
 import "./button-preview.css";
 
-const buttonSizes: readonly { size: ControlSize; label: string }[] = [
+const buttonSizes: readonly { size: ButtonSize; label: string }[] = [
+  { size: "xs", label: "Extra small" },
   { size: "sm", label: "Small" },
   { size: "md", label: "Medium" },
   { size: "lg", label: "Large" },
@@ -65,7 +66,7 @@ export function ButtonPreview() {
               <span>{label}</span>
               <div className="button-size-samples">
                 <Button size={size} variant="outline" onClick={() => setAction(`${label} button activated in this preview.`)}>{label}</Button>
-                <Tooltip><TooltipTrigger asChild><Button size={size} shape="icon" variant="outline" aria-label={`${label} icon action`} onClick={() => setAction(`${label} icon action activated in this preview.`)}><PlusIcon size={size} /></Button></TooltipTrigger><TooltipContent>{label} icon action</TooltipContent></Tooltip>
+                <Tooltip><TooltipTrigger asChild><Button size={size} shape="icon" variant={size === "xs" ? "ghost" : "outline"} aria-label={`${label} icon action`} onClick={() => setAction(`${label} icon action activated in this preview.`)}><PlusIcon size={size === "xs" ? "sm" : size} /></Button></TooltipTrigger><TooltipContent>{label} icon action</TooltipContent></Tooltip>
               </div>
               <code>size="{size}"</code>
             </div>

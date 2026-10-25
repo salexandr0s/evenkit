@@ -6,11 +6,12 @@ import { Spinner } from "./feedback.js";
 
 export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "destructive" | "link";
 export type ControlSize = "sm" | "md" | "lg";
+export type ButtonSize = ControlSize | "xs";
 export type ButtonShape = "default" | "icon";
 
 interface ButtonAppearanceProps {
   variant?: ButtonVariant;
-  size?: ControlSize;
+  size?: ButtonSize;
   /** Icon shape accepts a single glyph child and requires an accessible name on the control. */
   shape?: ButtonShape;
   /** Fill the available width. Icon shape takes precedence and stays square. */

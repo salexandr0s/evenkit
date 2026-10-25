@@ -131,6 +131,19 @@ test("toasts pause expiry, cap current notices, restore action focus, and clear 
   const undo = page.getByRole("button", { name: "Undo archive" });
   await expect(undo).toHaveAttribute("data-shape", "icon");
   await expect(undo).toHaveText("");
+  for (const [width, target] of [[1280, 24], [360, 44]] as const) {
+    await page.setViewportSize({ width, height: 900 });
+    const titleBox = await notice.locator(".pk-toast-title").boundingBox();
+    const undoBox = await undo.boundingBox();
+    const closeBox = await notice.getByRole("button", { name: "Dismiss notification" }).boundingBox();
+    if (!titleBox || !undoBox || !closeBox) throw new Error("Missing inline toast controls");
+    expect(undoBox.width).toBe(target);
+    expect(undoBox.height).toBe(target);
+    expect(undoBox.y + undoBox.height / 2).toBeCloseTo(titleBox.y + titleBox.height / 2, 1);
+    expect(undoBox.x + undoBox.width).toBeLessThanOrEqual(closeBox.x);
+    expect(await notice.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+  }
+  await page.setViewportSize({ width: 1280, height: 900 });
   await undo.focus();
   await expect(page.getByRole("tooltip", { name: "Undo archive" })).toBeVisible();
   await undo.press("Escape");

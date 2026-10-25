@@ -60,7 +60,7 @@ export function ProjectForm() {
 
 Provide your own submit handler and data storage. TextField and TextareaField associate labels, hints, and errors with their native controls and preserve additional `aria-describedby` IDs. A loading Button preserves its accessible name and width while disabling interaction. Use ButtonLink for navigation and keep ordinary button semantics for actions.
 
-Button and ButtonLink accept `startIcon` and `endIcon` for decorative icons beside a wrapping label, and `fullWidth` to fill their container. Use `shape="icon"` with one glyph child and an `aria-label` or `aria-labelledby` for a square control. Icon shape takes precedence over `fullWidth`. Icon controls use the selected 32/40/48px size on desktop and at least 44px on narrow or coarse-pointer screens. Pass `aria-pressed` and your own state handler for toggle actions. A caller-provided `aria-busy` is preserved; `loading` also disables a Button and displays its spinner.
+Button and ButtonLink accept `startIcon` and `endIcon` for decorative icons beside a wrapping label, and `fullWidth` to fill their container. Use `shape="icon"` with one glyph child and an `aria-label` or `aria-labelledby` for a square control. Icon shape takes precedence over `fullWidth`. Sizes `xs`, `sm`, `md` and `lg` produce 24/32/40/48px icon controls on desktop and at least 44px on narrow or coarse-pointer screens. Use `xs` with a 16px glyph and `variant="ghost"` for compact inline utilities. Pass `aria-pressed` and your own state handler for toggle actions. A caller-provided `aria-busy` is preserved; `loading` also disables a Button and displays its spinner.
 
 Set theme attributes on the document root:
 

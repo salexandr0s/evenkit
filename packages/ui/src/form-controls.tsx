@@ -141,7 +141,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(functi
         aria-describedby={[describedBy, hasResults ? resultsId : undefined].filter(Boolean).join(" ") || undefined}
         onChange={event => { onChange?.(event); if (!event.defaultPrevented) change(event.currentTarget.value); }}
         startAdornment={<SearchIcon size="sm" />}
-        endAdornment={query && !disabled && !readOnly ? <Button type="button" className="pk-field-action" size="sm" variant="ghost" shape="icon" aria-label={clearLabel} onClick={clear}><XIcon size="sm" /></Button> : null}
+        endAdornment={query && !disabled && !readOnly ? <Button type="button" className="pk-field-action" size="xs" variant="ghost" shape="icon" aria-label={clearLabel} onClick={clear}><XIcon size="sm" /></Button> : null}
       />
       {hasResults ? <p className="pk-field-hint pk-search-results" id={resultsId} role="status">{results}</p> : null}
     </div>
@@ -159,7 +159,7 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(fu
   const [visible, setVisible] = useState(false);
   const { input, setInput } = useInputHandle(ref);
   return <TextField {...props} ref={setInput} fieldClassName={classes("pk-password-field", fieldClassName)} type={visible ? "text" : "password"} disabled={disabled} readOnly={readOnly}
-    endAdornment={<TooltipProvider><Tooltip><TooltipTrigger asChild><Button className="pk-field-action pk-password-action" size="sm" variant="ghost" shape="icon" aria-label={visible ? hideLabel : showLabel} aria-pressed={visible} disabled={disabled}
+    endAdornment={<TooltipProvider><Tooltip><TooltipTrigger asChild><Button className="pk-field-action pk-password-action" size="xs" variant="ghost" shape="icon" aria-label={visible ? hideLabel : showLabel} aria-pressed={visible} disabled={disabled}
       onMouseDown={event => event.preventDefault()} onClick={() => {
         const start = input.current?.selectionStart ?? null;
         const end = input.current?.selectionEnd ?? null;

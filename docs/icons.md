@@ -21,6 +21,8 @@ Icons are decorative by default. Use `shape="icon"` for a square icon button and
 
 Use icon buttons for familiar actions whose context is visible, such as copying a code block, downloading a file, revealing a password, or undoing an archive notice. Show the action name in a shared tooltip on hover and keyboard focus. Keep visible labels for primary actions, critical confirmations, recovery instructions, and choices an icon cannot explain. Use `Undo2Icon` to reverse an action, `RotateCcwIcon` to retry, and `EyeIcon` / `EyeOffIcon` to show or hide a password.
 
+Place utility icons inline with the content or action row they belong to. Use `size="xs" variant="ghost" shape="icon"` with a `size="sm"` glyph: the desktop control is 24px with a 16px icon and no visible box at rest. Narrow screens and coarse pointers expand the target to 44px while keeping the glyph small. Larger standalone actions can use the existing button sizes.
+
 Use `UserIcon` for one person, an account, or a profile. Use `UsersIcon` for a team or group. The silhouettes differ, so a person row does not look like the destination for the whole team.
 
 ```tsx
