@@ -12,7 +12,9 @@ import { classes } from "./classes.js";
 import { DataTableCell } from "./data-table-cell.js";
 import { EmptyState, Spinner } from "./feedback.js";
 import { Input, Label } from "./field.js";
-import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, ChevronLeftIcon, ChevronRightIcon, CircleAlertIcon, InboxIcon, SearchIcon, XIcon } from "./icons.js";
+import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, CircleAlertIcon, InboxIcon, SearchIcon, XIcon } from "./icons.js";
+import { Pagination } from "./navigation.js";
+import { Checkbox } from "./selection-controls.js";
 import { Select } from "./select.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
@@ -73,27 +75,6 @@ export interface DataTableProps<T extends object> {
   emptyAction?: ReactNode;
   toolbar?: ReactNode;
   className?: string;
-}
-
-interface SelectionCheckboxProps {
-  label: string;
-  checked: boolean;
-  indeterminate?: boolean;
-  onChange: (event: unknown) => void;
-  disabled: boolean;
-}
-
-function SelectionCheckbox({ label, checked, indeterminate = false, onChange, disabled }: SelectionCheckboxProps) {
-  return (
-    <label className="pk-data-table-checkbox">
-      <input
-        type="checkbox" aria-label={label} checked={checked} disabled={disabled}
-        aria-checked={indeterminate ? "mixed" : checked}
-        ref={(element) => { if (element) element.indeterminate = indeterminate; }}
-        onChange={onChange}
-      />
-    </label>
-  );
 }
 
 export function DataTable<T extends object>({
@@ -199,7 +180,7 @@ export function DataTable<T extends object>({
         <table>
           <caption>{caption}</caption>
           <thead><tr>
-            {selection ? <th scope="col" className="pk-data-table-selection"><SelectionCheckbox label="Select all rows on this page" checked={table.getIsAllPageRowsSelected()} indeterminate={table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected()} onChange={table.getToggleAllPageRowsSelectedHandler()} disabled={controlsDisabled || rows.length === 0} /></th> : null}
+            {selection ? <th scope="col" className="pk-data-table-selection"><Checkbox className="pk-data-table-checkbox" aria-label="Select all rows on this page" checked={table.getIsAllPageRowsSelected() ? true : table.getIsSomePageRowsSelected() ? "indeterminate" : false} onCheckedChange={checked => table.toggleAllPageRowsSelected(checked === true)} disabled={controlsDisabled || rows.length === 0} /></th> : null}
             {columns.map((column) => {
               const engineColumn = table.getColumn(column.id);
               const sorted = engineColumn?.getIsSorted() ?? false;
@@ -215,7 +196,7 @@ export function DataTable<T extends object>({
               : hasError ? <tr><td colSpan={columnCount}><div role="alert"><EmptyState size="sm" icon={<CircleAlertIcon />} title="Records could not be loaded" description={error} action={onRetry ? <Button size="sm" variant="outline" onClick={() => { scrollRef.current?.focus(); onRetry(); }}>Try again</Button> : undefined} /></div></td></tr>
                 : total === 0 ? <tr><td colSpan={columnCount}><EmptyState size="sm" icon={data.length === 0 ? <InboxIcon /> : <SearchIcon />} title={data.length === 0 ? emptyTitle : "No matching records"} description={data.length === 0 ? emptyDescription : "Try a different search or clear the current search."} action={data.length === 0 ? emptyAction : <Button size="sm" variant="outline" onClick={resetSearch}>Clear search</Button>} /></td></tr>
                   : rows.map((row) => <tr key={row.id} data-selected={row.getIsSelected() || undefined}>
-                    {selection ? <td className="pk-data-table-selection"><SelectionCheckbox label={`Select ${selection.getRowLabel?.(row.original) ?? String(columns[0]?.accessor(row.original) ?? row.id)}`} checked={row.getIsSelected()} onChange={row.getToggleSelectedHandler()} disabled={false} /></td> : null}
+                    {selection ? <td className="pk-data-table-selection"><Checkbox className="pk-data-table-checkbox" aria-label={`Select ${selection.getRowLabel?.(row.original) ?? String(columns[0]?.accessor(row.original) ?? row.id)}`} checked={row.getIsSelected()} onCheckedChange={checked => row.toggleSelected(checked === true)} /></td> : null}
                     {columns.map((column) => <td key={column.id} data-align={column.align ?? "start"}>{column.cell ? <div className="pk-data-table-cell" data-overflow="custom">{column.cell(row.original)}</div> : <DataTableCell value={column.accessor(row.original)} overflow={column.overflow ?? "truncate"} />}</td>)}
                   </tr>)}
           </tbody>
@@ -226,14 +207,8 @@ export function DataTable<T extends object>({
         <div ref={paginationRef} className="pk-data-table-pagination">
           <div className="pk-data-table-page-size"><Label htmlFor={`${id}-size`}>Rows per page</Label><Select ref={pageSizeRef} id={`${id}-size`} controlSize="sm" value={String(pageSize)} options={sizeOptions} disabled={controlsDisabled} onValueChange={(value) => { table.setPageSize(Number(value)); table.firstPage(); }} /></div>
           <span>{unavailable ? "Page unavailable" : pageResetPending ? "Updating page" : `Page ${Math.min(pageIndex + 1, Math.max(1, table.getPageCount()))} of ${Math.max(1, table.getPageCount())}`}</span>
-          <Tooltip>
-            <TooltipTrigger asChild><Button size="sm" shape="icon" variant="outline" aria-label="Previous page" disabled={controlsDisabled || !table.getCanPreviousPage()} onClick={() => table.previousPage()}><ChevronLeftIcon size="sm" /></Button></TooltipTrigger>
-            <TooltipContent>Previous page</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild><Button size="sm" shape="icon" variant="outline" aria-label="Next page" disabled={controlsDisabled || !table.getCanNextPage()} onClick={() => table.nextPage()}><ChevronRightIcon size="sm" /></Button></TooltipTrigger>
-            <TooltipContent>Next page</TooltipContent>
-          </Tooltip>
+          <Pagination compact showStatus={false} page={pageIndex + 1} pageCount={Math.max(1, table.getPageCount())} disabled={controlsDisabled}
+            onPageChange={page => table.setPageIndex(page - 1)} />
         </div>
       </div>
     </div></TooltipProvider>

@@ -1,0 +1,167 @@
+import { expect, test } from "@playwright/test";
+
+test("tabs skip disabled choices, preserve host state, and support manual activation", async ({ page }) => {
+  await page.goto("/#tabs");
+  const overview = page.getByRole("tab", { name: "Overview", exact: true });
+  const activity = page.getByRole("tab", { name: "Activity", exact: true });
+  await page.getByRole("textbox", { name: "Project title" }).fill("Launch notes");
+  await page.getByRole("button", { name: "Add activity note" }).click();
+  await overview.focus();
+  await overview.press("ArrowRight");
+  await expect(activity).toBeFocused();
+  await expect(activity).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tabpanel", { name: "Activity", exact: true })).toContainText("1 local note was added");
+  await activity.press("ArrowLeft");
+  await expect(overview).toBeFocused();
+  await expect(page.getByRole("textbox", { name: "Project title" })).toHaveValue("Launch notes");
+  const summary = page.getByRole("tab", { name: "Summary", exact: true });
+  const history = page.getByRole("tab", { name: "History", exact: true });
+  await summary.focus();
+  await summary.press("ArrowRight");
+  await expect(history).toBeFocused();
+  await expect(summary).toHaveAttribute("aria-selected", "true");
+  await history.press("Enter");
+  await expect(history).toHaveAttribute("aria-selected", "true");
+  const rtlFirst = page.getByRole("tab", { name: "التفاصيل", exact: true });
+  await rtlFirst.focus();
+  await rtlFirst.press("ArrowLeft");
+  await expect(page.getByRole("tab", { name: "السجل", exact: true })).toBeFocused();
+});
+
+test("accordion and disclosure expose working expansion with keyboard recovery", async ({ page }) => {
+  await page.goto("/#accordion");
+  const scope = page.getByRole("button", { name: "What belongs in the project?" });
+  const access = page.getByRole("button", { name: "Who can access the workspace?" });
+  await expect(scope).toHaveAttribute("aria-expanded", "true");
+  await scope.focus();
+  await scope.press("ArrowDown");
+  await expect(access).toBeFocused();
+  await access.press("Enter");
+  await expect(scope).toHaveAttribute("aria-expanded", "false");
+  await expect(access).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByRole("button", { name: "Archive policy unavailable" })).toBeDisabled();
+  await access.press("ArrowDown");
+  await expect(scope).toBeFocused();
+  await page.getByRole("button", { name: "Files", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Notes", exact: true })).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByRole("button", { name: "Files", exact: true })).toHaveAttribute("aria-expanded", "true");
+  await page.goto("/#collapsible");
+  const trigger = page.getByRole("button", { name: "Show project details" });
+  await trigger.focus();
+  await trigger.press("Space");
+  const hide = page.getByRole("button", { name: "Hide project details" });
+  await expect(hide).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByText("PROJECT-204", { exact: true })).toBeVisible();
+  await hide.press("Space");
+  await expect(page.getByRole("button", { name: "Show project details" })).toBeFocused();
+  await expect(page.getByText("PROJECT-204", { exact: true })).toBeHidden();
+});
+
+test("pagination maintains boundaries, disables busy controls, and uses host router links", async ({ page }) => {
+  await page.goto("/#pagination");
+  const pagination = page.getByRole("navigation", { name: "Project pages", exact: true });
+  await expect(pagination.getByRole("button", { name: "Previous page" })).toBeDisabled();
+  await pagination.getByRole("button", { name: "Next page" }).click();
+  await expect(pagination.getByRole("status")).toHaveText("Page 2 of 12");
+  await pagination.getByRole("button", { name: "Page 12", exact: true }).click();
+  await expect(pagination.getByRole("button", { name: "Next page" })).toBeDisabled();
+  await expect(pagination.getByRole("status")).toHaveText("Page 12 of 12");
+  await page.getByRole("button", { name: "Simulate updating" }).click();
+  await expect(pagination).toHaveAttribute("aria-busy", "true");
+  for (const button of await pagination.getByRole("button").all()) await expect(button).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Finish updating" })).toBeFocused();
+  await page.getByRole("button", { name: "Finish updating" }).click();
+  const linked = page.getByRole("navigation", { name: "Linked project pages" });
+  await linked.getByRole("link", { name: "Page 1", exact: true }).click();
+  await expect(pagination.getByRole("status")).toHaveText("Page 1 of 12");
+  await page.getByRole("button", { name: "Show empty results" }).click();
+  await expect(pagination.getByRole("status")).toHaveText("Page 0 of 0");
+  await expect(pagination.getByRole("button", { name: "Next page" })).toBeDisabled();
+  await page.getByRole("button", { name: "Restore results" }).click();
+  await expect(pagination.getByRole("button", { name: "Next page" })).toBeEnabled();
+});
+
+test("navbar drawer dismisses, closes on expansion, and recovers focus across container sizes", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/#navbar");
+  const frame = page.locator(".navigation-preview-navbar-frame");
+  await page.getByRole("button", { name: "Use narrow preview" }).click();
+  const trigger = frame.getByRole("button", { name: "Open navigation" });
+  await expect(trigger).toBeVisible();
+  await trigger.click();
+  const dialog = page.getByRole("dialog", { name: "Preview navigation" });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("link", { name: "Team", exact: true }).click();
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await expect(frame.getByRole("heading", { name: "Team", exact: true })).toBeVisible();
+  await trigger.click();
+  await page.evaluate(() => document.querySelector(".navigation-preview-navbar-frame")?.removeAttribute("data-narrow"));
+  await expect(dialog).toBeHidden();
+  const teamLink = frame.locator(".pk-navbar-desktop").getByRole("link", { name: "Team", exact: true });
+  await expect(teamLink).toBeVisible();
+  await expect(frame.locator(".pk-navbar-desktop a:focus")).toHaveCount(1);
+  await teamLink.focus();
+  await page.evaluate(() => document.querySelector(".navigation-preview-navbar-frame")?.setAttribute("data-narrow", "true"));
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+  // An ordinary focus move to a host control must cancel navbar focus intent.
+  const rtlAction = page.getByRole("button", { name: "Preview RTL", exact: true });
+  await rtlAction.focus();
+  await page.evaluate(() => document.querySelector(".navigation-preview-navbar-frame")?.removeAttribute("data-narrow"));
+  await expect(rtlAction).toBeFocused();
+  await page.evaluate(() => document.querySelector(".navigation-preview-navbar-frame")?.setAttribute("data-narrow", "true"));
+  await expect(rtlAction).toBeFocused();
+  const skip = frame.getByRole("link", { name: "Skip to content", exact: true });
+  await skip.focus();
+  await expect(skip).toBeInViewport();
+  await skip.press("Enter");
+  await expect(frame.locator("#navbar-content")).toBeFocused();
+});
+
+test("navigation wraps long paths and preserves narrow and RTL geometry", async ({ page }) => {
+  await page.goto("/#breadcrumbs");
+  await page.getByRole("navigation", { name: "Breadcrumb", exact: true }).getByRole("link", { name: "Projects", exact: true }).click();
+  await expect(page.getByText("Preview destination: Projects", { exact: true })).toBeVisible();
+  for (const width of [360, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  }
+  await expect(page.getByRole("navigation", { name: "Right-to-left breadcrumb" })).toHaveCSS("direction", "rtl");
+  await page.goto("/#tabs");
+  await page.setViewportSize({ width: 360, height: 900 });
+  for (const tab of await page.getByRole("tab").all()) expect((await tab.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test("unavailable navbar destinations cannot navigate and resizing falls back to visible actions or header", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/#navbar");
+  const frame = page.locator(".navigation-preview-navbar-frame");
+  const reports = frame.locator(".pk-navbar-desktop").getByRole("link", { name: "Reports", exact: true });
+  await expect(reports).toHaveAttribute("aria-disabled", "true");
+  await expect(reports).not.toHaveAttribute("href");
+  const original = page.url();
+  await reports.click({ button: "middle", force: true });
+  expect(page.url()).toBe(original);
+  await page.getByRole("button", { name: "Use unavailable navigation" }).click();
+  await page.getByRole("button", { name: "Use narrow preview" }).click();
+  const trigger = frame.getByRole("button", { name: "Open navigation" });
+  await trigger.click();
+  const dialog = page.getByRole("dialog", { name: "Preview navigation" });
+  await expect(dialog).toBeVisible();
+  await page.evaluate(() => document.querySelector(".navigation-preview-navbar-frame")?.removeAttribute("data-narrow"));
+  await expect(dialog).toBeHidden();
+  await expect(frame.getByRole("button", { name: "Create project", exact: true })).toBeFocused();
+  await page.getByRole("button", { name: "Hide global action" }).click();
+  await page.evaluate(() => document.querySelector(".navigation-preview-navbar-frame")?.setAttribute("data-narrow", "true"));
+  await expect(trigger).toBeVisible();
+  await trigger.click();
+  await expect(dialog).toBeVisible();
+  await page.evaluate(() => document.querySelector(".navigation-preview-navbar-frame")?.removeAttribute("data-narrow"));
+  await expect(dialog).toBeHidden();
+  await expect(frame.locator(".pk-navbar")).toBeFocused();
+});

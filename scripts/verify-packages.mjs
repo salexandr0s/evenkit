@@ -97,6 +97,8 @@ async function smoke(kind, directory) {
     if (kind === "next" && !html.includes("Packed package check")) throw new Error("Next server did not render the package fixture.");
     if (kind === "next" && !html.includes("Packed projects")) throw new Error("Next server did not render the client shell/table fixture.");
     if (kind === "next" && !html.includes("Package assistant")) throw new Error("Next server did not render the client chat fixture.");
+    if (kind === "next" && !html.includes("Priority package controls")) throw new Error("Next server did not render the new priority control families.");
+    if (kind === "next" && !html.includes("Packed editable projects")) throw new Error("Next server did not render the independently copied page blocks.");
     if (kind === "vite" && !html.includes('id="root"')) throw new Error("Vite did not serve the package fixture.");
     const stylesheets = [...html.matchAll(/<link[^>]+href="([^"]+\.css[^"]*)"/g)].map(match => match[1]);
     const styles = await Promise.all(stylesheets.map(async path => {
@@ -105,8 +107,8 @@ async function smoke(kind, directory) {
       return css.text();
     }));
     const css = styles.join("\n");
-    if (!["--pk-color-accent", ".pk-button", ".pk-icon", ".pk-tooltip-content", ".pk-admin-shell", ".pk-data-table", ".pk-chat"].every(selector => css.includes(selector))) {
-      throw new Error(`${kind} fixture did not ship token, control, icon, tooltip, shell, table, and chat CSS.`);
+    if (!["--pk-color-accent", ".pk-button", ".pk-icon", ".pk-tooltip-content", ".pk-admin-shell", ".pk-data-table", ".pk-chat", ".pk-card", ".pk-check-control", ".pk-combobox", ".pk-tabs", ".pk-menu", ".pk-filter-bar"].every(selector => css.includes(selector))) {
+      throw new Error(`${kind} fixture did not ship the existing and priority component styles.`);
     }
     smokeResult = { httpStatus: response.status, stylesheetCount: stylesheets.length };
   } catch (error) {
@@ -149,6 +151,8 @@ try {
     console.log(`Checking packed packages in independent ${kind} consumer…`);
     const directory = join(scratch, kind);
     await cp(join(root, "fixtures", kind), directory, { recursive: true });
+    await cp(join(root, "fixtures", "priority-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "priority-fixture.tsx"));
+    await cp(join(root, "registry", "blocks"), join(directory, kind === "next" ? "app" : "", "blocks"), { recursive: true });
     const manifestPath = join(directory, "package.json");
     const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
     manifest.dependencies["@project-kit/tokens"] = `file:${tarballs.tokens}`;

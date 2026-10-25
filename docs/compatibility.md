@@ -1,6 +1,6 @@
 # Tested compatibility
 
-Integrated component, theme, and chat review, 25 October 2026. These packages are local pilots; no production application has adopted them yet.
+Integrated component, theme, chat and 48-priority review, 25 October 2026. These packages are local pilots; no production application has adopted them yet.
 
 | Area | Version/environment exercised | Evidence |
 |---|---|---|
@@ -18,7 +18,7 @@ Integrated component, theme, and chat review, 25 October 2026. These packages ar
 | Chat | Kit ChatWidget and ChatPanel | Draft persistence, IME/multiline input, stop/retry, streaming scroll position, answer copying, narrow/short RTL layouts, and focus restoration |
 | Vite | 8.3.5 | Catalog build; independent packed consumer builds controls, shell/table, and ChatWidget and serves their CSS |
 | Next.js | 16.4.3, App Router | Independent packed consumer build, server-rendered controls/shell/table/ChatPanel, and CSS HTTP smoke |
-| Browser | Chromium through Playwright 1.64.1 | 39 passing journeys in 16 files, covering the catalog and timer-driven table host regressions |
+| Browser | Chromium through Playwright 1.64.1 | 127 passing journeys, covering all priority routes, component interactions and existing regression suites |
 | Layout widths | 360, 768, 1024, 1440, 1700 CSS pixels | Overflow checks, touch targets, container navigation, resize cleanup, short windows, and RTL |
 | Themes | Neutral, Grove, Graphite, Linen, Ocean, Dusk, Clay, Rose; light, dark, and system | 560 contrast pairs; gallery selection, persistence, computed colours/fonts, system precedence, and dialog inheritance |
 
@@ -27,6 +27,18 @@ The declared Node minimum is 22.12.0; the current verification ran on Node 26.12
 On 25 October 2026, `npm run verify` passed against the integrated checkout: production build, package/catalog/test type checks, ESLint, eight token tests, and all 39 Chromium journeys. All 14 copied catalog snippets also passed strict TypeScript checks, including unused declarations and CSS side-effect imports.
 
 `npm run verify:packages` passed for independent Vite and Next.js consumers. Both production builds served HTTP 200 and delivered token, control, icon, tooltip, shell, table, and chat CSS. The Next.js response also contained the rendered shell, table, and chat content. Both temporary servers stopped and the allocated directory was removed. The local run records are `.artifacts/integration-verify.log` and `.artifacts/integration-package-verification.json`.
+
+## Priority expansion verification
+
+All 48 Next items have a public component or documented recipe/editable block, an individual catalog entry, complete usage and per-family contracts. The catalog now has 62 entries, with 211 resolved variables and the existing eight themes/560 contrast pairs. The [completion tracker](./priority-build-plan.md) links each item to source and evidence.
+
+The final source passed production build, configured package/catalog/test TypeScript checks, ESLint, eight token tests and all 127 Chromium journeys. Every priority route was checked at 360/768/1024/1440px in all eight themes and both color modes. All 62 copied usage examples passed strict TypeScript with unused-code and CSS side-effect checks; all 48 inventory IDs map exactly once.
+
+Independent packed Vite and Next consumers built and served HTTP 200 with the new stylesheet families. The fixtures also copied the editable record/recovery blocks independently; Next server rendering included their content. Owned servers and temporary consumers were cleaned. Seventeen representative captures had no runtime errors; a separate reviewer inspected seven component/mobile captures and found no actionable visual issue.
+
+Evidence: `.artifacts/priority-build-confirm.log`, `priority-typecheck-confirm.log`, `priority-lint-confirm.log`, `priority-examples-confirm.log`, `priority-release-browser.log`, `priority-token-final.log`, `priority-packages-confirm.log`, `catalog-examples.json`, `package-verification.json`, and `priority-visual/report.json`. Source hashes are in `priority-verification-inputs.json`.
+
+Combobox/Autocomplete use Base UI 1.9.0. Disabled options remain available for keyboard discovery but cannot be selected. Their dialog composition uses the dialog content as its popup container and a Radix DismissableLayer 1.2.1 bridge. Native field/group validation, controlled resets, clipboard failure, stale async results, file cancellation/removal, popup dismissal and responsive focus recovery have dedicated journeys. These are UI behaviors; storage, server access, routing and persistence remain application responsibilities.
 
 ## Supported boundaries
 

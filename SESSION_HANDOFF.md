@@ -2,6 +2,20 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Completed 48-priority build
+
+All 48 Next priorities are implemented and verified. The catalog has 62 entries with complete copied examples. Six public UI modules cover foundations, selection/progress, forms, navigation, overlays, data/files; editable record and recovery blocks are in `registry/blocks`. Every ID has source, contract and verification evidence in `docs/priority-build-plan.md`. No required implementation or verification work remains for this goal.
+
+Final checks passed: production build; configured TypeScript and ESLint; eight token tests; all 127 Chromium journeys; all 62 copied snippets and exactly 48 priority mappings; independent packed Next/Vite builds, SSR/HTTP/CSS and copied-block checks. Every priority route fits all eight themes, both modes and 360/768/1024/1440px layouts. Seventeen representative captures had no runtime errors; independent review of seven captures found no actionable visual defect. The kit has 211 resolved variables and 560 validated contrast pairs.
+
+Review resolved native required validation/focus, controlled choice-label and search clearing, popup Escape ordering, responsive Navbar focus, compact pagination hints, deferred filter-removal focus, native file cancellation/removal state, and stale async results. C07 deliberately follows Base UI's disabled-option discovery model: disabled rows may be highlighted and announced but cannot be selected. Its dialog popup uses the parent content as container plus the shared Radix DismissableLayer.
+
+Evidence: `.artifacts/priority-build-confirm.log`, `priority-typecheck-confirm.log`, `priority-lint-confirm.log`, `priority-examples-confirm.log`, `priority-release-browser.log`, `priority-token-final.log`, `priority-packages-confirm.log`, `catalog-examples.json`, `package-verification.json`, and `priority-visual/report.json`. The 98 source hashes in `priority-verification-inputs.json` remained unchanged during the final checks. Owned diagnostic/fixture servers and temporary consumers were cleaned; the existing 5173 preview remains available.
+
+Firefox/Safari, physical mobile keyboards and production adoption remain unverified. Packages remain local/unpublished. Other chats' dialog/dropdown/tooltip commits through `2ba4a8b` and their pre-existing design-pass edits were preserved. Inspect `git status --short` for those remaining parallel changes; the goal's commit isolates its own source, docs and tests.
+
+Resume reference: `cat docs/priority-build-plan.md`, `cat docs/compatibility.md`, `git log -1 --oneline`.
+
 ## Shared dialog design: 25 October 2026
 
 Dialogs now share an elevated frame, more space between sections, an inset close control and a separated action footer. Shared surface/backdrop motion opens in 160ms and closes in 120ms. ChatWidget now uses the same Dialog wrapper as the catalog and AdminShell drawers, retaining its compact/maximized viewport layout and Escape order. Drawer motion uses logical direction with build-safe RTL selectors. All visual values reuse existing tokens.

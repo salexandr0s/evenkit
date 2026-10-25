@@ -1,6 +1,6 @@
 # Shared project kit
 
-Reusable tokens, React controls, icons, an admin shell, data tables, and AI chat, with a local component catalog. This repository lives in the requested `design-tokens` folder. Version 0.1.0 is a pilot for evaluation in new projects.
+Reusable tokens, React controls, layouts, forms, navigation, feedback, data and file controls, editable page blocks, and AI chat, with a local component catalog. This repository lives in the requested `design-tokens` folder. Version 0.1.0 is a pilot for evaluation in new projects.
 
 ## Start the catalog
 
@@ -13,7 +13,7 @@ npm run dev
 
 Open `http://127.0.0.1:5173`. The dev command builds the packages first. If you edit package source while the catalog is running, run `npm run build:packages` to update its public artifacts. The catalog itself has Vite hot reload.
 
-The catalog includes themes, design tokens, icons, buttons, fields, custom select, dialog, tooltips, status, loading, empty state, admin shell, data table, and AI chat. Open `/#themes` to compare eight palettes and apply one across the library. The catalog follows your system appearance until you choose light or dark with the sun/moon button; your choice is remembered. Forms, navigation, table state changes, and chat replies are local previews.
+The catalog includes the original 14 sections plus 48 priority examples for layouts, selection controls, forms, navigation, overlays, feedback, files and editable page blocks. Search a component name or an inventory ID such as `B01`. Open `/#themes` to compare eight palettes and apply one across the library. The catalog follows your system appearance until you choose light or dark with the sun/moon button; your choice is remembered. Forms, navigation, table state changes, uploads and chat replies are local previews.
 
 The catalog uses AdminShell for its own navigation. Each entry has an icon. Drag the sidebar edge or use the single header button to expand, minimise, or hide it; the display mode is remembered. Search stays in the header, and narrow screens use a navigation drawer.
 
@@ -22,7 +22,7 @@ The catalog uses AdminShell for its own navigation. Each entry has an icon. Drag
 | Package | Contents | Public imports |
 |---|---|---|
 | `@project-kit/tokens` | Typed scales, palettes, eight themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
-| `@project-kit/ui` | Controls and feedback, 60 Lucide icons, responsive AdminShell, TanStack-backed DataTable, ChatWidget and ChatPanel | Main export, `/css` |
+| `@project-kit/ui` | Controls, layouts, forms, navigation, overlays, files and feedback; 60 Lucide icons, AdminShell, DataTable and chat | Main export, `/css` |
 | `@project-kit/catalog` | Searchable examples and usage reference | Local application |
 
 Both libraries export built files and declarations. UI styles use `pk-` classes and `--pk-` variables, with no global reset. Consumers need React 19 and React DOM 19; no Tailwind, Next.js, database, or authentication dependency is required by the UI package.
@@ -289,4 +289,12 @@ Basic controls and compositions are original kit code using the internal contrac
 
 Packages are local and unpublished. Internal code remains unlicensed for public distribution; dependency licenses retain their own terms. The kit maintainer owns shared interfaces and releases, while consuming projects own adoption, product rules, and deployment.
 
-Authentication, uploads, registry distribution, a server table adapter, and application migrations remain later phases from the [implementation plan](IMPLEMENTATION_PLAN.md). See [compatibility](docs/compatibility.md) for tested versions and limits.
+Authentication services, private storage integration, registry distribution, a server table adapter, and application migrations remain later phases from the [implementation plan](IMPLEMENTATION_PLAN.md). File selection and editable list/create/edit/recovery source blocks are included in the priority expansion. See [compatibility](docs/compatibility.md) for tested versions and limits.
+
+## Priority component guide
+
+The [48-item tracker](docs/priority-build-plan.md) records implementation and verification by inventory ID. API contracts, composition examples and host responsibilities are documented in [foundations](docs/foundations.md), [selection and progress](docs/selection-controls.md), [forms](docs/form-controls.md), [navigation](docs/navigation.md), [overlays](docs/overlays.md), and [data, files and pages](docs/data-workflows.md).
+
+The editable blocks are [record-workflow.tsx](registry/blocks/record-workflow.tsx) and [recovery-page.tsx](registry/blocks/recovery-page.tsx). Copy the relevant file into the consuming application and import it locally; it imports maintained controls from the installed UI package. Supply records, save/retry callbacks and recovery actions. Record saves receive an AbortSignal, and the example host uses fictional local data. Storage, authorization and routing policies remain application code.
+
+Run `npm run verify:examples` to compile the copied catalog examples and check all 48 ID mappings. Run `npm run verify:packages` after building to install packed packages in independent Vite/Next consumers, copy the editable blocks, and check builds, server rendering and delivered styles.

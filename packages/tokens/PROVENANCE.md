@@ -21,3 +21,7 @@ The inherited contract is internal source material. Package metadata remains `UN
 - The admin foundation adds icon sizes of 16/20/24px with a unitless stroke width of 2, header heights of 56px (desktop) and 52px (mobile), a 36px dropdown option height, and compact/default table row heights of 36/44px. The compact dropdown and table values reflect the user's density feedback. Existing control heights (32/40/48px), the 44px touch target, and 260px sidebar remain unchanged.
 
 Semantic colors, typography overrides, and radius overrides are emitted from the typed source and validation layer. CSS and JSON are generated artifacts and should not be edited directly.
+
+## Priority component extensions
+
+The action-menu widths (180px minimum, 320px maximum) and toast width (360px) follow the inherited `dropdown.v1` and `toast.v1` contracts. Menu scrolling uses the same 320px cap. Toast lifetimes of 3000/3500/4500/6000ms for success/info/warning/error are explicit feedback tokens; they control message lifetime rather than animation duration. Existing palettes and visual scales remain unchanged.

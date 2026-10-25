@@ -230,6 +230,9 @@ export const foundation = {
     "sidebar": "260px",
     "sidebarCollapsed": "72px",
     "tooltip": "280px",
+    "menuMin": "180px",
+    "menuMax": "320px",
+    "toast": "360px",
     "content": "1280px",
     "reading": "720px",
     "form": "480px",
@@ -262,6 +265,14 @@ export const foundation = {
   },
   "spinner": {
     "size": "16px"
+  },
+  "feedback": {
+    "toastDuration": {
+      "success": "3000ms",
+      "info": "3500ms",
+      "warning": "4500ms",
+      "error": "6000ms"
+    }
   }
 } as const;
 

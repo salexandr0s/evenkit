@@ -15,7 +15,8 @@
     "test": "vitest run",
     "test:browser": "playwright test",
     "verify": "npm run build && npm run typecheck && npm run lint && npm test && npm run test:browser",
-    "verify:packages": "node scripts/verify-packages.mjs"
+    "verify:packages": "node scripts/verify-packages.mjs",
+    "verify:examples": "node scripts/verify-catalog-examples.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

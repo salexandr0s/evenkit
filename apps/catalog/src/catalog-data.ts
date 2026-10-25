@@ -1,15 +1,13 @@
-export interface CatalogEntry {
-  id: string;
-  name: string;
-  group: "Foundations" | "Controls" | "Compositions" | "Feedback";
-  description: string;
-  tags: readonly string[];
-  source: string;
-  sourceUrl: string;
-  usage: string;
-}
+import type { CatalogEntry } from "./catalog-types.js";
+import { foundationsEntries } from "./foundations-entries.js";
+import { selectionEntries } from "./selection-entries.js";
+import { formsEntries } from "./forms-entries.js";
+import { navigationEntries } from "./navigation-entries.js";
+import { overlaysEntries } from "./overlays-entries.js";
+import { workflowsEntries } from "./workflows-entries.js";
+export type { CatalogEntry } from "./catalog-types.js";
 
-export const entries: readonly CatalogEntry[] = [
+const baseEntries: readonly CatalogEntry[] = [
   {
     id: "themes",
     name: "Themes",
@@ -150,6 +148,11 @@ export const entries: readonly CatalogEntry[] = [
     sourceUrl: "https://ui.shadcn.com/docs/components/radix/empty",
     usage: "\"use client\";\n\nimport \"@project-kit/tokens/css\";\nimport \"@project-kit/ui/css\";\nimport { Button, EmptyState, FolderIcon } from \"@project-kit/ui\";\n\nexport function EmptyProjects({ onCreate, onChooseTemplate }: {\n  onCreate: () => void;\n  onChooseTemplate: () => void;\n}) {\n  return (\n    <EmptyState\n      icon={<FolderIcon />} title=\"No projects yet\" titleAs=\"h3\"\n      size=\"sm\" align=\"start\"\n      description=\"Create a project or start from a template.\"\n      action={<Button onClick={onCreate}>Create project</Button>}\n      secondaryAction={\n        <Button variant=\"outline\" onClick={onChooseTemplate}>Use a template</Button>\n      }\n    />\n  );\n}\n\n// Choose a heading level that fits your page.\n// Your app owns announcements and focus when content is replaced.\n"
   }
+];
+
+export const entries: readonly CatalogEntry[] = [
+  ...baseEntries, ...foundationsEntries, ...selectionEntries, ...formsEntries,
+  ...navigationEntries, ...overlaysEntries, ...workflowsEntries,
 ];
 
 export const groups = ["Foundations", "Controls", "Compositions", "Feedback"] as const;

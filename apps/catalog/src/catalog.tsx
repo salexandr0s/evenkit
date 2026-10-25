@@ -8,6 +8,12 @@ import {
   TooltipTrigger, type AdminLinkProps, type AdminNavGroup, type AdminSidebarState,
 } from "@project-kit/ui";
 import { entries, groups } from "./catalog-data";
+import { foundationsEntries } from "./foundations-entries";
+import { selectionEntries } from "./selection-entries";
+import { formsEntries } from "./forms-entries";
+import { navigationEntries } from "./navigation-entries";
+import { overlaysEntries } from "./overlays-entries";
+import { workflowsEntries } from "./workflows-entries";
 import { CodeExample } from "./code-example";
 import { FieldPreview } from "./field-preview";
 import { EmptyPreview } from "./empty-preview";
@@ -24,6 +30,12 @@ const ShellPreview = lazy(() => import("./shell-preview").then((module) => ({ de
 const TablePreview = lazy(() => import("./table-preview").then((module) => ({ default: module.TablePreview })));
 const ChatPreview = lazy(() => import("./chat-preview").then((module) => ({ default: module.ChatPreview })));
 const TooltipPreview = lazy(() => import("./tooltip-preview").then((module) => ({ default: module.TooltipPreview })));
+const FoundationsPreview = lazy(() => import("./foundations-preview").then((module) => ({ default: module.FoundationsPreview })));
+const SelectionPreview = lazy(() => import("./selection-preview").then((module) => ({ default: module.SelectionPreview })));
+const FormsPreview = lazy(() => import("./forms-preview").then((module) => ({ default: module.FormsPreview })));
+const NavigationPreview = lazy(() => import("./navigation-preview").then((module) => ({ default: module.NavigationPreview })));
+const OverlaysPreview = lazy(() => import("./overlays-preview").then((module) => ({ default: module.OverlaysPreview })));
+const WorkflowsPreview = lazy(() => import("./workflows-preview").then((module) => ({ default: module.WorkflowsPreview })));
 
 const appearances = ["system", "light", "dark"] as const;
 const sidebarStates = ["expanded", "collapsed", "hidden"] as const;
@@ -52,6 +64,12 @@ function selectedFromHash() {
 }
 
 function Preview({ id, theme, mode, onThemeChange }: { id: string; theme: ThemeName; mode: ColorMode; onThemeChange: (theme: ThemeName) => void }) {
+  if (foundationsEntries.some(entry => entry.id === id)) return <FoundationsPreview id={id} />;
+  if (selectionEntries.some(entry => entry.id === id)) return <SelectionPreview id={id} />;
+  if (formsEntries.some(entry => entry.id === id)) return <FormsPreview id={id} />;
+  if (navigationEntries.some(entry => entry.id === id)) return <NavigationPreview id={id} />;
+  if (overlaysEntries.some(entry => entry.id === id)) return <OverlaysPreview id={id} />;
+  if (workflowsEntries.some(entry => entry.id === id)) return <WorkflowsPreview id={id} />;
   switch (id) {
     case "themes": return <ThemePreview theme={theme} mode={mode} onThemeChange={onThemeChange} />;
     case "tokens": return <TokenPreview theme={theme} mode={mode} />;
@@ -125,7 +143,7 @@ export function Catalog() {
   }, []);
 
   const search = query.trim().toLowerCase();
-  const visible = entries.filter((entry) => [entry.name, entry.group, entry.description, ...entry.tags].join(" ").toLowerCase().includes(search));
+  const visible = entries.filter((entry) => [entry.name, entry.group, entry.description, ...entry.tags, ...(entry.inventoryIds ?? [])].join(" ").toLowerCase().includes(search));
   const active = visible.find((entry) => entry.id === selectedId) ?? visible[0];
   const navigation: readonly AdminNavGroup[] = groups.flatMap((group) => {
     const items = visible.filter((entry) => entry.group === group).map((entry) => ({

@@ -1,0 +1,235 @@
+import { expect, test } from "@playwright/test";
+
+test("choice fields keep IDs separate from text and reset through native forms", async ({ page }) => {
+  await page.goto("/#combobox");
+  const team = page.getByRole("combobox", { name: "Project team", exact: true });
+  const topic = page.getByRole("combobox", { name: "Project topic", exact: true });
+  const form = page.getByRole("form", { name: "Team choice form" });
+  await expect(team).toHaveValue("Planning");
+  await team.fill("");
+  await team.press("ArrowDown");
+  await expect(team).toHaveAccessibleName("Project team");
+  await expect(page.getByRole("option", { name: "Planning", exact: true })).toHaveAttribute("data-highlighted", "");
+  await team.press("ArrowDown");
+  const unavailable = page.getByRole("option", { name: "Paused team", exact: true });
+  await expect(unavailable).toHaveAttribute("data-highlighted", "");
+  await expect(unavailable).toHaveAttribute("aria-disabled", "true");
+  const beforeUnavailable = await form.evaluate(node => new FormData(node as HTMLFormElement).get("team"));
+  await team.press("Enter");
+  await expect(team).toHaveValue("");
+  await expect(team).toHaveAttribute("aria-expanded", "true");
+  await expect(unavailable).toHaveAttribute("aria-selected", "false");
+  expect(await form.evaluate(node => new FormData(node as HTMLFormElement).get("team"))).toBe(beforeUnavailable);
+  await team.press("ArrowDown");
+  await expect(page.getByRole("option", { name: "Operations", exact: true })).toHaveAttribute("data-highlighted", "");
+  await team.press("Enter");
+  await expect(team).toHaveValue("Operations");
+  expect(await form.evaluate(node => new FormData(node as HTMLFormElement).get("team"))).toBe("operations");
+  await topic.fill("A custom project topic");
+  await topic.press("Escape");
+  await page.getByRole("button", { name: "Capture choices", exact: true }).click();
+  await expect(page.getByText("Submitted team: operations; topic: A custom project topic.", { exact: true })).toBeVisible();
+
+  await page.getByRole("button", { name: "Reset choices", exact: true }).click();
+  await expect(team).toHaveValue("Planning");
+  await expect(topic).toHaveValue("Roadmap");
+  expect(await form.evaluate(node => new FormData(node as HTMLFormElement).get("team"))).toBe("planning");
+  await page.getByRole("button", { name: "Clear project team", exact: true }).click();
+  await expect(team).toBeFocused();
+  await expect(team).toHaveValue("");
+  expect(await form.evaluate(node => new FormData(node as HTMLFormElement).get("team"))).toBe("");
+  await page.getByRole("button", { name: "Capture choices", exact: true }).click();
+  await expect(team).toBeFocused();
+  expect(await form.evaluate(node => (node as HTMLFormElement).checkValidity())).toBe(false);
+
+  await page.getByRole("button", { name: "Reset choices", exact: true }).click();
+  await team.fill("Not a team");
+  await expect(page.getByText("No matching options.", { exact: true })).toBeVisible();
+  await team.press("Escape");
+  await expect(team).toHaveValue("Planning");
+  const controlled = page.getByRole("combobox", { name: "Controlled team", exact: true });
+  await page.getByRole("button", { name: "Choose Research externally", exact: true }).click();
+  await expect(controlled).toHaveValue("Research");
+  const controlledForm = page.getByRole("form", { name: "Controlled team form" });
+  expect(await controlledForm.evaluate(node => new FormData(node as HTMLFormElement).get("controlledTeam"))).toBe("research");
+  const refresh = page.getByRole("button", { name: "Refresh team labels", exact: true });
+  await refresh.click();
+  await expect(controlled).toHaveValue("Research and discovery");
+  expect(await controlledForm.evaluate(node => new FormData(node as HTMLFormElement).get("controlledTeam"))).toBe("research");
+  await expect(refresh).toBeVisible();
+  const refreshNode = await refresh.elementHandle();
+  if (!refreshNode) throw new Error("Missing background label-refresh action.");
+  try {
+    await controlled.fill("Oper");
+    // The popup hides outside content from assistive tech, but background data can still update.
+    await refreshNode.evaluate(node => (node as HTMLButtonElement).click());
+    await expect(controlled).toHaveValue("Oper");
+    await expect(page.getByRole("option", { name: "Operations", exact: true })).toBeVisible();
+  } finally { await refreshNode.dispose(); }
+  await controlled.press("Escape");
+  await expect(controlled).toHaveValue("Research");
+  await page.getByRole("button", { name: "Reset controlled team", exact: true }).click();
+  await expect(controlled).toHaveValue("Planning");
+
+  await page.getByRole("button", { name: "Disable project team", exact: true }).click();
+  await expect(team).toBeDisabled();
+  expect(await form.evaluate(node => new FormData(node as HTMLFormElement).has("team"))).toBe(false);
+  await page.getByRole("button", { name: "Enable project team", exact: true }).click();
+  await expect(team).toHaveAttribute("aria-expanded", "false");
+  const readOnly = page.getByRole("combobox", { name: "Read-only team", exact: true });
+  await expect(readOnly).toHaveAttribute("readonly", "");
+  await readOnly.focus();
+  await expect(readOnly).toBeFocused();
+});
+
+test("search clear and password visibility preserve native input identity and focus", async ({ page }) => {
+  await page.goto("/#search-field");
+  const search = page.getByRole("searchbox", { name: "Search documents", exact: true });
+  const searchNode = await search.elementHandle();
+  if (!searchNode) throw new Error("Missing search input.");
+  await search.fill("handbook");
+  await expect(page.getByRole("list", { name: "Matching documents" }).getByRole("listitem")).toHaveCount(1);
+  await page.getByRole("button", { name: "Clear search", exact: true }).first().click();
+  await expect(search).toBeFocused();
+  await expect(search).toHaveValue("");
+  await expect(page.getByRole("list", { name: "Matching documents" }).getByRole("listitem")).toHaveCount(3);
+  expect(await search.evaluate((node, original) => node === original, searchNode)).toBe(true);
+  await searchNode.dispose();
+  const nativeSearch = page.getByRole("searchbox", { name: "Native controlled search", exact: true });
+  await nativeSearch.fill("Release");
+  await expect(page.getByText("Native query: Release.", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Clear native search", exact: true }).click();
+  await expect(nativeSearch).toHaveValue("");
+  await expect(nativeSearch).toBeFocused();
+  await expect(page.getByText("Native query: (empty).", { exact: true })).toBeVisible();
+  const saved = page.getByRole("searchbox", { name: "Saved search", exact: true });
+  await saved.fill("Changed");
+  await page.getByRole("button", { name: "Reset saved search", exact: true }).click();
+  await expect(saved).toHaveValue("Project");
+
+  await page.goto("/#password-field");
+  const password = page.locator('input[name="password"]');
+  await expect(password).toHaveAccessibleName("Account password");
+  const passwordNode = await password.elementHandle();
+  if (!passwordNode) throw new Error("Missing password input.");
+  await password.fill("sample-secret");
+  await password.evaluate(node => (node as HTMLInputElement).setSelectionRange(2, 5));
+  await page.getByRole("button", { name: "Show password", exact: true }).first().click();
+  await expect(password).toHaveAttribute("type", "text");
+  await expect(password).toHaveAttribute("autocomplete", "current-password");
+  await expect(password).toBeFocused();
+  expect(await password.evaluate((node, original) => node === original, passwordNode)).toBe(true);
+  expect(await password.evaluate(node => [(node as HTMLInputElement).selectionStart, (node as HTMLInputElement).selectionEnd])).toEqual([2, 5]);
+  await password.press("Tab");
+  const hide = page.getByRole("button", { name: "Hide password", exact: true }).first();
+  await expect(hide).toBeFocused();
+  await hide.press("Enter");
+  await expect(password).toHaveAttribute("type", "password");
+  await expect(password).toHaveValue("sample-secret");
+  await expect(page.getByRole("button", { name: "Show password", exact: true }).first()).toBeFocused();
+  await expect(page.getByLabel("Read-only password", { exact: true })).not.toBeDisabled();
+  await expect(page.getByLabel("Unavailable password", { exact: true })).toBeDisabled();
+  await passwordNode.dispose();
+});
+
+test("form summaries focus the failing fields and disabled groups retain native semantics", async ({ page }) => {
+  await page.goto("/#form-summary");
+  await page.getByRole("button", { name: "Validate contact", exact: true }).click();
+  const summary = page.getByRole("alert", { name: "Check the following fields", exact: true });
+  await expect(summary).toBeFocused();
+  await summary.getByRole("link", { name: "Enter a project contact name.", exact: true }).click();
+  const name = page.getByRole("textbox", { name: "Project contact name", exact: true });
+  await expect(name).toBeFocused();
+  await name.fill("Alex Morgan");
+  await summary.getByRole("link", { name: "Enter a valid contact email.", exact: true }).click();
+  const email = page.getByRole("textbox", { name: "Project contact email", exact: true });
+  await expect(email).toBeFocused();
+  await email.fill("alex@example.com");
+  await page.getByRole("button", { name: "Validate contact", exact: true }).click();
+  await expect(summary).toHaveCount(0);
+  await expect(page.getByText("Contact details are valid. No request was sent.", { exact: true })).toBeVisible();
+
+  await page.goto("/#fieldset");
+  await page.getByRole("button", { name: "Disable contact fields", exact: true }).click();
+  await expect(page.getByRole("textbox", { name: "Contact name", exact: true })).toBeDisabled();
+  await expect(page.getByRole("textbox", { name: "Contact email", exact: true })).toBeDisabled();
+  await expect(page.getByRole("textbox", { name: "Workspace reference", exact: true })).not.toBeDisabled();
+  await page.getByRole("button", { name: "Enable contact fields", exact: true }).click();
+  await expect(page.getByRole("textbox", { name: "Contact name", exact: true })).toBeEnabled();
+});
+
+test("dirty form actions support discard, cancellation, failed save and retry without stale completion", async ({ page }) => {
+  await page.clock.install({ time: new Date("2026-10-25T08:00:00Z") });
+  await page.goto("/#form-actions");
+  await page.clock.pauseAt(new Date("2026-10-25T09:00:00Z"));
+  const name = page.getByRole("textbox", { name: "Editable project name", exact: true });
+  await name.fill("Revised Northwind");
+  await page.getByRole("button", { name: "Cancel changes", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "Discard changes?", exact: true });
+  await expect(dialog.getByRole("button", { name: "Keep editing", exact: true })).toBeFocused();
+  await dialog.getByRole("button", { name: "Keep editing", exact: true }).click();
+  await page.clock.runFor(200);
+  await expect(name).toHaveValue("Revised Northwind");
+  await page.getByRole("button", { name: "Save project", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Cancel save", exact: true })).toBeFocused();
+  await page.getByRole("button", { name: "Cancel save", exact: true }).click();
+  await page.clock.runFor(1000);
+  await expect(page.getByText("You have unsaved changes.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Retry save", exact: true })).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Save project", exact: true }).click();
+  await page.clock.runFor(500);
+  await expect(page.getByRole("alert").filter({ hasText: "Changes could not be saved." })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Cancel changes", exact: true })).toBeFocused();
+  await page.getByRole("button", { name: "Retry save", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Cancel save", exact: true })).toBeFocused();
+  await page.clock.runFor(500);
+  await expect(page.getByText("Changes saved.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Cancel changes", exact: true })).toBeFocused();
+  await name.fill("Discard this draft");
+  await page.getByRole("button", { name: "Cancel changes", exact: true }).click();
+  await dialog.getByRole("button", { name: "Discard changes", exact: true }).click();
+  await page.clock.runFor(200);
+  await expect(name).toHaveValue("Revised Northwind");
+});
+
+test("a dialog-contained combobox keeps modal focus and RTL popups fit touch layouts", async ({ page, browser }) => {
+  await page.goto("/#combobox");
+  await page.getByRole("button", { name: "Choose a team in a dialog", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "Project team dialog", exact: true });
+  const input = dialog.getByRole("combobox", { name: "Dialog project team", exact: true });
+  await input.fill("Oper");
+  await input.press("ArrowDown");
+  await input.press("Enter");
+  await expect(input).toHaveValue("Operations");
+  await expect(dialog).toBeVisible();
+  await expect(input).toBeFocused();
+  await dialog.getByRole("button", { name: "Show dialog teams", exact: true }).click();
+  await expect(input).toHaveAttribute("aria-expanded", "true");
+  await expect(dialog.getByRole("listbox")).toBeVisible();
+  await input.press("Escape");
+  await expect(input).toHaveAttribute("aria-expanded", "false");
+  await expect(dialog.getByRole("listbox")).toHaveCount(0);
+  await expect(dialog).toHaveAttribute("data-state", "open");
+  await dialog.getByRole("button", { name: "Done choosing team", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Choose a team in a dialog", exact: true })).toBeFocused();
+
+  const touch = await browser.newContext({ hasTouch: true, viewport: { width: 360, height: 900 } });
+  try {
+    const touchPage = await touch.newPage();
+    await touchPage.goto(new URL("/#combobox", page.url()).href);
+    const rtl = touchPage.getByRole("combobox", { name: "Right-to-left team", exact: true });
+    await rtl.click();
+    await rtl.fill("");
+    await rtl.press("ArrowDown");
+    const popup = touchPage.locator('.pk-combobox-popup[dir="rtl"]');
+    await expect(popup).toBeVisible();
+    await expect(popup).toHaveCSS("direction", "rtl");
+    const bounds = await popup.boundingBox();
+    if (!bounds) throw new Error("Missing combobox popup geometry.");
+    expect(bounds.x).toBeGreaterThanOrEqual(0);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(360);
+    expect((await popup.getByRole("option", { name: "Operations", exact: true }).boundingBox())?.height).toBeGreaterThanOrEqual(44);
+    expect(await touchPage.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  } finally { await touch.close(); }
+});

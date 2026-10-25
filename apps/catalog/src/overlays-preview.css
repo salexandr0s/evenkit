@@ -1,0 +1,5 @@
+.overlays-preview-stack { display: grid; justify-items: start; gap: var(--pk-space-4); min-width: 0; max-width: 100%; }
+.overlays-preview-stack > p, .overlays-preview-stack section > p { max-width: var(--pk-layout-prose); margin: 0; overflow-wrap: anywhere; }
+.overlays-preview-stack section { min-width: 0; max-width: 100%; }
+.overlays-preview-stack h3 { margin-block: 0 var(--pk-space-2); font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-base); line-height: var(--pk-font-line-height-snug); }
+.overlays-preview-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-3); min-width: 0; max-width: 100%; }
