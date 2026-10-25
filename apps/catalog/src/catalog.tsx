@@ -12,6 +12,7 @@ import { IconPreview } from "./icon-preview";
 
 const ShellPreview = lazy(() => import("./shell-preview").then((module) => ({ default: module.ShellPreview })));
 const TablePreview = lazy(() => import("./table-preview").then((module) => ({ default: module.TablePreview })));
+const AuthPreview = lazy(() => import("./auth-preview").then((module) => ({ default: module.AuthPreview })));
 
 const appearances = ["system", "light", "dark"] as const;
 type Appearance = (typeof appearances)[number];
@@ -42,6 +43,10 @@ function Preview({ id, theme, mode }: { id: string; theme: ThemeName; mode: Colo
     case "icons": return <IconPreview />;
     case "admin-shell": return <ShellPreview />;
     case "data-table": return <TablePreview />;
+    case "login":
+    case "signup":
+    case "password-reset":
+    case "new-password": return <AuthPreview kind={id} />;
     case "fields": return <FieldPreview />;
     case "select": return <SelectPreview />;
     case "dialog": return <DialogPreview />;

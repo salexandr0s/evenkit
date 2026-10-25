@@ -1,6 +1,6 @@
 # Shared project kit
 
-Reusable tokens, React controls, icons, an admin shell, and data tables, with a local component catalog. This repository lives in the requested `design-tokens` folder. Version 0.1.0 is a pilot for evaluation in new projects.
+Reusable tokens, React controls, icons, an admin shell, data tables, and authentication pages, with a local component catalog. This repository lives in the requested `design-tokens` folder. Version 0.1.0 is a pilot for evaluation in new projects.
 
 ## Start the catalog
 
@@ -13,14 +13,14 @@ npm run dev
 
 Open `http://127.0.0.1:5173`. The dev command builds the packages first. If you edit package source while the catalog is running, run `npm run build:packages` to update its public artifacts. The catalog itself has Vite hot reload.
 
-The catalog has eleven entries: design tokens, icons, buttons, fields, custom select, dialog, status, loading, empty state, admin shell, and data table. Search by component or state, switch between Neutral and Grove, and try light, dark, or system appearance. Forms, navigation, table state changes, and retry actions are local previews.
+The catalog has fifteen entries, including login, signup, password reset, and new-password pages. Search by component or state, switch between Neutral and Grove, and try light, dark, or system appearance. Forms, navigation, table state changes, and authentication outcomes are local previews.
 
 ## Packages
 
 | Package | Contents | Public imports |
 |---|---|---|
 | `@project-kit/tokens` | Typed scales, palettes, two themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
-| `@project-kit/ui` | Controls and feedback, 31 Lucide icons, responsive AdminShell, TanStack-backed DataTable | Main export, `/css` |
+| `@project-kit/ui` | Controls and feedback, 31 icons, AdminShell, DataTable, and four authentication pages | Main export, `/css` |
 | `@project-kit/catalog` | Searchable examples and usage reference | Local application |
 
 Both libraries export built files and declarations. UI styles use `pk-` classes and `--pk-` variables, with no global reset. Consumers need React 19 and React DOM 19; no Tailwind, Next.js, database, or authentication dependency is required by the UI package.
@@ -111,6 +111,12 @@ SelectField adds the same label, hint, error, optional cue, and external-descrip
 
 Use `defaultValue` for an uncontrolled selection or `value` with `onValueChange` for application state. An empty value displays the placeholder. A named control participates in its containing form, or the form identified by `form`. Applications own validation and controlled reset behavior; the catalog demonstrates focusing an invalid field and clearing it with a reset action.
 
+## Authentication pages
+
+Use `LoginPage`, `SignupPage`, `PasswordResetPage`, and `NewPasswordPage` with your application's typed submission callbacks. The pages provide validation, password visibility, pending/error/success states, and responsive layout using shared tokens, controls, and icons. `AuthLayout` and `PasswordField` are also public compositions.
+
+Applications own authentication services, recovery tokens/sessions, navigation, and password policy. Signup success states must describe the actual next step; reset confirmation uses neutral account wording. See [authentication integration](docs/authentication.md) and the [phase plan](AUTH_PAGES_PLAN.md) for callback contracts and examples.
+
 ## Admin shell and tables
 
 `AdminShell` provides a sidebar, header, content area, skip link, and a drawer for narrow containers. Supply navigation items, the active item ID, branding, actions, and footer content. Native links work by default; `renderLink` lets a consuming router receive the same link props. Authentication and route matching belong to the application. Use `contentAs="section"` when embedding a shell inside an existing main landmark.
@@ -153,4 +159,4 @@ Basic controls and compositions are original kit code using the internal contrac
 
 Packages are local and unpublished. Internal code remains unlicensed for public distribution; dependency licenses retain their own terms. The kit maintainer owns shared interfaces and releases, while consuming projects own adoption, product rules, and deployment.
 
-Authentication, uploads, registry distribution, a server table adapter, and application migrations remain later phases from the [implementation plan](IMPLEMENTATION_PLAN.md). See [compatibility](docs/compatibility.md) for tested versions and limits.
+Authentication-service adapters, uploads, registry distribution, a server table adapter, and application migrations remain later phases from the [implementation plan](IMPLEMENTATION_PLAN.md). See [compatibility](docs/compatibility.md) for tested versions and limits.

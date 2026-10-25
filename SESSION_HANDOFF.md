@@ -1,66 +1,70 @@
 # Session handoff: 25 October 2026
 
-Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
-
-The user's active goal is to substantially improve every component one by one. Five of eleven areas are complete: Tokens, Icons, Buttons, Fields, and Select. The goal remains active. Items 6–11 and the final integration review remain unfinished; the full queue and evidence are in `COMPONENT_IMPROVEMENTS.md`.
+Project: shared project kit. Auth worktree: `/Users/nationalbank/.codex/worktrees/auth-pages/design-tokens`. Branch: `codex/auth-pages`, based on `1dfd7f9` from `codex/component-improvements`.
 
 ## Completed
 
-- Tokens (`ea8bacc`): searchable reference for 199 variables, copying, visual specimens, and 33 contrast pairs.
-- Icons (`f3b69f9`): all 31 wrappers, alias/category search, size previews, named imports, and accessible examples.
-- Buttons (`829c1a2`): icon shape and slots, full width, pressed state, stable loading, and touch targets.
-- Fields (`edc880b`): shared frame, TextareaField, label cues, stable adornments, native refs/descriptions, RTL/wrapping, validation/reset focus, and read-only states.
-- Select (commit includes this handoff): grouped and described options, SelectField, empty-menu feedback/focus, responsive popup sizing, and touch/RTL handling. Working examples cover validation, reset, form values, and loading options into an empty group.
-- Fixed a review finding where a popup forced to a tiny table trigger width wrapped two-digit options into tall rows. The popup now sizes intrinsically within a readable width and the available viewport.
+- Added `LoginPage`, `SignupPage`, `PasswordResetPage`, and `NewPasswordPage` using shared controls, tokens, and icons.
+- Exported shared `AuthLayout`, `PasswordField`, page props, credential payload types, and typed result contracts.
+- Added local validation, native FormData capture, password-manager attributes, password visibility, focused error/success feedback, a synchronous pending guard, and ignored stale/unmounted completions.
+- Signup requires an explicit success message. Signup/new-password forms accept the application's password validator and hint. Confirmation stays local, and password whitespace is preserved.
+- Reset requests show neutral confirmation. Expired/invalid new-password states omit the form and provide a consumer recovery action. Recovery authorization remains with the service.
+- Added four lazy catalog entries and local Success/Failure/Pending/Rejected request examples. Pending previews use an explicit completion control; restart/unmount settles owned promises without retaining credential values.
+- Added integration guidance and independent packed-package auth fixtures for Vite and Next.
 
-## Key files changed in the Select step
+## Key files
 
-- `packages/ui/src/select.tsx`: additive SelectOption.description, SelectOptionGroup, SelectField, and emptyMessage; Radix grouping and unique description IDs; no duplicate selection state.
-- `packages/ui/src/styles.css`: group/description/empty presentation, content focus, bounded intrinsic popup width, compact rows and touch sizing.
-- `packages/ui/src/index.ts`: SelectField, SelectFieldProps, and SelectOptionGroup exports.
-- `apps/catalog/src/select-preview.tsx` and `select-preview.css`: new interactive examples.
-- `apps/catalog/src/catalog.tsx` and `control-previews.tsx`: new preview wiring and removal of the old Select preview. Dialog still uses its original visibilityOptions.
-- `tests/browser/select.spec.ts`: three journeys for group/field semantics, empty recovery, and long/RTL/touch layout.
-- `tests/browser/admin-kit.spec.ts`: existing table journey now checks the two-digit page-size option remains 36px and changes page size correctly.
-- `README.md`, `apps/catalog/src/catalog-data.ts`, and both packed fixture entry points: documented API and independent consumer coverage.
+- `packages/ui/src/auth-types.ts`, `auth-layout.tsx`, `password-field.tsx`, `use-auth-submission.ts`, four `*-page.tsx` modules, and `auth.css`.
+- `packages/ui/src/index.ts` and `packages/ui/scripts/copy-styles.mjs`: public exports and combined CSS.
+- `apps/catalog/src/auth-preview.tsx`, `auth-preview.css`, `auth-data.ts`, plus catalog registration.
+- `tests/browser/auth.spec.ts`: five meaningful auth journeys.
+- `fixtures/vite/auth-preview.tsx`, `fixtures/next/app/preview-auth.tsx`, fixture entry points, and `scripts/verify-packages.mjs`.
+- `AUTH_PAGES_PLAN.md`, `docs/authentication.md`, `docs/compatibility.md`, README, and UI provenance.
 
-## Verification state
+## Verification
 
-Passed on the final Select implementation: `npm run build`, `npm run typecheck`, `npm run lint`, seven token tests, and all 17 Chromium journeys. `npm run verify:packages` passed independent Vite/Next builds plus HTTP/stylesheet checks. Its report confirms both owned servers cleaned and its temporary directory removed.
+Passed on the final implementation: production build, workspace/test type checks, ESLint, seven token tests, five auth Chromium journeys, and seventeen existing Chromium journeys. The auth and regression groups ran separately against the same final app build.
 
-Plan, source, and test/documentation reviews passed. The narrow-popup reproduction now fits the 25 label on one line in a 36px row. Tests cover grouped names, item descriptions, label-only triggers, disabled skipping, typeahead, validation/reset focus, native form values, empty-menu focus/Escape/recovery, long-label bounds at 360/768/1024/1440px, RTL geometry, and coarse-pointer targets. Root inspected light and dark grouped menus. Firefox and Safari remain untested.
+The first auth batch stopped after locator failures. Required labels include an aria-hidden cue in DOM text, so exact getByLabel did not match despite correct accessible names. Independent review confirmed the harness issue. Email tests now use role/accessibility names; password inputs use their native names plus explicit accessible-name assertions. The corrected five journeys passed. No component labels or validation were weakened to accommodate the tests.
 
-## Remaining work
+Code review also corrected auth-slot anchor rules to exclude `.pk-button`, preserving ButtonLink contrast. Plan/source/documentation reviews found no remaining actionable findings. A login layout was visually inspected in the app browser.
 
-Continue with Dialog, then Status, Loading, EmptyState, AdminShell, and DataTable. Preserve the sequential order, concrete plan, independent review, relevant checks, and logical local commit per area. Keep shared-file ownership sequential.
+`npm run verify:packages` passed independent Vite and Next builds, all four auth-page exports, Next server rendering, and token/control/icon/shell/table/auth stylesheet HTTP checks. `.artifacts/package-verification.json` confirms both owned fixture servers stopped and its temporary directory was removed.
 
-For Dialog, read `packages/ui/src/dialog.tsx`, its styles, the preview in `control-previews.tsx`, the existing focus/layer test, and `~/.claude/uiux-contract/components/modal.yaml`. The planned improvements are size and header/body/footer composition, long-content scrolling with reachable actions, mobile layout, and RTL-safe logical positioning. Preserve focus containment, Escape/dismissal, restoration, and Select layering. AdminShell also uses DialogContent for its drawer, so inspect that integration before changing shared layout.
-
-Known later findings: badges cannot wrap; table cells truncate arbitrary controls and can clip focus rings. Resolve each in its scheduled area. After the queue, review the catalog frame, usage examples, exports, documentation (including the currently older compatibility report), and independent packed consumers together.
-
-## Local preview
-
-The pre-existing production preview at `http://127.0.0.1:5173/#select` serves the rebuilt catalog. Ownership was previously recorded as Node PID 34531; recheck before stopping it. The app browser tab is retained as a deliverable with the grouped menu open in dark appearance. Screenshot: `.artifacts/select-reference.png`; earlier token/icon/button/field screenshots remain beside it.
-
-Generated artifacts are ignored. Packages remain local unpublished pilots. No deployment, publication, or application migration occurred.
-
-## Resume commands
+Commands used:
 
 ```sh
-git status --short
-git log --oneline -6
-cat COMPONENT_IMPROVEMENTS.md
-cat packages/ui/src/dialog.tsx
+npm run build
+npm run typecheck
+npm run lint
+npm test
+KIT_CATALOG_PORT=5301 npm run test:browser -- tests/browser/auth.spec.ts
+KIT_CATALOG_PORT=5301 npm run test:browser -- tests/browser/catalog.spec.ts tests/browser/admin-kit.spec.ts tests/browser/button.spec.ts tests/browser/field.spec.ts tests/browser/icon-reference.spec.ts tests/browser/token-reference.spec.ts tests/browser/select.spec.ts
+npm run verify:packages
 ```
 
-Read applicable UI contract specs before further component work. Build packages after public source changes, and rebuild the catalog before checking the production preview.
+## Preview and artifacts
 
-## Decisions and workflow
+This worktree's retained production preview is `http://127.0.0.1:5174/#login`. Other new hashes are `/#signup`, `/#password-reset`, and `/#new-password`. At handoff the listener was owned Node PID `23460`, execution session `45664`; verify ownership before stopping it. Rebuild the catalog to refresh a production preview. Screenshot: `.artifacts/auth-login.png`.
 
-- Flat Select options remain compatible. Mixed groups have stable IDs and globally unique nonempty option values. Empty groups are omitted.
-- Descriptions stay outside Radix ItemText so they do not leak into trigger text or native option labels. Highlighted descriptions inherit the validated accent foreground.
-- Empty popups use tabIndex=-1 for Radix's focus fallback and an inset focus shadow because Radix sets outline:none inline. They do not create fake selectable options.
-- Popup width uses max-content with trigger/viewport constraints and a token-based readable cap, retaining compact consumers.
-- Shared FieldFrame/useFieldDescription remains internal and now serves text inputs, textareas, and selects. Apps own validation and controlled reset behavior.
-- Workspace instructions require delegated implementation/review and avoid-ai-writing. Configured specialist roles use an unavailable model, so inherited-model agents with explicit assignments were used. Developer authorization covers the reversible queue work without repeated approvals.
-- Do not mark the goal complete until every queue item and integration review is verified.
+Local token/UI package tarballs can be regenerated with `npm pack --workspace @project-kit/tokens --workspace @project-kit/ui --pack-destination .artifacts`. Generated files are ignored.
+
+## Isolation and remaining work
+
+The primary `/Users/nationalbank/GitHub/design-tokens` checkout had concurrent Dialog/component work, so this phase was moved into an attached worktree before auth source was written. The primary checkout was not merged, reset, or staged. Auth changes are confined to `codex/auth-pages`; retain this worktree for review and later integration.
+
+The earlier component-refinement queue is separate. At this branch's base, Tokens, Icons, Buttons, Fields, and Select were completed; Dialog and later areas remained in `COMPONENT_IMPROVEMENTS.md`. Check the primary checkout's current status before integrating, because that work may have advanced independently. This auth phase does not complete or overwrite that queue.
+
+Packages remain unpublished local pilots. No real authentication provider, live login/account creation, email delivery, recovery-token validation, session management, or application migration was configured. Consumers supply those through callbacks. Firefox/Safari and third-party password-manager extensions were not exercised. Use the integration guide before adopting the pages in a live project.
+
+## Resume
+
+```sh
+cd /Users/nationalbank/.codex/worktrees/auth-pages/design-tokens
+git status --short
+git log --oneline -3
+npm run build
+npm run preview --workspace @project-kit/catalog -- --port 5174 --strictPort
+```
+
+Keep source changes in this worktree until integration with the concurrently edited primary branch is safe. The authentication goal is separate from the component-refinement queue.

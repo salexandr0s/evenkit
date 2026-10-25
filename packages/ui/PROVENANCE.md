@@ -27,3 +27,9 @@ Dropdown rows use border-box sizing and the shared option-height token. Small de
 `DataTable` uses `@tanstack/react-table` 9.3.1 for client sorting, global filtering, pagination, and row selection, following its [React quick start](https://tanstack.com/table/latest/docs/framework/react/quick-start) and installed versioned types/guidance. The semantic table markup and styles are original kit code. It processes the complete supplied dataset and requires unique stable row IDs. Selection is controlled by the consumer; remove IDs when their records are deleted. The header selection checkbox applies to the current page. Loading and error states disable the internal data controls. Custom toolbar actions remain consumer-owned.
 
 TanStack's React and core packages use MIT licenses; their installed notices are included in `licenses`. This package does not provide fetching, server pagination, virtualization, authorization, or persistence.
+
+## Authentication pages
+
+Login, signup, reset-request, and new-password pages are original kit compositions of the existing controls and icons. `AuthLayout` and `PasswordField` are reusable public components. The callback/result contract keeps service SDKs, recovery authorization, routing, and persistence in the application. No external auth component code or new runtime dependency was added.
+
+Password-manager attributes follow [MDN's autocomplete reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete). Neutral recovery confirmation and confirmation-field behavior follow [OWASP's password recovery guidance](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html), inspected on 25 October 2026. The UI does not establish that a recovery token is valid; the service verifies it at submission. See the root authentication integration guide for boundaries and examples.

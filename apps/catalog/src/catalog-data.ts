@@ -1,3 +1,5 @@
+import { authEntries } from "./auth-data";
+
 export interface CatalogEntry {
   id: string;
   name: string;
@@ -10,6 +12,7 @@ export interface CatalogEntry {
 }
 
 export const entries: readonly CatalogEntry[] = [
+  ...authEntries,
   {
     id: "tokens",
     name: "Design tokens",

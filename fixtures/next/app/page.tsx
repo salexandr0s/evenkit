@@ -1,6 +1,7 @@
 import { ArrowRightIcon, Badge, Button, ButtonLink, PlusIcon, Select, SelectField, TextareaField, TextField, type ButtonShape, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
 import { PreviewDialog } from "./preview-dialog";
 import { PreviewAdmin } from "./preview-admin";
+import { PreviewAuth } from "./preview-auth";
 
 export default function Page() {
   const iconShape: ButtonShape = "icon";
@@ -19,5 +20,6 @@ export default function Page() {
     <ButtonLink href="#projects" endIcon={<ArrowRightIcon />}>View projects</ButtonLink>
     <PreviewDialog />
     <PreviewAdmin />
+    <PreviewAuth />
   </main>;
 }

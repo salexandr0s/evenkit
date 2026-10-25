@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, DataTable, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, type ButtonShape, type DataTableColumn, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
 import "@project-kit/tokens/css";
 import "@project-kit/ui/css";
+import { PreviewAuth } from "./auth-preview";
 
 const element = document.getElementById("root");
 if (!element) throw new Error("Missing fixture root.");
@@ -21,6 +22,7 @@ createRoot(element).render(<main>
   <SelectField label="Project template" name="template" options={[templates]} defaultValue="blank" hint="Choose a starting point." required />
   <Select aria-label="Visibility" name="visibility" defaultValue="private" options={[{ value: "private", label: "Private" }, { value: "team", label: "Team" }]} />
   <Button>Native button</Button>
+  <PreviewAuth />
   <Button shape={iconShape} aria-label="Create project"><PlusIcon /></Button>
   <Button fullWidth startIcon={<PlusIcon />}>Create project</Button>
   <ButtonLink href="#projects" endIcon={<ArrowRightIcon />}>View projects</ButtonLink>
