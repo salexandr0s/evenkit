@@ -22,6 +22,10 @@ try {
   });
   const { entries } = await server.ssrLoadModule("/src/catalog-data.ts");
   if (!Array.isArray(entries)) throw new Error("Catalog entries were not exported.");
+  const richChatSource = await readFile(join(root, "apps", "catalog", "src", "rich-chat-example.tsx"), "utf8");
+  if (entries.find(entry => entry.id === "rich-chat")?.usage !== richChatSource) {
+    throw new Error("Rich chat copied source is stale. Run node scripts/generate-rich-chat-example.mjs.");
+  }
   const ids = entries.map(entry => entry.id);
   if (new Set(ids).size !== ids.length) throw new Error("Catalog entry IDs must be unique.");
   const inventory = await readFile(join(root, "docs", "component-inventory.md"), "utf8");
@@ -33,7 +37,7 @@ try {
     "J03", "J04", "E10", "E08", "O06",
   ];
   const inventoryIds = [...inventory.matchAll(/^\| ([A-R]\d{2}) \|/gm)].map(match => match[1]);
-  const workstreamIds = ["L01", "L08", "L09", "J05", "J06", "J07", "M07", "L04", "M08", "O09", "O08", "M06", "H10", "G03", "G06", "P01", "P02", "P03", "P04", "P05", "P06", "P10"];
+  const workstreamIds = ["L01", "L08", "L09", "J05", "J06", "J07", "M07", "L04", "M08", "O09", "O08", "M06", "H10", "G03", "G06", "P01", "P02", "P03", "P04", "P05", "P06", "P10", "N01", "N02", "N03", "H07"];
   const expected = [...original, ...additions, ...workstreamIds];
   if (new Set([...original, ...additions]).size !== 72 || expected.some(id => !inventoryIds.includes(id)) || new Set(expected).size !== expected.length) {
     throw new Error("The baseline and workstream mappings must be distinct inventory entries.");

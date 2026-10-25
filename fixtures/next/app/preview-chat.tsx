@@ -8,6 +8,7 @@ const conversations: readonly ChatConversation[] = [{ id: "package", title: "Pac
 export function PreviewChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { id: "welcome", role: "assistant", content: "This response comes from local fixture state." },
+    { id: "rich", role: "assistant", format: "markdown", content: "## Packed rich chat\n\n| State | Value |\n| --- | --- |\n| Package | Ready |\n\n```ts\nconst ready = true;\n```", sources: [{ id: "reference", title: "Markdown reference", href: "https://commonmark.org/help/", preview: "Markdown syntax examples." }], attachments: [{ id: "missing", name: "Archived notes.txt", unavailable: true }] },
   ]);
   const [draft, setDraft] = useState("");
 

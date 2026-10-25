@@ -100,6 +100,7 @@ async function smoke(kind, directory) {
     if (kind === "next" && !html.includes("Packed package check")) throw new Error("Next server did not render the package fixture.");
     if (kind === "next" && !html.includes("Packed projects")) throw new Error("Next server did not render the client shell/table fixture.");
     if (kind === "next" && !html.includes("Package assistant")) throw new Error("Next server did not render the client chat fixture.");
+    if (kind === "next" && !html.includes("Packed rich chat")) throw new Error("Next server did not render the rich chat fixture.");
     if (kind === "next" && !html.includes("Priority package controls")) throw new Error("Next server did not render the new priority control families.");
     if (kind === "next" && !html.includes("Roadmap package controls")) throw new Error("Next server did not render the roadmap controls and blocks.");
     if (kind === "next" && !html.includes("Document library package controls")) throw new Error("Next server did not render the document library fixture.");
@@ -124,6 +125,7 @@ async function smoke(kind, directory) {
     if (!teamSelectors.every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship the team administration styles.`);
     if (kind === "next" && !html.includes("Team administration package controls")) throw new Error("Next server did not render team administration controls.");
     if (![".pk-notification-list", ".pk-notification-preferences", ".pk-persistent-banner", ".pk-presence-indicator"].every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship notification family styles.`);
+    if (![".pk-code-block", ".pk-chat-markdown", ".pk-chat-attachments", ".pk-chat-sources"].every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship rich chat styles.`);
     smokeResult = { httpStatus: response.status, stylesheetCount: stylesheets.length };
   } catch (error) {
     failure = error;

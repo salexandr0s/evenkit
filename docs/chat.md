@@ -89,11 +89,14 @@ Choose persistence for each project: React state for a temporary session, namesp
 | `title`, `description`, `footer` | Product identity, context, and optional footer content. |
 | `launcherLabel`, `launcherIcon` | Launcher wording and decorative icon. |
 | `labels` | Override visible labels, hints, and accessible control names for your locale. |
-| `renderMessage(message)` | Render application-specific Markdown, citations, or other content. |
+| `renderMessage(message)` | Override message content with application-specific React output. |
+| Message `format="markdown"` | Opt into the fixed safe Markdown renderer. Plain text is the default. |
+| Message `attachments`, `sources` | Display application-supplied files and citations below the content. |
+| `attachments` | Connect a controlled upload queue to the composer. |
 | `maxLength` | Limit the draft's length. |
 | `container` | Choose the widget portal container. Themes normally belong on the document. |
 
-The default renderer displays escaped text and preserves line breaks. A custom renderer owns the safety of HTML and links it introduces. Keep rendered content keyboard accessible and preserve readable wrapping; application content can use the same semantic token variables as the chat.
+The default renderer displays escaped text and preserves line breaks. See [rich chat](./rich-chat.md) for Markdown, code blocks, files, citations and a complete local example. A custom renderer owns the safety of HTML and links it introduces. Keep rendered content keyboard accessible and preserve readable wrapping; application content can use the same semantic token variables as the chat.
 
 Enter sends a nonempty message, Shift+Enter inserts a new line, and IME composition does not send prematurely. A pending response prevents another send; provide `onStop` to let the user cancel it. Choosing a suggested prompt fills and focuses the draft so the user can edit it before sending. The message list follows incoming content while the reader is at the bottom and offers a jump action after they scroll up.
 

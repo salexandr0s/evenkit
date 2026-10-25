@@ -43,6 +43,7 @@ const IconPreview = lazy(() => import("./icon-preview").then((module) => ({ defa
 const ShellPreview = lazy(() => import("./shell-preview").then((module) => ({ default: module.ShellPreview })));
 const TablePreview = lazy(() => import("./table-preview").then((module) => ({ default: module.TablePreview })));
 const ChatPreview = lazy(() => import("./chat-preview").then((module) => ({ default: module.ChatPreview })));
+const RichChatPreview = lazy(() => import("./rich-chat-preview").then((module) => ({ default: module.RichChatPreview })));
 const TooltipPreview = lazy(() => import("./tooltip-preview").then((module) => ({ default: module.TooltipPreview })));
 const FoundationsPreview = lazy(() => import("./foundations-preview").then((module) => ({ default: module.FoundationsPreview })));
 const SelectionPreview = lazy(() => import("./selection-preview").then((module) => ({ default: module.SelectionPreview })));
@@ -95,6 +96,7 @@ const navigationIcons: Record<string, ReactNode> = {
   "website-features": <LayoutGridIcon />, "website-cta": <SquareIcon />,
   "website-faq": <CircleHelpIcon />, "website-forms": <ContactRoundIcon />,
   "website-article": <FileTextIcon />,
+  "rich-chat": <MessageSquareTextIcon />,
 };
 
 function selectedFromHash() {
@@ -119,6 +121,7 @@ function Preview({ id, theme, mode, onThemeChange }: { id: string; theme: ThemeN
     case "admin-shell": return <ShellPreview />;
     case "data-table": return <TablePreview />;
     case "chat": return <ChatPreview />;
+    case "rich-chat": return <RichChatPreview />;
     case "fields": return <FieldPreview />;
     case "select": return <SelectPreview />;
     case "dialog": return <DialogPreview />;
