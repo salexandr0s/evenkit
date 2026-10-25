@@ -9,6 +9,7 @@
 .status-badge-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-2); min-width: 0; }
 .status-badge-details { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--pk-space-5) var(--pk-space-8); min-width: 0; }
 .status-long-badge { max-width: calc(var(--pk-space-16) * 4); }
+.status-message-stack { display: grid; gap: var(--pk-space-3); min-width: 0; }
 .status-message-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--pk-space-16) * 4)), 1fr)); align-items: start; gap: var(--pk-space-4); min-width: 0; }
 .status-workbench .pk-action-message h4 { margin: 0; font: inherit; }
 .status-workbench .pk-action-message p { margin: 0; }

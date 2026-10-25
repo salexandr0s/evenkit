@@ -44,6 +44,16 @@ export function StatusPreview() {
 
   return (
     <div className="status-workbench">
+      <section className="status-section" aria-label="Message tone examples">
+        <div className="status-section-heading"><h3>Short status messages</h3><p>Icons distinguish success, information, warnings, and errors.</p></div>
+        <div className="status-message-stack">
+          <ActionMessage role="note" tone="success">Your preview is ready to review.</ActionMessage>
+          <ActionMessage role="note" tone="info">Changes remain in this preview.</ActionMessage>
+          <ActionMessage role="note" tone="warning">Check the project name and recipients before sharing.</ActionMessage>
+          <ActionMessage role="note" tone="error">Example failure: your changes could not be saved. Try again.</ActionMessage>
+        </div>
+      </section>
+
       <section className="status-section" aria-label="Badge examples">
         <div className="status-section-heading"><h3>Labels for state and progress</h3><p>Pair a short label with a tone, dot, or decorative icon.</p></div>
         <div className="status-badge-group">

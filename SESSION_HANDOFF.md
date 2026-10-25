@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Status message design pass: 25 October 2026
+
+The status banners now have neutral surfaces, fine borders with a colored leading edge, and consistent 32px tinted icon tiles around the existing 20px SVG status symbols. Standalone text aligns with the icon; messages with headings use quieter body text and retain their action layout. The leading edge follows RTL and preserves tone when the icon is hidden. The ActionMessage API and announcement/retry/dismiss behavior are unchanged.
+
+Only the ActionMessage block in `packages/ui/src/styles.css` and `apps/catalog/src/status-preview.tsx/css` changed for this request. Four compact message examples at the top of the preview match the screenshot's use case. Existing badge, recovery, custom-icon, hidden-icon, and RTL examples remain available.
+
+Verification passed: production build, workspace/test typecheck, focused ESLint, both Chromium journeys in `tests/browser/status.spec.ts`, and source review. Manual checks covered light/dark, 360px wrapping, longer messages, actions, and custom/hidden icons. Firefox and Safari suites were not run. References: `.artifacts/message-design-light.jpg` and `.artifacts/message-design-dark.jpg`. Preview: `http://127.0.0.1:5173/#status`. The stopped preview server was restarted; the observed Dark selection was restored after inspection.
+
+Concurrent EmptyState and chat work belongs to other chats. Preserve those edits, especially adjacent shared CSS and `feedback.tsx`. Focused check: `KIT_CATALOG_PORT=5317 npx playwright test tests/browser/status.spec.ts --workers=1 --output=.artifacts/message-design-browser-results`.
+
 ## Current continuation: loading complete
 
 Spinner and Skeleton are complete; ten of twelve component areas are now verified. `packages/ui/src/feedback.tsx` adds Spinner size/ref support and Skeleton variant/size props; shared CSS preserves the 20px spinner and 40px block defaults, fixes text-line minimum heights, and keeps avatars square when narrow. Low-specificity selectors preserve custom class overrides. Public exports, README/provenance, and packed Vite/Next fixtures cover the additions. No new dependency or token was added.
