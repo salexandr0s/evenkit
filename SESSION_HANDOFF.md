@@ -2,6 +2,12 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Sidebar resize handle: 25 October 2026
+
+Fixed the resize handle moving upward with the main content. In `packages/ui/src/admin-shell.css`, its sticky top offset now matches its initial position at the sidebar midpoint. Before the fix, scrolling 300px moved the handle from y=448 to y=148 while the sidebar remained at y=0. After the fix, the handle stays at y=448 throughout the 960px-high page, including at the bottom. Confidence in the localized CSS fix is high.
+
+Verification passed: `npm run build`, all 10 existing Chromium tests in `catalog-sidebar.spec.ts` and `sidebar-tooltip.spec.ts`, and direct scroll geometry checks for expanded, collapsed and hidden states plus a viewport resize to 1024x700. The build retains its existing chunk-size advisory. No new tests were added for this CSS adjustment; Firefox and Safari were not tested. No required work remains. The local preview at `http://127.0.0.1:5390/#stack` includes the fix; production was not deployed. Resume with `git log -1 --oneline` and `git status --short`.
+
 ## Calendar design refinement: 25 October 2026
 
 Completed the requested Calendar design pass. The month title now leads paired navigation arrows; selected days use filled circles, today uses an outline and dot, and range bands join endpoint centers in either direction. Shorter keyboard guidance aligns with Today. Forced-color mode uses system highlight colors for selection and hover. The standalone catalog example has one framed calendar with a localized selected-date summary and a matching-width language field below it. Existing props, date constraints, keyboard behavior and form contracts are preserved.
