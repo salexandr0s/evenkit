@@ -1,0 +1,43 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "website-cta",
+  "title": "Website call to action",
+  "description": "Editable call-to-action section with one primary action and an optional secondary link.",
+  "inventoryIds": [
+    "P04"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/website/call-to-action.tsx",
+      "target": "website/call-to-action.tsx"
+    },
+    {
+      "path": "registry/blocks/website/website.css",
+      "target": "website/website.css"
+    },
+    {
+      "path": "registry/blocks/website/website.css.d.ts",
+      "target": "website/website.css.d.ts"
+    },
+    {
+      "path": "registry/blocks/website/PROVENANCE.md",
+      "target": "website/PROVENANCE.md"
+    }
+  ]
+}

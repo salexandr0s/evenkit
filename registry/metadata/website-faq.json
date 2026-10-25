@@ -1,0 +1,43 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "website-faq",
+  "title": "Website FAQ",
+  "description": "Editable FAQ section with accessible accordion controls and configurable heading levels.",
+  "inventoryIds": [
+    "P05"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/website/faq-section.tsx",
+      "target": "website/faq-section.tsx"
+    },
+    {
+      "path": "registry/blocks/website/website.css",
+      "target": "website/website.css"
+    },
+    {
+      "path": "registry/blocks/website/website.css.d.ts",
+      "target": "website/website.css.d.ts"
+    },
+    {
+      "path": "registry/blocks/website/PROVENANCE.md",
+      "target": "website/PROVENANCE.md"
+    }
+  ]
+}

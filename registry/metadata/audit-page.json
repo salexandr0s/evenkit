@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "audit-page",
+  "title": "Audit history",
+  "description": "Editable audit page with a scoped loader, event details and application-provided export.",
+  "inventoryIds": [
+    "O09"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/audit-page.tsx",
+      "target": "audit-page.tsx"
+    }
+  ]
+}

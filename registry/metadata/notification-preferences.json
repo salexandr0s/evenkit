@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "notification-preferences",
+  "title": "Notification preferences",
+  "description": "Editable channel and category preferences with revision-aware saving, cancellation and retry.",
+  "inventoryIds": [
+    "M06"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/notification-preferences.tsx",
+      "target": "notification-preferences.tsx"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "role-settings",
+  "title": "Role settings",
+  "description": "Editable role selection and capability editor with application-defined roles and authorization.",
+  "inventoryIds": [
+    "M08"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/role-settings.tsx",
+      "target": "role-settings.tsx"
+    }
+  ]
+}

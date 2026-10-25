@@ -1,0 +1,113 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "website-examples",
+  "title": "Website examples",
+  "description": "Fictional website and article compositions with every required block, helper and stylesheet.",
+  "inventoryIds": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05",
+    "P06",
+    "P10"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/website/examples.tsx",
+      "target": "website/examples.tsx"
+    },
+    {
+      "path": "registry/blocks/website/examples.css",
+      "target": "website/examples.css"
+    },
+    {
+      "path": "registry/blocks/website/examples.css.d.ts",
+      "target": "website/examples.css.d.ts"
+    },
+    {
+      "path": "registry/blocks/website/site-shell.tsx",
+      "target": "website/site-shell.tsx"
+    },
+    {
+      "path": "registry/blocks/website/hero.tsx",
+      "target": "website/hero.tsx"
+    },
+    {
+      "path": "registry/blocks/website/feature-sections.tsx",
+      "target": "website/feature-sections.tsx"
+    },
+    {
+      "path": "registry/blocks/website/call-to-action.tsx",
+      "target": "website/call-to-action.tsx"
+    },
+    {
+      "path": "registry/blocks/website/faq-section.tsx",
+      "target": "website/faq-section.tsx"
+    },
+    {
+      "path": "registry/blocks/website/contact-form.tsx",
+      "target": "website/contact-form.tsx"
+    },
+    {
+      "path": "registry/blocks/website/newsletter-form.tsx",
+      "target": "website/newsletter-form.tsx"
+    },
+    {
+      "path": "registry/blocks/website/website.css",
+      "target": "website/website.css"
+    },
+    {
+      "path": "registry/blocks/website/website.css.d.ts",
+      "target": "website/website.css.d.ts"
+    },
+    {
+      "path": "registry/blocks/website/form-types.ts",
+      "target": "website/form-types.ts"
+    },
+    {
+      "path": "registry/blocks/website/use-website-submission.ts",
+      "target": "website/use-website-submission.ts"
+    },
+    {
+      "path": "registry/blocks/website/website-forms.css",
+      "target": "website/website-forms.css"
+    },
+    {
+      "path": "registry/blocks/website/website-forms.css.d.ts",
+      "target": "website/website-forms.css.d.ts"
+    },
+    {
+      "path": "registry/blocks/website/article-layout.tsx",
+      "target": "website/article-layout.tsx"
+    },
+    {
+      "path": "registry/blocks/website/website-article.css",
+      "target": "website/website-article.css"
+    },
+    {
+      "path": "registry/blocks/website/website-article.css.d.ts",
+      "target": "website/website-article.css.d.ts"
+    },
+    {
+      "path": "registry/blocks/website/PROVENANCE.md",
+      "target": "website/PROVENANCE.md"
+    }
+  ]
+}

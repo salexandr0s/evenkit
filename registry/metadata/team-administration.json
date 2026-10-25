@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "team-administration",
+  "title": "Team administration",
+  "description": "Editable team settings layout with members, invitations and application-provided roles and audit sections.",
+  "inventoryIds": [
+    "M07"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/team-administration.tsx",
+      "target": "team-administration.tsx"
+    }
+  ]
+}

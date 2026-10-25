@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "avatar-upload",
+  "title": "Avatar and logo upload",
+  "description": "Editable avatar or logo upload with preview, replacement, removal, undo and application-owned saving.",
+  "inventoryIds": [
+    "J05"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/avatar-upload.tsx",
+      "target": "avatar-upload.tsx"
+    }
+  ]
+}

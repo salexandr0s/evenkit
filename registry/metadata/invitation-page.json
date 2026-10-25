@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "invitation-page",
+  "title": "Invitation acceptance",
+  "description": "Editable invitation page using application-resolved invitation, account and eligibility state.",
+  "inventoryIds": [
+    "L04"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/invitation-page.tsx",
+      "target": "invitation-page.tsx"
+    }
+  ]
+}

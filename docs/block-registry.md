@@ -2,7 +2,37 @@
 
 Inventory R05 provides a local source installer for Evenkit blocks. Applications edit the installed copies and import them locally. Maintained controls and styles still come from the Evenkit packages. The installer does not change component behavior, install npm packages, execute source code, or publish anything.
 
-The initial catalog contains `account-settings`, `onboarding-wizard`, `record-detail`, `record-workflow`, and `recovery-page`. `record-detail` includes `record-workflow.tsx` because its source imports that file. Shared files have explicit owners in installed state.
+The catalog contains the following completed blocks. Targets are relative to the installer's `--dir` argument.
+
+| Block | Inventory | Installed source |
+| --- | --- | --- |
+| `account-settings` | M03, M04, M05 | `account-settings.tsx` |
+| `onboarding-wizard` | O06 | `onboarding-wizard.tsx` |
+| `record-detail` | O03 | `record-detail.tsx`, `record-workflow.tsx` |
+| `record-workflow` | O02, O04 | `record-workflow.tsx` |
+| `recovery-page` | O11 | `recovery-page.tsx` |
+| `avatar-upload` | J05 | `avatar-upload.tsx` |
+| `document-library` | J07 | `document-library.tsx` |
+| `team-administration` | M07 | `team-administration.tsx` |
+| `invitation-page` | L04 | `invitation-page.tsx` |
+| `role-settings` | M08 | `role-settings.tsx` |
+| `audit-page` | O09 | `audit-page.tsx` |
+| `notification-center` | O08 | `notification-center.tsx` |
+| `notification-preferences` | M06 | `notification-preferences.tsx` |
+| `dashboard` | O01 | `dashboard.tsx` |
+| `website-shell` | P01 | `website/site-shell.tsx` and shared website styles |
+| `website-hero` | P02 | `website/hero.tsx` and shared website styles |
+| `website-features` | P03 | `website/feature-sections.tsx` and shared website styles |
+| `website-cta` | P04 | `website/call-to-action.tsx` and shared website styles |
+| `website-faq` | P05 | `website/faq-section.tsx` and shared website styles |
+| `website-contact` | P06 | `website/contact-form.tsx`, submission helpers and form styles |
+| `website-newsletter` | P06 | `website/newsletter-form.tsx`, submission helpers and form styles |
+| `website-article` | P10 | `website/article-layout.tsx` and article styles |
+| `website-examples` | P01–P06, P10 | `website/examples.tsx` and the complete website source/style closure |
+
+`record-detail` includes `record-workflow.tsx` because its source imports that file. Website items preserve the `website/` directory, include CSS declaration files for strict consumers, and share `website/PROVENANCE.md`. The other blocks have no local source imports. Shared files have explicit owners in installed state. File preview and lightbox controls used by `document-library` remain maintained exports of `@evenkit/ui`.
+
+The repository-only website README is deliberately unregistered: it links to the adoption guide outside the installed source directory. Use [the website adoption guide](website-blocks.md) when customizing installed blocks. Rich chat is a maintained UI family with a catalog example; it adds no source-installed block.
 
 ## Format and shadcn compatibility
 
@@ -32,7 +62,7 @@ Hashes detect changed content; they are not signatures. Use catalogs and package
 Run from the tooling checkout with Node >=22.12 and Git installed. The commands were exercised on macOS; native Windows filesystem behavior is not supported by this release.
 
 ```sh
-cd /Users/nationalbank/.codex/worktrees/block-registry/design-tokens
+cd /Users/nationalbank/.codex/worktrees/admin-starter/design-tokens
 npm ci --ignore-scripts
 npm run registry -- discover
 
@@ -79,7 +109,7 @@ node "$EVENKIT_ROOT/scripts/registry/cli.mjs" install record-detail recovery-pag
 
 For an existing application, set `EVENKIT_CONSUMER` to its absolute directory and review the dry-run output first. Its package manifest must declare the dependencies and its own `node_modules` must contain matching installed versions. The installer checks installed package identities and versions, including private registry installations, local tarballs and npm links. It does not fetch packages or rewrite `package.json` or lockfiles. A missing, undeclared or incompatible dependency blocks the entire operation. Peer declarations alone are insufficient for a runnable consumer.
 
-Import `@evenkit/tokens/css` followed by `@evenkit/ui/css` once in the application's style entry point. Import the copied blocks from their local paths. Supply the host data, callbacks and routes documented in [data workflows](data-workflows.md), [record/settings contracts](records-settings.md), and [wizard contracts](commands-wizard.md). This installer does not scaffold a framework or route.
+Import `@evenkit/tokens/css` followed by `@evenkit/ui/css` once in the application's style entry point. Import the copied blocks from their local paths. Supply the host data, callbacks and routes documented in [data workflows](data-workflows.md), [record/settings contracts](records-settings.md), [wizard contracts](commands-wizard.md), [document library](document-library.md), [team administration](team-administration.md), [notifications](notifications.md), [reporting](reporting.md), and [website blocks](website-blocks.md). Website source imports its local styles. This installer does not scaffold a framework or route.
 
 JSON output goes to stdout; invalid inputs and operation errors go to stderr. Exit status `0` means success, `1` means invalid input or an operation failure, and `2` means a plan is blocked. Dry runs, discovery, inspection and diffs never write to the consumer. Invoking the CLI directly avoids npm's script banner when redirecting JSON to a file.
 
@@ -177,6 +207,8 @@ The copied blocks are original internal Evenkit source. Metadata records `UNLICE
 | Official shadcn JSON Schemas | Vendored under MIT with notice and provenance; no shadcn component implementation copied |
 
 Transitive UI dependencies and their notices remain in the packed UI package. The tooling introduces no consumer runtime dependency or hosted service. It requires the checkout's development dependencies; it is not a separately published installer package.
+
+The document, team, notification, reporting and website metadata declares `@evenkit/ui` and React, including the JSX runtime. Their token styles and React DOM renderer use the consumer setup above; charting, markdown and provider packages are not direct block dependencies. These blocks call application-owned functions for storage, mutations, permissions and account/workspace scoping.
 
 ## Verification
 

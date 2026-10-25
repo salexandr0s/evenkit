@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "document-library",
+  "title": "Document library",
+  "description": "Editable document list and grid with scoped loading, file previews, uploads and removal recovery.",
+  "inventoryIds": [
+    "J07"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/document-library.tsx",
+      "target": "document-library.tsx"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "notification-center",
+  "title": "Notification center",
+  "description": "Editable notification center with scoped read state, selection, pagination and recoverable operations.",
+  "inventoryIds": [
+    "O08"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/notification-center.tsx",
+      "target": "notification-center.tsx"
+    }
+  ]
+}

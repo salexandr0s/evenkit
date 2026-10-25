@@ -1,0 +1,43 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "website-article",
+  "title": "Website article layout",
+  "description": "Editable article layout with metadata, contents, prose, code, media and related content.",
+  "inventoryIds": [
+    "P10"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/website/article-layout.tsx",
+      "target": "website/article-layout.tsx"
+    },
+    {
+      "path": "registry/blocks/website/website-article.css",
+      "target": "website/website-article.css"
+    },
+    {
+      "path": "registry/blocks/website/website-article.css.d.ts",
+      "target": "website/website-article.css.d.ts"
+    },
+    {
+      "path": "registry/blocks/website/PROVENANCE.md",
+      "target": "website/PROVENANCE.md"
+    }
+  ]
+}

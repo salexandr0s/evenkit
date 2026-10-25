@@ -1,0 +1,31 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "dashboard",
+  "title": "Reporting dashboard",
+  "description": "Editable dashboard with statistics, reporting controls, export state, an optional chart and activity.",
+  "inventoryIds": [
+    "O01"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/dashboard.tsx",
+      "target": "dashboard.tsx"
+    }
+  ]
+}

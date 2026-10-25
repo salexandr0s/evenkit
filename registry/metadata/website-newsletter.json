@@ -1,0 +1,51 @@
+{
+  "$schema": "../schema/block-metadata.json",
+  "formatVersion": 1,
+  "name": "website-newsletter",
+  "title": "Website newsletter form",
+  "description": "Editable newsletter form with validation, application-owned submission, cancellation and retry.",
+  "inventoryIds": [
+    "P06"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": [
+    {
+      "name": "@evenkit/ui",
+      "range": "0.1.0",
+      "distribution": "private",
+      "license": "UNLICENSED"
+    },
+    {
+      "name": "react",
+      "range": "^19.0.0",
+      "distribution": "npm",
+      "license": "MIT"
+    }
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/website/newsletter-form.tsx",
+      "target": "website/newsletter-form.tsx"
+    },
+    {
+      "path": "registry/blocks/website/form-types.ts",
+      "target": "website/form-types.ts"
+    },
+    {
+      "path": "registry/blocks/website/use-website-submission.ts",
+      "target": "website/use-website-submission.ts"
+    },
+    {
+      "path": "registry/blocks/website/website-forms.css",
+      "target": "website/website-forms.css"
+    },
+    {
+      "path": "registry/blocks/website/website-forms.css.d.ts",
+      "target": "website/website-forms.css.d.ts"
+    },
+    {
+      "path": "registry/blocks/website/PROVENANCE.md",
+      "target": "website/PROVENANCE.md"
+    }
+  ]
+}
