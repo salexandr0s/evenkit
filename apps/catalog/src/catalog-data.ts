@@ -64,11 +64,11 @@ export const entries: readonly CatalogEntry[] = [
     id: "dialog",
     name: "Dialog",
     group: "Controls",
-    description: "A focused editing surface with a title, description, focus containment, and Escape dismissal.",
-    tags: ["modal", "dialog", "overlay", "focus", "keyboard", "edit"],
+    description: "Sized dialogs with header, scrolling body, and footer composition. Try validation, draft dismissal, long content, and RTL layout.",
+    tags: ["modal", "dialog", "overlay", "focus", "keyboard", "edit", "scroll", "size", "rtl"],
     source: "Radix Dialog · kit styling and composition",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dialog",
-    usage: 'import {\n  Button, Dialog, DialogTrigger, DialogContent,\n  DialogTitle, DialogDescription, DialogClose\n} from "@project-kit/ui";\n\n<Dialog>\n  <DialogTrigger asChild><Button>Edit project</Button></DialogTrigger>\n  <DialogContent>\n    <DialogTitle>Edit project</DialogTitle>\n    <DialogDescription>Update this preview.</DialogDescription>\n    <DialogClose asChild><Button>Done</Button></DialogClose>\n  </DialogContent>\n</Dialog>'
+    usage: 'import {\n  Button, Dialog, DialogTrigger, DialogContent,\n  DialogHeader, DialogTitle, DialogDescription,\n  DialogBody, DialogFooter, DialogClose\n} from "@project-kit/ui";\n\n<Dialog>\n  <DialogTrigger asChild><Button>Edit project</Button></DialogTrigger>\n  <DialogContent size="lg" scroll="body">\n    <DialogHeader>\n      <DialogTitle>Edit project</DialogTitle>\n      <DialogDescription>Update this preview.</DialogDescription>\n    </DialogHeader>\n    <DialogBody>\n      <form id={formId} onSubmit={saveProject}>{/* Fields */}</form>\n    </DialogBody>\n    <DialogFooter>\n      <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>\n      <Button type="submit" form={formId}>Save preview</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>\n\n// Generate a unique formId with useId().\n// size: sm | md (default) | lg\n// scroll: content (default) | body'
   },
   {
     id: "admin-shell",

@@ -92,4 +92,25 @@ test("shell drawer closes on navigation, Escape, outside click, and container gr
   await skip.focus();
   await skip.press("Enter");
   await expect(page.locator("#admin-preview-content")).toBeFocused();
+
+  // The shared dialog close control and the drawer title must agree on RTL.
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.evaluate(() => { document.documentElement.dir = "rtl"; });
+  await trigger.click();
+  await expect(drawer).toBeVisible();
+  const rtl = await drawer.evaluate(element => {
+    const close = element.querySelector(".pk-dialog-close")!.getBoundingClientRect();
+    const title = element.querySelector(".pk-dialog-title")!;
+    const box = element.getBoundingClientRect();
+    return {
+      right: box.right,
+      textStart: title.getBoundingClientRect().left + parseFloat(getComputedStyle(title).paddingLeft),
+      closeEnd: close.right,
+    };
+  });
+  expect(rtl.right).toBe(360);
+  expect(rtl.textStart).toBeGreaterThanOrEqual(rtl.closeEnd);
+  await page.keyboard.press("Escape");
+  await expect(drawer).not.toBeVisible();
+  await expect(trigger).toBeFocused();
 });

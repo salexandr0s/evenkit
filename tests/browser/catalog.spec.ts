@@ -110,6 +110,28 @@ test("dialog contains focus, inherits the theme, closes with Escape and restores
   await page.keyboard.press("Escape");
   await expect(dialog).not.toBeVisible();
   await expect(trigger).toBeFocused();
+
+  // Dismissed edits stay local; the footer submits the form inside DialogBody.
+  await trigger.click();
+  const name = dialog.getByRole("textbox", { name: "Project name" });
+  await expect(dialog.getByRole("combobox", { name: "Project visibility", exact: true })).toHaveText("Private");
+  await name.fill("Unsaved project");
+  await dialog.getByRole("button", { name: "Cancel", exact: true }).click();
+  await trigger.click();
+  await expect(name).toHaveValue("Spring launch");
+  await name.fill("   ");
+  await dialog.getByRole("button", { name: "Save preview", exact: true }).click();
+  await expect(name).toBeFocused();
+  await expect(name).toHaveAttribute("aria-invalid", "true");
+  await expect(name).toHaveAccessibleDescription(/Enter a project name\./);
+  await name.fill("Autumn launch");
+  await dialog.getByRole("button", { name: "Save preview", exact: true }).click();
+  await expect(dialog).not.toBeVisible();
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await expect(name).toHaveValue("Autumn launch");
+  await dialog.getByRole("button", { name: "Close dialog", exact: true }).click();
+  await expect(trigger).toBeFocused();
 });
 
 test("narrow layouts preserve controls and recoverable feedback", async ({ page }) => {

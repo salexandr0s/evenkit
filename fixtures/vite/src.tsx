@@ -1,11 +1,12 @@
 import { createRoot } from "react-dom/client";
-import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, DataTable, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, type ButtonShape, type DataTableColumn, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
+import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, DataTable, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, type ButtonShape, type DataTableColumn, type DialogSize, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
 import "@project-kit/tokens/css";
 import "@project-kit/ui/css";
 
 const element = document.getElementById("root");
 if (!element) throw new Error("Missing fixture root.");
 const records = [{ id: "one", name: "Independent consumer", members: 3 }];
+const dialogSize: DialogSize = "sm";
 const iconShape: ButtonShape = "icon";
 const notesProps: TextareaFieldProps = { label: "Notes", name: "notes", optional: true, hint: "Details for the team.", rows: 3 };
 const templates: SelectOptionGroup = { id: "team", label: "Team templates", options: [{ value: "blank", label: "Blank project", description: "Start with an empty project." }] };
@@ -24,6 +25,17 @@ createRoot(element).render(<main>
   <Button shape={iconShape} aria-label="Create project"><PlusIcon /></Button>
   <Button fullWidth startIcon={<PlusIcon />}>Create project</Button>
   <ButtonLink href="#projects" endIcon={<ArrowRightIcon />}>View projects</ButtonLink>
+  <Dialog>
+    <DialogTrigger asChild><Button>Open package dialog</Button></DialogTrigger>
+    <DialogContent size={dialogSize} scroll="body">
+      <DialogHeader>
+        <DialogTitle>Package dialog</DialogTitle>
+        <DialogDescription>This dialog uses the installed package exports.</DialogDescription>
+      </DialogHeader>
+      <DialogBody><p>Content scrolls while actions remain available.</p></DialogBody>
+      <DialogFooter><DialogClose asChild><Button>Close preview</Button></DialogClose></DialogFooter>
+    </DialogContent>
+  </Dialog>
   <AdminShell contentAs="section" brand="Package kit" header="Projects" activeItemId="projects" navigation={[{ items: [{ id: "projects", label: "Projects", href: "#projects", icon: <FolderIcon /> }] }]}>
     <DataTable caption="Packed projects" data={records} columns={columns} getRowId={row => row.id} />
   </AdminShell>

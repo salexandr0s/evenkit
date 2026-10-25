@@ -229,6 +229,8 @@ export const foundation = {
     "reading": "720px",
     "form": "480px",
     "dialog": "560px",
+    "dialogSm": "420px",
+    "dialogLg": "720px",
     "touch": "44px",
     "icon": "20px",
     "prose": "65ch",

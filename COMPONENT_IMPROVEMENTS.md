@@ -13,7 +13,7 @@ Keep the existing public API compatible. Preserve the Neutral and Grove themes, 
 | 3 | Button, ButtonLink | Icon-only sizing, leading/trailing icons, full-width layout, clearer variant hierarchy, and a working asynchronous loading example. | Complete |
 | 4 | Label, Input, Textarea, TextField, TextareaField | Shared field composition, textarea field, required/optional cues, adornments, read-only styling, and validation focus recovery. | Complete |
 | 5 | Select, SelectField | Grouped and described options, empty-options feedback, shared field composition, and long-label handling while preserving compact rows. | Complete |
-| 6 | Dialog, DialogTrigger, DialogClose, DialogContent, DialogTitle, DialogDescription, DialogFooter | Size and layout composition, long-content scrolling, reachable actions, mobile presentation, and logical RTL positioning. | Pending |
+| 6 | Dialog, DialogTrigger, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter | Size and layout composition, long-content scrolling, reachable actions, mobile presentation, and logical RTL positioning. | Complete |
 | 7 | Badge, ActionMessage | Status icons, wrapping labels, message titles/actions, warning feedback, and a retry/dismiss example. | Pending |
 | 8 | Spinner, Skeleton | Token sizes, text/avatar/block skeletons, and a loading-to-content example with one accessible announcement. | Pending |
 | 9 | EmptyState | Icon slot, heading semantics, secondary action, compact layout, and distinct first-use, no-results, and failure examples. | Pending |
@@ -71,4 +71,12 @@ Plain rows remain 36px on desktop and 44px on narrow or coarse-pointer screens. 
 
 Plan, implementation, and test/documentation reviews passed. Production build, workspace/test type checks, ESLint, seven token tests, all 17 Chromium journeys, and independent packed Vite/Next consumers passed. New journeys verify grouped keyboard/typeahead navigation, disabled-option skipping, descriptions, invalid/reset focus, native form values, empty-menu focus/recovery, long-label bounds at 360/768/1024/1440px, RTL geometry, and wide-screen touch targets. The existing table journey now protects compact page-size options. Package verification removed its own servers and temporary directory. Light and dark grouped menus were inspected. Screenshot: `.artifacts/select-reference.png`.
 
-Next: Dialog. The goal remains active; items 6–11 and final integration review are unfinished.
+### 6. Dialog
+
+DialogContent now supports small/medium/large widths and optional body scrolling. The default keeps whole-content scrolling compatible with existing consumers. New DialogHeader and DialogBody components work with DialogFooter to keep headings and actions visible around long content. Short windows (640px high or less) use whole-content scrolling so every section remains reachable. Two layout tokens add the contract's 420/720px sizes around the existing 560px default, bringing the resolved reference to 201 variables.
+
+Close controls use logical placement and 44px narrow/coarse-pointer targets. Title spacing follows direction and close-button visibility. Review also found physical title padding in the admin drawer; logical padding now reserves enough room for its close control in both directions. The catalog demonstrates required validation, external footer form submission, saved versus discarded drafts, a long brief with title autofocus, and an RTL example. Documentation and both packed consumers cover the new exports.
+
+Plan, source, and integration reviews passed. Production build, workspace/test type checks, ESLint, seven token tests, all 19 Chromium journeys, and independent packed Vite/Next consumers passed. New and extended journeys cover first-invalid focus, draft recovery, footer form association, focus containment/restoration, Select layering, body scrolling with stable actions, short-window field/action reachability, 360/768/1024/1440px sizing, RTL title clearance, coarse-pointer close targets, and RTL drawer positioning. Package verification removed its servers and temporary directory. Light and dark dialogs and the RTL example were inspected. Screenshot: `.artifacts/dialog-reference.png`.
+
+Next: Badge and ActionMessage. The goal remains active; items 7–11 and final integration review are unfinished.

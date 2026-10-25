@@ -179,11 +179,19 @@
 .pk-action-message[data-tone="error"] { background: var(--pk-color-danger-bg); color: var(--pk-color-danger); }
 
 .pk-dialog-overlay { position: fixed; inset: 0; z-index: var(--pk-z-index-overlay); background: var(--pk-color-overlay); animation: pk-fade-in var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
-.pk-dialog-content { position: fixed; top: 50%; left: 50%; z-index: var(--pk-z-index-modal); display: grid; gap: var(--pk-space-4); width: min(var(--pk-layout-dialog), calc(100% - var(--pk-space-6) * 2)); max-height: calc(100dvh - var(--pk-space-6) * 2); overflow-y: auto; padding: var(--pk-space-6); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface-elevated); color: var(--pk-color-fg); box-shadow: var(--pk-shadow-lg); transform: translate(-50%, -50%); animation: pk-fade-in var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
-.pk-dialog-title { margin: 0; padding-right: var(--pk-space-8); font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-xl); line-height: var(--pk-font-line-height-snug); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
+.pk-dialog-content { --pk-dialog-width: var(--pk-layout-dialog); position: fixed; top: 50%; left: 50%; z-index: var(--pk-z-index-modal); display: grid; gap: var(--pk-space-4); width: min(var(--pk-dialog-width), calc(100% - var(--pk-space-6) * 2)); max-height: calc(100dvh - var(--pk-space-6) * 2); overflow-y: auto; padding: var(--pk-space-6); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface-elevated); color: var(--pk-color-fg); box-shadow: var(--pk-shadow-lg); transform: translate(-50%, -50%); animation: pk-fade-in var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
+.pk-dialog-content[data-size="sm"] { --pk-dialog-width: var(--pk-layout-dialog-sm); }
+.pk-dialog-content[data-size="lg"] { --pk-dialog-width: var(--pk-layout-dialog-lg); }
+.pk-dialog-content[data-scroll="body"] { display: flex; flex-direction: column; overflow: hidden; }
+.pk-dialog-content[data-scroll="body"] > .pk-dialog-body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.pk-dialog-content[data-scroll="body"] > .pk-dialog-header, .pk-dialog-content[data-scroll="body"] > .pk-dialog-footer { flex: none; }
+.pk-dialog-header { display: grid; gap: var(--pk-space-2); min-width: 0; }
+.pk-dialog-body { min-width: 0; padding: var(--pk-space-1); margin: calc(var(--pk-space-1) * -1); }
+.pk-dialog-title { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-xl); line-height: var(--pk-font-line-height-snug); font-weight: var(--pk-font-weight-semibold); overflow-wrap: anywhere; }
+:where(.pk-dialog-content[data-close-button]) .pk-dialog-title { padding-inline-end: var(--pk-space-8); }
 .pk-dialog-description { margin: 0; color: var(--pk-color-fg-muted); overflow-wrap: anywhere; }
-.pk-dialog-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--pk-space-3); }
-.pk-dialog-close { position: absolute; top: var(--pk-space-3); right: var(--pk-space-3); display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: var(--pk-control-height-md); min-height: var(--pk-control-height-md); padding: var(--pk-space-2); border: var(--pk-border-width-hairline) solid transparent; border-radius: var(--pk-radius-sm); background: transparent; color: var(--pk-color-fg-muted); cursor: pointer; }
+.pk-dialog-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--pk-space-3); min-width: 0; }
+.pk-dialog-close { position: absolute; inset-block-start: var(--pk-space-3); inset-inline-end: var(--pk-space-3); display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-width: var(--pk-control-height-md); min-height: var(--pk-control-height-md); padding: var(--pk-space-2); border: var(--pk-border-width-hairline) solid transparent; border-radius: var(--pk-radius-sm); background: transparent; color: var(--pk-color-fg-muted); cursor: pointer; }
 .pk-dialog-close svg { width: var(--pk-layout-icon); height: var(--pk-layout-icon); }
 .pk-dialog-close:hover { background: var(--pk-color-bg-muted); color: var(--pk-color-fg); }
 
@@ -192,19 +200,25 @@
 
 /* 640px is breakpoint.sm in the inherited token contract; CSS variables cannot drive media queries. */
 @media (max-width: 640px) {
-  .pk-dialog-close { min-height: var(--pk-layout-touch); }
   .pk-input, .pk-textarea, .pk-select { font-size: var(--pk-font-size-base); }
-  .pk-dialog-close { min-width: var(--pk-layout-touch); }
-  .pk-dialog-content { width: calc(100% - var(--pk-space-4) * 2); padding: var(--pk-space-5); }
+  .pk-dialog-content { width: min(var(--pk-dialog-width), calc(100% - var(--pk-space-4) * 2)); padding: var(--pk-space-5); }
 }
 
 @media (max-width: 640px), (pointer: coarse) {
+  .pk-dialog-close { min-width: var(--pk-layout-touch); min-height: var(--pk-layout-touch); }
+  :where(.pk-dialog-content[data-close-button]) .pk-dialog-title { padding-inline-end: var(--pk-space-10); }
   .pk-select[data-size] { min-height: max(var(--pk-layout-touch), var(--pk-select-height)); }
   .pk-select-item { min-height: var(--pk-layout-touch); }
   .pk-input[data-size], .pk-textarea[data-size], .pk-input-container[data-adorned] { min-height: max(var(--pk-layout-touch), var(--pk-field-height)); }
   .pk-input-container[data-adorned] > .pk-input { min-height: calc(max(var(--pk-layout-touch), var(--pk-field-height)) - var(--pk-border-width-hairline) * 2); }
   .pk-button[data-size] { min-height: max(var(--pk-layout-touch), var(--pk-button-height)); min-width: var(--pk-layout-touch); }
   .pk-button[data-shape="icon"] { width: max(var(--pk-layout-touch), var(--pk-button-height)); min-width: max(var(--pk-layout-touch), var(--pk-button-height)); height: max(var(--pk-layout-touch), var(--pk-button-height)); }
+}
+
+/* Reuse foundation.breakpoint.sm (640px) as the short-window threshold; media queries cannot use CSS variables. */
+@media (max-height: 640px) {
+  .pk-dialog-content[data-scroll="body"] { display: grid; grid-auto-rows: max-content; overflow-y: auto; }
+  .pk-dialog-content[data-scroll="body"] > .pk-dialog-body { min-height: auto; overflow: visible; overscroll-behavior: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -111,6 +111,36 @@ SelectField adds the same label, hint, error, optional cue, and external-descrip
 
 Use `defaultValue` for an uncontrolled selection or `value` with `onValueChange` for application state. An empty value displays the placeholder. A named control participates in its containing form, or the form identified by `form`. Applications own validation and controlled reset behavior; the catalog demonstrates focusing an invalid field and clearing it with a reset action.
 
+## Dialog
+
+DialogContent accepts `size="sm" | "md" | "lg"` (420/560/720px, constrained to the viewport) and `scroll="content" | "body"`. Defaults preserve the original medium dialog with whole-content scrolling. Use DialogHeader, DialogBody, and DialogFooter as direct children with `scroll="body"` to keep the heading and actions visible while long content scrolls. At viewport heights of 640px or less, the entire dialog scrolls so every section remains reachable.
+
+```tsx
+import {
+  Button, Dialog, DialogTrigger, DialogContent, DialogHeader,
+  DialogTitle, DialogDescription, DialogBody, DialogFooter, DialogClose
+} from "@project-kit/ui";
+
+<Dialog>
+  <DialogTrigger asChild><Button>Edit project</Button></DialogTrigger>
+  <DialogContent size="lg" scroll="body">
+    <DialogHeader>
+      <DialogTitle>Edit project</DialogTitle>
+      <DialogDescription>Update the project details.</DialogDescription>
+    </DialogHeader>
+    <DialogBody>
+      <form id="edit-project" onSubmit={saveProject}>{/* Fields */}</form>
+    </DialogBody>
+    <DialogFooter>
+      <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
+      <Button type="submit" form="edit-project">Save project</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+Use a unique form ID (for example, from React's `useId`) to connect a footer submit button to its form inside the body. Keep validation and unsaved-draft behavior in the application. The catalog demonstrates first-invalid focus, saving, and discarding changes when dismissed. Radix manages focus containment, Escape, outside dismissal, and trigger focus restoration. Native Radix callbacks and refs remain available. Set `dir="rtl"` on DialogContent for logical close-button positioning; use `closeLabel` to name the close control or `showCloseButton={false}` when providing another clear dismissal action.
+
 ## Admin shell and tables
 
 `AdminShell` provides a sidebar, header, content area, skip link, and a drawer for narrow containers. Supply navigation items, the active item ID, branding, actions, and footer content. Native links work by default; `renderLink` lets a consuming router receive the same link props. Authentication and route matching belong to the application. Use `contentAs="section"` when embedding a shell inside an existing main landmark.
