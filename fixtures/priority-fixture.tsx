@@ -4,6 +4,7 @@ import { useState } from "react";
 import * as Kit from "@evenkit/ui";
 import { RecordWorkflow, type WorkflowRecord } from "./blocks/record-workflow";
 import { RecoveryPage } from "./blocks/recovery-page";
+import { RoadmapFixture } from "./roadmap-fixture";
 
 const requiredExports: readonly (keyof typeof Kit)[] = [
   "Prose", "Container", "Stack", "Separator", "Card", "PageHeader", "ActionGroup", "VisuallyHidden",
@@ -52,5 +53,6 @@ export function PriorityFixture() {
       return saved;
     }} />
     <RecoveryPage headingAs="h3" kind="offline" action={<Kit.ButtonLink href="#reconnect">Reconnect</Kit.ButtonLink>} />
+    <RoadmapFixture />
   </section>;
 }

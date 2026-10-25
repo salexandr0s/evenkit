@@ -4,7 +4,7 @@ Research date: 25 October 2026. Project: `@evenkit` in `design-tokens`.
 
 The kit should cover complete application and website flows, from small controls to editable page templates. The research baseline had 14 catalog sections. The tables below preserve that baseline and the proposed expansion scope.
 
-The 48 entries marked Next have since been implemented and verified, bringing the catalog to 62 entries. Their source, examples, contracts and completion evidence are recorded in the [priority tracker](./priority-build-plan.md). Follow-up and Optional entries remain proposals.
+The 48 entries marked Next have been implemented and verified; their completion evidence is in the [priority tracker](./priority-build-plan.md). The 24 requested additions marked Built bring the catalog to 86 entries. Their contracts and verification are tracked in the [component roadmap](./component-roadmap-plan.md). Remaining Follow-up and Optional entries are proposals.
 
 This is a proposed inventory, based on the original project review, the internal Apple Minimal contracts, current public exports, and fresh research of the original upstream libraries. Priorities are recommendations. An entry records a reusable family or work item; it does not promise a separate package, export, or ready implementation for every name.
 
@@ -37,7 +37,8 @@ Five gaps already have internal specifications: **Card, Tabs, Toast, Dropdown/Me
 
 | Label | Meaning |
 | --- | --- |
-| Next | Broadly useful missing foundations; prepare first. |
+| Next | Original priority foundations, now implemented. |
+| Built | Requested application components implemented in the current roadmap. |
 | Follow-up | Common compositions and richer controls; prepare after their dependencies. |
 | Optional | Keep a documented candidate; implement when a named project needs it. |
 | UI | Maintained React component or small composition using kit CSS. |
@@ -46,7 +47,7 @@ Five gaps already have internal specifications: **Card, Tabs, Toast, Dropdown/Me
 | Adapter | Explicit framework/provider integration with its own dependencies and checks. |
 | Extend | Expand or extract an existing implementation rather than duplicate it. |
 
-All rows below are proposed additions or extensions. Subparts such as CardHeader/CardBody, individual form states, sizes, and color variants are included in their family rather than counted separately.
+Rows retain their original scope; Next and Built rows are implemented, while other rows remain proposed additions or extensions. Subparts such as CardHeader/CardBody, individual form states, sizes, and color variants are included in their family rather than counted separately.
 
 ## Foundations and layout
 
@@ -96,11 +97,11 @@ Compare [Mantine input families](https://mantine.dev/core/package/), [HeroUI for
 | C02 | Form error summary and status | Next / UI | Linked field errors, first-invalid recovery, pending/saved/failed messages. |
 | C03 | Search field | Next / UI, Extend | Clear control, search naming, result feedback; reuse field frame. |
 | C04 | Password field | Next / UI | Accessible show/hide, autofill, password-manager compatibility. |
-| C05 | Number field | Follow-up / UI | Locale-aware parsing, limits, steps, decimal values, empty state. |
-| C06 | Currency, percentage, unit fields | Follow-up / Recipe | Explicit unit/currency, precision, display/edit values, validation. |
+| C05 | Number field | Built / UI | Locale-aware parsing, limits, steps, decimal values, empty state. |
+| C06 | Currency, percentage, unit fields | Built / Recipe | Explicit unit/currency, precision, display/edit values, validation. |
 | C07 | Combobox and autocomplete | Next / UI | Searchable options, custom rows, keyboard selection, clear and no-results states. |
-| C08 | MultiSelect | Follow-up / UI | Multiple values, removable selections, count, overflow and clear-all. |
-| C09 | Tags/token input | Follow-up / UI | User-created values, validation, duplicate handling, keyboard removal. |
+| C08 | MultiSelect | Built / UI | Multiple values, removable selections, count, overflow and clear-all. |
+| C09 | Tags/token input | Built / UI | User-created values, validation, duplicate handling, keyboard removal. |
 | C10 | OTP/PIN field | Follow-up / UI | Paste, autofill, grouped digits, accessible naming and invalid feedback. |
 | C11 | Phone and masked input | Optional / UI | Country context, unambiguous stored value, paste and edit behavior. |
 | C12 | Color field and picker | Optional / UI | Text entry, swatches, alpha where needed, token/brand validation. |
@@ -116,14 +117,14 @@ Prefer ordinary input types for email and URLs. Character counters, adornments, 
 
 | ID | Family | When / delivery | Scope |
 | --- | --- | --- | --- |
-| D01 | Calendar | Follow-up / UI | Keyboard date navigation, today/selected/unavailable states, locale. |
-| D02 | Date field and date picker | Follow-up / UI | Typed entry plus calendar popup; parsing and min/max validation. |
-| D03 | Date-range picker | Follow-up / UI | Start/end dates, incomplete selection, presets, invalid ranges. |
-| D04 | Time field and time picker | Follow-up / UI | 12/24-hour presentation, minute steps, labeled controls. |
+| D01 | Calendar | Built / UI | Keyboard date navigation, today/selected/unavailable states, locale. |
+| D02 | Date field and date picker | Built / UI | Typed entry plus calendar popup; parsing and min/max validation. |
+| D03 | Date-range picker | Built / UI | Start/end dates, incomplete selection, presets, invalid ranges. |
+| D04 | Time field and time picker | Built / UI | 12/24-hour presentation, minute steps, labeled controls. |
 | D05 | Date-time picker | Optional / UI | Compose D02/D04 with an explicit timezone contract. |
 | D06 | Month/year picker | Optional / UI | Reporting periods and coarse date selection. |
 | D07 | Timezone selector | Optional / UI | Search, IANA identifiers, current offset, daylight-saving context. |
-| D08 | Date/number/file-size formatting | Follow-up / Recipe | Locale-aware display; semantic time markup and stable stored values. |
+| D08 | Date/number/file-size formatting | Built / Recipe | Locale-aware display; semantic time markup and stable stored values. |
 
 ## Navigation and disclosure
 
@@ -138,9 +139,9 @@ The missing Tabs and Navbar already have [internal component contracts](/Users/n
 | E05 | Navbar/navigation menu | Next / UI | Public/app header, active links, mobile menu, brand/action slots. |
 | E06 | Pagination | Next / UI, Extend | Standalone list navigation, page ranges, disabled and busy states. |
 | E07 | Navigation item/group | Follow-up / UI, Extend | Extract useful shell pieces without duplicating sidebar state. |
-| E08 | Steps/step indicator | Follow-up / UI | Current/completed/upcoming/error states and noninteractive progress. |
+| E08 | Steps/step indicator | Built / UI | Current/completed/upcoming/error states and noninteractive progress. |
 | E09 | Table of contents/anchor navigation | Follow-up / UI | Document sections, current section, scroll offsets and keyboard links. |
-| E10 | Command palette/global search | Follow-up / UI | Commands versus links, groups, shortcuts, empty/loading results. |
+| E10 | Command palette/global search | Built / UI | Commands versus links, groups, shortcuts, empty/loading results. |
 
 ## Menus and overlays
 
@@ -184,7 +185,7 @@ Use [Chakra's display catalog](https://chakra-ui.com/docs/components/concepts/ov
 | H03 | Description/data list | Next / Recipe | Label/value details, compact/responsive layout, missing values. |
 | H04 | List item and rich item row | Next / UI | Leading media, title/description, metadata, trailing actions. |
 | H05 | Statistic/KPI | Follow-up / UI | Value, unit, period, comparison and text-based trend. |
-| H06 | Timeline/activity item | Follow-up / UI | Actor, action, timestamp, grouped events and pending/error states. |
+| H06 | Timeline/activity item | Built / UI | Actor, action, timestamp, grouped events and pending/error states. |
 | H07 | Code block and inline code | Follow-up / UI | Overflow, copy, language label, long lines; optional highlighting. |
 | H08 | Keyboard shortcut/Kbd | Next / UI | Platform-aware shortcut display and accessible descriptions. |
 | H09 | Text overflow/read-more | Follow-up / Recipe | Wrapping first, deliberate truncation, full-content access. |
@@ -199,11 +200,11 @@ Build on the [current DataTable](../packages/ui/src/data-table.tsx), the origina
 | I01 | Semantic Table | Next / UI | Caption, header/body/footer, alignment, density, scroll containment. |
 | I02 | Filter bar and filter field | Next / UI | Search, facets, sort, reset, apply versus immediate behavior. |
 | I03 | Applied filters | Next / UI | Removable chips, count, clear-all, pending/applied feedback. |
-| I04 | Sort control | Follow-up / UI | Field and direction, accessible current sort, reusable outside tables. |
-| I05 | Bulk action bar | Follow-up / UI, Extend | Selected count, actions, clear, cross-page scope; extract table composition. |
-| I06 | Column visibility and display settings | Follow-up / UI, Extend | Hide/show columns, density, useful persistence boundary. |
+| I04 | Sort control | Built / UI | Field and direction, accessible current sort, reusable outside tables. |
+| I05 | Bulk action bar | Built / UI, Extend | Selected count, actions, clear, cross-page scope; extract table composition. |
+| I06 | Column visibility and display settings | Built / UI, Extend | Hide/show columns, density, useful persistence boundary. |
 | I07 | Expanded rows and row details | Follow-up / UI, Extend | Controlled expansion, nested content, focus-safe actions. |
-| I08 | Remote-data table mode | Follow-up / Adapter, Extend | Controlled sorting/filtering/paging, totals, loading and stale responses. |
+| I08 | Remote-data table mode | Built / Adapter, Extend | Controlled sorting/filtering/paging, totals, loading and stale responses. |
 | I09 | Saved views | Optional / Block | Named filters/sort/columns; storage and sharing policies stay application-owned. |
 | I10 | Virtualized list/table | Optional / Adapter | Large-data rendering with explicit keyboard and screen-reader checks. |
 | I11 | Editable table/grid | Optional / Adapter | Cell editing, validation, save/cancel and concurrency; separate scope from read-only tables. |
@@ -216,8 +217,8 @@ References: [Leitspur upload picker](/Users/nationalbank/GitHub/leitspur/apps/in
 | --- | --- | --- | --- |
 | J01 | File input and dropzone | Next / UI | Click/keyboard/drop, multiple files, types/sizes/counts, rejection feedback. |
 | J02 | File row and attachment | Next / UI | Name/type/size, open/download/remove, long names, accessible labels. |
-| J03 | Upload queue and progress | Follow-up / UI | Per-file pending/uploading/done/error, retry/cancel and duplicates. |
-| J04 | Image and thumbnail | Follow-up / UI | Loading/error/alt text, fit/crop presentation and stable dimensions. |
+| J03 | Upload queue and progress | Built / UI | Per-file pending/uploading/done/error, retry/cancel and duplicates. |
+| J04 | Image and thumbnail | Built / UI | Loading/error/alt text, fit/crop presentation and stable dimensions. |
 | J05 | Avatar/logo upload | Follow-up / Block | Compose avatar, picker, preview, replace/remove and save feedback. |
 | J06 | File preview/lightbox | Follow-up / UI | Images/basic document previews, unsupported types and open/download fallback. |
 | J07 | Document list/grid | Follow-up / Block | File rows/cards, folder navigation, selection, filters and empty states. |
@@ -262,10 +263,10 @@ These extend the original invitation/settings candidates into explicit UI blocks
 | ID | Family | When / delivery | Scope |
 | --- | --- | --- | --- |
 | M01 | Account menu | Next / UI | Identity, profile/settings links, theme, sign-out and pending feedback. |
-| M02 | Workspace/organization switcher | Follow-up / UI | Current context, search, unavailable contexts, switching feedback. |
-| M03 | Settings layout and section | Follow-up / Block | Navigation, grouped fields, save behavior, deep links and mobile layout. |
-| M04 | Profile settings | Follow-up / Block | Name, email, avatar, validation and save recovery. |
-| M05 | Appearance/language preferences | Follow-up / Block | Theme/mode, density and locale; compose existing token options. |
+| M02 | Workspace/organization switcher | Built / UI | Current context, search, unavailable contexts, switching feedback. |
+| M03 | Settings layout and section | Built / Block | Navigation, grouped fields, save behavior, deep links and mobile layout. |
+| M04 | Profile settings | Built / Block | Name, email, avatar, validation and save recovery. |
+| M05 | Appearance/language preferences | Built / Block | Theme/mode, density and locale; compose existing token options. |
 | M06 | Notification preferences | Follow-up / Block | Per-channel/category preferences, pending and failed saves. |
 | M07 | Members and invitations | Follow-up / Block | Member list, invite/resend/revoke, pending/expired and action feedback. |
 | M08 | Role/capability editor | Optional / Block | Application-defined grants, read-only/denied states and confirmation. |
@@ -295,10 +296,10 @@ Keep [existing chat](./chat.md) as the base. The [shadcn AI Elements references]
 | --- | --- | --- | --- |
 | O01 | Dashboard/overview | Follow-up / Block | Page header, useful summaries, activity, optional chart and data section. |
 | O02 | List/index page | Next / Block | Header/actions, filters, table/list, pagination and recovery states. |
-| O03 | Record detail page | Follow-up / Block | Summary, description list, tabs, activity and contextual actions. |
+| O03 | Record detail page | Built / Block | Summary, description list, tabs, activity and contextual actions. |
 | O04 | Create/edit page | Next / Block | Sections, validation, save/cancel, pending/error, unsaved changes. |
 | O05 | Detail drawer/master-detail | Follow-up / Block | List context, selected record, focus/URL boundary and narrow-screen flow. |
-| O06 | Onboarding/wizard | Follow-up / Block | Steps, per-step validation, back/forward, review, draft recovery. |
+| O06 | Onboarding/wizard | Built / Block | Steps, per-step validation, back/forward, review, draft recovery. |
 | O07 | Search results page | Follow-up / Block | Query, facets, counts, result rows, no-results and unavailable search. |
 | O08 | Notification center | Follow-up / Block | Unread/read, groups, actions, pagination and empty/error states. |
 | O09 | Activity/audit viewer | Follow-up / Block | Event filters, actors, timestamps, details and export; no audit storage engine. |

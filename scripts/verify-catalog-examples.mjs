@@ -25,13 +25,23 @@ try {
   const ids = entries.map(entry => entry.id);
   if (new Set(ids).size !== ids.length) throw new Error("Catalog entry IDs must be unique.");
   const inventory = await readFile(join(root, "docs", "component-inventory.md"), "utf8");
-  const expected = [...inventory.matchAll(/^\| ([A-R]\d{2}) \|[^\n]+\| Next \/[^\n]+$/gm)].map(match => match[1]);
-  if (expected.length !== 48) throw new Error(`Expected the original 48 Next entries, received ${expected.length}.`);
+  const original = [...inventory.matchAll(/^\| ([A-R]\d{2}) \|[^\n]+\| Next \/[^\n]+$/gm)].map(match => match[1]);
+  if (original.length !== 48) throw new Error(`Expected the original 48 Next entries, received ${original.length}.`);
+  const additions = [
+    "D01", "D02", "D03", "D04", "D08", "C08", "C09", "C05", "C06",
+    "I08", "I04", "I05", "I06", "O03", "H06", "M02", "M03", "M04", "M05",
+    "J03", "J04", "E10", "E08", "O06",
+  ];
+  const inventoryIds = [...inventory.matchAll(/^\| ([A-R]\d{2}) \|/gm)].map(match => match[1]);
+  const expected = [...original, ...additions];
+  if (new Set(expected).size !== 72 || additions.some(id => !inventoryIds.includes(id))) {
+    throw new Error("The requested roadmap must contain 24 distinct additions present in the inventory.");
+  }
   const mapped = entries.flatMap(entry => entry.inventoryIds ?? []);
   for (const id of expected) {
     if (mapped.filter(value => value === id).length !== 1) throw new Error(`${id} must map to exactly one catalog entry.`);
   }
-  if (mapped.some(id => !expected.includes(id))) throw new Error("Unexpected inventory IDs in priority examples.");
+  if (mapped.some(id => !expected.includes(id))) throw new Error("Unexpected inventory IDs in component examples.");
   await symlink(join(root, "node_modules"), join(scratch, "node_modules"), "dir");
   const examples = join(scratch, "examples");
   await mkdir(examples);

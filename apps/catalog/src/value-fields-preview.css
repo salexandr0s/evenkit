@@ -1,0 +1,7 @@
+.value-fields-stack { display: grid; gap: var(--pk-space-5); min-width: 0; width: 100%; max-width: var(--pk-layout-form); }
+.value-fields-header > :first-child { margin: 0; color: var(--pk-color-fg); font-size: var(--pk-font-size-xl); line-height: var(--pk-font-line-height-snug); font-weight: var(--pk-font-weight-semibold); }
+.value-fields-header p { margin: var(--pk-space-2) 0 0; color: var(--pk-color-fg-muted); max-width: var(--pk-layout-prose); }
+.value-fields-secondary { padding-block-start: var(--pk-space-6); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.value-fields-secondary .value-fields-header > :first-child { font-size: var(--pk-font-size-base); }
+.value-fields-note { margin: 0; min-width: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.value-fields-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--pk-layout-reading)), 1fr)); gap: var(--pk-space-5); }

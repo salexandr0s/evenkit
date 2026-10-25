@@ -15,6 +15,7 @@ import {
   PanelTopIcon, RectangleHorizontalIcon, SaveIcon, SeparatorHorizontalIcon,
   ShapesIcon, SlidersHorizontalIcon, SquareCheckIcon, Table2Icon, TagsIcon,
   ToggleRightIcon, TriangleAlertIcon, TypeIcon, UploadIcon, UserIcon,
+  CalendarDaysIcon, ClockIcon, Building2Icon, ActivityIcon, CameraIcon, CalculatorIcon,
 } from "@evenkit/ui";
 import { entries, groups } from "./catalog-data";
 import { foundationsEntries } from "./foundations-entries";
@@ -23,6 +24,7 @@ import { formsEntries } from "./forms-entries";
 import { navigationEntries } from "./navigation-entries";
 import { overlaysEntries } from "./overlays-entries";
 import { workflowsEntries } from "./workflows-entries";
+import { roadmapEntries } from "./roadmap-entries";
 import { CodeExample } from "./code-example";
 import { FieldPreview } from "./field-preview";
 import { EmptyPreview } from "./empty-preview";
@@ -45,6 +47,7 @@ const FormsPreview = lazy(() => import("./forms-preview").then((module) => ({ de
 const NavigationPreview = lazy(() => import("./navigation-preview").then((module) => ({ default: module.NavigationPreview })));
 const OverlaysPreview = lazy(() => import("./overlays-preview").then((module) => ({ default: module.OverlaysPreview })));
 const WorkflowsPreview = lazy(() => import("./workflows-preview").then((module) => ({ default: module.WorkflowsPreview })));
+const RoadmapPreview = lazy(() => import("./roadmap-preview").then((module) => ({ default: module.RoadmapPreview })));
 
 const appearances = ["system", "light", "dark"] as const;
 const sidebarStates = ["expanded", "collapsed", "hidden"] as const;
@@ -73,6 +76,15 @@ const navigationIcons: Record<string, ReactNode> = {
   "semantic-table": <Table2Icon />, filters: <FilterIcon />, "applied-filters": <FilterXIcon />,
   "file-input": <UploadIcon />, "file-row": <FileTextIcon />, "list-page": <ListIcon />,
   "edit-page": <FilePenLineIcon />, "error-pages": <CircleAlertIcon />,
+  calendar: <CalendarDaysIcon />, "date-picker": <CalendarDaysIcon />, "date-range": <CalendarDaysIcon />,
+  "time-field": <ClockIcon />, formatting: <TypeIcon />, "multi-select": <ListChecksIcon />,
+  "token-input": <TagsIcon />, "number-field": <CalculatorIcon />, "number-recipes": <CalculatorIcon />,
+  "remote-data-table": <Table2Icon />, "sort-control": <ListFilterIcon />, "bulk-actions": <ListChecksIcon />,
+  "column-settings": <Columns3Icon />, "activity-timeline": <ActivityIcon />, "record-detail": <FileTextIcon />,
+  "workspace-switcher": <Building2Icon />, "settings-layout": <SlidersHorizontalIcon />,
+  "profile-settings": <UserIcon />, "appearance-preferences": <SunIcon />, "upload-queue": <UploadIcon />,
+  image: <CameraIcon />, "command-palette": <SearchIcon />, "step-indicator": <ListChecksIcon />,
+  "onboarding-wizard": <PanelsTopLeftIcon />,
 };
 
 function readPreference<T extends string>(key: string, options: readonly T[], fallback: T): T {
@@ -91,6 +103,7 @@ function selectedFromHash() {
 }
 
 function Preview({ id, theme, mode, onThemeChange }: { id: string; theme: ThemeName; mode: ColorMode; onThemeChange: (theme: ThemeName) => void }) {
+  if (roadmapEntries.some(entry => entry.id === id)) return <RoadmapPreview id={id} />;
   if (foundationsEntries.some(entry => entry.id === id)) return <FoundationsPreview id={id} />;
   if (selectionEntries.some(entry => entry.id === id)) return <SelectionPreview id={id} />;
   if (formsEntries.some(entry => entry.id === id)) return <FormsPreview id={id} />;

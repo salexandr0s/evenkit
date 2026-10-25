@@ -1,0 +1,19 @@
+.account-record-preview { display: grid; gap: var(--pk-space-6); min-width: 0; }
+.account-record-preview > .pk-button { justify-self: start; }
+.account-record-heading { display: grid; gap: var(--pk-space-2); }
+.account-record-heading h3 { margin: 0; font-size: var(--pk-font-size-xl); font-weight: var(--pk-font-weight-semibold); }
+.account-record-heading p, .account-appearance-sample p { margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); }
+.account-record-options { display: flex; flex-wrap: wrap; gap: var(--pk-space-3) var(--pk-space-5); padding-block-start: var(--pk-space-4); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.account-record-options label { display: flex; align-items: center; gap: var(--pk-space-2); font-size: var(--pk-font-size-sm); color: var(--pk-color-fg-muted); }
+.account-record-options input { accent-color: var(--pk-color-accent); }
+.account-appearance-sample { padding: var(--pk-space-6); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface); color: var(--pk-color-fg); display: grid; gap: var(--pk-space-5); }
+.account-appearance-sample h3 { margin: var(--pk-space-2) 0; font-size: var(--pk-font-size-xl); }
+.account-appearance-label { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
+.account-appearance-data { margin: 0; display: grid; gap: var(--pk-space-4); }
+.account-appearance-data > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--pk-space-2) var(--pk-space-4); padding-block: var(--pk-space-3); border-block-end: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.account-appearance-data dt { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
+.account-appearance-data dd { margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.account-appearance-sample[data-density="compact"] { padding: var(--pk-space-4); gap: var(--pk-space-3); }
+.account-appearance-sample[data-density="compact"] .account-appearance-data { gap: var(--pk-space-2); }
+.account-appearance-sample[data-density="compact"] .account-appearance-data > div { padding-block: var(--pk-space-1); }
+.account-record-preview [hidden] { display: none !important; }

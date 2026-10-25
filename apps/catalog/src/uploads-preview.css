@@ -1,0 +1,17 @@
+.uploads-preview { display: grid; gap: var(--pk-space-6); min-width: 0; }
+.uploads-preview-header { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: var(--pk-space-4); }
+.uploads-preview-header > div:first-child { flex: 1 1 var(--pk-layout-sidebar); }
+.uploads-preview h3 { margin: 0; color: var(--pk-color-fg); font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-lg); line-height: var(--pk-font-line-height-snug); }
+.uploads-preview p { margin: var(--pk-space-2) 0 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); overflow-wrap: anywhere; }
+.uploads-preview-options { display: grid; gap: var(--pk-space-3); padding-block-start: var(--pk-space-5); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.uploads-preview-options h3 { font-size: var(--pk-font-size-sm); }
+.uploads-preview-options label { display: flex; align-items: center; gap: var(--pk-space-2); font-size: var(--pk-font-size-sm); }
+.uploads-preview-options input { accent-color: var(--pk-color-accent); }
+.uploads-preview-options p { margin: 0; }
+.uploads-preview-images { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--pk-layout-sidebar)), 1fr)); gap: var(--pk-space-5); }
+.uploads-preview-images figure { min-width: 0; margin: 0; }
+.uploads-preview-images figcaption { margin-block-start: var(--pk-space-2); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
+.uploads-preview-thumbnails { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-4); }
+.uploads-preview-thumbnails p { flex: 1 1 var(--pk-layout-sidebar); }
+/* The sample logo has transparent pixels and needs its own light artboard. */
+.uploads-preview-images .pk-image[data-state="loaded"], .uploads-preview-thumbnails .pk-image[data-state="loaded"] { background: var(--pk-palette-neutral-0); }

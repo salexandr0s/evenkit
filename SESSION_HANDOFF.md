@@ -2,6 +2,20 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Application components and design pass: 25 October 2026
+
+Completed the requested nine groups covering 24 inventory additions: dates/time/formatting, MultiSelect/token input, locale numbers and unit recipes, remote tables and controls, record details/activity, workspace/settings/profile/appearance, upload queues/images, command search, and steps/onboarding. Public APIs and source blocks are in commit `907a53c`; catalog integration, browser coverage and completion records follow in a separate commit. Earlier Navbar, Hallmark and design edits remain in the working tree and were excluded through selective patches. No production deployment or package publication was performed for this work.
+
+The catalog now has 86 examples and exactly 72 inventory mappings. `apps/catalog/src/roadmap-entries.ts` and `roadmap-preview.tsx` integrate six feature families. New maintained controls are exported from `packages/ui/src/index.ts`; `registry/blocks/record-detail.tsx`, `account-settings.tsx` and `onboarding-wizard.tsx` are copyable application blocks. API guides are `docs/dates.md`, `value-fields.md`, `remote-tables.md`, `records-settings.md`, `uploads.md` and `commands-wizard.md`. The completed plan and design evidence are in `docs/component-roadmap-plan.md` and `component-roadmap-design.md`.
+
+Date-only and local-time strings remain distinct from timezone-bearing instants. Numeric drafts preserve invalid/partial input and submit canonical values. Applications own API transports, routing, authorization, storage scope and mutations. Async controls cancel requests and reject stale completions. Remote tables expose query/total/selection scope; source blocks preserve drafts and focus. Appearance settings include supported locales and density. Document themes use root attributes; nested samples apply explicit `cssVariables` and resolved system mode.
+
+The design pass improved selected-calendar contrast, bounded form width, mobile step density and action wrapping, upload empty states and stable command-search positioning. Reviewed all 24 additions at 360/1440px in light Neutral and dark Ocean; 96 captures and follow-up appearance/MultiSelect captures found no page overflow or runtime errors. The final appearance journey asserts actual computed theme colors.
+
+Verification passed: production builds, configured TypeScript and ESLint, 22 unit tests, all 86 copied examples/72 mappings, independent packed Vite/Next production builds and SSR/HTTP/stylesheet checks. The full Chromium run passed 183 of 184 journeys; its required-number-field failure was fixed and all ten affected value/account journeys passed after rebuilding. The final catalog color refinement passed the extended settings journey. No known test failure remains. Firefox, Safari, physical touch and a complete RTL visual matrix were not tested. Vite retains its initial-chunk size advisory.
+
+No required implementation remains. Evidence is under `.artifacts/component-roadmap/`, including `*-complete.log`, `unit-final.log`, `browser-final.log`, screenshots and selective patches. The local preview is `http://127.0.0.1:5390/#calendar` (owned session 77066). Resume with `git log -2 --oneline`, `git status --short` and `cat docs/component-roadmap-design.md`. If the preview has stopped, run `npm run preview --workspace @evenkit/catalog -- --port 5390 --strictPort`.
+
 ## Evenkit rename and production launch: 25 October 2026
 
 Renamed the kit and workspace packages to Evenkit / `@evenkit/*`, updated examples and documentation, and created an original transparent logo from scratch. The catalog uses the logo silhouette with the active theme foreground and supplies it as the favicon. Existing `pk-` CSS and `data-kit-*` contracts remain stable; catalog preferences migrate from the former storage keys.
