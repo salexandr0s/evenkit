@@ -24,11 +24,11 @@ The RadioGroup wrapper retains keyboard navigation intent until Radix's deferred
 
 ## Selection presentation
 
-Checkbox labels use medium weight, with hints aligned beneath the label and space between separate choices. Radio options use a quiet selected row boundary in addition to their checked indicator. Selected row styling is limited to radio options; labels and controls retain their native click targets.
+Checkbox labels use medium weight, with hints aligned beneath the label and space between separate choices. Selected radio options use a soft accent fill, accent label and border in addition to their checked indicator. Selected row styling is limited to radio options; labels and controls retain their native click targets.
 
 The switch thumb travels inside a fixed track over the base motion duration. Travel derives from the track width, thumb width, padding and border tokens. The nearest explicit `dir="ltr"` or `dir="rtl"` context sets its direction, including nested overrides, through an inherited private CSS variable. This avoids the production build's language-based lowering of `:dir()`. A pending save shows a small spinner inside the thumb without changing control geometry or focus. Reduced motion removes thumb transitions and spinner rotation.
 
-Toggle actions have individual outlines and pressed fills. Segmented choices share a recessed track, balanced widths and a raised selected surface. The catalog applies formatting toggles to a note and switches the project presentation between list and cards.
+Toggle actions have individual outlines. Pressed toggles and selected segmented choices use accent text and borders with soft accent fills. Segmented choices share a recessed track, balanced widths and a small shadow on the selected choice. Selected colours persist during hover and focus. The catalog applies formatting toggles to a note and switches the project presentation between list and cards.
 
 Joined button groups share one border at each seam and raise hovered or focused buttons above their neighbours. Horizontal groups keep labels wrapped within a single row on larger screens and stack below 640px, with logical corners preserved. Spaced groups retain their normal wrapping behavior and every action stays in Tab order.
 

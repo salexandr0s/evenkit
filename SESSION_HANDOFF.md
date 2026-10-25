@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Theme colour on selected states: 25 October 2026
+
+Rebalanced themes after the user found the first pass too muted. Selected sidebar rows now use a tinted background with accent labels and icons. The same treatment covers selected settings/workspace navigation, pill tabs, radio rows, toggles, segmented choices and current dropdown/mobile destinations. Horizontal active links keep their underline and gain accent text; the current pagination page has an accent fill. Selected neutral tags use the theme accent, while semantic tag tones retain their meaning. Selected colours persist on hover. Large surfaces, body text and structural borders remain neutral.
+
+Strengthened `accent-soft` across the eight themes; Grove light uses `#E0F2E6`. All existing text contrast checks pass, with a minimum of 4.89:1. Runtime changes are in `packages/tokens/src/themes.ts` and the UI stylesheets `admin-shell.css`, `foundations.css`, `navigation.css`, `selection-controls.css` and `workspace-settings.css`. Three component guides describe the selected-state treatment. APIs, layout and interaction behaviour are unchanged.
+
+Verification passed: production build, configured workspace TypeScript, ESLint and nine token tests. The browser run passed 39 of 40 journeys; the remaining switch journey froze the clock before its lazy preview loaded. Added a visibility wait before pausing the clock, preserving every timing and behaviour assertion; all eight selection journeys then passed. The other 32 passing journeys cover themes, sidebar, foundations, navigation, navbar and settings. A temporary Chromium fixture passed 61 selected/hover/focus style assertions. Visual review covered Grove light and Ocean dark sidebar, tabs and selections, with before/after captures in `.artifacts/theme-selection/`. Independent reviews approved the styling and test readiness fix. Firefox, Safari and physical touch were not tested.
+
+The local preview at `http://127.0.0.1:5390/` is rebuilt. The user's tab was refreshed; its Grove light preference was restored after checking a separate temporary tab. No required work remains; this change has not been deployed. Resume with `git status --short` and `git log -3 --oneline`.
+
 ## Subtle theme accents: 25 October 2026
 
 Completed the goal to keep themes from recolouring the whole site. All eight built-in themes share neutral page backgrounds, surfaces, text and borders within each appearance mode. Theme colours apply to actions, focus rings and softer hover/selection highlights. Existing accent identities, semantic status colours, custom-brand support and Linen's serif headings remain. The gallery compares Canvas, Accent, Hover, Highlight and Focus swatches; homepage and package guidance describe the new behaviour.

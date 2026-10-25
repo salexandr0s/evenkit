@@ -98,10 +98,12 @@
 .pk-tag-text { min-width: 0; }
 .pk-tag-check { display: inline-flex; flex: none; width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); opacity: 0; transition: opacity var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
 .pk-tag[data-selected] { border-color: currentColor; box-shadow: var(--pk-shadow-xs); }
+.pk-tag[data-selected][data-tone="neutral"] { background: var(--pk-color-accent-soft); color: var(--pk-color-accent); }
 .pk-tag[data-selected] .pk-tag-check { opacity: 1; }
 .pk-tag-remove { display: inline-flex; flex: none; align-items: center; justify-content: center; width: var(--pk-control-height-sm); min-width: var(--pk-control-height-sm); min-height: var(--pk-control-height-sm); padding: 0; border-inline-start: var(--pk-border-width-hairline) solid var(--pk-color-border); border-start-start-radius: 0; border-end-start-radius: 0; }
 .pk-tag:has(.pk-tag-remove) .pk-tag-select { border-start-end-radius: 0; border-end-end-radius: 0; }
 .pk-tag-select:hover:not(:disabled), .pk-tag-remove:hover:not(:disabled) { background: var(--pk-color-surface-elevated); color: var(--pk-color-fg); }
+.pk-tag[data-selected] .pk-tag-select:hover:not(:disabled) { background: transparent; color: inherit; }
 .pk-tag-select:active:not(:disabled), .pk-tag-remove:active:not(:disabled) { box-shadow: inset 0 0 0 var(--pk-border-width-hairline) currentColor; }
 .pk-tag-select:focus-visible, .pk-tag-remove:focus-visible { z-index: var(--pk-z-index-sticky); }
 .pk-tag[data-disabled] { opacity: var(--pk-opacity-disabled); }

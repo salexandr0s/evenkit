@@ -6,12 +6,12 @@
 .pk-tabs-list { display: flex; align-items: stretch; gap: var(--pk-space-1); max-width: 100%; padding: var(--pk-space-1); overflow-x: auto; scrollbar-width: thin; border-block-end: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .pk-tabs-trigger { box-sizing: border-box; flex: 0 0 auto; position: relative; min-height: var(--pk-tab-height); padding: var(--pk-space-2) var(--pk-space-4); border: 0; border-radius: var(--pk-radius-sm); background: transparent; color: var(--pk-color-fg-muted); font: inherit; font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-snug); cursor: pointer; transition: background var(--pk-motion-duration-base) var(--pk-motion-easing-standard), color var(--pk-motion-duration-base) var(--pk-motion-easing-standard); }
 .pk-tabs[data-size="sm"] .pk-tabs-trigger { padding-inline: var(--pk-space-3); }
-.pk-tabs-trigger:hover:not(:disabled), .pk-tabs-trigger:active:not(:disabled) { background: var(--pk-color-bg-muted); color: var(--pk-color-fg); }
-.pk-tabs-trigger[data-state="active"] { color: var(--pk-color-fg); font-weight: var(--pk-font-weight-medium); }
+.pk-tabs-trigger:hover:not(:disabled):not([data-state="active"]), .pk-tabs-trigger:active:not(:disabled):not([data-state="active"]) { background: var(--pk-color-bg-muted); color: var(--pk-color-fg); }
+.pk-tabs-trigger[data-state="active"] { color: var(--pk-color-accent); font-weight: var(--pk-font-weight-medium); }
 .pk-tabs[data-variant="underline"] .pk-tabs-list { padding-block-end: 0; }
 .pk-tabs[data-variant="underline"] .pk-tabs-trigger[data-state="active"]::after { position: absolute; content: ""; inset-inline: var(--pk-space-2); inset-block-end: 0; height: var(--pk-border-width-thick); border-radius: var(--pk-radius-full); background: var(--pk-color-accent); }
 .pk-tabs[data-variant="pills"] .pk-tabs-list { width: fit-content; gap: var(--pk-space-0-5); border: 0; border-radius: var(--pk-radius-md); background: var(--pk-color-bg-muted); }
-.pk-tabs[data-variant="pills"] .pk-tabs-trigger[data-state="active"] { background: var(--pk-color-surface); box-shadow: var(--pk-shadow-xs), inset 0 0 0 var(--pk-border-width-hairline) var(--pk-color-border); }
+.pk-tabs[data-variant="pills"] .pk-tabs-trigger[data-state="active"] { background: var(--pk-color-accent-soft); box-shadow: var(--pk-shadow-xs), inset 0 0 0 var(--pk-border-width-hairline) var(--pk-color-accent); }
 .pk-tabs-trigger:disabled { opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
 .pk-tabs-content { margin-block-start: var(--pk-space-6); min-width: 0; border-radius: var(--pk-radius-sm); overflow-wrap: anywhere; font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); }
 .pk-tabs[data-orientation="vertical"] { display: flex; gap: var(--pk-space-4); }
@@ -64,8 +64,8 @@
 .pk-navbar-desktop > .pk-navbar-list { width: max-content; flex-wrap: nowrap; }
 .pk-navbar-list li { min-width: 0; }
 .pk-navbar-link { box-sizing: border-box; position: relative; display: flex; align-items: center; min-height: var(--pk-layout-touch); padding: var(--pk-space-2) var(--pk-space-3); border-radius: var(--pk-radius-sm); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-snug); text-decoration: none; overflow-wrap: anywhere; transition: background var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
-.pk-navbar-link:hover:not([aria-disabled="true"]):not(:disabled), .pk-navbar-link:active:not([aria-disabled="true"]):not(:disabled) { background: var(--pk-color-bg-muted); color: var(--pk-color-fg); }
-.pk-navbar-link[aria-current="page"], .pk-navbar-group-trigger[data-active] { color: var(--pk-color-fg); font-weight: var(--pk-font-weight-medium); }
+.pk-navbar-link:hover:not([aria-disabled="true"]):not(:disabled):not([aria-current="page"]):not([data-active]), .pk-navbar-link:active:not([aria-disabled="true"]):not(:disabled):not([aria-current="page"]):not([data-active]) { background: var(--pk-color-bg-muted); color: var(--pk-color-fg); }
+.pk-navbar-link[aria-current="page"], .pk-navbar-group-trigger[data-active] { color: var(--pk-color-accent); font-weight: var(--pk-font-weight-medium); }
 .pk-navbar-link[aria-current="page"]::after, .pk-navbar-group-trigger[data-active]::after { content: ""; position: absolute; inset-inline: var(--pk-space-3); inset-block-end: var(--pk-space-1); height: var(--pk-border-width-thick); border-radius: var(--pk-radius-full); background: var(--pk-color-accent); }
 .pk-navbar-link[aria-disabled="true"] { opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
 .pk-navbar-actions { display: flex; flex: none; flex-wrap: wrap; align-items: center; gap: var(--pk-space-2); min-width: 0; max-width: 100%; margin-inline-start: auto; }
@@ -80,12 +80,14 @@
 .pk-navbar-contact-action > .pk-icon, .pk-navbar-contact-action .pk-button-text > .pk-icon { flex: none; }
 .pk-navbar-group-trigger { gap: var(--pk-space-1); border: 0; background: transparent; font-family: inherit; cursor: pointer; text-align: start; }
 .pk-navbar-group-trigger:disabled { opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
-.pk-navbar-group-trigger[data-state="open"] { color: var(--pk-color-fg); background: var(--pk-color-bg-muted); }
+.pk-navbar-group-trigger[data-state="open"] { background: var(--pk-color-bg-muted); }
+.pk-navbar-group-trigger[data-state="open"]:not([data-active]) { color: var(--pk-color-fg); }
 .pk-navbar-group-trigger > .pk-icon { flex: none; color: var(--pk-color-fg-muted); transition: transform var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
+.pk-navbar-group-trigger[data-active] > .pk-icon { color: currentColor; }
 .pk-navbar-group-trigger[data-state="open"] > .pk-icon { transform: rotate(180deg); }
 .pk-navbar-group-menu.pk-menu-content, .pk-navbar-account-menu.pk-menu-content { padding: var(--pk-space-2); border-radius: var(--pk-radius-lg); box-shadow: var(--pk-shadow-md); }
 .pk-navbar-group-menu .pk-menu-item, .pk-navbar-account-menu .pk-menu-item { min-height: var(--pk-control-height-md); }
-.pk-navbar-menu-link[aria-current="page"] { color: var(--pk-color-fg); font-weight: var(--pk-font-weight-medium); }
+.pk-navbar-menu-link.pk-menu-item[aria-current="page"] { background: var(--pk-color-accent-soft); color: var(--pk-color-accent); font-weight: var(--pk-font-weight-medium); }
 .pk-navbar-menu-link[aria-current="page"]::after { content: ""; position: absolute; inset-block: var(--pk-space-2); inset-inline-start: 0; width: var(--pk-border-width-thick); border-radius: var(--pk-radius-full); background: var(--pk-color-accent); }
 .pk-navbar-account-menu .pk-menu-label { padding-block: var(--pk-space-3); }
 .pk-navbar-account-menu .pk-menu-separator { margin-block: var(--pk-space-2); }
@@ -98,6 +100,7 @@
 .pk-navbar-drawer nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: var(--pk-space-3) var(--pk-space-1); margin-inline: calc(var(--pk-space-1) * -1); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .pk-navbar-drawer .pk-navbar-list { display: grid; gap: var(--pk-space-1); }
 .pk-navbar-drawer .pk-navbar-link { min-height: var(--pk-layout-touch); padding: var(--pk-space-3) var(--pk-space-4); }
+.pk-navbar-drawer .pk-navbar-link[aria-current="page"] { background: var(--pk-color-accent-soft); }
 .pk-navbar-drawer .pk-navbar-link[aria-current="page"]::after { inset-block: var(--pk-space-3); inset-inline-start: 0; inset-inline-end: auto; width: var(--pk-border-width-thick); height: auto; }
 .pk-navbar-mobile-group { margin-block: var(--pk-space-3); }
 .pk-navbar-mobile-group > ul { display: grid; gap: var(--pk-space-1); list-style: none; margin: 0; margin-inline-start: var(--pk-space-4); padding: 0; padding-inline-start: var(--pk-space-2); border-inline-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
@@ -117,11 +120,11 @@
 .pk-pagination-choice[data-gap] { min-width: var(--pk-space-6); }
 .pk-pagination-button.pk-button { min-width: var(--pk-control-height-sm); font-variant-numeric: tabular-nums; }
 .pk-pagination-choice > :is(.pk-button, .pk-pagination-link) { width: 100%; padding-inline: var(--pk-space-2); }
-.pk-pagination-button.pk-button[aria-current="page"], .pk-pagination-link[aria-current="page"] { border-color: var(--pk-color-border-strong); background: var(--pk-color-surface); color: var(--pk-color-fg); box-shadow: var(--pk-shadow-xs); font-weight: var(--pk-font-weight-semibold); }
+.pk-pagination-button.pk-button[aria-current="page"], .pk-pagination-button.pk-button[aria-current="page"]:hover:not(:disabled), .pk-pagination-link[aria-current="page"] { border-color: var(--pk-color-accent); background: var(--pk-color-accent); color: var(--pk-color-on-accent); box-shadow: var(--pk-shadow-xs); font-weight: var(--pk-font-weight-semibold); }
 .pk-pagination-button .pk-button-text, .pk-pagination-link { display: inline-flex; align-items: center; justify-content: center; gap: var(--pk-space-1); }
 .pk-pagination-gap { display: inline-flex; align-items: center; justify-content: center; min-width: var(--pk-space-6); color: var(--pk-color-fg-muted); }
 .pk-pagination-link { box-sizing: border-box; min-width: var(--pk-control-height-sm); min-height: var(--pk-control-height-sm); padding: var(--pk-space-1) var(--pk-space-3); border: var(--pk-border-width-hairline) solid transparent; border-radius: var(--pk-radius-sm); background: transparent; color: var(--pk-color-fg); font: inherit; font-size: var(--pk-font-size-sm); font-variant-numeric: tabular-nums; text-decoration: none; overflow-wrap: anywhere; transition: background var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
-.pk-pagination-link:hover { background: var(--pk-color-bg-muted); }
+.pk-pagination-link:hover:not([aria-current="page"]) { background: var(--pk-color-bg-muted); }
 .pk-pagination[data-compact] .pk-pagination-button .pk-button-text > span, .pk-pagination[data-compact] .pk-pagination-link > span { display: none; }
 .pk-pagination[data-compact] .pk-pagination-button.pk-button, .pk-pagination[data-compact] .pk-pagination-link { padding-inline: var(--pk-space-1); }
 .pk-pagination-navigation .pk-icon { transform: scaleX(var(--_pk-navigation-direction, 1)); }
