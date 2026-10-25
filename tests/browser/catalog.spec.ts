@@ -132,6 +132,14 @@ test("dialog contains focus, inherits the theme, closes with Escape and restores
     await expect(dialog).toContainText("Edit project");
     expect(await dialog.evaluate(element => element.contains(document.activeElement))).toBe(true);
   }
+  const close = dialog.getByRole("button", { name: "Close dialog", exact: true });
+  await close.focus();
+  const closeTip = page.getByRole("tooltip", { name: "Close dialog", exact: true }).and(page.locator(".pk-tooltip-content"));
+  await expect(closeTip).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(closeTip).toHaveCount(0);
+  await expect(dialog).toBeVisible();
+  await expect(close).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(dialog).not.toBeVisible();
   await expect(trigger).toBeFocused();

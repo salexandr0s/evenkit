@@ -77,15 +77,25 @@ test("shell drawer closes on navigation, Escape, outside click, and container gr
   const shell = page.locator(".catalog-admin-preview .pk-admin-shell");
   const trigger = shell.getByRole("button", { name: "Open navigation", exact: true });
   const drawer = page.getByRole("dialog", { name: "Demo workspace navigation", exact: true });
+  const menuTip = page.locator(".pk-tooltip-content").filter({ hasText: /^Open navigation$/ });
   await trigger.click();
   await expect(drawer).toBeVisible();
   for (let index = 0; index < 6; index += 1) {
     await page.keyboard.press("Tab");
     expect(await drawer.evaluate(element => element.contains(document.activeElement))).toBe(true);
   }
+  const close = drawer.getByRole("button", { name: "Close navigation", exact: true });
+  await close.focus();
+  const closeTip = page.getByRole("tooltip", { name: "Close navigation", exact: true }).and(page.locator(".pk-tooltip-content"));
+  await expect(closeTip).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(closeTip).toHaveCount(0);
+  await expect(drawer).toBeVisible();
+  await expect(close).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(drawer).not.toBeVisible();
   await expect(trigger).toBeFocused();
+  expect(await menuTip.count()).toBe(0);
   await trigger.click();
   await drawer.getByRole("link", { name: "Team", exact: true }).click();
   await expect(drawer).not.toBeVisible();
@@ -112,6 +122,7 @@ test("shell drawer closes on navigation, Escape, outside click, and container gr
   await page.evaluate(() => { document.documentElement.dir = "rtl"; });
   await trigger.click();
   await expect(drawer).toBeVisible();
+  expect(await menuTip.count()).toBe(0);
   const rtl = await drawer.evaluate(element => {
     const close = element.querySelector(".pk-dialog-close")!.getBoundingClientRect();
     const title = element.querySelector(".pk-dialog-title")!;

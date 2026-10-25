@@ -155,7 +155,7 @@ export function Catalog() {
     <AdminShell
       className="catalog-app"
       brand={<a className="catalog-brand" href="#buttons" aria-label="Project kit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}<span>Project kit<small>Shared foundations</small></span></a>}
-      compactBrand={<a className="catalog-brand" href="#buttons" aria-label="Project kit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}</a>}
+      compactBrand={<Tooltip><TooltipTrigger asChild><a className="catalog-brand" href="#buttons" aria-label="Project kit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}</a></TooltipTrigger><TooltipContent side="right">Project kit home</TooltipContent></Tooltip>}
       sidebarState={sidebarState}
       onSidebarStateChange={setSidebarState}
       navigation={navigation}

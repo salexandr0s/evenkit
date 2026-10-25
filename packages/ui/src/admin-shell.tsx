@@ -104,7 +104,7 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
                 onClick: navigate,
                 children: <><span className="pk-admin-nav-icon" aria-hidden="true">{item.icon ?? <CircleIcon />}</span><span className="pk-admin-nav-text">{item.label}</span>{item.end !== undefined && item.end !== null ? <span className="pk-admin-nav-end">{item.end}</span> : null}</>,
               };
-              return <li key={item.id}><Tooltip open={collapsed && tooltipsEnabled && !suppressTooltips && openItemId === item.id} onOpenChange={(open) => changeTooltipOpen(item.id, open)}><TooltipTrigger asChild><NavLink {...linkProps} renderLink={renderLink} /></TooltipTrigger>{collapsed && tooltipsEnabled && !suppressTooltips ? <TooltipContent side={tooltipSide}>{item.label}</TooltipContent> : null}</Tooltip></li>;
+              return <li key={item.id}><Tooltip open={collapsed && tooltipsEnabled && !suppressTooltips && openItemId === item.id} onOpenChange={(open) => changeTooltipOpen(item.id, open)}><TooltipTrigger asChild><NavLink {...linkProps} renderLink={renderLink} /></TooltipTrigger><TooltipContent side={tooltipSide}>{item.label}</TooltipContent></Tooltip></li>;
             })}
           </ul>
         </div>
@@ -120,6 +120,7 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [wideLayout, setWideLayout] = useState(true);
   const [openControl, setOpenControl] = useState(false);
+  const [openMenuTooltip, setOpenMenuTooltip] = useState(false);
   const [internalSidebarState, setInternalSidebarState] = useState(defaultSidebarState);
   const sidebarState = controlledSidebarState ?? internalSidebarState;
   const shellRef = useRef<HTMLDivElement>(null);
@@ -127,6 +128,7 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
   const sidebarRef = useRef<HTMLElement>(null);
   const cycleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLButtonElement>(null);
+  const restoringMenuFocus = useRef(false);
   const headerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLElement>(null);
   const sidebarFocusRef = useRef<HTMLElement | null>(null);
@@ -156,7 +158,11 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
   function restoreMobileFocus(event: FocusEvent<HTMLElement>) {
     const menu = menuRef.current;
     // CSS can hide the focused desktop control before ResizeObserver runs.
-    if (event.relatedTarget === null && event.target.getClientRects().length === 0 && menu && menu.getClientRects().length > 0) menu.focus();
+    if (event.relatedTarget === null && event.target.getClientRects().length === 0 && menu && menu.getClientRects().length > 0) {
+      restoringMenuFocus.current = true;
+      try { menu.focus(); }
+      finally { restoringMenuFocus.current = false; }
+    }
   }
 
   function sidebarBlur(event: FocusEvent<HTMLElement>) {
@@ -201,7 +207,10 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
       if (!entry) return;
       const wide = entry.contentRect.width > breakpoint;
       setWideLayout(wide);
-      if (wide) setDrawerOpen(false);
+      if (wide) {
+        setDrawerOpen(false);
+        setOpenMenuTooltip(false);
+      }
       else {
         drag.cancel();
         if (cycleRef.current?.getClientRects().length === 0) setOpenControl(false);
@@ -228,19 +237,31 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
         <div {...drag.handleProps} onBlurCapture={restoreMobileFocus} className="pk-admin-resize" role="separator" tabIndex={0} aria-label="Resize sidebar" aria-orientation="vertical" aria-controls={sidebarId} aria-valuemin={0} aria-valuemax={sidebarWidths.expanded} aria-valuenow={Math.round(drag.width ?? sidebarWidths[sidebarState])} aria-valuetext={`${sidebarState[0]?.toUpperCase()}${sidebarState.slice(1)}`} />
         <div className="pk-admin-workspace">
           <header ref={headerRef} className="pk-admin-header">
-            <Dialog open={drawerOpen} onOpenChange={setDrawerOpen}>
-              <DialogTrigger asChild>
-                <Button ref={menuRef} variant="ghost" shape="icon" className="pk-admin-menu" aria-label="Open navigation">
-                  <MenuIcon />
-                </Button>
-              </DialogTrigger>
+            <Dialog open={drawerOpen} onOpenChange={(open) => { setDrawerOpen(open); if (open) setOpenMenuTooltip(false); }}>
+              <Tooltip open={!wideLayout && !drawerOpen && openMenuTooltip} onOpenChange={(open) => setOpenMenuTooltip(open && !!menuRef.current?.getClientRects().length)}>
+                <TooltipTrigger asChild onFocus={(event) => { if (restoringMenuFocus.current) event.preventDefault(); }}>
+                  <DialogTrigger asChild>
+                    <Button ref={menuRef} variant="ghost" shape="icon" className="pk-admin-menu" aria-label="Open navigation">
+                      <MenuIcon />
+                    </Button>
+                  </DialogTrigger>
+                </TooltipTrigger>
+                {/* The drawer replaces this hint and must own Escape immediately. */}
+                {!drawerOpen ? <TooltipContent side="bottom">Open navigation</TooltipContent> : null}
+              </Tooltip>
               <DialogContent
                 className="pk-admin-drawer"
                 closeLabel="Close navigation"
                 onCloseAutoFocus={(event) => {
-                  if (menuRef.current && window.getComputedStyle(menuRef.current).display === "none") {
-                    event.preventDefault();
+                  const menu = menuRef.current;
+                  if (!menu) return;
+                  event.preventDefault();
+                  if (menu.getClientRects().length === 0) {
                     contentRef.current?.focus();
+                  } else {
+                    restoringMenuFocus.current = true;
+                    try { menu.focus(); }
+                    finally { restoringMenuFocus.current = false; }
                   }
                 }}
               >
@@ -252,7 +273,7 @@ export function AdminShell({ brand, compactBrand, navigation, header, children, 
               </DialogContent>
             </Dialog>
             <div className="pk-admin-sidebar-controls" role="group" aria-label="Sidebar display" onBlurCapture={restoreMobileFocus}>
-              <Tooltip open={wideLayout && !drag.dragging && openControl} onOpenChange={changeControlTooltip}><TooltipTrigger asChild><Button ref={cycleRef} variant="ghost" shape="icon" size="sm" aria-label={cycle.label} onClick={() => { drag.cancel(); changeSidebarState(cycle.state); }}>{cycle.icon}</Button></TooltipTrigger>{!drag.dragging ? <TooltipContent side="bottom">{cycle.label}</TooltipContent> : null}</Tooltip>
+              <Tooltip open={wideLayout && !drag.dragging && openControl} onOpenChange={changeControlTooltip}><TooltipTrigger asChild><Button ref={cycleRef} variant="ghost" shape="icon" size="sm" aria-label={cycle.label} onClick={() => { drag.cancel(); changeSidebarState(cycle.state); }}>{cycle.icon}</Button></TooltipTrigger><TooltipContent side="bottom">{cycle.label}</TooltipContent></Tooltip>
             </div>
             <div className="pk-admin-header-content">{header}</div>
             {actions ? <div className="pk-admin-actions">{actions}</div> : null}

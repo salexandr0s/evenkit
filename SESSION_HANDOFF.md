@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Shared tooltip design: 25 October 2026
+
+Tooltips now share a compact inverse surface, matching arrow, 220ms hover delay, and 120ms directional fade with 2px movement. Both opening and closing animate; reduced motion removes both animations. Existing tokens provide colors, spacing, radius, typography, shadow and motion. The shared tooltip is used for sidebar controls and compact branding, catalog icon examples, field clear actions, table search/pagination, dialog close buttons, and chat controls. Removed the redundant native title from the static sharing message. README and token provenance describe the design.
+
+The shared root controls Radix internally to preserve rapid reopening during exit. Focused tooltips ignore queued scroll events only when trigger geometry and all scroll offsets remain unchanged during that event's dispatch; genuine scrolling still dismisses them. Dialog autofocus and chat/sidebar focus restoration avoid unsolicited hints. Opening the mobile drawer removes its superseded menu hint immediately so the drawer owns Escape. Existing focus loops and activation behavior remain intact.
+
+Verification passed: source review, production build, configured typecheck, ESLint, eight token tests, and all 43 Chromium journeys. Regressions cover animated exit, rapid reopening, keyboard descriptions, real-scroll dismissal, tooltip-first Escape, modal pointer behavior, RTL, reduced motion, and drawer focus restoration. Packed Vite and Next consumers passed production builds, HTTP 200 and stylesheet checks; owned servers and temporary directories were cleaned. Logs: `.artifacts/tooltip-design-final-build.log`, `.artifacts/tooltip-design-complete-browser.log`, `.artifacts/tooltip-design-tokens.log`, and `.artifacts/tooltip-design-final-packages.log`. Package report: `.artifacts/tooltip-design-package-verification.json`.
+
+Manual light/dark inspection passed. Screenshots: `.artifacts/tooltip-design-dark.png` and `.artifacts/tooltip-design-light.png`. Dark appearance and expanded navigation were restored; the temporary browser tab was closed and the existing preview on port 5173 preserved. Firefox and Safari were not tested. No required work remains for this tooltip request; the earlier component goal remains complete. Concurrent Hallmark, field-error-icon and component-inventory edits are preserved outside the tooltip commit. Resume with `git status --short` and this handoff before starting the next component.
+
 ## Library sidebar: 25 October 2026
 
 The component library now uses the public AdminShell, with icons for all 14 entries, magnetic edge dragging, one changing display button, and custom tooltips in the icon rail. Expanded, collapsed, and hidden modes persist through reloads. Search remains in the header in every mode. Theme selection, the sun/moon appearance button, native hash navigation, and browser history remain available.

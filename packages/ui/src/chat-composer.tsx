@@ -5,6 +5,7 @@ import { Button } from "./button.js";
 import { Textarea } from "./field.js";
 import { ArrowUpIcon, SquareIcon } from "./icons.js";
 import type { ChatLabels, ChatStatus } from "./chat-types.js";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip.js";
 
 interface ChatComposerProps {
   value: string;
@@ -62,8 +63,13 @@ export function ChatComposer({ value, onValueChange, onSend, onStop, status, lab
             event.preventDefault(); send();
           }
         }} />
-      {busy ? <Button key="stop" shape="icon" aria-label={labels.stop} disabled={!onStop} onClick={event => { event.preventDefault(); onStop?.(); textareaRef.current?.focus(); }}><SquareIcon size="sm" /></Button>
-        : <Button key="send" type="submit" shape="icon" aria-label={labels.send} disabled={!canSend}><ArrowUpIcon /></Button>}
+      {busy ? <Tooltip key="stop">
+        <TooltipTrigger asChild><Button shape="icon" aria-label={labels.stop} disabled={!onStop} onClick={event => { event.preventDefault(); onStop?.(); textareaRef.current?.focus(); }}><SquareIcon size="sm" /></Button></TooltipTrigger>
+        <TooltipContent>{labels.stop}</TooltipContent>
+      </Tooltip> : <Tooltip key="send">
+        <TooltipTrigger asChild><Button type="submit" shape="icon" aria-label={labels.send} disabled={!canSend}><ArrowUpIcon /></Button></TooltipTrigger>
+        <TooltipContent>{labels.send}</TooltipContent>
+      </Tooltip>}
     </div>
     <div className="pk-chat-composer-meta">
       <span id={`${id}-hint`}>{labels.composerHint}</span>

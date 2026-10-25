@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from "react";
-import { ActionMessage, Button, MailIcon, TextareaField, TextField, XIcon } from "@project-kit/ui";
+import { ActionMessage, Button, MailIcon, TextareaField, TextField, Tooltip, TooltipContent, TooltipTrigger, XIcon } from "@project-kit/ui";
 import "./field-preview.css";
 
 function nameError(value: string) {
@@ -100,7 +100,7 @@ export function FieldPreview() {
             placeholder="spring-launch"
             hint="Type an alias to reveal its clear action."
             onChange={(event) => setAlias(event.target.value)}
-            endAdornment={alias ? <Button size="sm" shape="icon" variant="ghost" aria-label="Clear project alias" onClick={() => { setAlias(""); aliasRef.current?.focus(); }}><XIcon size="sm" /></Button> : undefined}
+            endAdornment={alias ? <Tooltip><TooltipTrigger asChild><Button size="sm" shape="icon" variant="ghost" aria-label="Clear project alias" onClick={() => { setAlias(""); aliasRef.current?.focus(); }}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Clear project alias</TooltipContent></Tooltip> : undefined}
           />
           <TextField label="Contact email" type="email" defaultValue="team@example.com" startAdornment={<MailIcon size="sm" />} hint="Use the address your team checks." />
           <TextField label="Project address" defaultValue="spring-launch" endAdornment={<span>.project.test</span>} hint="The full address ends in .project.test." />

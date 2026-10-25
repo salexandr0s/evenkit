@@ -1,4 +1,30 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
+
+function tooltipSurface(page: Page, name: string) {
+  return page.getByRole("tooltip", { name, exact: true }).and(page.locator(".pk-tooltip-content"));
+}
+
+async function dismissTooltipWithEscape(page: Page, surface: Locator) {
+  // Observe the mounted exit phase without racing its short animation.
+  const exit = await surface.evaluateHandle(element => {
+    const result = { connected: false, pointerEvents: "", animation: "", duration: "" };
+    const observer = new MutationObserver(() => {
+      if (element.getAttribute("data-state") !== "closed") return;
+      const style = getComputedStyle(element);
+      Object.assign(result, { connected: element.isConnected, pointerEvents: style.pointerEvents, animation: style.animationName, duration: style.animationDuration });
+      observer.disconnect();
+    });
+    observer.observe(element, { attributes: true, attributeFilter: ["data-state"] });
+    return result;
+  });
+  try {
+    await page.keyboard.press("Escape");
+    await expect.poll(() => exit.jsonValue()).toEqual({ connected: true, pointerEvents: "none", animation: "pk-tooltip-out", duration: "0.12s" });
+    await expect(surface).toHaveCount(0);
+  } finally {
+    await exit.dispose();
+  }
+}
 
 test("sidebar expands, becomes an icon rail with tooltips, and hides without reserving space", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -20,10 +46,17 @@ test("sidebar expands, becomes an icon rail with tooltips, and hides without res
   }
   const team = aside.getByRole("link", { name: "Team", exact: true });
   await team.hover();
-  const tooltip = page.getByRole("tooltip", { name: "Team", exact: true });
+  const tooltip = tooltipSurface(page, "Team");
   await expect(tooltip).toBeVisible();
-  await tooltip.hover();
-  await expect(tooltip).toBeVisible();
+  await expect(tooltip).toHaveCSS("opacity", "1");
+  const linkBox = await team.boundingBox();
+  const tipBox = await tooltip.boundingBox();
+  if (!linkBox || !tipBox) throw new Error("Missing sidebar tooltip geometry.");
+  expect(tipBox.x).toBeGreaterThan(linkBox.x + linkBox.width);
+  await page.mouse.move((linkBox.x + linkBox.width + tipBox.x) / 2, tipBox.y + tipBox.height / 2);
+  await expect(tooltip).toHaveAttribute("data-state", /open/);
+  await page.mouse.move(tipBox.x + tipBox.width / 2, tipBox.y + tipBox.height / 2, { steps: 4 });
+  await expect(tooltip).toHaveAttribute("data-state", /open/);
   await page.keyboard.press("Escape");
   await expect(tooltip).not.toBeVisible();
   await team.focus();
@@ -74,7 +107,7 @@ test("sidebar state survives the mobile drawer and tooltips follow inherited RTL
   await page.evaluate(() => { document.documentElement.dir = "rtl"; });
   const team = aside.getByRole("link", { name: "Team", exact: true });
   await team.focus();
-  const tip = page.getByRole("tooltip", { name: "Team", exact: true });
+  const tip = tooltipSurface(page, "Team");
   await expect(tip).toBeVisible();
   await expect(tip).toHaveAttribute("data-side", "left");
   const tipBox = await tip.boundingBox();
@@ -216,15 +249,30 @@ test("hiding a controlled sidebar with a focused link recovers focus to its rest
 });
 
 test("custom tooltip preserves descriptions, dismisses with Escape, and wraps within the viewport", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/#tooltips");
   const preview = page.locator(".tooltip-workbench");
   const bookmark = preview.getByRole("button", { name: "Bookmark project", exact: true });
   await bookmark.focus();
-  const tip = page.getByRole("tooltip", { name: "Keep this project in your bookmarks.", exact: true });
+  const tip = tooltipSurface(page, "Keep this project in your bookmarks.");
   await expect(tip).toBeVisible();
   await expect(bookmark).toHaveAccessibleDescription(/Changes stay in this preview\..*Keep this project in your bookmarks\.|Keep this project in your bookmarks\..*Changes stay in this preview\./);
-  await page.keyboard.press("Escape");
-  await expect(tip).not.toBeVisible();
+  const reopening = await bookmark.evaluate(element => {
+    const descriptions = element.getAttribute("aria-describedby")?.split(/\s+/) ?? [];
+    const surface = descriptions.map(id => document.getElementById(id)).find(node => node?.classList.contains("pk-tooltip-content"));
+    if (!surface) throw new Error("Missing bookmark tooltip surface.");
+    element.blur();
+    return new Promise(resolve => requestAnimationFrame(() => {
+      const previousState = { connected: surface.isConnected, state: surface.getAttribute("data-state") };
+      element.focus();
+      resolve(previousState);
+    }));
+  });
+  expect(reopening).toEqual({ connected: true, state: "closed" });
+  await expect(tip).toHaveAttribute("data-state", "instant-open");
+  await expect(tip).toHaveCSS("opacity", "1");
+  await expect(bookmark).toHaveAccessibleDescription(/Keep this project in your bookmarks\./);
+  await dismissTooltipWithEscape(page, tip);
   await expect(bookmark).toBeFocused();
   await bookmark.press("Enter");
   await expect(bookmark).toHaveAttribute("aria-pressed", "true");
@@ -232,20 +280,97 @@ test("custom tooltip preserves descriptions, dismisses with Escape, and wraps wi
   await expect(bookmark).toHaveAccessibleDescription("Changes stay in this preview.");
 
   const sharing = preview.getByRole("button", { name: "Sharing help", exact: true });
-  const longTip = page.getByRole("tooltip", { name: "Changing visibility keeps existing members' permissions.", exact: true });
+  const longTip = tooltipSurface(page, "Changing visibility keeps existing members' permissions.");
   for (const width of [360, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 800 });
     await sharing.hover();
     await expect(longTip).toBeVisible();
+    await expect(longTip).toHaveCSS("opacity", "1");
     const box = await longTip.boundingBox();
     expect(box!.x).toBeGreaterThanOrEqual(0);
     expect(box!.x + box!.width).toBeLessThanOrEqual(width);
     expect(box!.width).toBeLessThanOrEqual(280);
     expect(await longTip.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
     await page.keyboard.press("Escape");
+    await expect(longTip).toHaveCount(0);
     await page.mouse.move(0, 0);
   }
   await page.emulateMedia({ reducedMotion: "reduce" });
   await sharing.hover();
   await expect(longTip).toHaveCSS("animation-name", "none");
+  await page.keyboard.press("Escape");
+  await expect(longTip).toHaveCount(0);
+});
+
+test("shared tooltips preserve toolbar and table icon actions", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/#data-table");
+  const header = page.locator(".catalog-app > .pk-admin-frame > .pk-admin-workspace > .pk-admin-header");
+  const appearance = header.getByRole("button", { name: "Switch to dark mode", exact: true });
+  await appearance.hover();
+  await expect(tooltipSurface(page, "Switch to dark mode")).toBeVisible();
+  await expect(appearance).toHaveAccessibleDescription("Switch to dark mode");
+  await expect(appearance).not.toHaveAttribute("title");
+  await appearance.click();
+  await expect(page.locator("html")).toHaveAttribute("data-kit-mode", "dark");
+  await expect(tooltipSurface(page, "Switch to dark mode")).toHaveCount(0);
+
+  const table = page.locator(".pk-data-table");
+  const next = table.getByRole("button", { name: "Next page", exact: true });
+  const pageSize = table.getByRole("combobox", { name: "Rows per page", exact: true });
+  await pageSize.scrollIntoViewIfNeeded();
+  await pageSize.focus();
+  await expect(table.getByRole("button", { name: "Previous page", exact: true })).toBeDisabled();
+  await pageSize.press("Tab");
+  await expect(next).toBeFocused();
+  await expect(tooltipSurface(page, "Next page")).toBeVisible();
+  await expect(next).toHaveAccessibleDescription("Next page");
+  await expect(next).not.toHaveAttribute("title");
+  const beforeScroll = await next.boundingBox();
+  if (!beforeScroll) throw new Error("Missing pagination button geometry.");
+  await page.mouse.wheel(0, 100);
+  await expect.poll(async () => {
+    const afterScroll = await next.boundingBox();
+    return afterScroll ? Math.abs(afterScroll.y - beforeScroll.y) : 0;
+  }).toBeGreaterThan(1);
+  await expect(tooltipSurface(page, "Next page")).toHaveCount(0);
+  await expect(next).toBeFocused();
+  await next.press("Enter");
+  await expect(table.getByText("Page 2 of 3", { exact: true })).toBeVisible();
+  await expect(next).toBeFocused();
+  await expect(tooltipSurface(page, "Next page")).toHaveCount(0);
+});
+
+test("modal and chat tooltips dismiss before their parent surfaces", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/#dialog");
+  const edit = page.getByRole("button", { name: "Edit project", exact: true });
+  await edit.click();
+  const dialog = page.getByRole("dialog", { name: "Edit project", exact: true });
+  const close = dialog.getByRole("button", { name: "Close dialog", exact: true });
+  await close.focus();
+  const closeTip = tooltipSurface(page, "Close dialog");
+  await expect(closeTip).toBeVisible();
+  await expect(close).toHaveAccessibleDescription("Close dialog");
+  await dismissTooltipWithEscape(page, closeTip);
+  await expect(dialog).toBeVisible();
+  await expect(close).toBeFocused();
+  await close.press("Enter");
+  await expect(dialog).not.toBeVisible();
+  await expect(edit).toBeFocused();
+
+  await page.goto("/#chat");
+  await page.getByRole("button", { name: "Open assistant", exact: true }).click();
+  const chat = page.getByRole("dialog", { name: "Project assistant", exact: true });
+  const maximize = chat.getByRole("button", { name: "Maximize chat", exact: true });
+  await maximize.focus();
+  await expect(tooltipSurface(page, "Maximize chat")).toBeVisible();
+  await expect(maximize).toHaveAccessibleDescription("Maximize chat");
+  await page.keyboard.press("Escape");
+  await expect(tooltipSurface(page, "Maximize chat")).toHaveCount(0);
+  await expect(chat).toBeVisible();
+  await expect(maximize).toBeFocused();
+  await maximize.press("Enter");
+  await expect(chat.locator(".pk-chat-panel")).toHaveAttribute("data-mode", "expanded");
 });

@@ -142,6 +142,12 @@ test("narrow and short RTL chat keeps controls reachable and Escape restores foc
   await close.focus();
   await expectWithinViewport(close, page);
   expect(await chat.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
+  const closeTip = page.getByRole("tooltip", { name: "Close chat", exact: true }).and(page.locator(".pk-tooltip-content"));
+  await expect(closeTip).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(closeTip).toHaveCount(0);
+  await expect(chat).toBeVisible();
+  await expect(close).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(chat).not.toBeVisible();
   await expect(page.getByRole("button", { name: "Open assistant", exact: true })).toBeFocused();

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ActionMessage, ArrowRightIcon, Badge, Button, ButtonLink, CheckIcon, MailIcon, PlusIcon, SearchIcon, type ControlSize } from "@project-kit/ui";
+import { ActionMessage, ArrowRightIcon, Badge, Button, ButtonLink, CheckIcon, MailIcon, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipTrigger, type ControlSize } from "@project-kit/ui";
 import "./button-preview.css";
 
 const buttonSizes: readonly { size: ControlSize; label: string }[] = [
@@ -65,7 +65,7 @@ export function ButtonPreview() {
               <span>{label}</span>
               <div className="button-size-samples">
                 <Button size={size} variant="outline" onClick={() => setAction(`${label} button activated in this preview.`)}>{label}</Button>
-                <Button size={size} shape="icon" variant="outline" aria-label={`${label} icon action`} onClick={() => setAction(`${label} icon action activated in this preview.`)}><PlusIcon size={size} /></Button>
+                <Tooltip><TooltipTrigger asChild><Button size={size} shape="icon" variant="outline" aria-label={`${label} icon action`} onClick={() => setAction(`${label} icon action activated in this preview.`)}><PlusIcon size={size} /></Button></TooltipTrigger><TooltipContent>{label} icon action</TooltipContent></Tooltip>
               </div>
               <code>size="{size}"</code>
             </div>
@@ -78,10 +78,10 @@ export function ButtonPreview() {
         <div className="button-icon-actions">
           <div><Button startIcon={<PlusIcon />} onClick={() => setProjects((value) => value + 1)}>Create project</Button><p className="button-caption" role="status">{projects === 0 ? "Add a project to this local example." : `${projects} preview ${projects === 1 ? "project" : "projects"} created.`}</p></div>
           <div><ButtonLink variant="outline" href="#tokens" endIcon={<ArrowRightIcon />}>Explore tokens</ButtonLink><p className="button-caption">Open the token reference.</p></div>
-          <div><ButtonLink variant="ghost" href="#icons" shape="icon" fullWidth aria-label="Browse icons"><SearchIcon /></ButtonLink><p className="button-caption">Browse the icon library.</p></div>
+          <div><Tooltip><TooltipTrigger asChild><ButtonLink variant="ghost" href="#icons" shape="icon" fullWidth aria-label="Browse icons"><SearchIcon /></ButtonLink></TooltipTrigger><TooltipContent>Browse icons</TooltipContent></Tooltip><p className="button-caption">Browse the icon library.</p></div>
         </div>
         <div className="button-toggle-row">
-          <Button shape="icon" variant="outline" aria-label="Email notifications" aria-pressed={notifications} onClick={() => setNotifications((value) => !value)}><MailIcon /></Button>
+          <Tooltip><TooltipTrigger asChild><Button shape="icon" variant="outline" aria-label="Email notifications" aria-pressed={notifications} onClick={() => setNotifications((value) => !value)}><MailIcon /></Button></TooltipTrigger><TooltipContent>Email notifications</TooltipContent></Tooltip>
           <div><strong>Email notifications</strong><p className="button-caption" role="status">Email notifications are {notifications ? "on" : "off"}.</p></div>
         </div>
       </section>

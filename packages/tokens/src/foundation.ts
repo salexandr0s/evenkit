@@ -44,7 +44,7 @@ export const foundation = {
   },
   "motion": {
     "delay": {
-      "tooltip": "400ms"
+      "tooltip": "220ms"
     },
     "duration": {
       "fast": "120ms",

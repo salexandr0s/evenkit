@@ -14,7 +14,7 @@ import { EmptyState, Spinner } from "./feedback.js";
 import { Input, Label } from "./field.js";
 import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, ChevronLeftIcon, ChevronRightIcon, CircleAlertIcon, InboxIcon, SearchIcon, XIcon } from "./icons.js";
 import { Select } from "./select.js";
-import { TooltipProvider } from "./tooltip.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -190,7 +190,7 @@ export function DataTable<T extends object>({
     <TooltipProvider><div className={classes("pk-data-table", className)} data-density={density} onFocusCapture={trackFocus} onBlurCapture={releaseFocus}>
       {searchable || toolbar ? (
         <div className="pk-data-table-toolbar">
-          {searchable ? <div ref={searchAreaRef} className="pk-data-table-search"><Label htmlFor={`${id}-search`}>{searchLabel}</Label><Input ref={searchRef} id={`${id}-search`} type="search" controlSize="sm" value={search} disabled={controlsDisabled} placeholder="Search…" startAdornment={<SearchIcon size="sm" />} endAdornment={search && rows.length > 0 ? <Button size="sm" shape="icon" variant="ghost" aria-label="Clear search" disabled={controlsDisabled} onClick={resetSearch}><XIcon size="sm" /></Button> : undefined} onChange={(event) => { table.setGlobalFilter(event.target.value); table.firstPage(); }} /></div> : null}
+          {searchable ? <div ref={searchAreaRef} className="pk-data-table-search"><Label htmlFor={`${id}-search`}>{searchLabel}</Label><Input ref={searchRef} id={`${id}-search`} type="search" controlSize="sm" value={search} disabled={controlsDisabled} placeholder="Search…" startAdornment={<SearchIcon size="sm" />} endAdornment={search && rows.length > 0 ? <Tooltip><TooltipTrigger asChild><Button size="sm" shape="icon" variant="ghost" aria-label="Clear search" disabled={controlsDisabled} onClick={resetSearch}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Clear search</TooltipContent></Tooltip> : undefined} onChange={(event) => { table.setGlobalFilter(event.target.value); table.firstPage(); }} /></div> : null}
           {toolbar ? <div className="pk-data-table-actions">{toolbar}</div> : null}
         </div>
       ) : null}
@@ -226,8 +226,14 @@ export function DataTable<T extends object>({
         <div ref={paginationRef} className="pk-data-table-pagination">
           <div className="pk-data-table-page-size"><Label htmlFor={`${id}-size`}>Rows per page</Label><Select ref={pageSizeRef} id={`${id}-size`} controlSize="sm" value={String(pageSize)} options={sizeOptions} disabled={controlsDisabled} onValueChange={(value) => { table.setPageSize(Number(value)); table.firstPage(); }} /></div>
           <span>{unavailable ? "Page unavailable" : pageResetPending ? "Updating page" : `Page ${Math.min(pageIndex + 1, Math.max(1, table.getPageCount()))} of ${Math.max(1, table.getPageCount())}`}</span>
-          <Button size="sm" shape="icon" variant="outline" aria-label="Previous page" disabled={controlsDisabled || !table.getCanPreviousPage()} onClick={() => table.previousPage()}><ChevronLeftIcon size="sm" /></Button>
-          <Button size="sm" shape="icon" variant="outline" aria-label="Next page" disabled={controlsDisabled || !table.getCanNextPage()} onClick={() => table.nextPage()}><ChevronRightIcon size="sm" /></Button>
+          <Tooltip>
+            <TooltipTrigger asChild><Button size="sm" shape="icon" variant="outline" aria-label="Previous page" disabled={controlsDisabled || !table.getCanPreviousPage()} onClick={() => table.previousPage()}><ChevronLeftIcon size="sm" /></Button></TooltipTrigger>
+            <TooltipContent>Previous page</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild><Button size="sm" shape="icon" variant="outline" aria-label="Next page" disabled={controlsDisabled || !table.getCanNextPage()} onClick={() => table.nextPage()}><ChevronRightIcon size="sm" /></Button></TooltipTrigger>
+            <TooltipContent>Next page</TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </div></TooltipProvider>

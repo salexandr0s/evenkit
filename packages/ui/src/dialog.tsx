@@ -1,9 +1,10 @@
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { forwardRef, type ComponentPropsWithoutRef, type ComponentRef } from "react";
+import { forwardRef, useRef, type ComponentPropsWithoutRef, type ComponentRef } from "react";
 import { classes } from "./classes.js";
 import { XIcon } from "./icons.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 export const Dialog = DialogPrimitive.Root;
 export const DialogTrigger = DialogPrimitive.Trigger;
@@ -21,21 +22,29 @@ export interface DialogContentProps extends ComponentPropsWithoutRef<typeof Dial
 }
 
 export const DialogContent = forwardRef<ComponentRef<typeof DialogPrimitive.Content>, DialogContentProps>(function DialogContent(
-  { className, children, container, showCloseButton = true, closeLabel = "Close dialog", size = "md", scroll = "content", ...props },
+  { className, children, container, showCloseButton = true, closeLabel = "Close dialog", size = "md", scroll = "content", onOpenAutoFocus, ...props },
   ref,
 ) {
+  const opening = useRef(false);
   return (
-    <DialogPrimitive.Portal container={container}>
+    <TooltipProvider><DialogPrimitive.Portal container={container}>
       <DialogPrimitive.Overlay className="pk-dialog-overlay" />
-      <DialogPrimitive.Content {...props} ref={ref} className={classes("pk-dialog-content", className)} data-size={size} data-scroll={scroll} data-close-button={showCloseButton || undefined}>
+      <DialogPrimitive.Content {...props} ref={ref} className={classes("pk-dialog-content", className)} data-size={size} data-scroll={scroll} data-close-button={showCloseButton || undefined} onOpenAutoFocus={event => {
+        opening.current = true;
+        try { onOpenAutoFocus?.(event); }
+        finally { queueMicrotask(() => { opening.current = false; }); }
+      }}>
         {children}
         {showCloseButton ? (
-          <DialogPrimitive.Close className="pk-dialog-close" aria-label={closeLabel}>
-            <XIcon />
-          </DialogPrimitive.Close>
+          <Tooltip>
+            <TooltipTrigger asChild onFocus={event => { if (opening.current) event.preventDefault(); }}><DialogPrimitive.Close className="pk-dialog-close" aria-label={closeLabel}>
+              <XIcon />
+            </DialogPrimitive.Close></TooltipTrigger>
+            <TooltipContent>{closeLabel}</TooltipContent>
+          </Tooltip>
         ) : null}
       </DialogPrimitive.Content>
-    </DialogPrimitive.Portal>
+    </DialogPrimitive.Portal></TooltipProvider>
   );
 });
 

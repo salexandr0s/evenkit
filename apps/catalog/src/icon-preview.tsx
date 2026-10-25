@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { foundation } from "@project-kit/tokens";
-import { ActionMessage, Badge, Button, EmptyState, Input, Label, PlusIcon, SearchIcon, Select, type IconSize } from "@project-kit/ui";
+import { ActionMessage, Badge, Button, EmptyState, Input, Label, PlusIcon, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconSize } from "@project-kit/ui";
 import { iconCategories, icons, type IconCategory } from "./icon-data";
 import "./icon-preview.css";
 
@@ -111,7 +111,7 @@ export function IconPreview() {
           </div>
           <div className="icon-pattern">
             <h4>Icon button</h4>
-            <div className="icon-pattern-example"><Button shape="icon" aria-label="Add preview project" onClick={() => setActivated("icon")}><PlusIcon /></Button></div>
+            <div className="icon-pattern-example"><Tooltip><TooltipTrigger asChild><Button shape="icon" aria-label="Add preview project" onClick={() => setActivated("icon")}><PlusIcon /></Button></TooltipTrigger><TooltipContent>Add preview project</TooltipContent></Tooltip></div>
             <p>Put the accessible name on the button, leaving its icon decorative.</p>
             <code>{'<Button shape="icon" aria-label="Add project"><PlusIcon /></Button>'}</code>
           </div>

@@ -101,7 +101,7 @@ export function StatusPreview() {
       <section className="status-section" aria-label="Static message examples">
         <div className="status-section-heading"><h3>Context without an interruption</h3><p>These static examples use a note role. The recovery example above announces changes.</p></div>
         <div className="status-message-grid">
-          <ActionMessage role="note" tone="warning" heading={<h4>Review before sharing</h4>} title="Sharing reminder">
+          <ActionMessage role="note" tone="warning" heading={<h4>Review before sharing</h4>}>
             <p>Check the project name and recipients before sharing the next update.</p>
           </ActionMessage>
           <ActionMessage role="note" tone="info" icon={<MailIcon />} heading={<h4>Notification preview</h4>}>

@@ -205,7 +205,7 @@ Use a unique form ID (for example, from React's `useId`) to connect a footer sub
 
 ## Tooltips
 
-Wrap related triggers in TooltipProvider. TooltipTrigger supports `asChild` so the button or link keeps its native semantics. Every icon-only trigger needs its own accessible label; a tooltip is supplementary. Tooltips open on hover after 400ms or immediately on keyboard focus, remain open while hovered, and close on Escape or activation. Keep actions and essential instructions outside the tooltip.
+Wrap related triggers in TooltipProvider. TooltipTrigger supports `asChild` so the button or link keeps its native semantics. Every icon-only trigger needs its own accessible label; a tooltip is supplementary. Tooltips open on hover after 220ms or immediately on keyboard focus, remain open while hovered, and close on Escape or activation. Keep actions and essential instructions outside the tooltip.
 
 ```tsx
 import { Button, UserIcon, TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@project-kit/ui";
@@ -220,7 +220,7 @@ import { Button, UserIcon, TooltipProvider, Tooltip, TooltipTrigger, TooltipCont
 </TooltipProvider>
 ```
 
-TooltipContent includes the styled surface, text wrapper, and arrow. It supports Radix positioning props, a forwarded ref, `container`, and `showArrow`; it owns its markup and does not expose `asChild`. Text wraps within the viewport, with a 280px maximum width. The high-contrast colors follow the document theme. Provider timings are overridable. Use `UserIcon` for a person and `UsersIcon` for a team; the icon reference includes all 60 named wrappers.
+TooltipContent includes the compact surface, text wrapper, and matching arrow. It supports Radix positioning props, a forwarded ref, `container`, and `showArrow`; it owns its markup and does not expose `asChild`. Text wraps within the viewport, with a 280px maximum width. The inverse foreground/background colors follow the document theme. Opening and closing fade with a 2px movement over 120ms; reduced motion removes both animations. Provider timings are overridable. The catalog and shared component icon actions use this same tooltip. Use `UserIcon` for a person and `UsersIcon` for a team; the icon reference includes all 60 named wrappers.
 
 ## Admin shell and tables
 

@@ -10,6 +10,7 @@ import { ChatHistory } from "./chat-history.js";
 import { ChatMessages } from "./chat-messages.js";
 import { defaultChatLabels, type ChatPanelProps, type ChatWidgetProps } from "./chat-types.js";
 import { MaximizeIcon, MessageSquareIcon, MinimizeIcon, PanelLeftIcon, PlusIcon, XIcon } from "./icons.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 export type { ChatMessage, ChatConversation, ChatStatus, ChatLabels, ChatPanelProps, ChatWidgetProps } from "./chat-types.js";
 
@@ -38,6 +39,7 @@ const ChatSurface = forwardRef<ChatSurfaceHandle, ChatSurfaceProps>(function Cha
   const sidebar = useRef<HTMLElement>(null);
   const composer = useRef<HTMLTextAreaElement>(null);
   const historyToggle = useRef<HTMLButtonElement>(null);
+  const restoringHistoryFocus = useRef(false);
   const search = useRef<HTMLInputElement>(null);
   const [wide, setWide] = useState(false);
   const [historyPreference, setHistoryPreference] = useState<boolean>();
@@ -52,10 +54,16 @@ const ChatSurface = forwardRef<ChatSurfaceHandle, ChatSurfaceProps>(function Cha
     if (elementRef) elementRef.current = node;
   }, [elementRef]);
 
+  function restoreHistoryFocus() {
+    restoringHistoryFocus.current = true;
+    try { historyToggle.current?.focus(); }
+    finally { restoringHistoryFocus.current = false; }
+  }
+
   function closeHistory() {
     if (!historyOpen) return false;
     setHistoryPreference(false);
-    historyToggle.current?.focus();
+    restoreHistoryFocus();
     return true;
   }
   function focusComposer() { composer.current?.focus(); }
@@ -67,7 +75,7 @@ const ChatSurface = forwardRef<ChatSurfaceHandle, ChatSurfaceProps>(function Cha
       const nextWide = node.clientWidth > Number.parseFloat(foundation.breakpoint.md);
       const nextHistory = hasHistory && (historyPreference ?? (expanded && nextWide));
       // Move focus before the responsive update hides its current pane.
-      if (!nextHistory && sidebar.current?.contains(document.activeElement)) historyToggle.current?.focus();
+      if (!nextHistory && sidebar.current?.contains(document.activeElement)) restoreHistoryFocus();
       else if (nextHistory && !nextWide && main.current?.contains(document.activeElement)) search.current?.focus();
       setWide(nextWide);
     };
@@ -84,7 +92,7 @@ const ChatSurface = forwardRef<ChatSurfaceHandle, ChatSurfaceProps>(function Cha
   }, [expanded]);
   useLayoutEffect(() => {
     if (historyReplacesMain && main.current?.contains(document.activeElement)) search.current?.focus();
-    else if (!historyOpen && sidebar.current?.contains(document.activeElement)) historyToggle.current?.focus();
+    else if (!historyOpen && sidebar.current?.contains(document.activeElement)) restoreHistoryFocus();
   }, [historyOpen, historyReplacesMain]);
 
   function returnToConversation() {
@@ -100,20 +108,32 @@ const ChatSurface = forwardRef<ChatSurfaceHandle, ChatSurfaceProps>(function Cha
     if (!dialog && !event.defaultPrevented && event.key === "Escape" && closeHistory()) event.preventDefault();
   }}>
     <header className="pk-chat-header">
-      {hasHistory && <Button ref={historyToggle} variant="ghost" size="sm" shape="icon" aria-label={historyOpen ? labels.hideHistory : labels.showHistory} aria-controls={historyId} aria-expanded={historyOpen} onClick={() => {
-        setHistoryPreference(!historyOpen);
-        if (!historyOpen && !wide) requestAnimationFrame(() => search.current?.focus());
-      }}><PanelLeftIcon /></Button>}
+      {hasHistory && <Tooltip>
+        <TooltipTrigger asChild onFocus={event => { if (restoringHistoryFocus.current) event.preventDefault(); }}><Button ref={historyToggle} variant="ghost" size="sm" shape="icon" aria-label={historyOpen ? labels.hideHistory : labels.showHistory} aria-controls={historyId} aria-expanded={historyOpen} onClick={() => {
+          setHistoryPreference(!historyOpen);
+          if (!historyOpen && !wide) requestAnimationFrame(() => search.current?.focus());
+        }}><PanelLeftIcon /></Button></TooltipTrigger>
+        <TooltipContent>{historyOpen ? labels.hideHistory : labels.showHistory}</TooltipContent>
+      </Tooltip>}
       <div className="pk-chat-heading"><Title className="pk-chat-title">{title}</Title>{description && <Description className="pk-chat-description">{description}</Description>}</div>
       <div className="pk-chat-header-actions">
-        {onNewConversation && !historyOpen && <Button variant="ghost" size="sm" shape="icon" aria-label={labels.newChat} onClick={() => { onNewConversation(); returnToConversation(); }}><PlusIcon /></Button>}
-        {onMaximize && <Button variant="ghost" size="sm" shape="icon" aria-label={expanded ? labels.restore : labels.maximize} onClick={onMaximize}>{expanded ? <MinimizeIcon /> : <MaximizeIcon />}</Button>}
-        {onClose && <Button variant="ghost" size="sm" shape="icon" aria-label={labels.close} onClick={onClose}><XIcon /></Button>}
+        {onNewConversation && !historyOpen && <Tooltip>
+          <TooltipTrigger asChild><Button variant="ghost" size="sm" shape="icon" aria-label={labels.newChat} onClick={() => { onNewConversation(); returnToConversation(); }}><PlusIcon /></Button></TooltipTrigger>
+          <TooltipContent>{labels.newChat}</TooltipContent>
+        </Tooltip>}
+        {onMaximize && <Tooltip>
+          <TooltipTrigger asChild><Button variant="ghost" size="sm" shape="icon" aria-label={expanded ? labels.restore : labels.maximize} onClick={onMaximize}>{expanded ? <MinimizeIcon /> : <MaximizeIcon />}</Button></TooltipTrigger>
+          <TooltipContent>{expanded ? labels.restore : labels.maximize}</TooltipContent>
+        </Tooltip>}
+        {onClose && <Tooltip>
+          <TooltipTrigger asChild><Button variant="ghost" size="sm" shape="icon" aria-label={labels.close} onClick={onClose}><XIcon /></Button></TooltipTrigger>
+          <TooltipContent>{labels.close}</TooltipContent>
+        </Tooltip>}
       </div>
     </header>
     <div className="pk-chat-body">
       {hasHistory && <aside ref={sidebar} id={historyId} className="pk-chat-history" hidden={!historyOpen} aria-label={labels.history} onBlurCapture={event => {
-        if (!event.relatedTarget && event.currentTarget.hidden) historyToggle.current?.focus();
+        if (!event.relatedTarget && event.currentTarget.hidden) restoreHistoryFocus();
       }}>
         <ChatHistory conversations={conversations} activeConversationId={activeConversationId} labels={labels} searchRef={search}
           onSelect={onSelectConversation ? id => { onSelectConversation(id); returnToConversation(); } : undefined}
@@ -133,7 +153,7 @@ const ChatSurface = forwardRef<ChatSurfaceHandle, ChatSurfaceProps>(function Cha
 
 /** Embedded chat workspace. The host owns records, draft, and response lifecycle. */
 export const ChatPanel = forwardRef<HTMLDivElement, ChatPanelProps>(function ChatPanel(props, ref) {
-  return <ChatSurface {...props} elementRef={ref} expanded />;
+  return <TooltipProvider><ChatSurface {...props} elementRef={ref} expanded /></TooltipProvider>;
 });
 
 /** Floating launcher with compact and maximized views of the same chat surface. */
@@ -166,7 +186,7 @@ export function ChatWidget({
     return () => { visual.removeEventListener("resize", update); visual.removeEventListener("scroll", update); };
   }, [open, viewportNode]);
 
-  return <DialogPrimitive.Root open={open} onOpenChange={setOpen}>
+  return <TooltipProvider><DialogPrimitive.Root open={open} onOpenChange={setOpen}>
     <DialogPrimitive.Trigger asChild><Button className="pk-chat-launcher" size="lg" dir={dir} data-open={open || undefined} startIcon={launcherIcon ?? <MessageSquareIcon />}>{launcherLabel}</Button></DialogPrimitive.Trigger>
     <DialogPrimitive.Portal container={container}>
       <DialogPrimitive.Overlay className="pk-chat-overlay" />
@@ -179,5 +199,5 @@ export function ChatWidget({
         <ChatSurface {...props} dir={dir} ref={surface} dialog expanded={maximized} onMaximize={() => setMaximized(!maximized)} onClose={() => setOpen(false)} />
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>
-  </DialogPrimitive.Root>;
+  </DialogPrimitive.Root></TooltipProvider>;
 }

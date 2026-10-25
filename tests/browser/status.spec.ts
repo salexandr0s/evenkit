@@ -12,7 +12,6 @@ test("persistent feedback supports keyboard recovery, dismissal and cancellation
   await expect(recovery.getByRole("alert").locator("svg")).toHaveAttribute("aria-hidden", "true");
   const notes = page.getByRole("region", { name: "Static message examples" });
   await expect(notes.getByRole("note")).toHaveCount(4);
-  await expect(notes.getByRole("note").filter({ hasText: "Review before sharing" })).toHaveAttribute("title", "Sharing reminder");
   await expect(notes.getByRole("note").filter({ hasText: "Text without an icon" }).locator("svg")).toHaveCount(0);
 
   await retry.press("Enter");

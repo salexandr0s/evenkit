@@ -5,6 +5,7 @@ import { Button } from "./button.js";
 import { Input } from "./field.js";
 import { MessageSquareIcon, PlusIcon, SearchIcon, TrashIcon } from "./icons.js";
 import type { ChatConversation, ChatLabels } from "./chat-types.js";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip.js";
 
 interface ChatHistoryProps {
   conversations: readonly ChatConversation[];
@@ -34,7 +35,10 @@ export function ChatHistory({ conversations, activeConversationId, labels, searc
           <MessageSquareIcon size="sm" />
           <span><strong>{chat.title}</strong>{chat.description && <small>{chat.description}</small>}</span>
         </button>
-        {onDelete && <Button className="pk-chat-history-delete" variant="ghost" size="sm" shape="icon" aria-label={`${labels.deleteChat}: ${chat.title}`} onClick={() => onDelete(chat.id)}><TrashIcon size="sm" /></Button>}
+        {onDelete && <Tooltip>
+          <TooltipTrigger asChild><Button className="pk-chat-history-delete" variant="ghost" size="sm" shape="icon" aria-label={`${labels.deleteChat}: ${chat.title}`} onClick={() => onDelete(chat.id)}><TrashIcon size="sm" /></Button></TooltipTrigger>
+          <TooltipContent>{`${labels.deleteChat}: ${chat.title}`}</TooltipContent>
+        </Tooltip>}
       </div>) : <p className="pk-chat-history-empty" role="status">{search ? labels.noMatches : labels.noChats}</p>}
     </nav>
   </>;
