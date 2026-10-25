@@ -16,7 +16,7 @@ const CIRCLE_VARIANTS: Variants = {
     },
     animate: {
         opacity: [0, 1],
-        translateY: [-20, 0],
+        translateY: [-4, 0],
         transition: {
             opacity: { duration: iconDuration, ease: iconEase },
             duration: iconDuration,
@@ -37,7 +37,7 @@ const SECOND_CIRCLE_VARIANTS: Variants = {
     },
     animate: {
         opacity: [0, 1],
-        translateY: [-20, 0],
+        translateY: [-4, 0],
         transition: {
             opacity: { duration: iconDuration, ease: iconEase },
             delay: (iconDuration * 0.375),

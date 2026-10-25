@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Icon motion clipping pass: 25 October 2026
+
+Fixed the outer SVG viewport clipping moving artwork across all 215 icons. `packages/ui/src/icons.css` allows visible overflow while preserving token dimensions and the 24-unit viewBox. A narrow `:has(> .pk-icon)` override in `styles.css` also allows kit SVG motion through Badge's icon slot; arbitrary custom images retain their existing clipping. The padded ActionMessage frame and intentional scroll-container clipping remain unchanged.
+
+Shortened the outlying coin drops in HandCoins and speed trails in Car/Truck, and slightly reduced Leaf's upward travel. Normal artwork, reset states, durations and easing remain intact. Updated `docs/icons.md`. The new regression in `tests/browser/icon-animation.spec.ts` renders real public icons/buttons/badges, freezes representative hover poses, hit-tests painted strokes beyond the original SVG viewport, and asserts unchanged layout geometry.
+
+Verification passed: production package/catalog build, configured TypeScript and ESLint, four icon Chromium tests (including the live idle/hover/reset sweep for all 215 icons), and the existing Badge geometry/RTL/narrow-layout journey. The new clipping regression failed against the pre-fix build and passes after the fix. A separate bounds audit sampled all catalog icons: maximum measured excursion is now four artwork units, down from nineteen for HandCoins and over eleven for Car; all sampled overflowing artwork uses visible overflow. Inspected seven motion captures, including Search and CreditCard, and checked 360px layout for horizontal overflow. Independent source review found no actionable issues. Firefox/Safari and physical touch were not tested.
+
+Evidence: `.artifacts/icon-motion-bounds-before.json`, `icon-motion-bounds-after.json`, `icon-motion-before-test-results/`, `icon-motion-test-results/`, `icon-motion-*.png`, and `icon-motion-playwright.config.ts`. No required clipping work remains. Existing dev preview on port 5173 serves the updated icons. Concurrent design edits remain separate. Resume with `git status --short`; view `http://127.0.0.1:5173/#icons`.
+
 ## Icon scenario expansion: 25 October 2026
 
 Added 116 named icons, bringing the library to 215. New categories cover food/drink (24), money/payments (20), charts (16 added; 17 including the existing combined chart), shopping/delivery (12), travel/places (12), health/fitness (10), nature/weather (10), and devices/technology (12). Every addition uses the existing hover/static/reduced-motion contract. Forty-five new glyph bodies adapt the same pinned Lucide Animated source; 71 use original CSS motion on installed Lucide artwork. Totals are now 95 adapted bodies and 120 CSS animations. Syringe retains the installed 24-unit outline because upstream uses incompatible filled artwork.

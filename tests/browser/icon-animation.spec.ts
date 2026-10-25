@@ -1,5 +1,7 @@
 import { expect, test, type Locator } from "@playwright/test";
 import * as kit from "@project-kit/ui";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 
 async function artwork(icon: Locator) {
   return icon.evaluate(svg => [...svg.querySelectorAll("*")].map(element => {
@@ -7,6 +9,48 @@ async function artwork(icon: Locator) {
     return [element.getAttribute("d"), element.getAttribute("points"), style.transform, style.opacity, style.strokeDasharray, style.strokeDashoffset];
   }));
 }
+
+test("moving artwork remains visible beyond its SVG in standalone icons, compact buttons and badges", async ({ page }) => {
+  await page.goto("/#icons");
+  await expect(page.locator(".icon-gallery")).toBeVisible();
+  const cases = [
+    { name: "large search", icon: createElement(kit.SearchIcon, { size: "lg" }) },
+    { name: "medium card", icon: createElement(kit.CreditCardIcon) },
+    { name: "compact search", icon: createElement(kit.Button, { size: "xs", shape: "icon", "aria-label": "Search sample" }, createElement(kit.SearchIcon, { size: "sm" })) },
+    { name: "badge card", icon: createElement(kit.Badge, { icon: createElement(kit.CreditCardIcon, { size: "sm" }) }, "Payment") },
+  ];
+  const markup = renderToStaticMarkup(createElement("div", null, cases.map(({ name, icon }) => createElement("div", { key: name, "data-motion-case": name }, icon))));
+  const results = await page.evaluate(markup => {
+    const fixture = document.createElement("div");
+    fixture.style.cssText = "position:fixed;left:40px;top:180px;z-index:9999;background:white;padding:24px";
+    fixture.innerHTML = markup;
+    fixture.firstElementChild?.setAttribute("style", "display:flex;align-items:center;gap:40px");
+    document.body.append(fixture);
+    try {
+      return [...fixture.querySelectorAll<HTMLElement>("[data-motion-case]")].map(container => {
+        const svg = container.querySelector("svg")!;
+        const search = container.dataset.motionCase!.includes("search");
+        const shape = svg.querySelector<SVGGraphicsElement>(search ? "circle" : "rect")!;
+        const group = shape.parentElement!;
+        const before = [svg, container].map(node => node.getBoundingClientRect().toJSON());
+        // Freeze a real hover pose: hit testing proves the overflowing stroke is
+        // painted, including ancestor clipping. The sweep below checks live motion.
+        group.style.transform = search ? "translateY(-4px)" : "translateX(-4px)";
+        const point = new DOMPoint(search ? 11 : 2, search ? 3 : 12).matrixTransform(shape.getScreenCTM()!);
+        const bounds = svg.getBoundingClientRect();
+        return {
+          name: container.dataset.motionCase,
+          outsideViewport: point.x < bounds.left || point.y < bounds.top,
+          painted: document.elementFromPoint(point.x, point.y) === shape,
+          layoutUnchanged: JSON.stringify(before) === JSON.stringify([svg, container].map(node => node.getBoundingClientRect().toJSON())),
+        };
+      });
+    } finally {
+      fixture.remove();
+    }
+  }, markup);
+  expect(results).toEqual(cases.map(({ name }) => ({ name, outsideViewport: true, painted: true, layoutUnchanged: true })));
+});
 
 test("every catalog icon stays still at rest, animates its artwork, and resets on leave", async ({ page }) => {
   await page.goto("/#icons");

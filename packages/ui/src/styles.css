@@ -176,6 +176,7 @@
 .pk-badge[data-size="sm"] { gap: var(--pk-space-1); min-height: var(--pk-space-5); padding: 0 var(--pk-space-1-5); }
 .pk-badge-label { display: inline-flex; flex-wrap: wrap; align-items: center; gap: inherit; min-width: 0; max-width: 100%; }
 .pk-badge-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); overflow: hidden; }
+.pk-badge-icon:has(> .pk-icon) { overflow: visible; }
 .pk-badge-icon > *, .pk-badge-label > svg { flex: none; width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); max-width: var(--pk-icon-size-sm); max-height: var(--pk-icon-size-sm); object-fit: contain; }
 .pk-badge-dot { flex: none; width: var(--pk-space-1-5); height: var(--pk-space-1-5); border-radius: var(--pk-radius-full); background: currentColor; }
 .pk-badge[data-tone="accent"] { background: var(--pk-color-accent-soft); color: var(--pk-color-accent); }

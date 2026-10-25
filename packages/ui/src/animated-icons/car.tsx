@@ -40,7 +40,7 @@ const SPEED_LINE_VARIANTS: Variants = {
     },
     animate: (custom: number) => ({
         opacity: [0, 0.7, 0.5, 0],
-        x: [0, -4, -10, -16],
+        x: [0, -1, -2, -3],
         scaleX: [0.2, 1, 0.8, 0.3],
         transition: {
             duration: iconDuration * 2,
@@ -53,9 +53,9 @@ const SPEED_LINE_VARIANTS: Variants = {
 export function CarMotion({ controls }: AnimatedGlyphProps) {
     return (<g>
           {[
-            { y: 8, width: 5, x: 0 },
-            { y: 11, width: 7, x: -1 },
-            { y: 14, width: 4, x: 0 },
+            { y: 8, width: 5, x: 2 },
+            { y: 11, width: 7, x: 1 },
+            { y: 14, width: 4, x: 2 },
         ].map((line, i) => (<motion.line animate={controls} custom={i} key={`speed-${i}`} strokeLinecap="round" variants={SPEED_LINE_VARIANTS} x1={line.x} x2={line.x + line.width} y1={line.y} y2={line.y} initial="normal" transition={iconTransition}/>))}
           <motion.g animate={controls} variants={BODY_VARIANTS} initial="normal" transition={iconTransition}>
             <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>

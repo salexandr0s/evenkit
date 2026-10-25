@@ -77,6 +77,8 @@ ActionMessage uses `CircleCheckIcon` for success, `CircleAlertIcon` for errors, 
 
 Icons stay still on mount and while idle. Hovering an icon or its enclosing button or link plays its animation once; leaving resets it. Keyboard focus does not start an animation. Reduced-motion preferences keep icons still, including icons explicitly set to `animation="hover"`.
 
+Moving artwork can extend slightly beyond the SVG viewport without being cut off. Its layout box stays at the selected token size, so buttons and text do not shift. Badge icon slots allow this motion too. Coin drops and vehicle trails keep their movement close to the icon.
+
 Use `IconProvider` to set a default for a section or application. An explicit icon prop overrides the nearest provider. Both modes retain the same import, size tokens, accessible label, and SVG ref.
 
 ```tsx

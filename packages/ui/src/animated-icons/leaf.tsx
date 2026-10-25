@@ -12,7 +12,7 @@ const LEAF_VARIANTS: Variants = {
     },
     animate: {
         rotate: [0, -8, 4, -3, 0],
-        y: [0, -4, -2, -1, 0],
+        y: [0, -3, -2, -1, 0],
         x: [0, 2, -2, 1, 0],
         transition: {
             duration: iconDuration * 3,

@@ -32,7 +32,7 @@ const SPEED_LINE_VARIANTS: Variants = {
     },
     animate: (custom: number) => ({
         opacity: [0, 0.7, 0.5, 0],
-        x: [0, -4, -10, -16],
+        x: [0, -1, -2, -3],
         scaleX: [0.2, 1, 0.8, 0.3],
         transition: {
             duration: iconDuration * 2,
@@ -45,9 +45,9 @@ const SPEED_LINE_VARIANTS: Variants = {
 export function TruckMotion({ controls }: AnimatedGlyphProps) {
     return (<g>
           {[
-            { y: 8, width: 5, x: 0 },
-            { y: 11, width: 7, x: -1 },
-            { y: 14, width: 4, x: 0 },
+            { y: 8, width: 5, x: 2 },
+            { y: 11, width: 7, x: 1 },
+            { y: 14, width: 4, x: 2 },
         ].map((line, i) => (<motion.line animate={controls} custom={i} key={`speed-${i}`} strokeLinecap="round" variants={SPEED_LINE_VARIANTS} x1={line.x} x2={line.x + line.width} y1={line.y} y2={line.y} initial="normal" transition={iconTransition}/>))}
 
           <motion.g animate={controls} variants={TRUCK_VARIANTS} initial="normal" transition={iconTransition}>

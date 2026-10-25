@@ -8,6 +8,8 @@
   color: inherit;
   stroke-width: var(--pk-icon-stroke-width);
   vertical-align: middle;
+  /* Moving artwork may cross the viewBox; keep the token-sized layout box. */
+  overflow: visible;
 }
 
 .pk-icon[data-size="sm"] { width: var(--pk-icon-size-sm); height: var(--pk-icon-size-sm); }
