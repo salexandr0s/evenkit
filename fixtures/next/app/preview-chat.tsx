@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChatPanel, type ChatConversation, type ChatMessage } from "@project-kit/ui";
+import { ChatPanel, type ChatConversation, type ChatMessage } from "@evenkit/ui";
 
 const conversations: readonly ChatConversation[] = [{ id: "package", title: "Package check", description: "Local fixture messages" }];
 

@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import * as kit from "@project-kit/ui";
+import * as kit from "@evenkit/ui";
 
 async function choose(page: Page, label: string, value: string) {
   const trigger = page.getByRole("combobox", { name: label, exact: true });
@@ -26,7 +26,7 @@ test("icon reference combines aliases and categories, copies imports, and preser
 
   const copy = trash.getByRole("button", { name: "Copy import for TrashIcon", exact: true });
   await copy.press("Enter");
-  const namedImport = 'import { TrashIcon } from "@project-kit/ui";';
+  const namedImport = 'import { TrashIcon } from "@evenkit/ui";';
   await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe(namedImport);
   await page.evaluate(() => {
     Object.defineProperty(navigator.clipboard, "writeText", {

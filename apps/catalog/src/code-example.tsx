@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, CopyIcon, Tooltip, TooltipContent, TooltipTrigger } from "@project-kit/ui";
+import { Button, CopyIcon, Tooltip, TooltipContent, TooltipTrigger } from "@evenkit/ui";
 
 export function CodeExample({ code }: { code: string }) {
   const [notice, setNotice] = useState("");

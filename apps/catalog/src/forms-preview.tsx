@@ -4,7 +4,7 @@ import {
   DialogFooter, DialogTitle, Fieldset, FileTextIcon, FormActions, FormErrorSummary, FormSection,
   PasswordField, SaveStatus, SearchField, TextField, type ComboboxOption, type FormErrorItem,
   type SaveStatusState,
-} from "@project-kit/ui";
+} from "@evenkit/ui";
 import "./forms-preview.css";
 
 const teams: readonly ComboboxOption[] = [

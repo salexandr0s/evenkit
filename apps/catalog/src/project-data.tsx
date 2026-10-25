@@ -1,4 +1,4 @@
-import { Badge, type DataTableColumn } from "@project-kit/ui";
+import { Badge, type DataTableColumn } from "@evenkit/ui";
 
 export interface PreviewProject {
   id: string;

@@ -3,7 +3,7 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
-import { foundation } from "@project-kit/tokens";
+import { foundation } from "@evenkit/tokens";
 import { forwardRef, useLayoutEffect, useRef, useState, type AnchorHTMLAttributes, type ComponentPropsWithoutRef, type ComponentRef, type FocusEvent, type MouseEvent, type ReactNode, type Ref } from "react";
 import { Button } from "./button.js";
 import { classes } from "./classes.js";

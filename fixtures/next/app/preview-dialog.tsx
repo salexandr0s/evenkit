@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, type DialogSize } from "@project-kit/ui";
+import { Button, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, type DialogSize } from "@evenkit/ui";
 
 export function PreviewDialog() {
   const size: DialogSize = "lg";

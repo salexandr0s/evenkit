@@ -3,7 +3,7 @@ import {
   ActionMessage, Badge, Button, Dialog, DialogBody, DialogClose, DialogContent,
   DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
   SelectField, TextareaField, TextField,
-} from "@project-kit/ui";
+} from "@evenkit/ui";
 import "./dialog-preview.css";
 
 const visibilityOptions = [

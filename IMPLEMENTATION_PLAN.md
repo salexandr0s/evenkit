@@ -12,7 +12,7 @@ Build only tokens, basic controls, and a component catalog. Authentication servi
 | `apps/catalog` | Catalog coder | Searchable examples, theme and mode selection, live controls, usage and provenance |
 | Architecture and implementation review | Review agents | Resolve concrete defects before completion |
 
-Package names are `@project-kit/tokens`, `@project-kit/ui`, and `@project-kit/catalog`, initially at version 0.1.0. Core packages export built artifacts; the catalog consumes their public exports. Use strict TypeScript and npm workspaces. Ship ordinary CSS with the controls so existing Tailwind 3, Tailwind 4, and plain-CSS apps do not need the same build setup.
+Package names are `@evenkit/tokens`, `@evenkit/ui`, and `@evenkit/catalog`, initially at version 0.1.0. Core packages export built artifacts; the catalog consumes their public exports. Use strict TypeScript and npm workspaces. Ship ordinary CSS with the controls so existing Tailwind 3, Tailwind 4, and plain-CSS apps do not need the same build setup.
 
 Tokens use the prefix `--pk-`. Document-level attributes are `data-kit-theme="neutral|grove"` and `data-kit-mode="light|dark"`; omitting the mode follows the system. Preserve the inherited palette, but validate semantic foreground/background pairs and control borders before use. Package styles must not reset unrelated application elements.
 
@@ -33,7 +33,7 @@ The user approved this phase on 25 October 2026 and requested a goal for its com
 | Component catalog | Catalog coder | Working shell, table, and searchable icon examples with public API usage |
 | Integration and review | Root and reviewer | Browser interactions, narrow layouts, packed Next/Vite consumers, docs, handoff, local commit |
 
-Use `lucide-react` 1.61.0 and `@tanstack/react-table` 9.3.1 through `@project-kit/ui`. Import icons statically and export named wrappers; avoid a runtime registry that includes every icon. Table data is supplied by its consumer, with mandatory stable row IDs. The kit owns presentation and client table behavior; applications own fetching, authorization, routing, and persistence.
+Use `lucide-react` 1.61.0 and `@tanstack/react-table` 9.3.1 through `@evenkit/ui`. Import icons statically and export named wrappers; avoid a runtime registry that includes every icon. Table data is supplied by its consumer, with mandatory stable row IDs. The kit owns presentation and client table behavior; applications own fetching, authorization, routing, and persistence.
 
 Shell and table styles live in separate prefixed source files, combined into the existing UI stylesheet at build time. Keep the two-package installation contract. The catalog is a local demonstration, and the packages remain unpublished pilots. This phase does not migrate existing products or provide authentication services.
 

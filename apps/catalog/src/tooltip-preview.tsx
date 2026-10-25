@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { BookmarkIcon, Button, CircleHelpIcon, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@project-kit/ui";
+import { BookmarkIcon, Button, CircleHelpIcon, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@evenkit/ui";
 import "./tooltip-preview.css";
 
 export function TooltipPreview() {

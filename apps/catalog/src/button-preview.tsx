@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ActionMessage, ArrowRightIcon, Badge, Button, ButtonLink, CheckIcon, MailIcon, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipTrigger, type ButtonSize } from "@project-kit/ui";
+import { ActionMessage, ArrowRightIcon, Badge, Button, ButtonLink, CheckIcon, MailIcon, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipTrigger, type ButtonSize } from "@evenkit/ui";
 import "./button-preview.css";
 
 const buttonSizes: readonly { size: ButtonSize; label: string }[] = [

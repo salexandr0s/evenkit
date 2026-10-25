@@ -93,7 +93,7 @@ test("library drawer keeps navigation reachable while preserving the hidden desk
   await expect(drawer).not.toBeVisible();
   await expect(trigger).toBeFocused();
   await trigger.click();
-  await drawer.getByRole("link", { name: "Project kit home", exact: true }).click();
+  await drawer.getByRole("link", { name: "Evenkit home", exact: true }).click();
   await expect(drawer).not.toBeVisible();
   await expect(trigger).toBeFocused();
   await expect(page.getByRole("heading", { name: "Buttons", exact: true })).toBeVisible();

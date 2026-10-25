@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Badge, Button, DataTable, Label, Select, type DataTableColumn } from "@project-kit/ui";
+import { Badge, Button, DataTable, Label, Select, type DataTableColumn } from "@evenkit/ui";
 import { getProjectId, projectColumns, projects, type PreviewProject } from "./project-data";
 import "./table-preview.css";
 

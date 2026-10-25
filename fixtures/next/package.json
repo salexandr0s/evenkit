@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": { "build": "next build", "start": "next start --hostname 127.0.0.1" },
   "dependencies": {
-    "@project-kit/tokens": "0.1.0",
-    "@project-kit/ui": "0.1.0",
+    "@evenkit/tokens": "0.1.0",
+    "@evenkit/ui": "0.1.0",
     "next": "16.4.3",
     "react": "19.3.1",
     "react-dom": "19.3.1"

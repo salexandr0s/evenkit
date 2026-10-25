@@ -1,7 +1,7 @@
 "use client";
 
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { foundation } from "@project-kit/tokens";
+import { foundation } from "@evenkit/tokens";
 import { forwardRef, useEffect, useId, useState, type ComponentPropsWithoutRef } from "react";
 import { classes } from "./classes.js";
 import type { ControlSize } from "./button.js";

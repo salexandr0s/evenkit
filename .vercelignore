@@ -1,0 +1,11 @@
+node_modules
+.git
+.artifacts
+.hallmark
+test-results
+playwright-report
+**/dist
+**/.next
+*.tsbuildinfo
+.env*
+SESSION_HANDOFF.md

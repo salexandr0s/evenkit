@@ -2,7 +2,7 @@
 
 `ChatWidget` provides a launcher, compact modal chat, and maximized workspace. `ChatPanel` embeds the same conversation UI in a page. Both use the kit's current theme and accept application-owned messages, drafts, response state, and conversation history.
 
-Import `@project-kit/tokens/css` before `@project-kit/ui/css`. In Next.js, render the chat from a client component and import the styles in your root layout. The [catalog example](../apps/catalog/src/chat-preview.tsx) demonstrates conversation switching, simulated responses, stop, retry, and deletion without an AI service.
+Import `@evenkit/tokens/css` before `@evenkit/ui/css`. In Next.js, render the chat from a client component and import the styles in your root layout. The [catalog example](../apps/catalog/src/chat-preview.tsx) demonstrates conversation switching, simulated responses, stop, retry, and deletion without an AI service.
 
 ## Connect a reply handler
 
@@ -12,7 +12,7 @@ The application accepts a submitted message, clears the draft, and updates `stat
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChatWidget, type ChatMessage, type ChatStatus } from "@project-kit/ui";
+import { ChatWidget, type ChatMessage, type ChatStatus } from "@evenkit/ui";
 
 type Reply = (messages: readonly ChatMessage[], signal: AbortSignal) => Promise<string>;
 

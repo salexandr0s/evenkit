@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { foundation } from "@project-kit/tokens";
-import { Button, FolderIcon, RotateCcwIcon, Skeleton, Spinner } from "@project-kit/ui";
+import { foundation } from "@evenkit/tokens";
+import { Button, FolderIcon, RotateCcwIcon, Skeleton, Spinner } from "@evenkit/ui";
 import "./loading-preview.css";
 
 const sizes = [

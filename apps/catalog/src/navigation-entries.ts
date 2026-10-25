@@ -1,6 +1,6 @@
 import type { CatalogEntry } from "./catalog-types.js";
 
-const imports = '"use client";\n\nimport "@project-kit/tokens/css";\nimport "@project-kit/ui/css";\n';
+const imports = '"use client";\n\nimport "@evenkit/tokens/css";\nimport "@evenkit/ui/css";\n';
 
 export const navigationEntries: readonly CatalogEntry[] = [
   {
@@ -9,7 +9,7 @@ export const navigationEntries: readonly CatalogEntry[] = [
     tags: ["tabs", "tabpanel", "navigation", "underline", "pills", "manual", "rtl", "E01"],
     source: "Radix Tabs · internal tabs.v1 contract",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/tabs",
-    usage: `${imports}import { Tabs, TabsList, TabsTrigger, TabsContent } from "@project-kit/ui";
+    usage: `${imports}import { Tabs, TabsList, TabsTrigger, TabsContent } from "@evenkit/ui";
 
 export function ProjectTabs() {
   return (
@@ -36,7 +36,7 @@ export function ProjectTabs() {
     source: "Radix Accordion · original kit presentation",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/accordion",
     usage: `${imports}import { Accordion, AccordionItem, AccordionHeader,
-  AccordionTrigger, AccordionContent } from "@project-kit/ui";
+  AccordionTrigger, AccordionContent } from "@evenkit/ui";
 
 export function ProjectQuestions() {
   return (
@@ -66,7 +66,7 @@ export function ProjectQuestions() {
     source: "Radix Collapsible · kit Button composition",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/collapsible",
     usage: `${imports}import { useState } from "react";
-import { Button, Collapsible, CollapsibleTrigger, CollapsibleContent } from "@project-kit/ui";
+import { Button, Collapsible, CollapsibleTrigger, CollapsibleContent } from "@evenkit/ui";
 
 export function ProjectDetails() {
   const [open, setOpen] = useState(false);
@@ -87,7 +87,7 @@ export function ProjectDetails() {
     tags: ["breadcrumbs", "path", "navigation", "ancestors", "current page", "long labels", "E04"],
     source: "Original kit composition · ARIA breadcrumb pattern",
     sourceUrl: "https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/",
-    usage: `${imports}import { Breadcrumbs } from "@project-kit/ui";
+    usage: `${imports}import { Breadcrumbs } from "@evenkit/ui";
 
 export function ProjectPath() {
   return (
@@ -109,7 +109,7 @@ export function ProjectPath() {
     tags: ["navbar", "navigation", "header", "mobile", "drawer", "router", "skip link", "E05"],
     source: "Internal navbar.v1 · existing Radix Dialog composition",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dialog",
-    usage: `${imports}import { Navbar, Button } from "@project-kit/ui";
+    usage: `${imports}import { Navbar, Button } from "@evenkit/ui";
 
 export function ProjectNavigation({ onCreate }: { onCreate: () => void }) {
   return (
@@ -139,7 +139,7 @@ export function ProjectNavigation({ onCreate }: { onCreate: () => void }) {
     source: "Original kit composition · extracted table navigation contract",
     sourceUrl: "https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/examples/navigation.html",
     usage: `${imports}import { useState } from "react";
-import { Pagination } from "@project-kit/ui";
+import { Pagination } from "@evenkit/ui";
 
 export function ProjectPages({ pageCount, onLoadPage }: {
   pageCount: number;

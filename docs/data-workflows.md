@@ -1,6 +1,6 @@
 # Data, files, and editable page blocks
 
-25 October 2026. Owner: Project kit. Maturity: pilot. Catalog consumers use fictional local data. Covers I01–I03, J01–J02, O02, O04 and O11.
+25 October 2026. Owner: Evenkit. Maturity: pilot. Catalog consumers use fictional local data. Covers I01–I03, J01–J02, O02, O04 and O11.
 
 ## Component contracts
 

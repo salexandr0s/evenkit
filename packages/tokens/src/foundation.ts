@@ -277,7 +277,7 @@ export const foundation = {
 } as const;
 
 export const metadata = {
-  "name": "Project kit tokens",
+  "name": "Evenkit tokens",
   "version": "0.1.0",
   "source": {
     "id": "tokens.apple-minimal.v1",

@@ -1,7 +1,7 @@
 "use client";
 
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { foundation } from "@project-kit/tokens";
+import { foundation } from "@evenkit/tokens";
 import { createContext, forwardRef, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState, type ComponentPropsWithoutRef, type ComponentRef, type RefObject } from "react";
 import { classes } from "./classes.js";
 

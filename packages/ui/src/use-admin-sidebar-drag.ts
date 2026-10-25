@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type RefObject } from "react";
-import { foundation } from "@project-kit/tokens";
+import { foundation } from "@evenkit/tokens";
 import type { AdminSidebarState } from "./admin-shell.js";
 
 export const sidebarWidths: Record<AdminSidebarState, number> = {

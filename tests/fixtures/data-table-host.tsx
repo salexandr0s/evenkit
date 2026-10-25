@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Button, DataTable, type DataTableColumn } from "@project-kit/ui";
-import "@project-kit/tokens/css";
-import "@project-kit/ui/css";
+import { Button, DataTable, type DataTableColumn } from "@evenkit/ui";
+import "@evenkit/tokens/css";
+import "@evenkit/ui/css";
 
 interface Project {
   id: string;

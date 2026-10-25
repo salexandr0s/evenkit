@@ -38,7 +38,7 @@ Progress keeps its native element, label, ref and value semantics inside a clipp
 
 The examples expose mixed/disabled choices, form serialization/reset, disabled-option keyboard skipping, a failed preference save and retry, pressed actions, copy success/failure/retry, and determinate/indeterminate progress. The preparation example advances four fictional files and keeps workspace capacity separate. No provider or persistence is included.
 
-Import `@project-kit/tokens/css`, then `@project-kit/ui/css`. Controls are exported from `@project-kit/ui`; recipes and complete snippets are in the corresponding catalog entries.
+Import `@evenkit/tokens/css`, then `@evenkit/ui/css`. Controls are exported from `@evenkit/ui`; recipes and complete snippets are in the corresponding catalog entries.
 
 Behavior sources are pinned Radix [Checkbox](https://www.radix-ui.com/primitives/docs/components/checkbox), [RadioGroup](https://www.radix-ui.com/primitives/docs/components/radio-group), [Switch](https://www.radix-ui.com/primitives/docs/components/switch), and [ToggleGroup](https://www.radix-ui.com/primitives/docs/components/toggle-group). Those packages retain their MIT notices. Kit markup and CSS are original. The local catalog is the initial example consumer; maturity remains pilot until adoption and documented compatibility checks are complete.
 

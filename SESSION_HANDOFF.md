@@ -2,6 +2,16 @@
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Branch: `codex/component-improvements`.
 
+## Evenkit rename and production launch: 25 October 2026
+
+Renamed the kit and workspace packages to Evenkit / `@evenkit/*`, updated examples and documentation, and created an original transparent logo from scratch. The catalog uses the logo silhouette with the active theme foreground and supplies it as the favicon. Existing `pk-` CSS and `data-kit-*` contracts remain stable; catalog preferences migrate from the former storage keys.
+
+Production is live at https://evenkit.dev, with https://www.evenkit.dev also verified in a browser. Vercel project `evenkit` belongs to Block Consult GmbH (`blockconsult`), ID `prj_5K4UrqWVGwIWPIxGYAe8OkwfpxBW`. Deployment `dpl_DHELtJHtgpfQQX3WN19QoNm2Beei` is READY. Cloudflare retains DNS with DNS-only CNAME records for `@` and `www` pointing to `af34aa774455dc22.vercel-dns-016.com`; Vercel reports both domains configured correctly. The connector uses a different account; deployment used the user's confirmed local CLI account/team.
+
+Verification passed on the deployed working tree: production build, configured TypeScript and ESLint, eight token tests, all 135 Chromium journeys, 62 copied examples/all 48 mappings, and independent packed Vite/Next.js builds and HTTP/CSS checks. Live browser checks confirmed branding, search and light/dark switching. Screenshot: `.artifacts/evenkit/live-evenkit.png`. Branding/deployment changes form a focused commit separate from the pre-existing design/Navbar work; working files were preserved. An isolated copy of the staged source also passed build, TypeScript and ESLint. No Git remote is configured. The library packages remain unpublished.
+
+Key files: `vercel.json`, `.vercelignore`, root/workspace package manifests and lockfile, `apps/catalog/index.html`, `apps/catalog/src/catalog.tsx`, `apps/catalog/src/catalog.css`, and `apps/catalog/public/evenkit-logo.png`. Redeploy from the repository root with `vercel deploy --prod --scope blockconsult`. Inspect with `vercel project inspect evenkit --scope blockconsult` and `vercel domains verify evenkit.dev --scope blockconsult`. Existing pending component edits remain separate and are preserved below.
+
 ## Design commit series: 25 October 2026
 
 Committed this chat's completed 48-item design pass and popup-footer follow-up in four logical units: foundations/forms, navigation, overlays/data workflows, and popup actions. Separate Navbar implementation/design, Hallmark, field-error and other pre-existing edits remain in the working tree. Shared navigation, catalog CSS, global CSS and handoff contents were staged selectively; no work-tree source files were replaced. The commits were not pushed.

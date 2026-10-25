@@ -1,9 +1,9 @@
 # Icons
 
-Use the named Lucide wrappers exported by `@project-kit/ui`. Icons animate on hover by default and accept `animation="static"` for a still version. The kit pins `lucide-react` 1.61.0 and adapts matching animations from [Lucide Animated](https://lucide-animated.com/), with kit animations for the remaining icons. Named imports support tree shaking. [Lucide React documentation](https://lucide.dev/guide/react).
+Use the named Lucide wrappers exported by `@evenkit/ui`. Icons animate on hover by default and accept `animation="static"` for a still version. The kit pins `lucide-react` 1.61.0 and adapts matching animations from [Lucide Animated](https://lucide-animated.com/), with kit animations for the remaining icons. Named imports support tree shaking. [Lucide React documentation](https://lucide.dev/guide/react).
 
 ```tsx
-import { Button, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@project-kit/ui";
+import { Button, PlusIcon, SearchIcon, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@evenkit/ui";
 
 <Button><PlusIcon size="sm" />Create project</Button>
 <TooltipProvider>
@@ -26,7 +26,7 @@ Place utility icons inline with the content or action row they belong to. Use `s
 Use `UserIcon` for one person, an account, or a profile. Use `UsersIcon` for a team or group. The silhouettes differ, so a person row does not look like the destination for the whole team.
 
 ```tsx
-import { UserIcon, UsersIcon } from "@project-kit/ui";
+import { UserIcon, UsersIcon } from "@evenkit/ui";
 
 <span><UserIcon />Alex Morgan</span>
 <span><UsersIcon />Team</span>
@@ -61,7 +61,7 @@ The set contains 215 named wrappers, including these families:
 Choose a category to browse a scenario, or search for the task: "breakfast" finds coffee, croissants, eggs, and bananas; "revenue" finds money and charts; "portfolio" finds line, pie, and candlestick charts. Search and category filters work together.
 
 ```tsx
-import { Button, CoffeeIcon, CreditCardIcon, ChartPieIcon, TruckIcon } from "@project-kit/ui";
+import { Button, CoffeeIcon, CreditCardIcon, ChartPieIcon, TruckIcon } from "@evenkit/ui";
 
 <Button startIcon={<CoffeeIcon />}>Breakfast menu</Button>
 <Button startIcon={<CreditCardIcon />}>Payment methods</Button>
@@ -82,7 +82,7 @@ Moving artwork can extend slightly beyond the SVG viewport without being cut off
 Use `IconProvider` to set a default for a section or application. An explicit icon prop overrides the nearest provider. Both modes retain the same import, size tokens, accessible label, and SVG ref.
 
 ```tsx
-import { BellIcon, Button, IconProvider, PlusIcon } from "@project-kit/ui";
+import { BellIcon, Button, IconProvider, PlusIcon } from "@evenkit/ui";
 
 <BellIcon animation="hover" label="Notifications" />
 <BellIcon animation="static" label="Notifications" />

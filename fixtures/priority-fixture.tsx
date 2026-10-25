@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import * as Kit from "@project-kit/ui";
+import * as Kit from "@evenkit/ui";
 import { RecordWorkflow, type WorkflowRecord } from "./blocks/record-workflow";
 import { RecoveryPage } from "./blocks/recovery-page";
 

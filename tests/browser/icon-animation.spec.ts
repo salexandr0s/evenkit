@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from "@playwright/test";
-import * as kit from "@project-kit/ui";
+import * as kit from "@evenkit/ui";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 

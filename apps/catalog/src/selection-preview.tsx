@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, ButtonGroup, Checkbox, CheckboxGroup, CopyAction, Meter, Progress, RadioGroup, SegmentedControl, Switch, Toggle, ToggleGroup, ToggleGroupItem } from "@project-kit/ui";
+import { Button, ButtonGroup, Checkbox, CheckboxGroup, CopyAction, Meter, Progress, RadioGroup, SegmentedControl, Switch, Toggle, ToggleGroup, ToggleGroupItem } from "@evenkit/ui";
 import "./selection-preview.css";
 
 function CheckboxPreview() {

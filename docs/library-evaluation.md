@@ -1,6 +1,6 @@
 # Component library evaluation
 
-Reviewed 25 October 2026 for the first project-kit phase. The current kit uses original controls and prefixed CSS, with Radix Dialog as its interaction dependency. No Mantine, HeroUI, Chakra, or Uiverse source was copied into this release.
+Reviewed 25 October 2026 for the first Evenkit phase. The current kit uses original controls and prefixed CSS, with Radix Dialog as its interaction dependency. No Mantine, HeroUI, Chakra, or Uiverse source was copied into this release.
 
 | Source | Useful in this foundation | Candidate for a later phase |
 |---|---|---|

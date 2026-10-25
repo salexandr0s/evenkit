@@ -4,7 +4,7 @@ import * as MenuPrimitive from "@radix-ui/react-dropdown-menu";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import * as AlertPrimitive from "@radix-ui/react-alert-dialog";
 import * as ToastPrimitive from "@radix-ui/react-toast";
-import { foundation } from "@project-kit/tokens";
+import { foundation } from "@evenkit/tokens";
 import { createPortal } from "react-dom";
 import { createContext, forwardRef, useCallback, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentPropsWithoutRef, type ComponentRef, type MouseEvent, type ReactNode, type SyntheticEvent } from "react";
 import { Button } from "./button.js";

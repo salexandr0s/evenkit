@@ -1,5 +1,5 @@
 {
-  "name": "project-kit-workspace",
+  "name": "evenkit-workspace",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -7,9 +7,9 @@
   "engines": { "node": ">=22.12.0" },
   "scripts": {
     "predev": "npm run build:packages",
-    "dev": "npm run dev --workspace @project-kit/catalog",
-    "build:packages": "npm run build --workspace @project-kit/tokens && npm run build --workspace @project-kit/ui",
-    "build": "npm run build:packages && npm run build --workspace @project-kit/catalog",
+    "dev": "npm run dev --workspace @evenkit/catalog",
+    "build:packages": "npm run build --workspace @evenkit/tokens && npm run build --workspace @evenkit/ui",
+    "build": "npm run build:packages && npm run build --workspace @evenkit/catalog",
     "typecheck": "tsc -p tsconfig.checks.json && npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
     "test": "vitest run",

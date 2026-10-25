@@ -4,7 +4,7 @@ import {
   Avatar, Badge, Breadcrumbs, Button, ChevronDownIcon, Collapsible, CollapsibleContent, CollapsibleTrigger,
   Heading, Inline, Navbar, Pagination, Stack, Tabs, TabsContent, TabsList, TabsTrigger, TextField,
   type NavigationLinkProps, type PaginationPageLinkProps,
-} from "@project-kit/ui";
+} from "@evenkit/ui";
 import "./navigation-preview.css";
 
 function TabsPreview() {

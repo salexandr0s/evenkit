@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, type AnchorHTMLAttributes, type CSSProperties, type FocusEvent, type MouseEventHandler, type ReactNode, type Ref } from "react";
-import { foundation } from "@project-kit/tokens";
+import { foundation } from "@evenkit/tokens";
 import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "./dialog.js";

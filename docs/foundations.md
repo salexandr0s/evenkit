@@ -1,6 +1,6 @@
 # Foundations and display contracts
 
-Owner: Project kit. Maturity: pilot. Example consumer: the local component catalog. This module implements inventory A01–A07, A11, H01–H04 and H08.
+Owner: Evenkit. Maturity: pilot. Example consumer: the local component catalog. This module implements inventory A01–A07, A11, H01–H04 and H08.
 
 These original kit components use the existing Apple Minimal values and [Card contract](/Users/nationalbank/GitHub/ai-config/claude/uiux-contract/components/card.yaml). They add no runtime dependency, asset or visual token. Components receive ordinary React/native attributes and forwarded refs. The host owns record data, routing, action behavior and focus recovery after removing content.
 

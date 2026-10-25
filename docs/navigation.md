@@ -1,6 +1,6 @@
 # Navigation controls
 
-Owner: Project kit. Maturity: pilot. Inventory: E01–E06. Example consumer: the local component catalog. These controls use the existing kit styles and document-level themes.
+Owner: Evenkit. Maturity: pilot. Inventory: E01–E06. Example consumer: the local component catalog. These controls use the existing kit styles and document-level themes.
 
 ## Contracts
 

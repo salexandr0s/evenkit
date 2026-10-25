@@ -22,7 +22,7 @@ import {
   CloudRainIcon, CloudSnowIcon, CloudLightningIcon, ThermometerIcon, DropletsIcon,
   MonitorIcon, LaptopIcon, SmartphoneIcon, TabletIcon, CameraIcon, VideoIcon,
   HeadphonesIcon, MicIcon, WifiIcon, BluetoothIcon, DatabaseIcon, CodeXmlIcon,
-} from "@project-kit/ui";
+} from "@evenkit/ui";
 import type { IconEntry } from "./icon-data.js";
 
 // Scenario names and search terms belong to the catalog, not the UI package.

@@ -1,6 +1,6 @@
 "use client";
 
-import { foundation } from "@project-kit/tokens";
+import { foundation } from "@evenkit/tokens";
 import { forwardRef, useCallback, useId, useImperativeHandle, useLayoutEffect, useRef, useState, type Ref } from "react";
 import { Button } from "./button.js";
 import { classes } from "./classes.js";

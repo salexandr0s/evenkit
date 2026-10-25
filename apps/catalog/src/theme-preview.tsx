@@ -1,6 +1,6 @@
 import { useId, type CSSProperties } from "react";
-import { themeNames, themes, type ColorMode, type ThemeName } from "@project-kit/tokens";
-import { Button, CheckIcon } from "@project-kit/ui";
+import { themeNames, themes, type ColorMode, type ThemeName } from "@evenkit/tokens";
+import { Button, CheckIcon } from "@evenkit/ui";
 import "./theme-preview.css";
 
 const swatches = [

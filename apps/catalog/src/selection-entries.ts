@@ -1,7 +1,7 @@
 import type { CatalogEntry } from "./catalog-types.js";
 
 function usage(imports: string, body: string) {
-  return `"use client";\n\nimport "@project-kit/tokens/css";\nimport "@project-kit/ui/css";\n${imports}\n\n${body}\n`;
+  return `"use client";\n\nimport "@evenkit/tokens/css";\nimport "@evenkit/ui/css";\n${imports}\n\n${body}\n`;
 }
 
 export const selectionEntries: readonly CatalogEntry[] = [
@@ -11,7 +11,7 @@ export const selectionEntries: readonly CatalogEntry[] = [
     tags: ["checkbox", "checkbox group", "mixed", "indeterminate", "selection", "form", "required", "reset"],
     source: "Radix Checkbox 1.4.1 · original kit field composition",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/checkbox",
-    usage: usage('import { Button, Checkbox, CheckboxGroup } from "@project-kit/ui";', `export function DeliveryOptions({ onSubmit }: { onSubmit: (values: FormData) => void }) {
+    usage: usage('import { Button, Checkbox, CheckboxGroup } from "@evenkit/ui";', `export function DeliveryOptions({ onSubmit }: { onSubmit: (values: FormData) => void }) {
   return (
     <form onSubmit={event => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
       <CheckboxGroup label="Delivery channels" hint="Choose the channels your team uses.">
@@ -31,7 +31,7 @@ export const selectionEntries: readonly CatalogEntry[] = [
     tags: ["radio", "radio group", "one choice", "form", "schedule", "keyboard", "reset"],
     source: "Radix RadioGroup 1.5.1 · kit labels and feedback",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/radio-group",
-    usage: usage('import { Button, RadioGroup } from "@project-kit/ui";', `export function ScheduleOptions({ onSubmit }: { onSubmit: (values: FormData) => void }) {
+    usage: usage('import { Button, RadioGroup } from "@evenkit/ui";', `export function ScheduleOptions({ onSubmit }: { onSubmit: (values: FormData) => void }) {
   return (
     <form onSubmit={event => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
       <RadioGroup label="Delivery schedule" name="schedule" defaultValue="weekly" required options={[
@@ -51,7 +51,7 @@ export const selectionEntries: readonly CatalogEntry[] = [
     tags: ["switch", "preference", "toggle", "pending", "save", "error", "retry"],
     source: "Radix Switch 1.4.1 · kit feedback and pending behavior",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/switch",
-    usage: usage('import { Switch } from "@project-kit/ui";', `interface NotificationPreferenceProps {
+    usage: usage('import { Switch } from "@evenkit/ui";', `interface NotificationPreferenceProps {
   enabled: boolean;
   saving: boolean;
   error?: string;
@@ -73,7 +73,7 @@ export function NotificationPreference({ enabled, saving, error, onChange }: Not
     tags: ["toggle", "toggle group", "pressed", "formatting", "toolbar", "keyboard", "alignment"],
     source: "Radix ToggleGroup 1.2.1 · kit pressed Button",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/toggle-group",
-    usage: usage('import { useState } from "react";\nimport { Toggle, ToggleGroup, ToggleGroupItem } from "@project-kit/ui";', `export function FormattingActions() {
+    usage: usage('import { useState } from "react";\nimport { Toggle, ToggleGroup, ToggleGroupItem } from "@evenkit/ui";', `export function FormattingActions() {
   const [formats, setFormats] = useState<string[]>(["bold"]);
   return (
     <>
@@ -93,7 +93,7 @@ export function NotificationPreference({ enabled, saving, error, onChange }: Not
     tags: ["segmented", "mode", "view", "radio", "form", "list", "cards", "rtl"],
     source: "Radix RadioGroup 1.5.1 · original segmented presentation",
     sourceUrl: "https://www.radix-ui.com/primitives/docs/components/radio-group",
-    usage: usage('import { useState } from "react";\nimport { SegmentedControl } from "@project-kit/ui";', `export function ProjectPresentation() {
+    usage: usage('import { useState } from "react";\nimport { SegmentedControl } from "@evenkit/ui";', `export function ProjectPresentation() {
   const [mode, setMode] = useState("list");
   return (
     <SegmentedControl label="Project presentation" name="presentation" value={mode} onValueChange={setMode}
@@ -109,7 +109,7 @@ export function NotificationPreference({ enabled, saving, error, onChange }: Not
     tags: ["button group", "actions", "joined", "vertical", "horizontal", "wrapping"],
     source: "Original kit composition · native group semantics",
     sourceUrl: "https://www.w3.org/WAI/ARIA/apg/patterns/button/",
-    usage: usage('import { Button, ButtonGroup } from "@project-kit/ui";', `export function DocumentActions({ onSave, onPreview }: { onSave: () => void; onPreview: () => void }) {
+    usage: usage('import { Button, ButtonGroup } from "@evenkit/ui";', `export function DocumentActions({ onSave, onPreview }: { onSave: () => void; onPreview: () => void }) {
   return (
     <ButtonGroup label="Document actions" joined>
       <Button variant="outline" onClick={onSave}>Save document</Button>
@@ -124,7 +124,7 @@ export function NotificationPreference({ enabled, saving, error, onChange }: Not
     tags: ["copy", "clipboard", "reference", "failure", "retry", "feedback"],
     source: "Original kit Clipboard API composition",
     sourceUrl: "https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText",
-    usage: usage('import { CopyAction } from "@project-kit/ui";', `export function CopyProjectReference({ reference }: { reference: string }) {
+    usage: usage('import { CopyAction } from "@evenkit/ui";', `export function CopyProjectReference({ reference }: { reference: string }) {
   return <CopyAction text={reference}>Copy project reference</CopyAction>;
 }
 
@@ -137,7 +137,7 @@ export function NotificationPreference({ enabled, saving, error, onChange }: Not
     tags: ["progress", "meter", "determinate", "indeterminate", "percentage", "measurement", "loading"],
     source: "Original kit composition · native progress and meter",
     sourceUrl: "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/progress",
-    usage: usage('import { Meter, Progress } from "@project-kit/ui";', `export function PreparationStatus({ completed, total }: { completed: number; total: number }) {
+    usage: usage('import { Meter, Progress } from "@evenkit/ui";', `export function PreparationStatus({ completed, total }: { completed: number; total: number }) {
   return (
     <>
       <Progress label="File preparation" value={completed} max={total} />

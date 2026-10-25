@@ -1,6 +1,6 @@
 "use client";
 
-import { AdminShell, Button, DataTable, FolderIcon, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserIcon, type AdminSidebarState, type DataTableCellOverflow, type DataTableColumn } from "@project-kit/ui";
+import { AdminShell, Button, DataTable, FolderIcon, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserIcon, type AdminSidebarState, type DataTableCellOverflow, type DataTableColumn } from "@evenkit/ui";
 
 const records = [{ id: "one", name: "Independent consumer", members: 3 }];
 const overflow: DataTableCellOverflow = "wrap";

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { entries } from "../../apps/catalog/src/catalog-data.js";
-import { themeNames } from "@project-kit/tokens";
+import { themeNames } from "@evenkit/tokens";
 
 // Package/type checks cannot detect long labels escaping a themed page or a
 // missing lazy preview. Exercise every priority route at the contract widths.

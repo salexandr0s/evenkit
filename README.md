@@ -1,6 +1,6 @@
-# Shared project kit
+# Evenkit
 
-Reusable tokens, React controls, layouts, forms, navigation, feedback, data and file controls, editable page blocks, and AI chat, with a local component catalog. This repository lives in the requested `design-tokens` folder. Version 0.1.0 is a pilot for evaluation in new projects.
+Reusable tokens, React controls, layouts, forms, navigation, feedback, data and file controls, editable page blocks, and AI chat. Browse the component catalog at [evenkit.dev](https://evenkit.dev). Version 0.1.0 is a pilot for evaluation in new projects.
 
 ## Start the catalog
 
@@ -17,13 +17,25 @@ The catalog includes the original 14 sections plus 48 priority examples for layo
 
 The catalog uses AdminShell for its own navigation. Each entry has an icon. Drag the sidebar edge or use the single header button to expand, minimise, or hide it; the display mode is remembered. Search stays in the header, and narrow screens use a navigation drawer.
 
+## Deploy the catalog
+
+Vercel serves the catalog at [evenkit.dev](https://evenkit.dev) from the `evenkit` project in the Block Consult GmbH team. DNS stays with Cloudflare; both `evenkit.dev` and `www.evenkit.dev` point to Vercel using DNS-only CNAME records.
+
+From the repository root, deploy the current working tree:
+
+```sh
+vercel deploy --prod --scope blockconsult
+```
+
+The root `vercel.json` installs the workspace dependencies, builds both packages and the catalog, then publishes `apps/catalog/dist`. The site uses the original logo in `apps/catalog/public/evenkit-logo.png`; the catalog colors its silhouette with the active theme. The package libraries remain unpublished.
+
 ## Packages
 
 | Package | Contents | Public imports |
 |---|---|---|
-| `@project-kit/tokens` | Typed scales, palettes, eight themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
-| `@project-kit/ui` | Controls, layouts, forms, navigation, overlays, files and feedback; 215 Lucide icons, AdminShell, DataTable and chat | Main export, `/css` |
-| `@project-kit/catalog` | Searchable examples and usage reference | Local application |
+| `@evenkit/tokens` | Typed scales, palettes, eight themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
+| `@evenkit/ui` | Controls, layouts, forms, navigation, overlays, files and feedback; 215 Lucide icons, AdminShell, DataTable and chat | Main export, `/css` |
+| `@evenkit/catalog` | Searchable examples and usage reference | Local application |
 
 Both libraries export built files and declarations. UI styles use `pk-` classes and `--pk-` variables, with no global reset. Consumers need React 19 and React DOM 19; no Tailwind, Next.js, database, or authentication dependency is required by the UI package.
 
@@ -34,21 +46,21 @@ Build and pack both packages locally:
 ```sh
 npm run build:packages
 mkdir -p .artifacts
-npm pack --workspace @project-kit/tokens --workspace @project-kit/ui --pack-destination .artifacts
+npm pack --workspace @evenkit/tokens --workspace @evenkit/ui --pack-destination .artifacts
 ```
 
 From a sibling project directory, install both tarballs together:
 
 ```sh
-npm install ../design-tokens/.artifacts/project-kit-tokens-0.1.0.tgz ../design-tokens/.artifacts/project-kit-ui-0.1.0.tgz
+npm install ../design-tokens/.artifacts/evenkit-tokens-0.1.0.tgz ../design-tokens/.artifacts/evenkit-ui-0.1.0.tgz
 ```
 
 Import the styles in this order, once at the application entry or root layout:
 
 ```tsx
-import "@project-kit/tokens/css";
-import "@project-kit/ui/css";
-import { Button, TextField } from "@project-kit/ui";
+import "@evenkit/tokens/css";
+import "@evenkit/ui/css";
+import { Button, TextField } from "@evenkit/ui";
 
 export function ProjectForm() {
   return <form>
@@ -79,7 +91,7 @@ For Next.js, import CSS in the root layout. Interactive UI exports retain their 
 Badge supports `tone`, `size="sm" | "md"`, `variant="soft" | "outline"`, and an optional decorative `icon` or `dot`. An icon takes precedence over a dot. Short labels retain 20/24px heights; longer labels wrap within the available width. Keep labels concise and format counts in your application. Badges are passive spans and preserve native attributes and refs.
 
 ```tsx
-import { ActionMessage, Badge, Button, CheckIcon } from "@project-kit/ui";
+import { ActionMessage, Badge, Button, CheckIcon } from "@evenkit/ui";
 
 <Badge tone="success" icon={<CheckIcon />}>Approved</Badge>
 <Badge tone="accent" size="sm" variant="outline" dot>Live</Badge>
@@ -135,7 +147,7 @@ Your project supplies messages, conversations, drafts, and response callbacks. I
 Use TextField for an input and TextareaField for multiline text. Both accept native control props and refs, plus `label`, `hint`, `error`, `optional`, and `fieldClassName`. Required controls show a required cue; `optional` shows an optional cue when the control is not required. Label also supports these cues when composing a field manually. Native `required` belongs on the control. An error sets `aria-invalid`; without an error, a caller-provided invalid state is preserved.
 
 ```tsx
-import { MailIcon, TextareaField, TextField } from "@project-kit/ui";
+import { MailIcon, TextareaField, TextField } from "@evenkit/ui";
 
 <TextField label="Contact email" type="email" name="email" required
   startAdornment={<MailIcon />} error={errors.email} />
@@ -152,7 +164,7 @@ Input always renders a stable wrapper so changing adornments preserves the nativ
 Select accepts flat options or a mix of options and `SelectOptionGroup` objects. Each group has a stable `id`, a `label`, and an `options` array. Option values must be nonempty and unique across the entire control; group IDs must be unique. Empty groups are omitted. When there are no options, the popup shows `emptyMessage` (default: “No options available.”) and remains keyboard dismissible.
 
 ```tsx
-import { SelectField, type SelectOptionGroup } from "@project-kit/ui";
+import { SelectField, type SelectOptionGroup } from "@evenkit/ui";
 
 const templates: SelectOptionGroup = {
   id: "team", label: "Team templates",
@@ -185,7 +197,7 @@ Dialogs share an elevated surface and an inset close control. The footer uses th
 import {
   Button, Dialog, DialogTrigger, DialogContent, DialogHeader,
   DialogTitle, DialogDescription, DialogBody, DialogFooter, DialogClose
-} from "@project-kit/ui";
+} from "@evenkit/ui";
 
 <Dialog>
   <DialogTrigger asChild><Button>Edit project</Button></DialogTrigger>
@@ -212,7 +224,7 @@ Use a unique form ID (for example, from React's `useId`) to connect a footer sub
 Wrap related triggers in TooltipProvider. TooltipTrigger supports `asChild` so the button or link keeps its native semantics. Every icon-only trigger needs its own accessible label; a tooltip is supplementary. Tooltips open on hover after 220ms or immediately on keyboard focus, remain open while hovered, and close on Escape or activation. Keep actions and essential instructions outside the tooltip.
 
 ```tsx
-import { Button, UserIcon, TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@project-kit/ui";
+import { Button, UserIcon, TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@evenkit/ui";
 
 <TooltipProvider>
   <Tooltip>
@@ -234,7 +246,7 @@ Drag the sidebar's outer edge to resize it. The edge attracts gently toward each
 
 ```tsx
 import { useState } from "react";
-import { AdminShell, FolderIcon, LayoutDashboardIcon, type AdminSidebarState } from "@project-kit/ui";
+import { AdminShell, FolderIcon, LayoutDashboardIcon, type AdminSidebarState } from "@evenkit/ui";
 
 const [sidebar, setSidebar] = useState<AdminSidebarState>("expanded");
 <AdminShell
@@ -254,7 +266,7 @@ Set a column's `overflow="wrap"` for longer text. Primitive accessor cells trunc
 The footer reports the displayed row range and filtered total. Clear search resets the page and returns focus to the search field. Controlled selection can include IDs hidden by filtering or absent from the current dataset. Clear selection clears every selected ID; your application must also remove deleted IDs when it changes the dataset. Pass bulk controls through `selection.actions` and disable them when appropriate for your request state. The table disables its own data controls while unavailable, but does not change the behavior of host toolbar or selection actions.
 
 ```tsx
-import { DataTable, type DataTableColumn } from "@project-kit/ui";
+import { DataTable, type DataTableColumn } from "@evenkit/ui";
 
 interface Project { id: string; name: string; members: number }
 const columns: readonly DataTableColumn<Project>[] = [

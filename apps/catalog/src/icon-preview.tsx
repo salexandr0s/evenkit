@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from "react";
-import { foundation } from "@project-kit/tokens";
-import { ActionMessage, Badge, BellIcon, Button, CheckIcon, CopyIcon, EmptyState, IconProvider, Input, Label, PlusIcon, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconAnimation, type IconSize } from "@project-kit/ui";
+import { foundation } from "@evenkit/tokens";
+import { ActionMessage, Badge, BellIcon, Button, CheckIcon, CopyIcon, EmptyState, IconProvider, Input, Label, PlusIcon, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconAnimation, type IconSize } from "@evenkit/ui";
 import { iconCategories, icons, type IconCategory } from "./icon-data";
 import "./icon-preview.css";
 
@@ -44,7 +44,7 @@ export function IconPreview() {
     setNotice("");
     setCopied(undefined);
     try {
-      await navigator.clipboard.writeText(`import { ${name} } from "@project-kit/ui";`);
+      await navigator.clipboard.writeText(`import { ${name} } from "@evenkit/ui";`);
       if (request === copyRequest.current) {
         setCopied(name);
         setNotice(`Copied the ${name} import.`);
@@ -117,7 +117,7 @@ export function IconPreview() {
                   <code className="icon-export-name">{name}</code>
                   <div className="icon-import">
                     <div className="icon-import-code">
-                      <code>{`import { ${name} } from "@project-kit/ui";`}</code>
+                      <code>{`import { ${name} } from "@evenkit/ui";`}</code>
                       <code>{`<${name} size="${size}" animation="${animation}" />`}</code>
                     </div>
                     <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Copy import for ${name}`} onClick={() => void copyImport(name)}>{copied === name ? <CheckIcon size="sm" /> : <CopyIcon size="sm" />}</Button></TooltipTrigger><TooltipContent>{copied === name ? "Copied" : `Copy import for ${name}`}</TooltipContent></Tooltip>

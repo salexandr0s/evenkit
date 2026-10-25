@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@project-kit/tokens/css";
-import "@project-kit/ui/css";
+import "@evenkit/tokens/css";
+import "@evenkit/ui/css";
 import "./catalog.css";
 import { Catalog } from "./catalog";
 

@@ -3,7 +3,7 @@
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { DismissableLayer } from "@radix-ui/react-dismissable-layer";
-import { foundation } from "@project-kit/tokens";
+import { foundation } from "@evenkit/tokens";
 import {
   forwardRef, useCallback, useEffect, useId, useMemo, useRef, useState,
   type ComponentPropsWithoutRef, type ForwardedRef, type ReactNode, type RefObject,

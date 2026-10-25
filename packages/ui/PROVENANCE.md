@@ -14,7 +14,7 @@ The dropdown design uses existing tokens for 6px popup padding and trigger spaci
 
 Dialog uses an elevated surface, layered shadows, and a separated action footer with responsive gutters. Existing motion tokens provide a 160ms opening fade and a 120ms closing fade. Independent translation preserves centered placement, drawer edges, and chat-window geometry. Radix Presence retains both surfaces through exit; the wrapper blocks closing controls from pointer and keyboard activation. Reduced motion removes the animations. Catalog dialogs, AdminShell drawers, and ChatWidget all use the shared Dialog wrapper and backdrop.
 
-Import `@project-kit/tokens/css`, then `@project-kit/ui/css`. Component styles are scoped to `pk-` classes and do not install a global reset. Set theme and mode attributes on the document root in this release so body-mounted dialog portals inherit them. Nested theme scopes are not a supported portal configuration yet.
+Import `@evenkit/tokens/css`, then `@evenkit/ui/css`. Component styles are scoped to `pk-` classes and do not install a global reset. Set theme and mode attributes on the document root in this release so body-mounted dialog portals inherit them. Nested theme scopes are not a supported portal configuration yet.
 
 The root project records tested framework versions and checks. Usage in the local catalog alone does not establish production adoption.
 

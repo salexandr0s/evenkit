@@ -4,7 +4,7 @@ import {
   Container, DataList, DataListItem, Grid, Heading, Inline, Kbd, ListItem, LiveStatus,
   PageHeader, PlusIcon, Prose, SectionHeader, Separator, SkipLink, Stack, Tag, TagGroup,
   VisuallyHidden,
-} from "@project-kit/ui";
+} from "@evenkit/ui";
 import "./foundations-preview.css";
 
 function TypographyPreview() {

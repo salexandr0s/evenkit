@@ -1,6 +1,6 @@
 import { useId, useRef, useState, type CSSProperties } from "react";
-import { contrastChecks, contrastRatio, cssVariables, themes, type ColorMode, type ThemeName } from "@project-kit/tokens";
-import { Badge, Button, CheckIcon, CopyIcon, EmptyState, Input, Label, SearchIcon, Select, TextField, Tooltip, TooltipContent, TooltipTrigger } from "@project-kit/ui";
+import { contrastChecks, contrastRatio, cssVariables, themes, type ColorMode, type ThemeName } from "@evenkit/tokens";
+import { Badge, Button, CheckIcon, CopyIcon, EmptyState, Input, Label, SearchIcon, Select, TextField, Tooltip, TooltipContent, TooltipTrigger } from "@evenkit/ui";
 import "./token-preview.css";
 
 const categories = [

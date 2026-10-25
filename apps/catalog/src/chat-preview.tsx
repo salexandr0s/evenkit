@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Badge, ChatPanel, ChatWidget, SelectField, type ChatConversation, type ChatMessage, type ChatPanelProps, type ChatStatus } from "@project-kit/ui";
+import { Badge, ChatPanel, ChatWidget, SelectField, type ChatConversation, type ChatMessage, type ChatPanelProps, type ChatStatus } from "@evenkit/ui";
 import "./chat-preview.css";
 
 interface DemoConversation extends ChatConversation {

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
-import { themes, themeNames, type ColorMode, type ThemeName } from "@project-kit/tokens";
+import { themes, themeNames, type ColorMode, type ThemeName } from "@evenkit/tokens";
 import {
   AdminShell, Badge, Button, ChevronDownIcon, CircleCheckIcon, CircleHelpIcon,
   EmptyState, ExternalLinkIcon, FileTextIcon, InboxIcon, Input, Label, LayoutDashboardIcon,
@@ -15,7 +15,7 @@ import {
   PanelTopIcon, RectangleHorizontalIcon, SaveIcon, SeparatorHorizontalIcon,
   ShapesIcon, SlidersHorizontalIcon, SquareCheckIcon, Table2Icon, TagsIcon,
   ToggleRightIcon, TriangleAlertIcon, TypeIcon, UploadIcon, UserIcon,
-} from "@project-kit/ui";
+} from "@evenkit/ui";
 import { entries, groups } from "./catalog-data";
 import { foundationsEntries } from "./foundations-entries";
 import { selectionEntries } from "./selection-entries";
@@ -77,7 +77,8 @@ const navigationIcons: Record<string, ReactNode> = {
 
 function readPreference<T extends string>(key: string, options: readonly T[], fallback: T): T {
   try {
-    const stored = localStorage.getItem(`project-kit.catalog.${key}`);
+    // Preserve preferences saved before the Evenkit rename on this origin.
+    const stored = localStorage.getItem(`evenkit.catalog.${key}`) ?? localStorage.getItem(`project-kit.catalog.${key}`);
     return options.find((option) => option === stored) ?? fallback;
   } catch {
     return fallback;
@@ -132,7 +133,7 @@ export function Catalog() {
 
   useEffect(() => {
     try {
-      localStorage.setItem("project-kit.catalog.sidebar", sidebarState);
+      localStorage.setItem("evenkit.catalog.sidebar", sidebarState);
     } catch {
       // Sidebar controls still work when browser storage is unavailable.
     }
@@ -150,8 +151,8 @@ export function Catalog() {
     if (appearance === "system") delete document.documentElement.dataset.kitMode;
     else document.documentElement.dataset.kitMode = appearance;
     try {
-      localStorage.setItem("project-kit.catalog.theme", theme);
-      localStorage.setItem("project-kit.catalog.appearance", appearance);
+      localStorage.setItem("evenkit.catalog.theme", theme);
+      localStorage.setItem("evenkit.catalog.appearance", appearance);
     } catch {
       // Blocked browser storage does not prevent changing the current preview.
     }
@@ -193,13 +194,13 @@ export function Catalog() {
     }} />;
   }
 
-  const brandMark = <span className="catalog-brand-mark" aria-hidden="true"><span /><span /><span /><span /></span>;
+  const brandMark = <span className="catalog-brand-mark" aria-hidden="true" />;
 
   return (
     <AdminShell
       className="catalog-app"
-      brand={<a className="catalog-brand" href="#buttons" aria-label="Project kit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}<span>Project kit<small>Shared foundations</small></span></a>}
-      compactBrand={<Tooltip><TooltipTrigger asChild><a className="catalog-brand" href="#buttons" aria-label="Project kit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}</a></TooltipTrigger><TooltipContent side="right">Project kit home</TooltipContent></Tooltip>}
+      brand={<a className="catalog-brand" href="#buttons" aria-label="Evenkit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}<span>Evenkit<small>Components & themes</small></span></a>}
+      compactBrand={<Tooltip><TooltipTrigger asChild><a className="catalog-brand" href="#buttons" aria-label="Evenkit home" onClick={(event) => selectEntry(event, "buttons")}>{brandMark}</a></TooltipTrigger><TooltipContent side="right">Evenkit home</TooltipContent></Tooltip>}
       sidebarState={sidebarState}
       onSidebarStateChange={setSidebarState}
       navigation={navigation}
@@ -224,7 +225,7 @@ export function Catalog() {
               </Tooltip>
             </TooltipProvider>
           </div>}
-      footer={<div className="catalog-library-footer"><div><Badge tone="accent">Pilot</Badge><span>Version 0.1.0</span></div><p>Internal component library</p></div>}
+      footer={<div className="catalog-library-footer"><div><Badge tone="accent">Pilot</Badge><span>Version 0.1.0</span></div><p>React components, themes and layouts</p></div>}
       compactFooter={<span className="catalog-compact-footer" aria-label="Version 0.1.0">0.1.0</span>}
     >
           {active ? (
@@ -240,8 +241,8 @@ export function Catalog() {
               </section>
               <CodeExample code={active.usage} />
               <div className="catalog-information-grid">
-                <section className="catalog-info-panel"><h2>Component details</h2><dl><div><dt>Owner</dt><dd>Project kit</dd></div><div><dt>Maturity</dt><dd>Pilot · ready for evaluation</dd></div><div><dt>Source</dt><dd>{active.source}</dd></div></dl><a href={active.sourceUrl} target="_blank" rel="noreferrer">Reference documentation <ExternalLinkIcon size="sm" /></a></section>
-                <section className="catalog-info-panel"><h2>Use in a project</h2><p>Import the token stylesheet before the control stylesheet. Components ship ordinary CSS and do not require Tailwind.</p><pre tabIndex={0}><code>{'import "@project-kit/tokens/css";\nimport "@project-kit/ui/css";'}</code></pre><p>These local pilot packages have not been published. Build and pack them from this repository; installation steps are in the repository README.</p></section>
+                <section className="catalog-info-panel"><h2>Component details</h2><dl><div><dt>Owner</dt><dd>Evenkit</dd></div><div><dt>Maturity</dt><dd>Pilot · ready for evaluation</dd></div><div><dt>Source</dt><dd>{active.source}</dd></div></dl><a href={active.sourceUrl} target="_blank" rel="noreferrer">Reference documentation <ExternalLinkIcon size="sm" /></a></section>
+                <section className="catalog-info-panel"><h2>Use in a project</h2><p>Import the token stylesheet before the control stylesheet. Components ship ordinary CSS and do not require Tailwind.</p><pre tabIndex={0}><code>{'import "@evenkit/tokens/css";\nimport "@evenkit/ui/css";'}</code></pre><p>These local pilot packages have not been published. Build and pack them from this repository; installation steps are in the repository README.</p></section>
               </div>
               <footer className="catalog-detail-footer"><span>React controls · document-level themes</span><span>Application state and callbacks stay in your project.</span></footer>
             </article>

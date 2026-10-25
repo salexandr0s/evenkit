@@ -1,6 +1,6 @@
 import type { CatalogEntry } from "./catalog-types.js";
 
-const styles = '"use client";\n\nimport "@project-kit/tokens/css";\nimport "@project-kit/ui/css";\n';
+const styles = '"use client";\n\nimport "@evenkit/tokens/css";\nimport "@evenkit/ui/css";\n';
 
 export const formsEntries: readonly CatalogEntry[] = [
   {
@@ -8,7 +8,7 @@ export const formsEntries: readonly CatalogEntry[] = [
     description: "Group related fields with native legends, descriptions, and disabled behavior.",
     tags: ["fieldset", "legend", "form section", "group", "disabled", "required", "C01"],
     source: "Original kit composition · native fieldset and input contract", sourceUrl: "https://ui.shadcn.com/docs/components/radix/field",
-    usage: `${styles}import { Fieldset, FormSection, TextField } from "@project-kit/ui";
+    usage: `${styles}import { Fieldset, FormSection, TextField } from "@evenkit/ui";
 
 export function ContactSection() {
   return (
@@ -28,7 +28,7 @@ export function ContactSection() {
     tags: ["form", "error", "summary", "validation", "focus", "status", "C02"],
     source: "Original kit validation composition · native focus and field associations", sourceUrl: "https://www.w3.org/WAI/tutorials/forms/notifications/",
     usage: `${styles}import { useRef, useState } from "react";
-import { Button, FormErrorSummary, TextField, type FormErrorItem } from "@project-kit/ui";
+import { Button, FormErrorSummary, TextField, type FormErrorItem } from "@evenkit/ui";
 
 export function ContactValidation() {
   const summary = useRef<HTMLDivElement>(null);
@@ -55,7 +55,7 @@ export function ContactValidation() {
     tags: ["search", "input", "clear", "query", "results", "C03"],
     source: "Original kit field extension · native search input", sourceUrl: "https://ui.shadcn.com/docs/components/radix/input-group",
     usage: `${styles}import { useState } from "react";
-import { SearchField } from "@project-kit/ui";
+import { SearchField } from "@evenkit/ui";
 
 export function DocumentSearch({ titles }: { titles: readonly string[] }) {
   const [query, setQuery] = useState("");
@@ -75,7 +75,7 @@ export function DocumentSearch({ titles }: { titles: readonly string[] }) {
     description: "Show or hide a password while preserving the input, value, autofill, and selection.",
     tags: ["password", "show", "hide", "autofill", "form", "C04"],
     source: "Original kit field extension · native password semantics", sourceUrl: "https://ui.shadcn.com/docs/components/radix/input-group",
-    usage: `${styles}import { Button, PasswordField } from "@project-kit/ui";
+    usage: `${styles}import { Button, PasswordField } from "@evenkit/ui";
 
 export function PasswordForm({ onSubmit }: { onSubmit: (data: FormData) => void }) {
   return (
@@ -93,7 +93,7 @@ export function PasswordForm({ onSubmit }: { onSubmit: (data: FormData) => void 
     description: "Search predefined options by label, select stable IDs, or enter free text with suggestions.",
     tags: ["combobox", "autocomplete", "search", "options", "disabled", "form", "C07"],
     source: "Base UI 1.9.0 behavior · original kit fields and popup styling", sourceUrl: "https://base-ui.com/react/components/combobox",
-    usage: `${styles}import { Autocomplete, Button, Combobox, type ComboboxOption } from "@project-kit/ui";
+    usage: `${styles}import { Autocomplete, Button, Combobox, type ComboboxOption } from "@evenkit/ui";
 
 const teams: readonly ComboboxOption[] = [
   { value: "planning", label: "Planning", description: "Plans and milestones" },
@@ -120,7 +120,7 @@ export function TeamForm({ onSubmit }: { onSubmit: (data: FormData) => void }) {
     tags: ["form", "actions", "dirty", "unsaved", "save", "cancel", "reset", "C15"],
     source: "Original kit form recipe · host-owned submission and navigation", sourceUrl: "https://ui.shadcn.com/docs/components/radix/field",
     usage: `${styles}import { useRef, useState } from "react";
-import { Button, FormActions, SaveStatus, TextField } from "@project-kit/ui";
+import { Button, FormActions, SaveStatus, TextField } from "@evenkit/ui";
 
 export function ProjectNameForm({ savedName, onSave, onCancel }: {
   savedName: string;
@@ -161,7 +161,7 @@ export function ProjectNameForm({ savedName, onSave, onCancel }: {
     description: "Show saving, saved, failed, retry, and unsaved states using persistent feedback.",
     tags: ["save", "submission", "status", "retry", "pending", "success", "error", "G04"],
     source: "Original kit ActionMessage composition · host-owned async state", sourceUrl: "https://ui.shadcn.com/docs/components/radix/alert",
-    usage: `${styles}import { Button, SaveStatus, type SaveStatusState } from "@project-kit/ui";
+    usage: `${styles}import { Button, SaveStatus, type SaveStatusState } from "@evenkit/ui";
 
 export function SubmissionFeedback({ state, onRetry }: {
   state: SaveStatusState;

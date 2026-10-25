@@ -1,6 +1,6 @@
 import type { CatalogEntry } from "./catalog-types.js";
 
-const imports = `"use client";\n\nimport "@project-kit/tokens/css";\nimport "@project-kit/ui/css";\n`;
+const imports = `"use client";\n\nimport "@evenkit/tokens/css";\nimport "@evenkit/ui/css";\n`;
 
 export const overlaysEntries: readonly CatalogEntry[] = [
   {
@@ -10,7 +10,7 @@ export const overlaysEntries: readonly CatalogEntry[] = [
     source: "Radix DropdownMenu with kit presentation", sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dropdown-menu",
     usage: imports + `import { useState } from "react";
 import { Button, DropdownMenu, DropdownMenuTrigger, DropdownMenuContent,
-  DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuSeparator } from "@project-kit/ui";
+  DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuSeparator } from "@evenkit/ui";
 
 export function ProjectActions({ onReview }: { onReview: () => void }) {
   const [archived, setArchived] = useState(false);
@@ -33,7 +33,7 @@ export function ProjectActions({ onReview }: { onReview: () => void }) {
     tags: ["popover", "popup", "interactive", "overlay", "focus", "F02"],
     source: "Radix Popover with kit surface and portal layer", sourceUrl: "https://www.radix-ui.com/primitives/docs/components/popover",
     usage: imports + `import { Button, TextField, Popover, PopoverTrigger, PopoverContent,
-  PopoverTitle, PopoverDescription, PopoverClose } from "@project-kit/ui";
+  PopoverTitle, PopoverDescription, PopoverClose } from "@evenkit/ui";
 
 export function SharingOptions() {
   return <Popover>
@@ -56,7 +56,7 @@ export function SharingOptions() {
     usage: imports + `import { useRef, useState } from "react";
 import { Button, ActionMessage, AlertDialog, AlertDialogTrigger, AlertDialogContent,
   AlertDialogTitle, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogCancel, AlertDialogAction } from "@project-kit/ui";
+  AlertDialogCancel, AlertDialogAction } from "@evenkit/ui";
 
 export function DeleteProject({ remove }: { remove: () => Promise<void> }) {
   const [open, setOpen] = useState(false);
@@ -107,7 +107,7 @@ export function DeleteProject({ remove }: { remove: () => Promise<void> }) {
     source: "Existing kit Dialog with logical side-panel layout", sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dialog",
     usage: imports + `import { useId, useState } from "react";
 import { Button, TextareaField, Sheet, SheetTrigger, SheetContent, SheetHeader,
-  SheetTitle, SheetDescription, SheetBody, SheetFooter, SheetClose } from "@project-kit/ui";
+  SheetTitle, SheetDescription, SheetBody, SheetFooter, SheetClose } from "@evenkit/ui";
 
 export function ProjectNotes({ onSave }: { onSave: (notes: string) => void }) {
   const [open, setOpen] = useState(false);
@@ -135,7 +135,7 @@ export function ProjectNotes({ onSave }: { onSave: (notes: string) => void }) {
     tags: ["toast", "notification", "undo", "timer", "feedback", "G01"],
     source: "Radix Toast with original kit notification manager", sourceUrl: "https://www.radix-ui.com/primitives/docs/components/toast",
     usage: imports + `import { useState } from "react";
-import { Button, ToastProvider, Undo2Icon, useToast } from "@project-kit/ui";
+import { Button, ToastProvider, Undo2Icon, useToast } from "@evenkit/ui";
 
 function SaveAction({ save }: { save: () => Promise<void> }) {
   const { toast } = useToast();
@@ -182,7 +182,7 @@ export function ProjectArchive({ projectId }: { projectId: string }) {
     tags: ["account", "user menu", "profile", "appearance", "sign out", "M01"],
     source: "Original kit composition using DropdownMenu", sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dropdown-menu",
     usage: imports + `import { useState } from "react";
-import { AccountMenu } from "@project-kit/ui";
+import { AccountMenu } from "@evenkit/ui";
 
 export function UserMenu({ signOut }: { signOut: () => Promise<void> }) {
   const [pending, setPending] = useState(false);

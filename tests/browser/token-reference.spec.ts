@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { contrastRatio, cssVariables, themes } from "@project-kit/tokens";
+import { contrastRatio, cssVariables, themes } from "@evenkit/tokens";
 
 async function chooseOption(page: Page, label: string, option: string) {
   await page.getByRole("combobox", { name: label, exact: true }).click();

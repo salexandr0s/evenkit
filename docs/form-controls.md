@@ -1,6 +1,6 @@
 # Form controls
 
-Owner: Project kit. Maturity: pilot. Example consumer: the catalog's editable fictional workspace forms. Inventory: C01, C02, C03, C04, C07, C15 and G04.
+Owner: Evenkit. Maturity: pilot. Example consumer: the catalog's editable fictional workspace forms. Inventory: C01, C02, C03, C04, C07, C15 and G04.
 
 ## Component contracts
 

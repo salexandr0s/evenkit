@@ -9,9 +9,7 @@ body { margin: 0; background: var(--pk-color-bg); color: var(--pk-color-fg); fon
 .catalog-app > .pk-admin-frame > .pk-admin-workspace > .pk-admin-content { position: relative; z-index: var(--pk-z-index-base); padding: var(--pk-space-10); }
 .catalog-brand { display: flex; gap: var(--pk-space-3); align-items: center; color: var(--pk-color-fg); text-decoration: none; font-size: var(--pk-font-size-base); font-weight: var(--pk-font-weight-semibold); line-height: var(--pk-font-line-height-tight); }
 .catalog-brand small { display: block; margin-top: var(--pk-space-1); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-regular); color: var(--pk-color-fg-muted); }
-.catalog-brand-mark { display: grid; grid-template-columns: repeat(2, 1fr); width: var(--pk-space-8); height: var(--pk-space-8); gap: var(--pk-space-1); flex-shrink: 0; }
-.catalog-brand-mark span { border-radius: var(--pk-radius-sm); background: var(--pk-color-accent); }
-.catalog-brand-mark span:last-child { background: var(--pk-color-fg); }
+.catalog-brand-mark { display: block; width: var(--pk-space-10); height: var(--pk-space-10); flex-shrink: 0; background: var(--pk-color-fg); mask: url("/evenkit-logo.png") center / contain no-repeat; }
 .catalog-search { display: grid; gap: var(--pk-space-1); min-width: 0; max-width: calc(var(--pk-space-16) * 6); }
 .catalog-search-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-1) var(--pk-space-3); }
 .catalog-search-count { font-size: var(--pk-font-size-xs); color: var(--pk-color-fg-muted); }

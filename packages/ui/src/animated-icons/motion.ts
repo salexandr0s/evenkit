@@ -1,4 +1,4 @@
-import { foundation } from "@project-kit/tokens";
+import { foundation } from "@evenkit/tokens";
 import type { useAnimationControls, Transition } from "motion/react";
 
 export interface AnimatedGlyphProps {

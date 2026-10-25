@@ -1,6 +1,6 @@
 # Menus, overlays, and transient feedback
 
-Contracts prepared on 25 October 2026 for F01–F04, G01, and M01. Owner: Project kit. Maturity: pilot. The catalog's fictional project examples are the first consumers. Generic UI does not perform authentication, persistence, or network requests.
+Contracts prepared on 25 October 2026 for F01–F04, G01, and M01. Owner: Evenkit. Maturity: pilot. The catalog's fictional project examples are the first consumers. Generic UI does not perform authentication, persistence, or network requests.
 
 ## Component contracts
 

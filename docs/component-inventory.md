@@ -1,6 +1,6 @@
 # Component inventory and expansion plan
 
-Research date: 25 October 2026. Project: `@project-kit` in `design-tokens`.
+Research date: 25 October 2026. Project: `@evenkit` in `design-tokens`.
 
 The kit should cover complete application and website flows, from small controls to editable page templates. The research baseline had 14 catalog sections. The tables below preserve that baseline and the proposed expansion scope.
 

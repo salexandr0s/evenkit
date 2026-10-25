@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { foundation } from "@project-kit/tokens";
+import { foundation } from "@evenkit/tokens";
 import { Button } from "./button.js";
 import { Spinner } from "./feedback.js";
 import { ArrowDownIcon, CheckIcon, CopyIcon, MessageSquareIcon, RotateCcwIcon } from "./icons.js";

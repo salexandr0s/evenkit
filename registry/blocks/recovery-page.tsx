@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleHelpIcon, Container, EmptyState, InfoIcon, SettingsIcon, ShieldIcon, TriangleAlertIcon, type EmptyStateTitleTag } from "@project-kit/ui";
+import { CircleHelpIcon, Container, EmptyState, InfoIcon, SettingsIcon, ShieldIcon, TriangleAlertIcon, type EmptyStateTitleTag } from "@evenkit/ui";
 import type { ReactNode } from "react";
 
 export type RecoveryKind = "not-found" | "unavailable" | "denied" | "offline" | "maintenance";

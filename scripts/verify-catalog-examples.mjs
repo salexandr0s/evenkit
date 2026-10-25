@@ -8,7 +8,7 @@ import { createServer } from "vite";
 
 const run = promisify(execFile);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const scratch = await mkdtemp(join(tmpdir(), "project-kit-examples-"));
+const scratch = await mkdtemp(join(tmpdir(), "evenkit-examples-"));
 const reportPath = join(root, ".artifacts", "catalog-examples.json");
 const report = { status: "running", entries: [], inventory: [], scratchRemoved: false };
 let server;

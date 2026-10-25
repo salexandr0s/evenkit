@@ -1,6 +1,6 @@
 import type { CatalogEntry } from "./catalog-types.js";
 
-const styles = 'import "@project-kit/tokens/css";\nimport "@project-kit/ui/css";\n\n';
+const styles = 'import "@evenkit/tokens/css";\nimport "@evenkit/ui/css";\n\n';
 
 export const foundationsEntries: readonly CatalogEntry[] = [
   {
@@ -8,7 +8,7 @@ export const foundationsEntries: readonly CatalogEntry[] = [
     description: "Theme-aware headings, readable prose and native document elements without a global reset.",
     tags: ["heading", "body", "caption", "muted", "quote", "list", "link", "inline code", "A01"],
     source: "Original kit recipe · Apple Minimal typography", sourceUrl: "https://ui.shadcn.com/docs/components/radix/typography",
-    usage: styles + `import { Prose } from "@project-kit/ui";
+    usage: styles + `import { Prose } from "@evenkit/ui";
 
 export function ProjectNotes() {
   return <Prose>
@@ -26,7 +26,7 @@ export function ProjectNotes() {
     description: "Content, reading, form and full-width containers using shared layout tokens.",
     tags: ["container", "page", "width", "reading", "form", "responsive", "A02"],
     source: "Original kit recipe · existing layout tokens", sourceUrl: "https://mantine.dev/core/container/",
-    usage: styles + `import { Container, Heading } from "@project-kit/ui";
+    usage: styles + `import { Container, Heading } from "@evenkit/ui";
 
 export function ProjectIntroduction() {
   return <main>
@@ -42,7 +42,7 @@ export function ProjectIntroduction() {
     description: "Token-spaced groups that wrap and collapse with the available viewport.",
     tags: ["stack", "inline", "group", "grid", "columns", "spacing", "responsive", "A03"],
     source: "Original kit layout primitives", sourceUrl: "https://mantine.dev/core/stack/",
-    usage: styles + `import { Badge, Grid, Heading, Inline, Stack } from "@project-kit/ui";
+    usage: styles + `import { Badge, Grid, Heading, Inline, Stack } from "@evenkit/ui";
 
 export function ProjectOverview() {
   return <Stack gap="6">
@@ -56,7 +56,7 @@ export function ProjectOverview() {
     description: "Horizontal and vertical rules with explicit decorative or structural meaning.",
     tags: ["divider", "rule", "horizontal", "vertical", "A04"],
     source: "Original kit implementation · native separator semantics", sourceUrl: "https://www.radix-ui.com/primitives/docs/components/separator",
-    usage: styles + `import { Inline, Separator, Stack } from "@project-kit/ui";
+    usage: styles + `import { Inline, Separator, Stack } from "@evenkit/ui";
 
 export function ProjectMetadata() {
   return <Stack>
@@ -70,7 +70,7 @@ export function ProjectMetadata() {
     description: "Content-driven cards with header, body, footer and media parts, using the existing card contract.",
     tags: ["card", "header", "body", "footer", "media", "outline", "elevated", "ghost", "A05"],
     source: "Original kit implementation · internal card.v1", sourceUrl: "https://ui.shadcn.com/docs/components/radix/card",
-    usage: '"use client";\n\n' + styles + `import { Button, Card, CardBody, CardFooter, CardHeader } from "@project-kit/ui";
+    usage: '"use client";\n\n' + styles + `import { Button, Card, CardBody, CardFooter, CardHeader } from "@evenkit/ui";
 
 export function ProjectCard({ onReview }: { onReview: () => void }) {
   return <Card variant="outline">
@@ -85,7 +85,7 @@ export function ProjectCard({ onReview }: { onReview: () => void }) {
     description: "Headings, descriptions, metadata and wrapping actions with a host-selected heading level.",
     tags: ["page header", "section header", "title", "actions", "description", "metadata", "A06"],
     source: "Original kit header composition", sourceUrl: "https://ui.shadcn.com/blocks",
-    usage: '"use client";\n\n' + styles + `import { Button, PageHeader, SectionHeader, Stack } from "@project-kit/ui";
+    usage: '"use client";\n\n' + styles + `import { Button, PageHeader, SectionHeader, Stack } from "@evenkit/ui";
 
 export function ProjectHeading({ onCreate }: { onCreate: () => void }) {
   return <Stack gap="8">
@@ -100,7 +100,7 @@ export function ProjectHeading({ onCreate }: { onCreate: () => void }) {
     description: "Related actions in a named group with normal Tab order and safe wrapping.",
     tags: ["toolbar", "action group", "buttons", "keyboard", "A07"],
     source: "Original kit action-group recipe · native Tab order", sourceUrl: "https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/",
-    usage: '"use client";\n\n' + styles + `import { ActionGroup, Button } from "@project-kit/ui";
+    usage: '"use client";\n\n' + styles + `import { ActionGroup, Button } from "@evenkit/ui";
 
 export function DraftActions({ onSave, onPreview }: { onSave: () => void; onPreview: () => void }) {
   return <ActionGroup label="Draft actions">
@@ -119,7 +119,7 @@ export function DraftActions({ onSave, onPreview }: { onSave: () => void; onPrev
     usage: `"use client";
 
 ` + styles + `import { useState } from "react";
-import { LiveStatus, PlusIcon, SkipLink, VisuallyHidden } from "@project-kit/ui";
+import { LiveStatus, PlusIcon, SkipLink, VisuallyHidden } from "@evenkit/ui";
 
 export function ProjectWorkspace() {
   const [count, setCount] = useState(0);
@@ -139,7 +139,7 @@ export function ProjectWorkspace() {
     description: "Named image/initials fallbacks, shared sizes and accessible group overflow.",
     tags: ["avatar", "person", "image", "initials", "fallback", "team", "group", "H01"],
     source: "Original kit implementation · shared control sizes", sourceUrl: "https://ui.shadcn.com/docs/components/radix/avatar",
-    usage: styles + `import { Avatar, AvatarGroup, Inline } from "@project-kit/ui";
+    usage: styles + `import { Avatar, AvatarGroup, Inline } from "@evenkit/ui";
 
 export function ProjectPeople() {
   return <Inline>
@@ -158,7 +158,7 @@ export function ProjectPeople() {
     usage: `"use client";
 
 ` + styles + `import { useRef, useState } from "react";
-import { Button, LiveStatus, Tag, TagGroup } from "@project-kit/ui";
+import { Button, LiveStatus, Tag, TagGroup } from "@evenkit/ui";
 
 export function ProjectTags() {
   const [visible, setVisible] = useState(true);
@@ -179,7 +179,7 @@ export function ProjectTags() {
     description: "Responsive native description lists for record details and explicit missing values.",
     tags: ["description list", "data list", "details", "label", "value", "metadata", "H03"],
     source: "Original kit recipe · native dl/dt/dd", sourceUrl: "https://chakra-ui.com/docs/components/data-list",
-    usage: styles + `import { DataList, DataListItem } from "@project-kit/ui";
+    usage: styles + `import { DataList, DataListItem } from "@evenkit/ui";
 
 export function ProjectDetails() {
   return <DataList aria-label="Project details">
@@ -195,7 +195,7 @@ export function ProjectDetails() {
     description: "Rows with media, title, description, metadata and actions inside host-owned lists.",
     tags: ["list item", "row", "media", "record", "metadata", "actions", "H04"],
     source: "Original kit row composition", sourceUrl: "https://ui.shadcn.com/docs/components/radix/item",
-    usage: '"use client";\n\n' + styles + `import { Avatar, Button, ListItem } from "@project-kit/ui";
+    usage: '"use client";\n\n' + styles + `import { Avatar, Button, ListItem } from "@evenkit/ui";
 
 export function ProjectRecords({ onReview }: { onReview: () => void }) {
   return <ul><li>
@@ -210,7 +210,7 @@ export function ProjectRecords({ onReview }: { onReview: () => void }) {
     description: "Native keyboard notation with host-provided platform symbols and accessible labels.",
     tags: ["kbd", "keyboard", "shortcut", "command", "control", "platform", "H08"],
     source: "Original kit styling · native kbd", sourceUrl: "https://ui.shadcn.com/docs/components/radix/kbd",
-    usage: styles + `import { Inline, Kbd } from "@project-kit/ui";
+    usage: styles + `import { Inline, Kbd } from "@evenkit/ui";
 
 export function SearchShortcut({ macOS }: { macOS: boolean }) {
   return <Inline gap="1">

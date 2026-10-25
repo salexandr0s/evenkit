@@ -22,7 +22,7 @@ import {
   PanelTopIcon, RectangleHorizontalIcon, SaveIcon, SeparatorHorizontalIcon,
   ShapesIcon, SlidersHorizontalIcon, SquareCheckIcon, Table2Icon, TagsIcon,
   ToggleRightIcon, TypeIcon,
-} from "@project-kit/ui";
+} from "@evenkit/ui";
 
 export const iconCategories = [
   { value: "all", label: "All icons" },

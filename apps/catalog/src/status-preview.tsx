@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ActionMessage, Badge, Button, CheckIcon, CircleAlertIcon, CircleCheckIcon, ClockIcon, MailIcon, Tooltip, TooltipContent, TooltipTrigger, TriangleAlertIcon, XIcon } from "@project-kit/ui";
+import { ActionMessage, Badge, Button, CheckIcon, CircleAlertIcon, CircleCheckIcon, ClockIcon, MailIcon, Tooltip, TooltipContent, TooltipTrigger, TriangleAlertIcon, XIcon } from "@evenkit/ui";
 import "./status-preview.css";
 
 type ExportState = "error" | "retrying" | "success" | "dismissed";

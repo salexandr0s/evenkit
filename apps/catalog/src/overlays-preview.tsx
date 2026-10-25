@@ -8,7 +8,7 @@ import {
   DropdownMenuSubTrigger, DropdownMenuTrigger, Popover, PopoverClose, PopoverContent, PopoverDescription,
   PopoverTitle, PopoverTrigger, Sheet, SheetBody, SheetClose, SheetContent, SheetDescription, SheetFooter,
   SheetHeader, SheetTitle, SheetTrigger, TextField, TextareaField, ToastProvider, Undo2Icon, useToast,
-} from "@project-kit/ui";
+} from "@evenkit/ui";
 import "./overlays-preview.css";
 
 function MenuExample() {

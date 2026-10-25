@@ -6,7 +6,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const scratch = await mkdtemp(join(tmpdir(), "project-kit-consumers-"));
+const scratch = await mkdtemp(join(tmpdir(), "evenkit-consumers-"));
 const artifacts = join(root, ".artifacts");
 const environment = { ...process.env, NEXT_TELEMETRY_DISABLED: "1" };
 const report = { status: "running", allocatedDirectory: scratch, consumers: [], resources: [] };
@@ -155,8 +155,8 @@ try {
     await cp(join(root, "registry", "blocks"), join(directory, kind === "next" ? "app" : "", "blocks"), { recursive: true });
     const manifestPath = join(directory, "package.json");
     const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-    manifest.dependencies["@project-kit/tokens"] = `file:${tarballs.tokens}`;
-    manifest.dependencies["@project-kit/ui"] = `file:${tarballs.ui}`;
+    manifest.dependencies["@evenkit/tokens"] = `file:${tarballs.tokens}`;
+    manifest.dependencies["@evenkit/ui"] = `file:${tarballs.ui}`;
     await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
     run("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund"], directory);
     run("npm", ["run", "build"], directory);

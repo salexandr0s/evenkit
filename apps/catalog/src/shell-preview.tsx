@@ -2,7 +2,7 @@ import { useState, type MouseEvent } from "react";
 import {
   ActionMessage, AdminShell, Badge, Button, DataTable, FolderIcon, LayoutDashboardIcon,
   SettingsIcon, UserIcon, UsersIcon, type AdminLinkProps, type AdminNavGroup, type AdminSidebarState
-} from "@project-kit/ui";
+} from "@evenkit/ui";
 import { getProjectId, projectColumns, projects } from "./project-data";
 
 const owners = [...new Set(projects.map((project) => project.owner))];
