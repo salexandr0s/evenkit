@@ -29,3 +29,9 @@ Dropdown rows use border-box sizing and the shared option-height token. Small de
 `DataTable` uses `@tanstack/react-table` 9.3.1 for client sorting, global filtering, pagination, and row selection, following its [React quick start](https://tanstack.com/table/latest/docs/framework/react/quick-start) and installed versioned types/guidance. The semantic table markup and styles are original kit code. It processes the complete supplied dataset and requires unique stable row IDs. Selection is controlled by the consumer; remove IDs when their records are deleted. The header selection checkbox applies to the current page. Loading and error states disable the internal data controls. Custom toolbar actions remain consumer-owned.
 
 TanStack's React and core packages use MIT licenses; their installed notices are included in `licenses`. This package does not provide fetching, server pagination, virtualization, authorization, or persistence.
+
+## AI chat
+
+`ChatWidget` and `ChatPanel` are original kit compositions using the existing Radix Dialog dependency and kit controls. Brainwave's launcher, compact/fullscreen transitions, composer, message actions, and scroll behavior supplied the interaction reference. The kit adds host-supplied conversation history and uses the kit's existing semantic tokens throughout. Brainwave's branding, content protocol, AI transport, and storage implementation are not included.
+
+Chat records, drafts, response status, cancellation, persistence, and any rich message renderer belong to the consumer. Plain text is the default. The catalog demonstrates local sample replies; the UI package makes no AI requests.

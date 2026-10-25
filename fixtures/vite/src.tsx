@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { createRoot } from "react-dom/client";
-import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, DataTable, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserIcon, type AdminSidebarState, type ButtonShape, type DataTableColumn, type DialogSize, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
+import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, ChatWidget, DataTable, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserIcon, type AdminSidebarState, type ButtonShape, type ChatMessage, type DataTableColumn, type DialogSize, type SelectOptionGroup, type TextareaFieldProps } from "@project-kit/ui";
 import "@project-kit/tokens/css";
 import "@project-kit/ui/css";
 
@@ -15,6 +16,23 @@ const columns: readonly DataTableColumn<(typeof records)[number]>[] = [
   { id: "name", header: "Project", accessor: row => row.name },
   { id: "members", header: "Members", accessor: row => row.members, align: "end" },
 ];
+
+function PreviewChat() {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [draft, setDraft] = useState("");
+
+  function send(content: string) {
+    const id = crypto.randomUUID();
+    setMessages(previous => [...previous,
+      { id, role: "user", content },
+      { id: `${id}-reply`, role: "assistant", content: "This response comes from local fixture state." },
+    ]);
+    setDraft("");
+  }
+
+  return <ChatWidget title="Package assistant" launcherLabel="Open package assistant" messages={messages} value={draft} onValueChange={setDraft} onSend={send} suggestions={["Check the packed chat"]} footer="Local package preview" />;
+}
+
 createRoot(element).render(<main>
   <h1>Packed package check</h1>
   <Badge tone="success">Vite consumer</Badge>
@@ -41,4 +59,5 @@ createRoot(element).render(<main>
   <AdminShell defaultSidebarState={sidebarState} compactBrand={<FolderIcon />} contentAs="section" brand="Package kit" header="Projects" activeItemId="projects" navigation={[{ items: [{ id: "projects", label: "Projects", href: "#projects", icon: <FolderIcon /> }] }]}>
     <DataTable caption="Packed projects" data={records} columns={columns} getRowId={row => row.id} />
   </AdminShell>
+  <PreviewChat />
 </main>);

@@ -54,6 +54,10 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Circle,
+  Maximize,
+  Minimize,
+  Square,
+  RotateCcw,
   type LucideIcon,
   type LucideProps,
 } from "lucide-react";
@@ -149,3 +153,7 @@ export const PanelLeftIcon = /* @__PURE__ */ createKitIcon(PanelLeft, "PanelLeft
 export const PanelLeftCloseIcon = /* @__PURE__ */ createKitIcon(PanelLeftClose, "PanelLeftCloseIcon");
 export const PanelLeftOpenIcon = /* @__PURE__ */ createKitIcon(PanelLeftOpen, "PanelLeftOpenIcon");
 export const CircleIcon = /* @__PURE__ */ createKitIcon(Circle, "CircleIcon");
+export const MaximizeIcon = /* @__PURE__ */ createKitIcon(Maximize, "MaximizeIcon");
+export const MinimizeIcon = /* @__PURE__ */ createKitIcon(Minimize, "MinimizeIcon");
+export const SquareIcon = /* @__PURE__ */ createKitIcon(Square, "SquareIcon");
+export const RotateCcwIcon = /* @__PURE__ */ createKitIcon(RotateCcw, "RotateCcwIcon");

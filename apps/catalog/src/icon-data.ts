@@ -11,6 +11,7 @@ import {
   ChartNoAxesCombinedIcon, ClockIcon, BookmarkIcon, ArchiveIcon, UploadIcon,
   CopyIcon, PencilIcon, FilterIcon, PanelLeftIcon, PanelLeftCloseIcon,
   PanelLeftOpenIcon, CircleIcon,
+  MaximizeIcon, MinimizeIcon, SquareIcon, RotateCcwIcon,
 } from "@project-kit/ui";
 
 export const iconCategories = [
@@ -89,4 +90,8 @@ export const icons: readonly IconEntry[] = [
   { name: "PanelLeftCloseIcon", label: "Collapse sidebar", category: "navigation", aliases: ["panel", "hide", "compact", "close sidebar"], Icon: PanelLeftCloseIcon },
   { name: "PanelLeftOpenIcon", label: "Expand sidebar", category: "navigation", aliases: ["panel", "show", "open sidebar"], Icon: PanelLeftOpenIcon },
   { name: "CircleIcon", label: "Circle", category: "status", aliases: ["unselected", "pending", "outline", "marker"], Icon: CircleIcon },
+  { name: "MaximizeIcon", label: "Maximize", category: "actions", aliases: ["expand", "fullscreen", "chat"], Icon: MaximizeIcon },
+  { name: "MinimizeIcon", label: "Minimize", category: "actions", aliases: ["restore", "compact", "chat"], Icon: MinimizeIcon },
+  { name: "SquareIcon", label: "Stop", category: "actions", aliases: ["square", "cancel", "generation"], Icon: SquareIcon },
+  { name: "RotateCcwIcon", label: "Retry", category: "actions", aliases: ["regenerate", "undo", "restart"], Icon: RotateCcwIcon },
 ];

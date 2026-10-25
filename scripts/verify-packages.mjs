@@ -96,6 +96,7 @@ async function smoke(kind, directory) {
     const html = await response.text();
     if (kind === "next" && !html.includes("Packed package check")) throw new Error("Next server did not render the package fixture.");
     if (kind === "next" && !html.includes("Packed projects")) throw new Error("Next server did not render the client shell/table fixture.");
+    if (kind === "next" && !html.includes("Package assistant")) throw new Error("Next server did not render the client chat fixture.");
     if (kind === "vite" && !html.includes('id="root"')) throw new Error("Vite did not serve the package fixture.");
     const stylesheets = [...html.matchAll(/<link[^>]+href="([^"]+\.css[^"]*)"/g)].map(match => match[1]);
     const styles = await Promise.all(stylesheets.map(async path => {
@@ -104,8 +105,8 @@ async function smoke(kind, directory) {
       return css.text();
     }));
     const css = styles.join("\n");
-    if (!["--pk-color-accent", ".pk-button", ".pk-icon", ".pk-admin-shell", ".pk-data-table"].every(selector => css.includes(selector))) {
-      throw new Error(`${kind} fixture did not ship token, control, icon, shell, and table CSS.`);
+    if (!["--pk-color-accent", ".pk-button", ".pk-icon", ".pk-admin-shell", ".pk-data-table", ".pk-chat"].every(selector => css.includes(selector))) {
+      throw new Error(`${kind} fixture did not ship token, control, icon, shell, table, and chat CSS.`);
     }
     smokeResult = { httpStatus: response.status, stylesheetCount: stylesheets.length };
   } catch (error) {

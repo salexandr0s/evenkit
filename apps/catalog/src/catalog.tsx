@@ -13,6 +13,7 @@ import { IconPreview } from "./icon-preview";
 
 const ShellPreview = lazy(() => import("./shell-preview").then((module) => ({ default: module.ShellPreview })));
 const TablePreview = lazy(() => import("./table-preview").then((module) => ({ default: module.TablePreview })));
+const ChatPreview = lazy(() => import("./chat-preview").then((module) => ({ default: module.ChatPreview })));
 const TooltipPreview = lazy(() => import("./tooltip-preview").then((module) => ({ default: module.TooltipPreview })));
 
 const appearances = ["system", "light", "dark"] as const;
@@ -44,6 +45,7 @@ function Preview({ id, theme, mode }: { id: string; theme: ThemeName; mode: Colo
     case "icons": return <IconPreview />;
     case "admin-shell": return <ShellPreview />;
     case "data-table": return <TablePreview />;
+    case "chat": return <ChatPreview />;
     case "fields": return <FieldPreview />;
     case "select": return <SelectPreview />;
     case "dialog": return <DialogPreview />;

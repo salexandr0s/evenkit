@@ -101,6 +101,16 @@ export const entries: readonly CatalogEntry[] = [
     usage: 'import { DataTable, type DataTableColumn } from "@project-kit/ui";\n\ninterface Project { id: string; name: string }\nconst columns: readonly DataTableColumn<Project>[] = [\n  { id: "name", header: "Project", accessor: (row) => row.name }\n];\nconst rows = [{ id: "project-01", name: "Spring launch" }];\n\n<DataTable\n  columns={columns}\n  data={rows}\n  getRowId={(row) => row.id}\n  caption="Projects"\n  searchLabel="Search projects"\n  initialPageSize={5}\n  pageSizeOptions={[5, 10, 25]}\n/>\n\n// Applications supply records, permissions, and persistence.'
   },
   {
+    id: "chat",
+    name: "AI chat",
+    group: "Compositions",
+    description: "A floating assistant or embedded chat with a maximized workspace, conversation history, and streaming controls. Uses the same tokens as the rest of your project.",
+    tags: ["ai", "chat", "chatbot", "assistant", "conversation", "history", "streaming", "messages", "composer", "widget", "maximize", "sidebar"],
+    source: "Original kit composition · Brainwave interaction reference",
+    sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dialog",
+    usage: 'import { ChatWidget, ChatPanel } from "@project-kit/ui";\n\n<ChatWidget\n  title="Project assistant"\n  messages={messages}\n  conversations={conversations}\n  activeConversationId={activeId}\n  onSelectConversation={selectConversation}\n  onNewConversation={createConversation}\n  value={draft}\n  onValueChange={setDraft}\n  onSend={sendMessage}\n  status={status}\n  onStop={stopResponse}\n  onRetry={retryResponse}\n  suggestions={["Help me get started"]}\n/>\n\n// Use ChatPanel with the same data for an embedded chat.\n// Your app owns messages, drafts, streaming, and storage.\n// sendMessage clears the draft when the send is accepted.\n// status: idle | submitted | streaming | error'
+  },
+  {
     id: "status",
     name: "Status",
     group: "Feedback",

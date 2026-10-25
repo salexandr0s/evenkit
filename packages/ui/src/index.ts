@@ -16,7 +16,10 @@ export {
   BellIcon, CalendarDaysIcon, InboxIcon, MessageSquareIcon, ChartNoAxesCombinedIcon, ClockIcon,
   BookmarkIcon, ArchiveIcon, UploadIcon, CopyIcon, PencilIcon, FilterIcon,
   PanelLeftIcon, PanelLeftCloseIcon, PanelLeftOpenIcon, CircleIcon,
+  MaximizeIcon, MinimizeIcon, SquareIcon, RotateCcwIcon,
   type IconProps, type IconSize,
 } from "./icons.js";
 export { AdminShell, type AdminShellProps, type AdminNavGroup, type AdminNavItem, type AdminLinkProps, type AdminSidebarState } from "./admin-shell.js";
 export { DataTable, type DataTableProps, type DataTableColumn, type DataTableSelection } from "./data-table.js";
+export { ChatWidget, ChatPanel } from "./chat.js";
+export type { ChatMessage, ChatConversation, ChatStatus, ChatLabels, ChatPanelProps, ChatWidgetProps } from "./chat-types.js";

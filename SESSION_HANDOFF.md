@@ -61,3 +61,18 @@ cat packages/ui/src/feedback.tsx
 ```
 
 Read relevant UI contracts before changes. Build packages after public source changes and catalog before checking the production preview. Existing `/root/tokens_implementation`, `/root/tooltip_implementation`, `/root/audit`, and `/root/review` agents can be reused with followup_task. Configured specialist roles use an unavailable model, so inherited-model explicit assignments are required. Workspace instructions require delegated implementation/review and avoid-ai-writing. Developer authorization covers reversible goal work without repeated approvals. Do not mark the goal complete until every queue item and final integration review passes.
+
+## Reusable AI chat addition
+
+The user requested a reusable chatbot based on `brainwave_site` within the kit's current tokens. This addition is complete; the earlier component improvement queue above remains separate.
+
+- `ChatWidget` provides a floating launcher, compact modal, and maximized workspace; `ChatPanel` embeds the same UI. Both use one stable surface across resizing. Source is in `packages/ui/src/chat*.tsx`, `chat-types.ts`, and `chat.css`.
+- Conversations, messages, drafts, response status, and callbacks belong to the host. The UI includes searchable history, new/delete actions, suggested prompts, multiline/IME-safe entry, stop/retry/copy, bounded scrolling, and a keyboard-accessible jump action. Plain text is safe by default; a renderer hook supports product content. The kit adds no transport, storage, dependency, or foundation token.
+- Brainwave's source sidebar is a question outline within one conversation. The kit instead accepts genuine saved-conversation metadata, matching the user's requested history behavior.
+- Four named icons were added (57 total). Public exports and packed CSS include chat. The catalog has 13 entries; `/#chat` demonstrates per-conversation drafts and simulated responses with cancellation. Documentation: `docs/chat.md`. Independent Vite and Next fixtures exercise the public API.
+- Verification: production build, workspace/test typecheck, ESLint, four chat Chromium journeys, and seven catalog/icon journeys passed. Packed Vite and Next consumers built and passed HTTP/SSR/stylesheet smoke checks. Final focus-only fixes were subsequently rebuilt, typechecked, linted, and browser tested. Static review found no remaining issues. Native preview checked light/dark compact and expanded views. Firefox/Safari and a real mobile software keyboard were not tested.
+- Browser tests caught Stop changing into a submit button during its click. Distinct keyed buttons plus default prevention preserve the next draft and return focus. Resize and jump focus regressions are covered. Transcript uses a named region with a separate status announcer so Radix can hide the background transcript when the widget opens.
+- Use isolated browser test output when concurrent runs share this checkout: `KIT_CATALOG_PORT=5297 npx playwright test tests/browser/chat.spec.ts --workers=1 --output=.artifacts/chat-browser-results`. The initial shared output run collided with another runner's artifact cleanup; the isolated final run passed.
+- User-facing preview remains open at `http://127.0.0.1:5173/#chat`; screenshot `.artifacts/chat-reference.png`. AI replies in the catalog are samples. Projects connect their own service and persistence using the integration guide.
+
+The concurrent sidebar change was committed separately as `7976024`; its files were preserved.

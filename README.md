@@ -1,6 +1,6 @@
 # Shared project kit
 
-Reusable tokens, React controls, icons, an admin shell, and data tables, with a local component catalog. This repository lives in the requested `design-tokens` folder. Version 0.1.0 is a pilot for evaluation in new projects.
+Reusable tokens, React controls, icons, an admin shell, data tables, and AI chat, with a local component catalog. This repository lives in the requested `design-tokens` folder. Version 0.1.0 is a pilot for evaluation in new projects.
 
 ## Start the catalog
 
@@ -13,14 +13,14 @@ npm run dev
 
 Open `http://127.0.0.1:5173`. The dev command builds the packages first. If you edit package source while the catalog is running, run `npm run build:packages` to update its public artifacts. The catalog itself has Vite hot reload.
 
-The catalog has twelve entries: design tokens, icons, buttons, fields, custom select, dialog, tooltips, status, loading, empty state, admin shell, and data table. Search by component or state, switch between Neutral and Grove, and try light, dark, or system appearance. Forms, navigation, table state changes, and retry actions are local previews.
+The catalog has thirteen entries: design tokens, icons, buttons, fields, custom select, dialog, tooltips, status, loading, empty state, admin shell, data table, and AI chat. Search by component or state, switch between Neutral and Grove, and try light, dark, or system appearance. Forms, navigation, table state changes, and chat replies are local previews.
 
 ## Packages
 
 | Package | Contents | Public imports |
 |---|---|---|
 | `@project-kit/tokens` | Typed scales, palettes, two themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
-| `@project-kit/ui` | Controls and feedback, 53 Lucide icons, responsive AdminShell, TanStack-backed DataTable | Main export, `/css` |
+| `@project-kit/ui` | Controls and feedback, 57 Lucide icons, responsive AdminShell, TanStack-backed DataTable, ChatWidget and ChatPanel | Main export, `/css` |
 | `@project-kit/catalog` | Searchable examples and usage reference | Local application |
 
 Both libraries export built files and declarations. UI styles use `pk-` classes and `--pk-` variables, with no global reset. Consumers need React 19 and React DOM 19; no Tailwind, Next.js, database, or authentication dependency is required by the UI package.
@@ -69,6 +69,12 @@ Set theme attributes on the document root:
 Omit `data-kit-mode` to follow the system. Neutral is the default theme. This release supports document-level themes; nested scopes are not supported for body-mounted dialog portals. Custom brands use the same validated model and contrast checks; see [token usage](packages/tokens/README.md).
 
 For Next.js, import CSS in the root layout. Interactive UI exports retain their `"use client"` boundary. Server components may render controls with serializable props; handlers and client state belong in a client component. A dialog needs its Title and Description, with a trigger and a clear dismissal action.
+
+## AI chat
+
+Use `ChatWidget` for a floating launcher that opens a compact chat and expands into a workspace with conversation history. Use `ChatPanel` to embed the same interface in a page. Both include searchable history, suggested prompts, multiline input, streaming feedback, stop/retry controls, and answer copying. They inherit the kit's theme and tokens.
+
+Your project supplies messages, conversations, drafts, and response callbacks. It decides where to save history and which AI service to use. See the [chat integration guide](docs/chat.md) for the API and a working host example; open `/#chat` in the catalog to try the sample conversations.
 
 ## Fields
 
