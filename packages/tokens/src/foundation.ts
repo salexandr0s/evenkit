@@ -1,5 +1,7 @@
+import { deepFreeze } from "./deep-freeze.js";
+
 /** Resolved values from the inherited contract; see PROVENANCE.md for changes. */
-export const foundation = {
+export const foundation = deepFreeze({
   "breakpoint": {
     "xs": "0px",
     "sm": "640px",
@@ -293,9 +295,9 @@ export const foundation = {
       "error": "6000ms"
     }
   }
-} as const;
+} as const);
 
-export const metadata = {
+export const metadata = deepFreeze({
   "name": "Evenkit tokens",
   "version": "0.1.0",
   "source": {
@@ -304,4 +306,4 @@ export const metadata = {
     "updated": "2026-03-10",
     "sha256": "762bc8068bca72494f58164871f8488c589e19940ee1431c30a267ceeec3a4d3"
   }
-} as const;
+} as const);

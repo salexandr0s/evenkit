@@ -20,6 +20,8 @@ const variables = cssVariables("grove", "dark");
 
 The `foundation` export contains inherited spacing, type, radii, shadows, palette, and control scales, plus documented kit layout/state additions. Semantic colors live in `themes[name].modes[mode]`. All emitted CSS custom properties use the `--pk-` prefix. The JSON export is available at `@evenkit/tokens/tokens.json`.
 
+`foundation`, `metadata`, and `themes` are frozen at runtime, including nested values. Copy values into a custom brand configuration to make changes. Each `cssVariables()` call returns a new mutable map for local style overrides.
+
 ## Built-in themes
 
 Compare the themes in the catalog at `/#themes`, then apply one to see it on forms, tables, navigation, dialogs, and chat. The gallery follows the selected appearance, and the catalog remembers your choice.

@@ -8,8 +8,10 @@ import {
   cssVariables,
   foundation,
   generateCss,
+  metadata,
   themeNames,
   themes,
+  tokenDocument,
 } from "../src/index.js";
 
 describe("theme trust boundary", () => {
@@ -154,6 +156,31 @@ describe("theme trust boundary", () => {
 });
 
 describe("portable token output", () => {
+  it("prevents runtime mutations from diverging direct tokens, CSS, and JSON", () => {
+    const css = generateCss();
+    const json = JSON.stringify(tokenDocument);
+    const variables = cssVariables("neutral", "light");
+    const mutations = [
+      [foundation, "space", {}],
+      [foundation.space, "4", "999px"],
+      [foundation.palette.neutral, "0", "#000000"],
+      [metadata, "version", "changed"],
+      [metadata.source, "sha256", "changed"],
+      [themes.neutral.modes.light, "accent", "#FFFFFF"],
+    ] as const;
+    for (const [target, key, value] of mutations) {
+      const original = Reflect.get(target, key);
+      try {
+        expect(Reflect.set(target, key, value), key).toBe(false);
+      } finally {
+        Reflect.set(target, key, original);
+      }
+    }
+    expect(generateCss()).toBe(css);
+    expect(JSON.stringify(tokenDocument)).toBe(json);
+    expect(cssVariables("neutral", "light")).toEqual(variables);
+  });
+
   it("generates deterministic fully resolved CSS with document-only selectors", () => {
     const css = generateCss();
     expect(css).toBe(generateCss());

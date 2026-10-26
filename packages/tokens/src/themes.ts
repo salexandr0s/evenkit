@@ -1,4 +1,5 @@
 import { foundation } from "./foundation.js";
+import { deepFreeze, type DeepReadonly } from "./deep-freeze.js";
 import { brandSchema, type Brand } from "./schema.js";
 
 const { neutral, blue, green, red, amber, chart } = foundation.palette;
@@ -65,15 +66,6 @@ const dark = {
 
 export const themeNames = ["neutral", "grove", "graphite", "linen", "ocean", "dusk", "clay", "rose"] as const;
 export type ThemeName = (typeof themeNames)[number];
-
-type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] };
-
-function deepFreeze<T extends object>(value: T): DeepReadonly<T> {
-  for (const child of Object.values(value)) {
-    if (child !== null && typeof child === "object") deepFreeze(child);
-  }
-  return Object.freeze(value);
-}
 
 export const themes: DeepReadonly<Record<ThemeName, Brand>> = deepFreeze({
   neutral: brandSchema.parse({
