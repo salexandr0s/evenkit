@@ -9,5 +9,8 @@
 .pk-chat-source-name a:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
 .pk-chat-source-name small { display: block; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
 .pk-chat-source-preview { max-inline-size: min(var(--pk-layout-dialog-sm), calc(100vw - var(--pk-space-6))); overflow-wrap: anywhere; }
+.pk-chat-source-preview-heading { display: flex; align-items: start; gap: var(--pk-space-3); }
+.pk-chat-source-preview-heading > .pk-popover-title { flex: 1; min-inline-size: 0; }
+.pk-chat-source-preview-heading > .pk-button { flex: none; }
 .pk-chat-source-excerpt { max-block-size: min(var(--pk-layout-dialog-sm), 50dvh); overflow: auto; white-space: pre-wrap; }
 .pk-chat-source-excerpt:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
