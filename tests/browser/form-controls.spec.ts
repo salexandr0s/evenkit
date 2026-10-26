@@ -167,8 +167,9 @@ test("form summaries focus the failing fields and disabled groups retain native 
 test("dirty form actions support discard, cancellation, failed save and retry without stale completion", async ({ page }) => {
   await page.clock.install({ time: new Date("2026-10-25T08:00:00Z") });
   await page.goto("/#form-actions");
-  await page.clock.pauseAt(new Date("2026-10-25T09:00:00Z"));
   const name = page.getByRole("textbox", { name: "Editable project name", exact: true });
+  await expect(name).toBeVisible();
+  await page.clock.pauseAt(new Date("2026-10-25T09:00:00Z"));
   await name.fill("Revised Northwind");
   await page.getByRole("button", { name: "Cancel changes", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Discard changes?", exact: true });

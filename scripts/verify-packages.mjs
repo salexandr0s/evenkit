@@ -1,18 +1,85 @@
 import { execFileSync, spawn } from "node:child_process";
 import { createServer } from "node:net";
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildRegistry } from "./registry/build.mjs";
+import { gzipSync } from "node:zlib";
+import { chromium, expect } from "@playwright/test";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const scratch = await mkdtemp(join(tmpdir(), "evenkit-consumers-"));
 const artifacts = join(root, ".artifacts");
 const environment = { ...process.env, NEXT_TELEMETRY_DISABLED: "1" };
-const report = { status: "running", allocatedDirectory: scratch, consumers: [], resources: [] };
 const verifyRegistry = process.argv.includes("--registry");
 const reportFilename = verifyRegistry ? "registry-package-verification.json" : "package-verification.json";
+const report = { status: "running", startedAt: new Date().toISOString(), node: process.version, allocatedDirectory: scratch, packages: [], consumers: [], resources: [] };
+
+async function browserSmoke(url) {
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage();
+    const errors = [];
+    page.on("pageerror", error => errors.push(error.message));
+    await page.goto(url);
+    await expect(page.getByRole("heading", { name: "Packed package check", exact: true })).toBeVisible();
+    const trigger = page.getByRole("button", { name: "Open package dialog", exact: true });
+    await trigger.click();
+    await expect(page.getByRole("dialog", { name: "Package dialog", exact: true })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(trigger).toBeFocused();
+    const checkbox = page.getByRole("checkbox", { name: "Accept package preview", exact: true });
+    await checkbox.check();
+    await expect(checkbox).toBeChecked();
+    const documentTrigger = page.getByRole("button", { name: "Preview Packed document.txt", exact: true });
+    await documentTrigger.click();
+    const preview = page.getByRole("dialog", { name: "Packed document.txt", exact: true });
+    await expect(preview.getByText("Document content from an independent consumer.", { exact: true })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(documentTrigger).toBeFocused();
+    if (errors.length) throw new Error(`Packed consumer browser errors: ${errors.join("; ")}`);
+    return { browser: "Chromium", hydration: "passed", dialogFocus: "passed", controlledInput: "passed", copiedDocumentAction: "passed" };
+  } finally {
+    await browser.close();
+  }
+}
+
+async function inspectViteBundle(directory, variant) {
+  const output = join(directory, variant === "minimal" ? "dist-minimal" : "dist");
+  const chunks = JSON.parse(await readFile(join(output, "bundle-modules.json"), "utf8"));
+  const forbidden = /\/node_modules\/(?:next\/|@supabase\/|@evenkit\/auth-next\/|server-only\/)/;
+  const heavy = /\/node_modules\/(?:recharts\/|shiki\/|@shikijs\/|react-markdown\/|remark-gfm\/|unified\/|d3-[^/]+\/)/;
+  const modules = [...new Set(chunks.flatMap(chunk => chunk.modules))];
+  const forbiddenModules = modules.filter(id => forbidden.test(id) || (variant === "minimal" && heavy.test(id)));
+  if (forbiddenModules.length) throw new Error(`Unexpected ${variant} Vite dependencies: ${forbiddenModules.join(", ")}`);
+  const sizes = await Promise.all(chunks.map(async chunk => {
+    const bytes = await readFile(join(output, chunk.file));
+    return { file: chunk.file, bytes: bytes.length, gzipBytes: gzipSync(bytes).length, entry: chunk.entry, imports: chunk.imports, dynamicImports: chunk.dynamicImports };
+  }));
+  return { variant, modules: modules.length, forbiddenModules, jsBytes: sizes.reduce((sum, chunk) => sum + chunk.bytes, 0), gzipBytes: sizes.reduce((sum, chunk) => sum + chunk.gzipBytes, 0), chunks: sizes };
+}
+
+async function verifyServerBoundary(directory) {
+  const route = join(directory, "app", "invalid-client");
+  await mkdir(route);
+  await writeFile(join(route, "page.tsx"), '"use client";\nimport { trustedOrigin } from "@evenkit/auth-next/server";\nexport default function InvalidBoundary() { return <p>{trustedOrigin("http://localhost:3000")}</p>; }\n');
+  try {
+    let output = "";
+    try {
+      execFileSync("npm", ["run", "build"], { cwd: directory, env: environment, encoding: "utf8", timeout: 180_000, maxBuffer: 8 * 1024 * 1024, stdio: ["ignore", "pipe", "pipe"] });
+    } catch (error) {
+      if (!error || typeof error !== "object") throw error;
+      output = ["stdout" in error ? String(error.stdout) : "", "stderr" in error ? String(error.stderr) : ""].join("\n");
+    }
+    if (!output.includes("server-only") || !/Client Component|client component/i.test(output) || !output.includes("invalid-client")) {
+      throw new Error(`Expected the packed auth server entry to reject a Client Component import. ${output.slice(-4_000)}`);
+    }
+    return "rejected client import";
+  } finally {
+    await rm(route, { recursive: true, force: true });
+  }
+}
 
 function run(command, args, cwd) {
   try {
@@ -105,6 +172,7 @@ async function smoke(kind, directory) {
     if (kind === "next" && !html.includes("Roadmap package controls")) throw new Error("Next server did not render the roadmap controls and blocks.");
     if (kind === "next" && !html.includes("Document library package controls")) throw new Error("Next server did not render the document library fixture.");
     if (kind === "next" && !html.includes("Packed notification family")) throw new Error("Next server did not render notification exports and copied blocks.");
+    if (kind === "next" && !html.includes("Website block package controls")) throw new Error("Next server did not render the copied website blocks.");
     if (kind === "next" && !["Reporting package controls", "Packed reporting dashboard", "Packed monthly activity", "View data table"].every(text => html.includes(text))) throw new Error("Next server did not render the reporting chart and copied dashboard block.");
     if (kind === "next" && !html.includes("Packed primary navigation")) throw new Error("Next server did not render the complete navbar fixture.");
     if (kind === "next" && !html.includes("Packed editable projects")) throw new Error("Next server did not render the independently copied page blocks.");
@@ -127,9 +195,18 @@ async function smoke(kind, directory) {
     if (kind === "next" && !html.includes("Team administration package controls")) throw new Error("Next server did not render team administration controls.");
     if (![".pk-notification-list", ".pk-notification-preferences", ".pk-persistent-banner", ".pk-presence-indicator"].every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship notification family styles.`);
     if (![".pk-code-block", ".pk-chat-markdown", ".pk-chat-attachments", ".pk-chat-sources"].every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship rich chat styles.`);
+    if (![".pk-website-section", ".pk-website-form", ".pk-website-article"].every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship the copied website styles.`);
     const reportingSelectors = [".pk-statistic", ".pk-reporting-controls", ".pk-export-action", ".pk-chart", "--pk-chart-series-1", "--pk-chart-series-6"];
     if (!reportingSelectors.every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship the reporting styles and chart series tokens.`);
-    smokeResult = { httpStatus: response.status, stylesheetCount: stylesheets.length };
+    const browser = await browserSmoke(`http://127.0.0.1:${port}`);
+    if (kind === "next") {
+      const authResponse = await fetch(`http://127.0.0.1:${port}/auth-package`);
+      const authHtml = await authResponse.text();
+      if (!authResponse.ok || !authHtml.includes("Packed auth boundaries") || !authHtml.includes("/dashboard") || !authHtml.includes("Packed auth client")) {
+        throw new Error("Packed Next auth subpaths did not render their server/client fixture.");
+      }
+    }
+    smokeResult = { httpStatus: response.status, stylesheetCount: stylesheets.length, ...browser };
   } catch (error) {
     failure = error;
   } finally {
@@ -158,32 +235,36 @@ try {
   await mkdir(artifacts, { recursive: true });
   const registry = verifyRegistry ? await buildRegistry({ root, output: join(scratch, "registry") }) : null;
   const tarballs = {};
-  for (const name of ["tokens", "ui"]) {
+  for (const name of ["tokens", "ui", "auth-next"]) {
     const packed = JSON.parse(run("npm", ["pack", join(root, "packages", name), "--pack-destination", scratch, "--json", "--ignore-scripts"], root));
     const item = packed[0];
     if (!item?.filename || !Array.isArray(item.files)) throw new Error(`Missing ${name} package artifact.`);
-    for (const required of ["dist/index.js", "dist/index.d.ts", name === "tokens" ? "dist/tokens.css" : "dist/styles.css"]) {
+    const requiredFiles = name === "auth-next"
+      ? ["dist/server.js", "dist/server.d.ts", "dist/client.js", "dist/client.d.ts", "dist/paths.js", "dist/paths.d.ts", "dist/policy.js", "dist/policy.d.ts"]
+      : ["dist/index.js", "dist/index.d.ts", name === "tokens" ? "dist/tokens.css" : "dist/styles.css"];
+    for (const required of requiredFiles) {
       if (!item.files.some(file => file.path === required)) throw new Error(`${name} package is missing ${required}.`);
     }
     if (name === "ui") for (const required of ["licenses/d3-shape.txt", "licenses/d3-path.txt"]) {
       if (!item.files.some(file => file.path === required)) throw new Error(`UI package is missing ${required}.`);
     }
     tarballs[name] = join(scratch, item.filename);
+    report.packages.push({ name: item.name, version: item.version, integrity: item.integrity, unpackedSize: item.unpackedSize });
   }
   for (const kind of ["vite", "next"]) {
     console.log(`Checking packed packages in independent ${kind} consumer…`);
     const directory = join(scratch, kind);
     await cp(join(root, "fixtures", kind), directory, { recursive: true });
-    await cp(join(root, "fixtures", "priority-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "priority-fixture.tsx"));
-    await cp(join(root, "fixtures", "roadmap-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "roadmap-fixture.tsx"));
-    await cp(join(root, "fixtures", "document-library-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "document-library-fixture.tsx"));
-    await cp(join(root, "fixtures", "team-admin-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "team-admin-fixture.tsx"));
+    const sharedFixtures = (await readdir(join(root, "fixtures"))).filter(name => name.endsWith("-fixture.tsx"));
+    for (const fixture of sharedFixtures) {
+      await cp(join(root, "fixtures", fixture), join(directory, kind === "next" ? "app" : "", fixture));
+    }
     if (!verifyRegistry) await cp(join(root, "registry", "blocks"), join(directory, kind === "next" ? "app" : "", "blocks"), { recursive: true });
-    await cp(join(root, "fixtures", "reporting-fixture.tsx"), join(directory, kind === "next" ? "app" : "", "reporting-fixture.tsx"));
     const manifestPath = join(directory, "package.json");
     const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
     manifest.dependencies["@evenkit/tokens"] = `file:${tarballs.tokens}`;
     manifest.dependencies["@evenkit/ui"] = `file:${tarballs.ui}`;
+    if (kind === "next") manifest.dependencies["@evenkit/auth-next"] = `file:${tarballs["auth-next"]}`;
     await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
     run("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund"], directory);
     if (registry) {
@@ -196,9 +277,17 @@ try {
       report.registry.push({ kind, items: registry.items.map(item => item.name), sourceRevision: registry.items[0].meta.evenkit.sourceRevision, files: installed.files, dependencies: installed.dependencies, dryRun: "passed", install: "passed", repeated: "passed" });
     }
     run("npm", ["run", "build"], directory);
+    run("npm", ["run", "typecheck"], directory);
     const result = await smoke(kind, directory);
-    report.consumers.push({ kind, build: "passed", ...result });
-    console.log(`${kind}: production build and stylesheet HTTP smoke passed.`);
+    if (kind === "vite") {
+      run("npm", ["run", "build:minimal"], directory);
+      const bundles = await Promise.all([inspectViteBundle(directory, "full"), inspectViteBundle(directory, "minimal")]);
+      report.consumers.push({ kind, build: "passed", strictTypes: "passed", ...result, bundles });
+    } else {
+      const serverBoundary = await verifyServerBoundary(directory);
+      report.consumers.push({ kind, build: "passed", strictTypes: "passed", ...result, serverBoundary });
+    }
+    console.log(`${kind}: production build, strict types, browser interaction, and package boundary checks passed.`);
   }
   report.status = "passed";
 } catch (error) {

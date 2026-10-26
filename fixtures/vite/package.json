@@ -2,7 +2,7 @@
   "name": "kit-vite-consumer",
   "private": true,
   "type": "module",
-  "scripts": { "build": "tsc --noEmit && vite build", "start": "vite preview --host 127.0.0.1" },
+  "scripts": { "build": "tsc --noEmit && vite build", "build:minimal": "vite build --mode minimal", "typecheck": "tsc --noEmit", "start": "vite preview --host 127.0.0.1" },
   "dependencies": {
     "@evenkit/tokens": "0.1.0",
     "@evenkit/ui": "0.1.0",

@@ -3,25 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "workspaces": ["packages/*", "apps/*"],
-  "engines": { "node": ">=22.12.0" },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "predev": "npm run build:packages",
     "dev": "npm run dev --workspace @evenkit/catalog",
     "build:packages": "npm run build --workspace @evenkit/tokens && npm run build --workspace @evenkit/ui && npm run build --workspace @evenkit/auth-next",
-    "build": "npm run build:packages && npm run build --workspace @evenkit/catalog",
+    "build": "npm run build:packages && npm run build --workspace @evenkit/catalog && npm run build --workspace @evenkit/admin-starter",
     "typecheck": "tsc -p tsconfig.checks.json && npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
     "test": "vitest run",
     "test:browser": "playwright test",
-    "verify": "npm run build && npm run typecheck && npm run lint && npm test && npm run test:browser",
+    "verify": "npm run build && npm run typecheck && npm run lint && npm test && npm run test:registry && npm run test:browser && npm run test:admin",
     "verify:packages": "node scripts/verify-packages.mjs",
     "verify:examples": "node scripts/verify-catalog-examples.mjs",
     "registry": "node scripts/registry/cli.mjs",
     "pretest:registry": "npm run build --workspace @evenkit/tokens",
     "test:registry": "node --test scripts/registry/*.test.mjs",
     "verify:registry-viewer": "npm run build --workspace @evenkit/tokens && node scripts/registry/verify-viewer.mjs",
-    "verify:registry": "npm run test:registry && npm run build:packages && node scripts/verify-packages.mjs --registry"
+    "verify:registry": "npm run test:registry && npm run build:packages && node scripts/verify-packages.mjs --registry",
+    "build:admin": "npm run build:packages && npm run build --workspace @evenkit/admin-starter",
+    "dev:admin": "npm run build:packages && npm run dev --workspace @evenkit/admin-starter",
+    "test:admin": "playwright test -c playwright.admin.config.ts",
+    "verify:bundle": "node scripts/measure-catalog-bundle.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

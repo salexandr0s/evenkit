@@ -128,7 +128,7 @@ export function Homepage({ theme, mode, onThemeChange, onToggleAppearance }: Hom
       </section>
 
       <section className="home-collections home-container" id="home-components" aria-labelledby="home-components-title">
-        <div className="home-section-heading"><div><p className="home-eyebrow">EXPLORE THE LIBRARY</p><h2 id="home-components-title">Browse the<br />component library</h2></div><p>90 examples with live previews and usage code.</p></div>
+        <div className="home-section-heading"><div><p className="home-eyebrow">EXPLORE THE LIBRARY</p><h2 id="home-components-title">Browse the<br />component library</h2></div><p>116 examples with live previews and usage code.</p></div>
         <div className="home-collection-grid">{collections.map(collection => <article className="home-collection" key={collection.number}>
           <div className="home-collection-top"><span>{collection.number}</span>{collection.icon}</div>
           <h3>{collection.name}</h3><p>{collection.description}</p>
