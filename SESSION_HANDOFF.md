@@ -125,6 +125,16 @@ Earlier branch handoff history is retained below.
 Current worktree: `/Users/nationalbank/.codex/worktrees/document-library/design-tokens`.
 Branch: `codex/document-library`. Base: `b588b1b` from `codex/component-improvements`.
 
+# Session handoff: 26 October 2026
+
+## Latest session: rich chat design pass
+
+**DONE** on `codex/rich-chat` in `/Users/nationalbank/.codex/worktrees/rich-chat/design-tokens`. Commit `05d0ce0` refines Markdown rhythm, code headers and copy feedback, citation rows/previews, message files, the unified upload/composer surface and catalog presentation. All checks passed: production build, configured typecheck, full ESLint, 32 unit tests, nine focused Chromium journeys, the extended short-window layout journey, 87 copied examples and packed Next/Vite consumers. The layout journey includes 128 theme/mode/direction/width combinations and a 360×320 widget with failed files and a multiline draft.
+
+The [design pass record](./docs/rich-chat-design-pass.md) contains decisions, evidence and remaining verification limits. Final screenshots are in `.artifacts/rich-chat-design/`; logs are `.artifacts/rich-chat/design-*.log`. Firefox/Safari, physical devices and assistive technology were not tested. No implementation work remains. No publishing or deployment occurred. The rebuilt preview is available at `http://127.0.0.1:5388/#rich-chat`; restart it with `npm run preview --workspace @evenkit/catalog -- --port 5388 --strictPort` if needed. Resume with `git status --short` and `git log -5 --oneline` in this worktree. Earlier session notes are preserved below.
+
+## Rich chat implementation: 25 October 2026
+
 ## Document library design: 26 October 2026
 
 Completed the requested design pass in `a906e7b`. The library has a contained

@@ -2,6 +2,8 @@
 
 Completed on 25 October 2026. Status: **DONE**.
 
+The follow-up [design pass](./rich-chat-design-pass.md) was completed on 26 October 2026 in commit `05d0ce0`. It records the updated presentation and verification evidence.
+
 Worktree: `/Users/nationalbank/.codex/worktrees/rich-chat/design-tokens`.
 Branch: `codex/rich-chat`.
 Base: `b588b1b1964ba2b26ee8453606f354f2c33eb10d`, the latest local `codex/component-improvements` when this worktree was created. The fetched remote branch was seven commits behind that local branch. The original checkout and other agents' worktrees were preserved.
@@ -12,8 +14,10 @@ Base: `b588b1b1964ba2b26ee8453606f354f2c33eb10d`, the latest local `codex/compon
 | --- | --- |
 | `64f3196` | Safe Markdown, reusable code blocks, message/composer attachments, citations, integration types, styles, unit tests, dependencies and license notices. |
 | `363f84b` | Catalog example, working copied source, documentation, inventory mappings, browser journeys and packed-consumer checks. |
+| `7b16451` | Initial verification and handoff record. |
+| `05d0ce0` | Rich content/composer design pass and extended short-window recovery coverage. |
 
-Apply both commits in order when integrating. This handoff is a separate documentation commit. Nothing was pushed, published or deployed; no production provider was connected.
+Apply these commits in order when integrating, followed by the latest documentation commit. Nothing was pushed, published or deployed; no production provider was connected.
 
 ## Delivered behavior
 
