@@ -16,6 +16,7 @@ export interface TeamAdministrationProps {
 export function TeamAdministration({ teamName, section, onSectionChange, members, roles, audit }: TeamAdministrationProps) {
   const items = [{ id: "members", label: "Members and invitations" }, ...(roles ? [{ id: "roles", label: "Roles and capabilities" }] : []), ...(audit ? [{ id: "audit", label: "Audit history" }] : [])];
   const active = items.some(item => item.id === section) ? section : "members";
+  if (items.length === 1) return <TeamMembers {...members} />;
   return <Stack gap="6">
     <SectionHeader title={teamName} description="Members, roles and team activity." />
     <SettingsLayout items={items} activeId={active} navigationLabel="Team settings" onNavigate={next => { if (next === "members" || next === "roles" || next === "audit") onSectionChange(next); }}>
