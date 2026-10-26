@@ -1,6 +1,7 @@
 # Document-library integration handoff
 
-Completed on 25 October 2026 in the isolated worktree
+Implemented on 25 October 2026; design pass completed on 26 October 2026 in the
+isolated worktree
 `/Users/nationalbank/.codex/worktrees/document-library/design-tokens`, branch
 `codex/document-library`. The base is
 `b588b1b1964ba2b26ee8453606f354f2c33eb10d` from the latest local
@@ -22,9 +23,53 @@ preserved. No storage provider, publication, push or deployment was performed.
   complete copyable examples, API guide and provenance. Catalog totals are now
   89 entries and 75 inventory mappings.
 
-Implementation commit: `27eb10e` (`feat(document-library): add previews and
-editable document flows`). The following catalog/docs commit completes the
-branch. Review the range `b588b1b..codex/document-library` for the full change.
+Implementation commit: `27eb10e`; catalog/docs: `a5cb9f1`; sample asset metadata:
+`6ce6eed`; design pass: `a906e7b` (`feat(document-library): refine browser and
+media layouts`). Review `b588b1b..codex/document-library` for the full change.
+
+## Design pass: 26 October 2026
+
+The library now has a contained folder header, grouped toolbar, aligned sort
+controls, a constrained actions column and readable file-type labels. Grid
+cards share passive 4:3 thumbnails, a separate selection overlay and aligned
+actions. Long text excerpts clear the selection target; narrow sort controls
+stack before their labels wrap. Selected borders retain their theme accent.
+
+File previews have a bounded canvas, file identity header and aligned actions.
+The additive `FilePreview.variant="thumbnail"` omits retry/action controls and
+text tab stops; the containing card opens the full lightbox. Loaded images use
+the existing neutral palette for a transparency checkerboard. Long fallback
+messages remain keyboard-scrollable, and asynchronous replacement of a focused
+status returns focus to the stable preview frame.
+
+Avatar/logo editing uses a bounded settings panel with image stage, compact
+picker, grouped secondary actions and a shared status/save footer. Avatar and
+logo shapes remain distinct; failed image decoding expands the fallback frame
+so its explanation remains readable. The catalog puts test controls in open
+disclosures below the main examples. Application storage and transfer contracts
+are unchanged; this pass adds no dependency or external visual asset.
+
+Production build, workspace TypeScript/ESLint, all 25 unit tests, 89 copied
+examples/75 mappings and independent packed Vite/Next consumers passed. All ten
+component browser journeys passed, including the added passive-thumbnail
+keyboard path and focus recovery after loading content is replaced. The final
+narrow-sort CSS adjustment passed a fresh 66-case grid/mobile matrix and five
+focused mobile checks for single-line LTR/RTL sort labels, failed avatar decode
+and long filenames. Together with the 215 layout/theme/portal checks, coverage
+includes all eight themes, both modes, four widths and reduced motion.
+
+Independent source review resolved checkbox stacking, custom root labels,
+fallback scrolling and asynchronous focus recovery. Visual review covered
+desktop list/grid, loaded-image selection, file canvas, avatar settings, mobile
+RTL, a mobile lightbox and failed avatar decoding. Chromium-only limitations
+below still apply. No design work remains.
+
+Design evidence is in `.artifacts/document-library-design/`: `build.log`,
+`typecheck.log`, `lint.log`, `unit.log`, `examples.log`, `packages.log`,
+`browser-final.log`, `layout-report.json`, `grid-report.json`, `polish-report.json`
+and screenshots. `design-final.png` captures the completed library in the app.
+`verification-inputs.json` records source hashes and the final revision. The
+earlier preview server stopped between sessions; it was restarted on port 5497.
 
 ## Verification
 

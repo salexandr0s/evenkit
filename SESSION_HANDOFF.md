@@ -41,12 +41,41 @@ Earlier branch handoff history is retained below.
 Current worktree: `/Users/nationalbank/.codex/worktrees/document-library/design-tokens`.
 Branch: `codex/document-library`. Base: `b588b1b` from `codex/component-improvements`.
 
+## Document library design: 26 October 2026
+
+Completed the requested design pass in `a906e7b`. The library has a contained
+folder header, grouped toolbar, aligned controls and compact file rows. Grid
+cards use passive 4:3 previews, readable fallbacks and separate selection
+targets. File previews have bounded canvases and aligned actions; avatar editing
+has a bounded settings panel and connected status/save footer. Neutral palette
+checkerboards reveal transparency without modifying image pixels.
+
+Changed only the owned media-preview/document-library modules, avatar styles,
+editable blocks, corresponding catalog files, API/provenance docs and two focused
+browser journeys. Async storage/transfer contracts remain with applications.
+Independent review findings were resolved, including focus when an asynchronous
+preview replaces focused status content. Existing concurrent work is preserved.
+
+Production builds, workspace type/lint checks, 25 unit tests, 89 copied examples,
+75 mappings, packed Vite/Next consumers and ten component browser journeys passed.
+Appearance verification passed 281 matrix checks plus five focused mobile checks.
+The last CSS adjustment was separately checked at all four widths in both modes
+and all themes; LTR/RTL sort labels stay on one line and failed avatar decoding
+keeps its fallback readable. Evidence: `.artifacts/document-library-design/`.
+
+No requested implementation or design work remains. Safari, Firefox and physical
+mobile keyboards were not tested. No push, publication or deployment occurred.
+The preview server was restarted at `http://127.0.0.1:5497/#document-library`.
+See [the integration handoff](docs/document-library-handoff.md) for source hashes,
+verification details and merge notes. Resume from this worktree with
+`git status --short` and `git log --oneline b588b1b..codex/document-library`.
+
 ## Document library: 25 October 2026
 
 Completed J05, J06 and J07 with maintained media-preview/document-library modules,
 editable avatar-upload/document-library blocks, catalog examples and focused
-tests. Implementation commit: `27eb10e`. The following catalog/docs commit
-completes this branch. The original checkout and concurrent worktrees are preserved.
+tests. Implementation commit: `27eb10e`; catalog/docs: `a5cb9f1`; sample asset
+metadata: `6ce6eed`. The original checkout and concurrent worktrees are preserved.
 
 Build, TypeScript, ESLint, 25 unit tests, 89 copied examples/75 mappings and packed
 Vite/Next checks passed. Ten new Chromium journeys and eleven existing regressions
