@@ -1,3 +1,13 @@
+# Token production deployment: 26 October 2026
+
+Status: DONE. Pushed the two token improvements and their handoff through commit `4fa085146792c07fedbf1e82e90a02b32f7a1fda` to `origin/codex/component-improvements`, then deployed that exact committed snapshot to `blockconsult/evenkit` at the user's request. Deployment `dpl_FnBz7HNxKssaKn61BHjGyoPLgyF9` is READY and serves both `https://evenkit.dev` and `https://www.evenkit.dev`. Its immutable URL is `https://evenkit-19pvmgo1b-blockconsult.vercel.app`.
+
+The Vercel connector lacked team access; the authenticated CLI deployed to the verified project and team. The clean Git archive excluded unfinished catalog HTML, Vite and `llms/` edits, which remain untouched locally. Vercel completed the configured production build. Both live Chromium journeys passed: token search/copy/contrast and theme switching/persistence/portals. A separate live check confirmed all eight new success/warning contrast pairs and no page errors. Browser results are in `.artifacts/token-deployment-browser-results/`.
+
+No required deployment work remains. Check deployment state with `vercel inspect https://evenkit.dev --scope team_luOipoW354gDuRyyUaYVO2mg --json`. Rerun the live journeys with `npx playwright test tests/browser/token-reference.spec.ts tests/browser/themes.spec.ts --config=.artifacts/sidebar-dropdown-live.config.ts --project=chromium --output=.artifacts/token-deployment-browser-results`. This follow-up used Chromium; the earlier implementation checks are recorded below.
+
+---
+
 # Two token improvement passes: 26 October 2026
 
 Status: DONE. Completed the requested two-pass goal in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`.
