@@ -1,3 +1,15 @@
+# Completed worktree integration: 26 October 2026
+
+Target: `/Users/nationalbank/GitHub/design-tokens`, branch `codex/component-improvements`. Ten completed source worktree snapshots, including feature refinements, the admin starter, registry tooling and the shared design pass, are integrated through code merge `8187a1a`. Earlier main/auth history is retained. See [the merge review](docs/worktree-merge-review.md) for source cutoffs and conflict decisions.
+
+Verification passed: final production build in the integration and primary checkouts; configured TypeScript/ESLint; 47 unit tests; 34 registry tests; 116 copied examples/104 mappings; 296 catalog Chromium journeys; 63 admin journeys across Chromium, Firefox and WebKit; and 11 affected catalog plus 12 affected admin reruns after the final compatibility/recovery fixes. Independent packed Vite/Next consumers passed all 23 installed blocks, SSR/HTTP/CSS, auth, keyboard/form and package-boundary checks. Copied website consumers, registry viewer and deferred-bundle checks also passed. The packed fixture now gates its trigger on actual hydration and retains failure diagnostics without weakening interaction assertions.
+
+The original uncommitted catalog HTML and two LLM-source files are byte-identical. Vite retains the original LLM plugin with the merged manifest setting. Preservation hashes and verification evidence are in `.artifacts/worktree-integration/`, copied from the temporary integration checkout. Owned fixture servers/scratch were cleaned; other chats' worktrees and servers were preserved. New sidebar edits started after the recorded design snapshot and remain uncommitted in the primary checkout, outside this merge. The final primary checks preceded those ongoing edits.
+
+No push, publication, deployment or existing-application migration occurred. Physical devices, screen-reader speech and live provider/storage behavior were not newly exercised. No required work remains for this merge. Resume with `git status --short`, `git log -5 --oneline` and `cat docs/worktree-merge-review.md`. Historical entries below retain their original snapshot context.
+
+---
+
 # Seven-workstream design handoff: 26 October 2026
 
 Status: DONE. Completed the requested goal across editable block registry tools, documents, team administration, notifications/status, rich chat, reporting and website blocks. The completed design branch is merged into local `main` in `/Users/nationalbank/.codex/worktrees/evenkit-design-refinements/design-tokens`. No push, publication or deployment occurred. The primary checkout's concurrent metadata edits remain untouched.
