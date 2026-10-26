@@ -95,6 +95,7 @@ test("chart loading, empty and failed states recover without displaying stale me
 
 test("reporting controls invalidate prepared downloads and export transitions retain usable focus", async ({ page }) => {
   await page.goto("/#reporting-controls");
+  await page.locator(".reporting-preview-export summary").click();
   const exportGroup = page.getByRole("group", { name: "Export report", exact: true });
   const prepare = exportGroup.locator("button").first();
   await prepare.focus();
@@ -145,12 +146,22 @@ test("line, area and bar adapters draw missing, grouped and signed stacked value
   await page.goto("/#line-chart");
   const line = chart(page, "Orders by day");
   await expect(line.locator(".pk-chart-line")).toHaveCount(2);
-  const current = line.locator('g').filter({ has: page.locator('.pk-chart-line[data-series="current"]') }).last();
-  await expect(current.locator(".pk-chart-point")).toHaveCount(6);
+  await expect(line.locator('.pk-chart-point[data-series="current"]')).toHaveCount(6);
   const area = chart(page, "Daily order volume");
   await expect(area.locator(".pk-chart-area")).toHaveCount(1);
   await expect(area.locator(".pk-chart-line")).toHaveCount(1);
   await expect(area.locator(".pk-chart-point")).toHaveCount(6);
+  for (const width of [360, 1440]) {
+    await page.setViewportSize({ width, height: 960 });
+    const markerSizes = await line.locator(".pk-chart-point").evaluateAll(markers => markers.map(marker => {
+      const { width, height } = marker.getBoundingClientRect();
+      return { width, height };
+    }));
+    for (const marker of markerSizes) {
+      expect(marker.width).toBeGreaterThan(0);
+      expect(marker.width).toBeCloseTo(marker.height, 1);
+    }
+  }
 
   await page.goto("/#bar-chart");
   for (const title of ["Orders by region", "Orders by channel", "Stacked regional orders", "Stacked channel totals"]) {
@@ -210,6 +221,27 @@ test("statistics distinguish zero from missing and dashboard controls update hos
   const history = chart(page, "Order history");
   await expect(dashboard.getByRole("group", { name: "Report summary", exact: true })).toContainText("6 of 7");
   await expect(history.locator(".pk-chart-line")).toHaveCount(2);
+  await page.evaluate(() => { document.documentElement.dir = "rtl"; });
+  for (const [target, first, second] of [
+    [dashboard.locator(".pk-statistic-number").nth(1), "6", "7"],
+    [history.locator(".pk-chart-period"), "19", "25"],
+  ] as const) {
+    const order = await target.evaluate((element, { first, second }) => {
+      const text = document.createTreeWalker(element, NodeFilter.SHOW_TEXT).nextNode();
+      if (!text?.textContent) throw new Error("Expected a mixed-direction measure");
+      const position = (value: string) => {
+        const index = text.textContent?.indexOf(value) ?? -1;
+        if (index < 0) throw new Error(`Missing ${value}`);
+        const range = document.createRange();
+        range.setStart(text, index);
+        range.setEnd(text, index + value.length);
+        return range.getBoundingClientRect().left;
+      };
+      return { first: position(first), second: position(second) };
+    }, { first, second });
+    expect(order.first).toBeLessThan(order.second);
+  }
+  await page.evaluate(() => { document.documentElement.dir = "ltr"; });
   await chooseOption(page, "Comparison", "No comparison");
   await expect(history.locator(".pk-chart-line")).toHaveCount(1);
   await chooseOption(page, "Period", "October 2026");

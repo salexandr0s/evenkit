@@ -30,26 +30,23 @@ function Categories({ data, activeIndex, grouped = false }: { data: readonly Cha
     {data.map((row, index) => <span key={row.id} dir="auto" style={grouped ? undefined : { gridColumn: index === 0 ? "1" : index === data.length - 1 ? String(tracks) : `${index * 2} / span 2` }} data-active={activeIndex === index || undefined}>{row.label}</span>)}
   </div>;
 }
-function Point({ x, y, index }: { x: number; y: number; index: number }) {
-  if (index % 3 === 1) return <rect className="pk-chart-point" x={x - 4} y={y - 4} width={8} height={8} />;
-  if (index % 3 === 2) return <path className="pk-chart-point" d={`M${x},${y - 5}l5,5l-5,5l-5,-5Z`} />;
-  return <circle className="pk-chart-point" cx={x} cy={y} r={4} />;
+function Points({ data, series, domain }: { data: readonly ChartDatum[]; series: readonly ChartSeries[]; domain: readonly [number, number] }) {
+  return <div className="pk-chart-marker-layer" aria-hidden="true">{series.map((item, index) => data.map((row, rowIndex) => {
+    const value = chartValue(row.values[item.id]);
+    return value === null ? null : <span key={`${item.id}-${row.id}`} className="pk-chart-point" data-series={item.id} data-category={row.id} data-shape={index % 3 === 1 ? "square" : index % 3 === 2 ? "diamond" : "circle"} style={{ left: `${categoryPosition(rowIndex, data.length) / plotWidth * 100}%`, top: `${chartScale(value, domain) / plotHeight * 100}%`, color: chartColor(item, index) }} />;
+  }))}</div>;
 }
 export function LinePlot({ data, series, activeIndex, onActiveIndexChange, formatValue, categoryLabel, area = false }: PlotProps & { area?: boolean }) {
   const domain = chartDomain(data, series);
   return <div className="pk-chart-plot" data-kind={area ? "area" : "line"}>
     <div className="pk-chart-vertical-layout"><Axis domain={domain} formatValue={formatValue} />
-      <svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} preserveAspectRatio="none" className="pk-chart-svg" aria-hidden="true">
+      <div className="pk-chart-svg-wrap"><svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} preserveAspectRatio="none" className="pk-chart-svg" aria-hidden="true">
         <Grid domain={domain} />
         {series.map((item, index) => {
           const paths = chartPaths(data, item, domain);
           return <g key={item.id} style={{ color: chartColor(item, index) }}>
             {area ? <path className="pk-chart-area" data-series={item.id} d={paths.area} /> : null}
             <path className="pk-chart-line" data-series={item.id} d={paths.line} strokeDasharray={seriesDashes[index]} />
-            {data.map((row, rowIndex) => {
-              const value = chartValue(row.values[item.id]);
-              return value === null ? null : <Point key={row.id} x={categoryPosition(rowIndex, data.length)} y={chartScale(value, domain)} index={index} />;
-            })}
           </g>;
         })}
         {activeIndex === null ? null : <line className="pk-chart-cursor" x1={categoryPosition(activeIndex, data.length)} x2={categoryPosition(activeIndex, data.length)} y1={plotInset} y2={plotHeight - plotInset} />}
@@ -61,7 +58,7 @@ export function LinePlot({ data, series, activeIndex, onActiveIndexChange, forma
           const end = index === data.length - 1 ? plotWidth : (x + next) / 2;
           return <rect key={row.id} className="pk-chart-hit" data-category={row.id} x={start} y={0} width={end - start} height={plotHeight} onPointerEnter={() => onActiveIndexChange(index)} onPointerDown={() => onActiveIndexChange(index)} />;
         })}
-      </svg>
+      </svg><Points data={data} series={series} domain={domain} /></div>
     </div>
     <Categories data={data} activeIndex={activeIndex} />
     {categoryLabel ? <p className="pk-chart-category-title">{categoryLabel}</p> : null}

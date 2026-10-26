@@ -114,7 +114,7 @@ Tab reaches the chart as one focus target. Arrow Right/Down moves to the next ca
 
 `ChartFrame` accepts the common chart props, an optional `legendVariant="line" | "bar"`, and either ordinary children or a render function receiving `activeIndex`, `onActiveIndexChange` and a stable `patternId`. Custom adapters own the visual marks and pointer hit areas; retain the frame's keyboard and table alternatives. Do not place nested focusable controls inside its plot interaction target. The [chart-frame catalog example](../apps/catalog/src/reporting-entries.ts) is a complete custom SVG composition with token colors and pointer hit areas; it uses a fixed 0–4 scale for its three-row fixture. Use the supplied adapters for general datasets.
 
-The chart fills its available width. Vertical plots use a fixed height of three `--pk-space-16` units; horizontal bar plots grow with their rows and labels. Long labels remain available without relying on hover. The table scrolls within its own named region. For larger reports, aggregate or filter data in the host: the adapter is intended for modest dashboard datasets, without virtualization, zoom, pan, cross-chart synchronization or editing.
+The chart fills its available width. Vertical plots use four `--pk-space-16` units of height, reducing to three below a 640px plot width; horizontal bar plots grow with their rows and labels. Line markers retain their proportions as the plot resizes. The inspector overlays the plot without moving the page, and the table scrolls within its own named region. Full labels remain available in the inspector and table. For larger reports, aggregate or filter data in the host: the adapter is intended for modest dashboard datasets, without virtualization, zoom, pan, cross-chart synchronization or editing.
 
 ## Themes and contrast
 
@@ -122,7 +122,7 @@ The palette is explicit: `--pk-chart-series-1` through `--pk-chart-series-6`. Se
 
 Custom brand input must provide all six `chart-series-1` through `chart-series-6` roles in both `modes.light` and `modes.dark`. This extends the required `ModeColors` schema. Existing custom-brand objects need those keys before validation; spread a shipped theme's modes to inherit their chart palette, then override intentional choices. Validation requires each series color to reach 3:1 against `bg`, `bg-muted`, `surface` and `surface-elevated`.
 
-The token contrast check covers every series against the relevant neutral plotting surfaces across eight themes and light/dark modes. Surface contrast does not establish pairwise color distinguishability. Legends, series numbering, line dashes, bar patterns and the full data table supplement color. Keep these cues when adapting the frame. Charts have no data animation; focus uses the existing ring tokens, and reporting controls inherit the kit's reduced-motion behavior.
+The token contrast check covers every series against the relevant neutral plotting surfaces across eight themes and light/dark modes. Surface contrast does not establish pairwise color distinguishability. Labeled legends, marker shapes, line dashes, bar patterns and the full data table supplement color. Keep these cues when adapting the frame. Charts have no data animation; focus uses the existing ring tokens, and reporting controls inherit the kit's reduced-motion behavior.
 
 ## Reporting controls and export
 
@@ -148,7 +148,7 @@ The [reporting controls catalog example](../apps/catalog/src/reporting-entries.t
 
 Copy [registry/blocks/dashboard.tsx](../registry/blocks/dashboard.tsx) into the consuming application. `DashboardBlockProps` accepts `title`, optional `description`, `statistics`, `controls`, optional `exportAction`, optional `chart`, optional `activity`, a `dataSection` slot and optional `dir`. Each statistic adds a stable `id` to `StatisticProps`. The other sections accept their public component props. The chart is a line chart by default; edit the source to use a bar/area chart or additional sections.
 
-The block composes the kit's PageHeader, ReportingControls, Statistic, LineChart, ActivityTimeline and ExportAction. Supply a semantic table or domain list through `dataSection`. Data, activity timestamps, comparison meanings, permissions, persistence and query/export cancellation remain with the host. The catalog's dashboard example shows immediate period/comparison changes, partial coverage, a data section and export invalidation; the copyable example shows the same public boundaries.
+The block composes the kit's PageHeader, ReportingControls, Statistic, LineChart, ActivityTimeline and ExportAction. Statistics share a summary band. The data and activity sections sit side by side when space permits and stack in narrower containers. Supply a semantic table or domain list through `dataSection`. Data, activity timestamps, comparison meanings, permissions, persistence and query/export cancellation remain with the host. The catalog's dashboard example shows immediate period/comparison changes, partial coverage, a data section and export invalidation; the copyable example shows the same public boundaries.
 
 ## Verification and limits
 

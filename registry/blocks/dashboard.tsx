@@ -30,7 +30,9 @@ export function DashboardBlock({ title, description, statistics, controls, expor
       {statistics.map(({ id, ...statistic }) => <Statistic key={id} {...statistic} />)}
     </div>
     {chart ? <LineChart {...chart} /> : null}
-    {dataSection ? <div className="pk-dashboard-section">{dataSection}</div> : null}
-    {activity ? <ActivityTimeline {...activity} /> : null}
+    {dataSection || activity ? <div className="pk-dashboard-support">
+      {dataSection ? <div className="pk-dashboard-section">{dataSection}</div> : null}
+      {activity ? <div className="pk-dashboard-activity"><h3 className="pk-dashboard-support-heading">{activity.label ?? "Activity"}</h3><ActivityTimeline {...activity} /></div> : null}
+    </div> : null}
   </section>;
 }
