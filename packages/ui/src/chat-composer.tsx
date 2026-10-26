@@ -64,9 +64,10 @@ export function ChatComposer({ value, onValueChange, onSend, onStop, status, lab
     textareaRef.current?.focus();
   }
 
-  return <form className="pk-chat-composer" onSubmit={event => { event.preventDefault(); send(); }}>
+  return <form className="pk-chat-composer" data-has-attachments={Boolean(attachments) || undefined} onSubmit={event => { event.preventDefault(); send(); }}>
+    <div className="pk-chat-composer-surface">
     {attachments && uploadQueue && <div className="pk-chat-composer-attachments" role="region" aria-label={typeof attachmentLabel === "string" ? attachmentLabel : "Attachments"} tabIndex={0}>
-      <UploadQueue {...uploadProps} queue={uploadQueue} label={attachmentLabel} disabled={busy || Boolean(attachments.disabled)} />
+      <UploadQueue emptyMessage={null} {...uploadProps} queue={uploadQueue} label={attachmentLabel} disabled={busy || Boolean(attachments.disabled)} />
     </div>}
     {pendingAttachments && <p id={`${id}-attachments`} className="pk-chat-attachments-pending" role="status">{pendingMessage}</p>}
     <label className="pk-chat-visually-hidden" htmlFor={id}>{labels.message}</label>
@@ -87,6 +88,7 @@ export function ChatComposer({ value, onValueChange, onSend, onStop, status, lab
         <TooltipTrigger asChild><Button type="submit" shape="icon" aria-label={labels.send} disabled={!canSend}><ArrowUpIcon /></Button></TooltipTrigger>
         <TooltipContent>{labels.send}</TooltipContent>
       </Tooltip>}
+    </div>
     </div>
     <div className="pk-chat-composer-meta">
       <span id={`${id}-hint`}>{labels.composerHint}</span>

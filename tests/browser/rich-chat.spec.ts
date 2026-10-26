@@ -168,6 +168,9 @@ test("rich layouts contain long code and tables in every theme, mode and directi
   await expect(table).toBeFocused();
   expect(await table.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
   await page.screenshot({ path: ".artifacts/rich-chat/narrow-rtl-dark.png", fullPage: true });
+  await page.getByRole("button", { name: "Fail next upload", exact: true }).click();
+  await page.getByRole("button", { name: "Add sample files", exact: true }).click();
+  await expect(panel.getByRole("button", { name: "Retry Review notes.txt", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Open rich chat", exact: true }).click();
   const widget = page.getByRole("dialog", { name: "Rich chat widget", exact: true });
   await page.setViewportSize({ width: 768, height: 320 });
@@ -175,5 +178,13 @@ test("rich layouts contain long code and tables in every theme, mode and directi
   await expect(input).toBeInViewport();
   await expect(widget.getByRole("button", { name: "Close chat", exact: true })).toBeInViewport();
   await expect(widget).toHaveCSS("transition-duration", "0s");
+  // A failed file and a multiline draft compete for space when the keyboard is open.
+  await page.setViewportSize({ width: 360, height: 320 });
+  await input.fill("First line\nSecond line\nThird line\nFourth line\nFifth line\nSixth line");
+  await expect(input).toBeInViewport({ ratio: 1 });
+  await expect(widget.getByRole("button", { name: "Send message", exact: true })).toBeInViewport({ ratio: 1 });
+  const retry = widget.getByRole("button", { name: "Retry Review notes.txt", exact: true });
+  await retry.focus();
+  await expect(retry).toBeInViewport({ ratio: 1 });
   await page.screenshot({ path: ".artifacts/rich-chat/short-widget.png", fullPage: true });
 });

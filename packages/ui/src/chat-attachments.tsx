@@ -64,7 +64,7 @@ function AttachmentRow({ attachment, unavailableLabel, previewUnavailableLabel, 
 /** Read-only message files. The host must omit links and previews the viewer cannot access. */
 export function ChatAttachments({ attachments, label = "Attachments", unavailableLabel = "Attachment unavailable", previewUnavailableLabel = "Preview unavailable", locale }: ChatAttachmentsProps) {
   if (attachments.length === 0) return null;
-  return <ul className="pk-chat-attachments" aria-label={label}>
+  return <ul className="pk-chat-attachments" role="list" aria-label={label}>
     {attachments.map(attachment => <AttachmentRow key={attachment.id} attachment={attachment}
       unavailableLabel={unavailableLabel} previewUnavailableLabel={previewUnavailableLabel} locale={locale} />)}
   </ul>;
