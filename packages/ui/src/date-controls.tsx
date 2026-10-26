@@ -158,12 +158,12 @@ export function DateRangePicker({ label, value, defaultValue = emptyRange, onVal
   return <fieldset className="pk-date-range" disabled={disabled} aria-describedby={hint ? `${id}-hint` : undefined}>
     <legend className="pk-label">{label}{required ? <span className="pk-label-cue">Required</span> : null}</legend>
     {hint ? <p className="pk-field-hint" id={`${id}-hint`}>{hint}</p> : null}
-    <div className="pk-date-range-fields">
-      <DateField ref={input} label={startLabel} value={range.start} onValueChange={start => change({ ...range, start })} name={startName} form={form} required={required || !!range.end} disabled={disabled} readOnly={readOnly} {...constraints} />
-      <DateField label={endLabel} value={range.end} onValueChange={end => change({ ...range, end })} name={endName} form={form} required={required || !!range.start} disabled={disabled} readOnly={readOnly} {...constraints} error={error || rangeError} />
-    </div>
     <Popover open={open && !disabled && !readOnly} onOpenChange={next => setOpen(next && !input.current?.matches(":disabled"))}>
-      <PopoverTrigger asChild><Button variant="outline" form={form} disabled={disabled || readOnly} startIcon={<CalendarDaysIcon />}>{calendarLabel}</Button></PopoverTrigger>
+      <div className="pk-date-range-fields">
+        <DateField ref={input} label={startLabel} value={range.start} onValueChange={start => change({ ...range, start })} name={startName} form={form} required={required || !!range.end} disabled={disabled} readOnly={readOnly} {...constraints} />
+        <DateField label={endLabel} value={range.end} onValueChange={end => change({ ...range, end })} name={endName} form={form} required={required || !!range.start} disabled={disabled} readOnly={readOnly} {...constraints} error={error || rangeError}
+          endAdornment={<TooltipProvider><Tooltip><TooltipTrigger asChild><PopoverTrigger asChild><Button className="pk-date-trigger" variant="ghost" size="sm" shape="icon" form={form} disabled={disabled || readOnly} aria-label={calendarLabel}><CalendarDaysIcon /></Button></PopoverTrigger></TooltipTrigger><TooltipContent container={container}>{calendarLabel}</TooltipContent></Tooltip></TooltipProvider>} />
+      </div>
       <PopoverContent ref={popup} container={container} className="pk-date-popup" aria-label={calendarLabel} onOpenAutoFocus={event => { event.preventDefault(); requestAnimationFrame(() => popup.current?.querySelector<HTMLButtonElement>('[tabindex="0"]')?.focus()); }}>
         <Calendar range={range} value={range.end ?? range.start} onValueChange={select} locale={locale} today={today} {...constraints} />
         <p className="pk-date-range-status" role="status">{attemptError ?? (range.start && !range.end ? `${formatDateOnly(range.start, { locale })} selected. Choose an end date.` : "Choose the first and last day.")}</p>

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import {
-  ActionGroup, Avatar, AvatarGroup, Badge, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader,
-  Container, DataList, DataListItem, Grid, Heading, Inline, Kbd, ListItem, LiveStatus,
+  ActionGroup, ArchiveIcon, Avatar, AvatarGroup, Badge, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader,
+  Container, DataList, DataListItem, EyeIcon, Grid, Heading, IconButton, Inline, Kbd, ListItem, LiveStatus,
   PageHeader, PlusIcon, Prose, SectionHeader, Separator, SkipLink, Stack, Tag, TagGroup,
   VisuallyHidden,
 } from "@evenkit/ui";
@@ -53,7 +53,7 @@ function HeaderPreview() {
 
 function ActionGroupPreview() {
   const [message, setMessage] = useState("The draft is ready for review.");
-  return <Stack gap="6"><Inline justify="between"><Stack gap="1"><Heading as="h3" size="4">Website refresh</Heading><p className="pk-text-muted">Project brief</p></Stack><Badge>Draft</Badge></Inline><div className="foundations-preview-action-bar"><ActionGroup label="Draft actions"><Button onClick={() => setMessage("Draft saved.")}>Save draft</Button><Button variant="outline" onClick={() => setMessage("Preview opened.")}>Preview</Button><Separator orientation="vertical" /><Button variant="ghost" onClick={() => setMessage("Draft archived.")}>Archive</Button><Button disabled variant="outline">Publish</Button></ActionGroup><LiveStatus className="foundations-preview-status">{message}</LiveStatus></div><p className="pk-caption">Save your changes before publishing. Use Tab to move through the available actions.</p></Stack>;
+  return <Stack gap="6"><Inline justify="between"><Stack gap="1"><Heading as="h3" size="4">Website refresh</Heading><p className="pk-text-muted">Project brief</p></Stack><Badge>Draft</Badge></Inline><div className="foundations-preview-action-bar"><ActionGroup label="Draft actions"><Button onClick={() => setMessage("Draft saved.")}>Save draft</Button><IconButton label="Preview" size="md" variant="outline" onClick={() => setMessage("Preview opened.")}><EyeIcon /></IconButton><Separator orientation="vertical" /><IconButton label="Archive" size="md" onClick={() => setMessage("Draft archived.")}><ArchiveIcon /></IconButton><Button disabled variant="outline">Publish</Button></ActionGroup><LiveStatus className="foundations-preview-status">{message}</LiveStatus></div><p className="pk-caption">Save your changes before publishing. Use Tab to move through the available actions.</p></Stack>;
 }
 
 function AccessibilityPreview() {

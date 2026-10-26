@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Button, ChevronDownIcon, Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DocumentLibrary, FileLightbox, RotateCcwIcon, SaveStatus, UploadIcon, UploadQueue, useDocumentLibrary, useUploadQueue, type DocumentFolder, type DocumentLibraryLoad, type DocumentLibraryQuery, type MediaFile, type UploadContext, type UploadResult } from "@evenkit/ui";
+import { Button, ChevronDownIcon, Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DocumentLibrary, FileLightbox, IconButton, RotateCcwIcon, SaveStatus, Undo2Icon, UploadIcon, UploadQueue, useDocumentLibrary, useUploadQueue, type DocumentFolder, type DocumentLibraryLoad, type DocumentLibraryQuery, type MediaFile, type UploadContext, type UploadResult } from "@evenkit/ui";
 
 export interface DocumentMutationContext { signal: AbortSignal; folderId: string | null }
 export interface DocumentLibraryBlockProps {
@@ -74,10 +74,10 @@ function LibraryWorkspace({ scopeKey, load, upload, onRemove, onRestore, onRefre
     <DocumentLibrary entries={result.data} total={result.total} query={query} onQueryChange={setQuery} path={path} onNavigate={navigate} view={view} onViewChange={setView}
       selection={result.selection} loading={result.loading} error={result.error} onRetry={result.retry}
       onPreview={(file, trigger) => { trigger.focus(); setSelectedPreview(file); }} {...(onRemove ? { onRemove: (ids: readonly string[]) => { setError(""); setRemovalIds([...ids]); } } : {})}
-      actions={<Button ref={refresh} size="sm" variant="outline" startIcon={<RotateCcwIcon size="sm" />} aria-label="Refresh documents" onClick={result.retry}>Refresh</Button>} />
+      actions={<IconButton ref={refresh} label="Refresh documents" size="sm" variant="outline" onClick={result.retry}><RotateCcwIcon size="sm" /></IconButton>} />
     {removalIds === null && (error || note || pending === "restore") ? <SaveStatus state={error ? "error" : pending ? "saving" : "saved"} role={error ? "alert" : "status"}>{error || note || "Restoring items…"}</SaveStatus> : null}
     {removed && onRestore ? <div className="pk-document-recovery"><p>{removed.ids.length} {removed.ids.length === 1 ? "item can" : "items can"} be restored from the last removal.</p>
-      <Button variant="outline" disabled={result.loading} loading={pending === "restore"} onClick={() => { void mutate("restore"); }}>Undo removal</Button>
+      <IconButton label="Undo removal" variant="outline" disabled={result.loading} loading={pending === "restore"} onClick={() => { void mutate("restore"); }}><Undo2Icon /></IconButton>
       {pending === "restore" ? <Button variant="ghost" onClick={() => { cancelRequest(); setNote("Restore cancelled. You can try undo again."); refresh.current?.focus(); }}>Cancel restore</Button> : null}
     </div> : null}
     {upload ? <DocumentUploads key={JSON.stringify([query.folderId])} folderId={query.folderId} upload={upload} onComplete={result.retry} /> : null}

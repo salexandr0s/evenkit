@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
-import { Avatar, Button, FileInput, FileRow, FormSection, Image, RotateCcwIcon, SaveStatus, TrashIcon, Undo2Icon, formatFileSize } from "@evenkit/ui";
+import { Avatar, Button, FileInput, FileRow, FormSection, IconButton, Image, RotateCcwIcon, SaveStatus, TrashIcon, Undo2Icon, formatFileSize } from "@evenkit/ui";
 
 export const avatarImageTypes = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/avif"] as const;
 export type AvatarImageType = typeof avatarImageTypes[number];
@@ -149,8 +149,8 @@ function AvatarUploadForm({ ownerId, name, value, kind = "avatar", maxBytes = 5 
             onFilesSelected={({ accepted }) => { const next = accepted[0]; if (next) { setDraft({ kind: "replace", file: next }); setBeforeRemoval(null); clearFeedback(); } }} />
           {selected ? <ul className="pk-avatar-upload-files" aria-label="Selected image"><FileRow name={selected.name} sizeBytes={selected.size} fileType={selected.type} state="ready" message="Ready to save" /></ul> : null}
           <div className="pk-avatar-upload-actions">
-            {removed ? <Button ref={undo} size="sm" variant="outline" startIcon={<Undo2Icon size="sm" />} disabled={pending || disabled} onClick={() => { setDraft(beforeRemoval); setBeforeRemoval(null); clearFeedback(); focusAfterChange.current = "picker"; }}>Undo removal</Button> : saved || selected ? <Button size="sm" variant="ghost" startIcon={<TrashIcon size="sm" />} disabled={pending || disabled} onClick={remove}>Remove {kind}</Button> : null}
-            {!selected && saved && !removed && onRefreshPreview ? <Button size="sm" variant="ghost" startIcon={<RotateCcwIcon size="sm" />} disabled={pending || disabled} onClick={onRefreshPreview}>Refresh preview</Button> : null}
+            {removed ? <IconButton ref={undo} label="Undo removal" size="sm" variant="outline" disabled={pending || disabled} onClick={() => { setDraft(beforeRemoval); setBeforeRemoval(null); clearFeedback(); focusAfterChange.current = "picker"; }}><Undo2Icon size="sm" /></IconButton> : saved || selected ? <IconButton label={`Remove ${kind}`} size="sm" variant="ghost" disabled={pending || disabled} onClick={remove}><TrashIcon size="sm" /></IconButton> : null}
+            {!selected && saved && !removed && onRefreshPreview ? <IconButton label="Refresh preview" size="sm" variant="ghost" disabled={pending || disabled} onClick={onRefreshPreview}><RotateCcwIcon size="sm" /></IconButton> : null}
           </div>
         </div>
       </div>
@@ -158,7 +158,7 @@ function AvatarUploadForm({ ownerId, name, value, kind = "avatar", maxBytes = 5 
     <footer className="pk-avatar-upload-footer">
       <SaveStatus state={error ? "error" : pending ? "saving" : dirty ? "dirty" : note ? "saved" : "idle"} role={error ? "alert" : "status"}>{error || (pending ? `Saving ${kind}…` : note || (dirty ? removed ? "Removal is not saved yet." : "You have unsaved changes." : "No changes to save."))}</SaveStatus>
       <div className="pk-avatar-upload-save-actions">
-        <Button type="reset" variant="ghost" disabled={pending || disabled || !draft}>Reset changes</Button>
+        <IconButton label="Reset changes" type="reset" variant="ghost" disabled={pending || disabled || !draft}><RotateCcwIcon /></IconButton>
         {pending ? <Button ref={cancel} variant="outline" onClick={cancelSave}>Cancel save</Button> : null}
         <Button type="submit" loading={pending} disabled={disabled || (!dirty && !pending)}>{error ? "Retry save" : `Save ${kind}`}</Button>
       </div>

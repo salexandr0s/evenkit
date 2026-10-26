@@ -5,7 +5,8 @@ import { Button } from "./button.js";
 import { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./dialog.js";
 import { ActionMessage, Badge } from "./feedback.js";
 import { SearchField } from "./form-controls.js";
-import { SlidersHorizontalIcon } from "./icons.js";
+import { IconButton } from "./icon-button.js";
+import { LockIcon, RotateCcwIcon, SlidersHorizontalIcon } from "./icons.js";
 import { Checkbox, CheckboxGroup } from "./selection-controls.js";
 import type { TeamActionContext, TeamActionResult } from "./team-admin-types.js";
 import { useTeamAction } from "./use-team-action.js";
@@ -104,7 +105,7 @@ function RoleEditorPanel({ role, capabilities, contextKey, onSave, readOnlyReaso
     <div className="pk-role-search"><SearchField ref={search} label="Search capabilities" value={query} onValueChange={setQuery} /></div>
     <div className="pk-role-capabilities">{groups.map(group => {
       const items = filtered.filter(capability => (capability.group ?? "Capabilities") === group);
-      return <CheckboxGroup key={group} label={<span className="pk-role-group-heading"><span>{group}</span><span className="pk-role-group-count" aria-hidden="true">{items.filter(capability => draft.includes(capability.id)).length} of {items.length} selected</span></span>} disabled={blocked || action.pending}>{items.map(capability => <div className="pk-role-capability-row" key={capability.id} data-checked={draft.includes(capability.id) || undefined} data-locked={Boolean(capability.disabledReason) || undefined}><Checkbox label={capability.label} hint={capability.disabledReason ? `${capability.description ? `${capability.description} ` : ""}${capability.disabledReason}` : capability.description} checked={draft.includes(capability.id)} disabled={blocked || action.pending || Boolean(capability.disabledReason)} onCheckedChange={checked => change(capability.id, checked === true)} />{capability.disabledReason ? <span className="pk-role-capability-lock" aria-hidden="true">Locked</span> : null}</div>)}</CheckboxGroup>;
+      return <CheckboxGroup key={group} label={<span className="pk-role-group-heading"><span>{group}</span><span className="pk-role-group-count" aria-hidden="true">{items.filter(capability => draft.includes(capability.id)).length} of {items.length} selected</span></span>} disabled={blocked || action.pending}>{items.map(capability => <div className="pk-role-capability-row" key={capability.id} data-checked={draft.includes(capability.id) || undefined} data-locked={Boolean(capability.disabledReason) || undefined}><Checkbox label={capability.label} hint={capability.disabledReason ? `${capability.description ? `${capability.description} ` : ""}${capability.disabledReason}` : capability.description} checked={draft.includes(capability.id)} disabled={blocked || action.pending || Boolean(capability.disabledReason)} onCheckedChange={checked => change(capability.id, checked === true)} />{capability.disabledReason ? <span className="pk-role-capability-lock" aria-hidden="true"><LockIcon size="sm" animation="static" /></span> : null}</div>)}</CheckboxGroup>;
     })}</div>
     {filtered.length === 0 ? <p className="pk-role-note">No matching capabilities.</p> : null}
     {unknown.length ? <ActionMessage tone="warning" heading="Additional grants retained"><p>These grants are not listed above. Saving keeps them unchanged.</p><ul className="pk-role-unknown">{unknown.map(id => <li key={id}><code>{id}</code></li>)}</ul></ActionMessage> : null}
@@ -112,7 +113,7 @@ function RoleEditorPanel({ role, capabilities, contextKey, onSave, readOnlyReaso
     <footer className="pk-role-footer"><div className="pk-role-change-summary" role="status"><strong>{dirty ? `${added.length + removed.length} unsaved ${added.length + removed.length === 1 ? "change" : "changes"}` : "No unsaved changes"}</strong><span>{dirty ? `${added.length} added · ${removed.length} removed` : "Changes apply after review and save."}</span></div><div className="pk-role-actions">
       <Button ref={review} disabled={blocked || !dirty || action.pending} onClick={() => { action.reset(); setNote(""); setConfirm(true); }}>Review changes</Button>
       <Button variant="outline" disabled={!dirty || action.pending} onClick={() => { setDraft(baseline); if (action.result?.status !== "denied" && action.result?.status !== "stale") action.reset(); setNote("Draft changes discarded."); search.current?.focus(); }}>Discard changes</Button>
-      {(uncertain || action.result?.status === "stale" || action.result?.status === "denied" || deniedReason) && onReload ? <Button variant="outline" onClick={onReload}>Reload role</Button> : null}
+      {(uncertain || action.result?.status === "stale" || action.result?.status === "denied" || deniedReason) && onReload ? <IconButton label="Reload role" size="md" variant="outline" onClick={onReload}><RotateCcwIcon size="sm" /></IconButton> : null}
     </div></footer>
     <Dialog open={confirm} onOpenChange={open => { if (!open) close(); }}>
       <DialogContent className="pk-role-confirmation" onOpenAutoFocus={event => { event.preventDefault(); cancel.current?.focus(); }} onCloseAutoFocus={event => { event.preventDefault(); restoreFocus(); }}>

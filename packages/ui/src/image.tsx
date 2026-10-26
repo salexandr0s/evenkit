@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useRef, useState, type ComponentPropsWithoutRef, type ForwardedRef, type ReactNode } from "react";
-import { Button } from "./button.js";
+import { IconButton } from "./icon-button.js";
 import { classes } from "./classes.js";
 import { Spinner } from "./feedback.js";
 import { FileTextIcon, RotateCcwIcon } from "./icons.js";
@@ -39,7 +39,7 @@ function ImageFrame({ src, alt, aspectRatio = 4 / 3, fit = "cover", fallback = "
     {state === "loading" ? <span className="pk-image-loading" aria-hidden="true"><Spinner size="sm" /></span> : null}
     {state === "error" || (attempt > 0 && state === "loading") ? <div className="pk-image-fallback">
       <span role={alt ? "img" : undefined} aria-label={alt || undefined} aria-hidden={!alt || undefined}><FileTextIcon aria-hidden="true" /><span>{fallback}</span></span>
-      {retryable ? <Button ref={retry} size="xs" variant="outline" aria-label={retryLabel} aria-disabled={state === "loading" || undefined} onClick={() => { if (state === "loading") return; frame.current?.focus(); setState("loading"); setAttempt(value => value + 1); onRetry?.(); }} startIcon={<RotateCcwIcon size="sm" />}>{retryLabel}</Button> : null}
+      {retryable ? <IconButton ref={retry} label={retryLabel} variant="outline" aria-disabled={state === "loading" || undefined} onClick={() => { if (state === "loading") return; frame.current?.focus(); setState("loading"); setAttempt(value => value + 1); onRetry?.(); }}><RotateCcwIcon size="sm" /></IconButton> : null}
     </div> : null}
   </div>;
 }

@@ -300,7 +300,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar(
       {account ? <div ref={accountRef} className="pk-navbar-account"><NavbarAccountControl account={account} renderLink={renderLink} dir={dir === "rtl" ? "rtl" : "ltr"} /></div> : null}
       {contact ? <div ref={contactRef} className="pk-navbar-contact" aria-hidden={!contactVisible || undefined} inert={!contactVisible || undefined} onFocusCapture={event => { desktopFocus.current = event.target; }} onBlurCapture={desktopBlur}><NavbarActionControl action={contact} renderLink={renderLink} /></div> : null}
       <Dialog open={open} onOpenChange={next => { resizeClose.current = false; setOpen(next); }}>
-        <TooltipProvider><Tooltip open={!!compact && !open && menuTooltipOpen} onOpenChange={setMenuTooltipOpen}><TooltipTrigger asChild><DialogTrigger asChild><Button ref={triggerRef} className="pk-navbar-mobile-trigger" variant="ghost" shape="icon" aria-label={menuLabel} onFocusCapture={() => { menuFocus.current = true; }} onBlurCapture={menuBlur}><MenuIcon /></Button></DialogTrigger></TooltipTrigger><TooltipContent>{menuLabel}</TooltipContent></Tooltip></TooltipProvider>
+        <TooltipProvider><Tooltip open={!!compact && !open && menuTooltipOpen} onOpenChange={setMenuTooltipOpen}><TooltipTrigger asChild><DialogTrigger asChild><Button ref={triggerRef} className="pk-navbar-mobile-trigger" variant="ghost" shape="icon" aria-label={menuLabel} onFocusCapture={() => { menuFocus.current = true; }} onBlurCapture={menuBlur}><MenuIcon /></Button></DialogTrigger></TooltipTrigger>{!open ? <TooltipContent>{menuLabel}</TooltipContent> : null}</Tooltip></TooltipProvider>
         <DialogContent ref={drawerRef} dir={dir} className="pk-navbar-drawer" closeLabel={closeMenuLabel} onOpenAutoFocus={event => {
           const destination = drawerRef.current?.querySelector<HTMLElement>('nav a[href][aria-current="page"]:not([aria-disabled="true"])') ?? drawerRef.current?.querySelector<HTMLElement>('nav a[href]:not([aria-disabled="true"])');
           if (destination) { event.preventDefault(); destination.focus(); }
@@ -360,13 +360,13 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(function Pagi
   const current = count === 0 ? 0 : Math.min(count, Math.max(1, Number.isFinite(page) ? Math.floor(page) : 1));
   const blocked = disabled || busy || count === 0;
 
-  function pageControl(target: number, children: ReactNode, accessibleLabel: string, unavailable: boolean, selected = false) {
+  function pageControl(target: number, children: ReactNode, accessibleLabel: string, unavailable: boolean, selected = false, iconOnly = false) {
     const ariaCurrent = selected ? "page" as const : undefined;
     const activate = () => { if (!unavailable && target !== current) onPageChange(target); };
     const control = renderPageLink && !unavailable
       ? renderPageLink({ page: target, className: "pk-pagination-link", "aria-label": accessibleLabel, "aria-current": ariaCurrent, children, onClick: event => { if (ordinaryActivation(event)) activate(); } })
-      : <Button size="sm" variant={selected ? "secondary" : "ghost"} className="pk-pagination-button" aria-label={accessibleLabel} aria-current={ariaCurrent} disabled={unavailable} onClick={activate}>{children}</Button>;
-    return compact ? <Tooltip><TooltipTrigger asChild>{control}</TooltipTrigger><TooltipContent>{accessibleLabel}</TooltipContent></Tooltip> : control;
+      : <Button size="sm" shape={iconOnly ? "icon" : "default"} variant={selected ? "secondary" : "ghost"} className="pk-pagination-button" aria-label={accessibleLabel} aria-current={ariaCurrent} disabled={unavailable} onClick={activate}>{children}</Button>;
+    return compact || iconOnly ? <Tooltip><TooltipTrigger asChild>{control}</TooltipTrigger><TooltipContent>{accessibleLabel}</TooltipContent></Tooltip> : control;
   }
 
   return <TooltipProvider><nav aria-label={label} {...props} ref={ref} aria-busy={busy || props["aria-busy"]} className={classes("pk-pagination", className)} data-compact={compact || undefined}>
@@ -374,8 +374,8 @@ export const Pagination = forwardRef<HTMLElement, PaginationProps>(function Pagi
     <div className="pk-pagination-controls">
       {!compact && count > 0 ? <div className="pk-pagination-pages">{pageChoices(current, count).map(choice => <span key={choice} className="pk-pagination-choice" data-gap={typeof choice === "string" || undefined}>{typeof choice === "number" ? pageControl(choice, choice, pageLabel(choice), blocked, choice === current) : <span className="pk-pagination-gap" aria-hidden="true">…</span>}</span>)}</div> : null}
       <div className="pk-pagination-navigation">
-        {pageControl(Math.max(1, current - 1), <><ChevronLeftIcon size="sm" /><span>{previousLabel}</span></>, previousLabel, blocked || current <= 1)}
-        {pageControl(Math.min(count, current + 1), <><span>{nextLabel}</span><ChevronRightIcon size="sm" /></>, nextLabel, blocked || current >= count)}
+        {pageControl(Math.max(1, current - 1), <ChevronLeftIcon size="sm" />, previousLabel, blocked || current <= 1, false, true)}
+        {pageControl(Math.min(count, current + 1), <ChevronRightIcon size="sm" />, nextLabel, blocked || current >= count, false, true)}
       </div>
     </div>
   </nav></TooltipProvider>;

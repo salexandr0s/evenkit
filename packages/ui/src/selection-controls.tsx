@@ -10,6 +10,7 @@ import { classes } from "./classes.js";
 import { useFieldDescription } from "./field-frame.js";
 import { Spinner } from "./feedback.js";
 import { CheckIcon, CircleAlertIcon, CopyIcon } from "./icons.js";
+import { IconButton } from "./icon-button.js";
 
 export type CheckboxState = boolean | "indeterminate";
 
@@ -241,7 +242,7 @@ export interface CopyActionProps extends Omit<ButtonProps, "onClick" | "loading"
   errorMessage?: string;
 }
 export const CopyAction = forwardRef<HTMLButtonElement, CopyActionProps>(function CopyAction(
-  { text, writeText, copyingMessage = "Copying…", copiedMessage = "Copied to clipboard.", errorMessage = "Could not copy. Try again.", children = "Copy", variant = "outline", ...props }, ref,
+  { text, writeText, copyingMessage = "Copying…", copiedMessage = "Copied to clipboard.", errorMessage = "Could not copy. Try again.", children = "Copy", variant = "outline", shape = "default", "aria-label": accessibleLabel, ...props }, ref,
 ) {
   const [status, setStatus] = useState<"idle" | "copying" | "copied" | "error">("idle");
   const mounted = useRef(false);
@@ -265,10 +266,11 @@ export const CopyAction = forwardRef<HTMLButtonElement, CopyActionProps>(functio
       if (mounted.current && current === attempt.current) setStatus("error");
     }
   }
-  return <span className="pk-copy-action" data-status={status}>
-    <Button {...props} ref={ref} variant={variant} aria-busy={status === "copying" || undefined}
-      startIcon={status === "copying" ? <Spinner aria-hidden="true" /> : status === "copied" ? <CheckIcon /> : <CopyIcon />} onClick={() => { void copy(); }}>{children}</Button>
-    <span className="pk-copy-feedback" role="status" data-error={status === "error" || undefined}>
+  const icon = status === "copying" ? <Spinner aria-hidden="true" /> : status === "copied" ? <CheckIcon /> : <CopyIcon />;
+  return <span className="pk-copy-action" data-status={status} data-shape={shape}>
+    {shape === "icon" ? <IconButton {...props} ref={ref} label={accessibleLabel ?? (typeof children === "string" ? children : "Copy")} variant={variant} aria-busy={status === "copying" || undefined} onClick={() => { void copy(); }}>{icon}</IconButton> : <Button {...props} ref={ref} variant={variant} aria-label={accessibleLabel} aria-busy={status === "copying" || undefined}
+      startIcon={icon} onClick={() => { void copy(); }}>{children}</Button>}
+    <span className={classes("pk-copy-feedback", shape === "icon" && status !== "error" && "pk-visually-hidden")} role="status" data-error={status === "error" || undefined}>
       {status === "error" ? <CircleAlertIcon size="sm" /> : status === "copied" ? <CheckIcon size="sm" /> : null}
       <span>{status === "copying" ? copyingMessage : status === "copied" ? copiedMessage : status === "error" ? errorMessage : ""}</span>
     </span>

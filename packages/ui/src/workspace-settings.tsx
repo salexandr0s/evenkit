@@ -7,7 +7,8 @@ import { classes } from "./classes.js";
 import { ActionMessage, Spinner } from "./feedback.js";
 import { SearchField } from "./form-controls.js";
 import { Avatar } from "./foundations.js";
-import { CheckIcon, ChevronsUpDownIcon } from "./icons.js";
+import { IconButton } from "./icon-button.js";
+import { CheckIcon, ChevronsUpDownIcon, RotateCcwIcon, XIcon } from "./icons.js";
 import { Popover, PopoverContent, PopoverDescription, PopoverTitle, PopoverTrigger } from "./overlays.js";
 import { RadioGroup } from "./selection-controls.js";
 import { SelectField } from "./select.js";
@@ -88,8 +89,8 @@ export function WorkspaceSwitcher({ workspaces, value, onValueChange, onSwitch, 
           </button>
         </li>)}</ul>
         {filtered.length === 0 ? <p className="pk-settings-note">No matching workspaces.</p> : null}
-        {pending ? <div className="pk-workspace-pending"><span role="status"><Spinner size="sm" aria-hidden="true" />Opening workspace…</span><Button ref={cancelButton} size="sm" variant="ghost" onClick={cancel}>Cancel switch</Button></div> : null}
-        {failure ? <ActionMessage tone="error" heading="Workspace did not change" actions={<Button variant="outline" size="sm" onClick={() => { void choose(failure.id); }}>Retry switch</Button>}>{failure.message}</ActionMessage> : null}
+        {pending ? <div className="pk-workspace-pending"><span role="status"><Spinner size="sm" aria-hidden="true" />Opening workspace…</span><IconButton ref={cancelButton} label="Cancel switch" size="sm" variant="ghost" onClick={cancel}><XIcon size="sm" /></IconButton></div> : null}
+        {failure ? <ActionMessage tone="error" heading="Workspace did not change" actions={<IconButton label="Retry switch" variant="outline" size="sm" onClick={() => { void choose(failure.id); }}><RotateCcwIcon size="sm" /></IconButton>}>{failure.message}</ActionMessage> : null}
       </PopoverContent>
     </Popover>
     <span className="pk-visually-hidden" role="status">{note}</span>

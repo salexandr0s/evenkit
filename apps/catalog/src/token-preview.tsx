@@ -1,6 +1,6 @@
 import { useId, useRef, useState, type CSSProperties } from "react";
 import { contrastChecks, contrastRatio, cssVariables, themes, type ColorMode, type ThemeName } from "@evenkit/tokens";
-import { Badge, Button, CheckIcon, CopyIcon, EmptyState, Input, Label, SearchIcon, Select, TextField, Tooltip, TooltipContent, TooltipTrigger } from "@evenkit/ui";
+import { Badge, Button, CheckIcon, CopyIcon, EmptyState, FilterXIcon, IconButton, Input, Label, SearchIcon, Select, TextField, Tooltip, TooltipContent, TooltipTrigger } from "@evenkit/ui";
 import "./token-preview.css";
 
 const categories = [
@@ -132,7 +132,7 @@ export function TokenPreview({ theme, mode }: { theme: ThemeName; mode: ColorMod
         <p className="token-guidance">{categoryInfo.description}</p>
         <div className="token-results-header">
           <p id={`${id}-results`} role="status">{visible.length} of {variables.length} tokens · {themes[theme].name} / {mode}</p>
-          {visible.length > 0 && (query || category !== "all") && <Button size="sm" variant="ghost" onClick={resetFilters}>Reset filters</Button>}
+          {visible.length > 0 && (query || category !== "all") && <IconButton label="Reset filters" onClick={resetFilters}><FilterXIcon size="sm" /></IconButton>}
         </div>
         <p className="token-copy-notice" role="status" aria-live="polite">{copyNotice}</p>
         {visible.length > 0 ? (

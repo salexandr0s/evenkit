@@ -138,7 +138,7 @@ export function Homepage({ theme, mode, onThemeChange, onToggleAppearance }: Hom
 
       <section className="home-start home-container" id="home-start" aria-labelledby="home-start-title">
         <div className="home-start-copy"><p className="home-eyebrow">BUILD WITH EVENKIT</p><h2 id="home-start-title">Use Evenkit<br />in your project</h2><p>Import the styles, add a component, and connect your own state. Every example in the catalog includes code you can copy.</p><p className="home-pilot-note"><Badge variant="outline" size="sm">Pilot 0.1.0</Badge>The packages are currently unpublished. With repository access, build and pack <code>@evenkit/tokens</code> and <code>@evenkit/ui</code> locally using the README instructions.</p><a className="home-text-link" href="/#buttons">See a complete example <ArrowRightIcon size="sm" /></a></div>
-        <div className="home-code-panel"><div className="home-code-header"><span><CodeXmlIcon size="sm" />App.tsx</span><CopyAction text={starterCode} size="sm" variant="ghost">Copy code</CopyAction></div><pre tabIndex={0} aria-label="React starter example"><code>{starterCode}</code></pre><p>Import token styles before component styles.</p></div>
+        <div className="home-code-panel"><div className="home-code-header"><span><CodeXmlIcon size="sm" />App.tsx</span><CopyAction text={starterCode} size="sm" variant="ghost" shape="icon" aria-label="Copy code">Copy code</CopyAction></div><pre tabIndex={0} aria-label="React starter example"><code>{starterCode}</code></pre><p>Import token styles before component styles.</p></div>
       </section>
     </main>
 

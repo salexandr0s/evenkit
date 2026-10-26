@@ -109,11 +109,12 @@ export function NotificationPreference({ enabled, saving, error, onChange }: Not
     tags: ["button group", "actions", "joined", "vertical", "horizontal", "wrapping"],
     source: "Original kit composition · native group semantics",
     sourceUrl: "https://www.w3.org/WAI/ARIA/apg/patterns/button/",
-    usage: usage('import { Button, ButtonGroup } from "@evenkit/ui";', `export function DocumentActions({ onSave, onPreview }: { onSave: () => void; onPreview: () => void }) {
+    usage: usage('import { Button, ButtonGroup, EyeIcon, IconButton } from "@evenkit/ui";', `export function DocumentActions({ onSave, onPreview }: { onSave: () => void; onPreview: () => void }) {
   return (
     <ButtonGroup label="Document actions" joined>
       <Button variant="outline" onClick={onSave}>Save document</Button>
-      <Button variant="outline" onClick={onPreview}>Preview</Button>
+      <IconButton label="Preview" size="md" variant="outline" onClick={onPreview}><EyeIcon /></IconButton>
+      <Button variant="outline" disabled>Publish</Button>
     </ButtonGroup>
   );
 }`),
@@ -125,7 +126,7 @@ export function NotificationPreference({ enabled, saving, error, onChange }: Not
     source: "Original kit Clipboard API composition",
     sourceUrl: "https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText",
     usage: usage('import { CopyAction } from "@evenkit/ui";', `export function CopyProjectReference({ reference }: { reference: string }) {
-  return <CopyAction text={reference}>Copy project reference</CopyAction>;
+  return <CopyAction text={reference} shape="icon" size="sm" aria-label="Copy project reference">Copy project reference</CopyAction>;
 }
 
 // A rejected or unavailable clipboard reports failure; the control keeps focus.

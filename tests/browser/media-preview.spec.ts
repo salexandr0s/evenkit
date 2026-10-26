@@ -12,6 +12,11 @@ test("lightbox traps keyboard focus, closes with Escape and restores its launche
   await page.keyboard.press("Tab");
   await expect.poll(() => dialog.evaluate(element => element.contains(document.activeElement))).toBe(true);
   await expect(page.getByRole("tooltip", { name: "Close file preview", exact: true })).toHaveCount(0);
+  const openTip = page.getByRole("tooltip", { name: "Open file in a new tab", exact: true });
+  await expect(openTip).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(openTip).toHaveCount(0);
+  await expect(dialog).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
   await expect(launcher).toBeFocused();

@@ -35,6 +35,6 @@ button.pk-step-content:disabled { opacity: var(--pk-opacity-disabled); cursor: n
   .pk-step-copy { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: var(--pk-space-1) var(--pk-space-2); }
   .pk-step-description { flex-basis: 100%; }
   .pk-wizard-actions > div:last-child { flex: 1 1 100%; }
-  .pk-wizard-actions > div:last-child > .pk-button { flex: 1; }
+  .pk-wizard-actions > div:last-child > .pk-button:not([data-shape="icon"]) { flex: 1; }
 }
 @media (pointer: coarse) { button.pk-step-content { min-height: var(--pk-layout-touch); } }

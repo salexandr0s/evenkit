@@ -2,11 +2,11 @@
 
 import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentPropsWithoutRef } from "react";
 import { ActivityTimeline, type ActivityGroup } from "./activity-timeline.js";
-import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { ActionMessage, Badge, Spinner } from "./feedback.js";
 import { SearchField } from "./form-controls.js";
-import { ChevronDownIcon, DownloadIcon } from "./icons.js";
+import { IconButton } from "./icon-button.js";
+import { ChevronDownIcon, DownloadIcon, FilterXIcon, RotateCcwIcon, XIcon } from "./icons.js";
 import { Pagination } from "./navigation.js";
 import { useRemoteTable, type DataTableQuery, type RemoteTableResult } from "./remote-table.js";
 import { SelectField } from "./select.js";
@@ -164,7 +164,7 @@ export function AuditViewer({
     onFocusCapture={event => { if (event.target instanceof HTMLElement) focusedControl.current = event.target; props.onFocusCapture?.(event); }}
     onBlurCapture={event => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) focusedControl.current = null; props.onBlurCapture?.(event); }}>
     <header className="pk-audit-header"><div className="pk-audit-heading"><div className="pk-audit-heading-meta"><span className="pk-audit-eyebrow">Team administration</span><Badge size="sm" variant="outline">Read only</Badge></div><h2 ref={heading} tabIndex={-1} id={id}>{label}</h2><p>Recorded activity, with the actor and outcome of each event.</p></div>
-      {onExport ? <Button ref={exportButton} variant="outline" startIcon={<DownloadIcon size="sm" animation="static" />} disabled={cannotExport} onClick={() => { void exportEvents(); }} aria-describedby={exportDisabledReason ? `${id}-export-reason` : undefined}>Export matching events</Button> : null}
+      {onExport ? <IconButton ref={exportButton} label="Export matching events" variant="outline" disabled={cannotExport} onClick={() => { void exportEvents(); }} aria-describedby={exportDisabledReason ? `${id}-export-reason` : undefined}><DownloadIcon size="sm" /></IconButton> : null}
     </header>
     {onExport && exportDisabledReason ? <p className="pk-audit-note" id={`${id}-export-reason`}>{exportDisabledReason}</p> : null}
     <div className="pk-audit-filter-panel" role="group" aria-label="Filter audit activity">
@@ -174,15 +174,15 @@ export function AuditViewer({
         <SelectField label="Event type" value={query.kind === null ? "all" : `value:${query.kind}`} options={filterOptions(kinds, query.kind, "All event types")} disabled={Boolean(denied)} onValueChange={value => changeCriteria({ kind: filterValue(value) })} />
         <SelectField label="Outcome" value={query.outcome === null ? "all" : `value:${query.outcome}`} options={filterOptions(outcomes, query.outcome, "All outcomes")} disabled={Boolean(denied)} onValueChange={value => changeCriteria({ outcome: filterValue(value) })} />
       </div>
-      {hasFilters && !denied ? <Button className="pk-audit-reset" variant="ghost" size="sm" onClick={resetFilters}>Clear audit filters</Button> : null}
+      {hasFilters && !denied ? <IconButton label="Clear audit filters" className="pk-audit-reset" variant="ghost" size="sm" onClick={resetFilters}><FilterXIcon size="sm" /></IconButton> : null}
     </div>
-    {action.pending ? <div className="pk-audit-export-pending"><p role="status"><Spinner size="sm" aria-hidden="true" />Preparing export…</p><Button ref={cancelButton} variant="outline" size="sm" onFocus={() => { exportHasFocus.current = true; }} onBlur={event => { if (event.relatedTarget) exportHasFocus.current = false; }} onClick={cancelExport}>Cancel export</Button></div> : null}
+    {action.pending ? <div className="pk-audit-export-pending"><p role="status"><Spinner size="sm" aria-hidden="true" />Preparing export…</p><IconButton ref={cancelButton} label="Cancel export" variant="outline" size="sm" onFocus={() => { exportHasFocus.current = true; }} onBlur={event => { if (event.relatedTarget) exportHasFocus.current = false; }} onClick={cancelExport}><XIcon size="sm" /></IconButton></div> : null}
     {action.result ? <ActionMessage tone={action.result.status === "success" ? "success" : stale || exportDenied ? "warning" : "error"} heading={action.result.status === "success" ? "Export ready" : stale ? "Activity or access changed" : exportDenied ? "Export unavailable" : "Export failed"}
-      actions={action.result.status === "error" ? <Button variant="outline" size="sm" onClick={() => { void exportEvents(); }}>Retry export</Button> : stale || exportDenied ? <Button variant="outline" size="sm" onClick={refresh}>Refresh activity</Button> : undefined}>
+      actions={action.result.status === "error" ? <IconButton label="Retry export" variant="outline" size="sm" onClick={() => { void exportEvents(); }}><RotateCcwIcon size="sm" /></IconButton> : stale || exportDenied ? <IconButton label="Refresh activity" variant="outline" size="sm" onClick={refresh}><RotateCcwIcon size="sm" /></IconButton> : undefined}>
       {action.result.message ?? "The requested export is ready."}
     </ActionMessage> : null}
     {notice?.key === exportKey ? <p className="pk-audit-note" role="status">{notice.text}</p> : null}
-    {denied ? <ActionMessage tone="warning" heading="Activity unavailable" {...(onRefreshContext ? { actions: <Button variant="outline" size="sm" onClick={refresh}>Refresh access</Button> } : {})}>{denied}</ActionMessage> : <>
+    {denied ? <ActionMessage tone="warning" heading="Activity unavailable" {...(onRefreshContext ? { actions: <IconButton label="Refresh access" variant="outline" size="sm" onClick={refresh}><RotateCcwIcon size="sm" /></IconButton> } : {})}>{denied}</ActionMessage> : <>
       <ActivityTimeline key={JSON.stringify([scopeKey, query.pageIndex, query.pageSize])} label="Audit events" groups={groups} timeZone={timeZone} locale={locale} loading={remote.loading || pageResetPending} error={remote.error}
         onRetry={() => { heading.current?.focus(); remote.retry(); }} emptyMessage={hasFilters ? "No events match these filters. Clear the filters to see more activity." : "No events have been recorded."} />
       <div className="pk-audit-pagination"><div className="pk-audit-pagination-info"><p className="pk-audit-note" role="status">{remote.loading ? "" : <><strong>{remote.total}</strong> matching {remote.total === 1 ? "event" : "events"}</>}</p><p className="pk-audit-timezone">Times shown in {timeZone}.</p></div>

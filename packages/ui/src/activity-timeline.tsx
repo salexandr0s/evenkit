@@ -6,6 +6,8 @@ import { classes } from "./classes.js";
 import { ActionMessage, Spinner } from "./feedback.js";
 import { Avatar } from "./foundations.js";
 import { FormattedTimestamp } from "./formatting.js";
+import { IconButton } from "./icon-button.js";
+import { RotateCcwIcon } from "./icons.js";
 
 export interface ActivityEvent {
   id: string;
@@ -44,7 +46,7 @@ export function ActivityTimeline({ groups, timeZone, locale = "en", label = "Act
             <p className="pk-activity-summary"><strong>{event.actor}</strong> {event.action}</p>
             <FormattedTimestamp className="pk-activity-time" value={event.timestamp} options={{ timeZone, locale, dateStyle: "medium", timeStyle: "short" }} />
             {event.detail ? <div className="pk-activity-detail">{event.detail}</div> : null}
-            {event.state === "pending" ? <p className="pk-activity-state" role="status"><Spinner size="sm" aria-hidden="true" />Pending</p> : event.state === "error" ? <div className="pk-activity-state" role="alert"><span>Action failed.</span>{event.onRetry ? <Button variant="ghost" size="sm" onClick={click => { click.currentTarget.closest("li")?.focus(); event.onRetry?.(); }} aria-label={`Retry action by ${event.actor}`}>Retry</Button> : null}</div> : null}
+            {event.state === "pending" ? <p className="pk-activity-state" role="status"><Spinner size="sm" aria-hidden="true" />Pending</p> : event.state === "error" ? <div className="pk-activity-state" role="alert"><span>Action failed.</span>{event.onRetry ? <IconButton label="Retry action" onClick={click => { click.currentTarget.closest("li")?.focus(); event.onRetry?.(); }} aria-label={`Retry action by ${event.actor}`}><RotateCcwIcon size="sm" /></IconButton> : null}</div> : null}
           </div>
         </li>)}</ol>
       </section>)}

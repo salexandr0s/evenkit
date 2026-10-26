@@ -4,6 +4,14 @@ test("notification selection is page scoped and preserves unavailable notificati
   await page.goto("/#notification-center");
   const center = page.getByRole("region", { name: "Notifications", exact: true });
   const select = center.getByRole("checkbox", { name: "Select this page", exact: true });
+  const read = center.getByRole("button", { name: "Mark as read: Release plan ready for review", exact: true });
+  await read.focus();
+  await expect(page.getByRole("tooltip", { name: "Mark as read", exact: true })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("tooltip")).toHaveCount(0);
+  const readBounds = await read.boundingBox();
+  expect(readBounds?.width).toBe(32);
+  expect(readBounds?.height).toBe(32);
   await expect(center.getByRole("button", { name: "Mark selected as read", exact: true })).toHaveCount(0);
   await select.focus();
   await page.keyboard.press("Space");
@@ -22,6 +30,13 @@ test("notification selection is page scoped and preserves unavailable notificati
   await expect(center.getByRole("heading", { name: "Notifications", exact: true })).toBeFocused();
   await center.getByRole("button", { name: "Previous page", exact: true }).click();
   await expect(select).not.toBeChecked();
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.evaluate(() => { document.documentElement.dir = "rtl"; });
+  const narrowRead = center.getByRole("button", { name: "Mark as unread: Release plan ready for review", exact: true });
+  const narrowBounds = await narrowRead.boundingBox();
+  expect(narrowBounds?.width).toBe(44);
+  expect(narrowBounds?.height).toBe(44);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
 test("notification actions retain focus while pending and offer persistent retry", async ({ page }) => {

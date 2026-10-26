@@ -2,7 +2,8 @@
 
 import { useId } from "react";
 import { Button } from "./button.js";
-import { CheckIcon, CircleIcon } from "./icons.js";
+import { IconButton } from "./icon-button.js";
+import { CheckIcon, CircleIcon, MailIcon } from "./icons.js";
 import { Checkbox } from "./selection-controls.js";
 
 export interface NotificationAction { id: string; label: string; unavailable?: string }
@@ -49,7 +50,7 @@ export function NotificationList({ groups, selectedIds = [], onSelectionChange, 
           <div className="pk-notification-item-footer">
             {item.timestamp && item.timestampLabel ? <time className="pk-notification-time" dateTime={item.timestamp}>{item.timestampLabel}</time> : null}
             {onReadChange || item.actions?.length ? <div className="pk-notification-actions">
-            {onReadChange ? <Button size="sm" variant="ghost" disabled={disabled || Boolean(item.readOnlyReason)} aria-describedby={item.readOnlyReason ? `${id}-${index}-${itemIndex}-reason` : undefined} aria-disabled={busy || undefined} aria-label={`Mark as ${item.read ? "unread" : "read"}: ${item.title}`} onClick={() => { if (!busy) onReadChange(item.id, !item.read); }}>{item.read ? "Mark as unread" : "Mark as read"}</Button> : null}
+            {onReadChange ? <IconButton label={item.read ? "Mark as unread" : "Mark as read"} disabled={disabled || Boolean(item.readOnlyReason)} aria-describedby={item.readOnlyReason ? `${id}-${index}-${itemIndex}-reason` : undefined} aria-disabled={busy || undefined} aria-label={`Mark as ${item.read ? "unread" : "read"}: ${item.title}`} onClick={() => { if (!busy) onReadChange(item.id, !item.read); }}>{item.read ? <MailIcon size="sm" /> : <CheckIcon size="sm" />}</IconButton> : null}
             {item.actions?.map((action, actionIndex) => <div className="pk-notification-action" key={action.id}><Button size="sm" variant="outline" disabled={disabled || !onAction || Boolean(action.unavailable)} aria-describedby={action.unavailable ? `${id}-${index}-${itemIndex}-${actionIndex}-reason` : undefined} aria-disabled={busy || undefined} aria-label={`${action.label}: ${item.title}`} onClick={() => { if (!busy) onAction?.(item.id, action.id); }}>{action.label}</Button>{action.unavailable ? <span className="pk-notification-reason" id={`${id}-${index}-${itemIndex}-${actionIndex}-reason`}>{action.unavailable}</span> : null}</div>)}
             </div> : null}
           </div>

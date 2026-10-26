@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { themeNames } from "@evenkit/tokens";
-import { AppearancePreferences, Avatar, Button, FormSection, SaveStatus, TextField, type AppearancePreferencesProps, type AppearanceValue } from "@evenkit/ui";
+import { AppearancePreferences, Avatar, Button, FormSection, IconButton, RotateCcwIcon, SaveStatus, TextField, type AppearancePreferencesProps, type AppearanceValue } from "@evenkit/ui";
 
 export interface ProfileValue { id: string; name: string; email: string }
 export interface ProfileSettingsProps {
@@ -59,7 +59,7 @@ function ProfileForm({ profile, onSave, onSaved }: ProfileSettingsProps) {
       <TextField ref={email} label="Email address" name="email" autoComplete="email" type="email" required disabled={pending} value={draft.email} onChange={event => update({ email: event.target.value })} onInvalid={() => setAttempted(true)} error={attempted && (!draft.email.trim() || email.current?.validity.typeMismatch) ? "Enter a valid email address." : undefined} />
     </FormSection>
     <SaveStatus state={error ? "error" : pending ? "saving" : note === "Profile saved." ? "saved" : dirty ? "dirty" : "idle"} role={error ? "alert" : "status"}>{error || (pending ? "Saving profile…" : note || (dirty ? "Unsaved changes" : "No unsaved changes"))}</SaveStatus>
-    <div className="pk-settings-actions"><Button type="submit" loading={pending} disabled={!dirty && !pending}>{error ? "Retry save" : "Save profile"}</Button><Button type="reset" variant="ghost" disabled={pending || !dirty}>Reset changes</Button>{pending ? <Button ref={cancel} variant="outline" onClick={cancelSave}>Cancel save</Button> : null}</div>
+    <div className="pk-settings-actions"><Button type="submit" loading={pending} disabled={!dirty && !pending}>{error ? "Retry save" : "Save profile"}</Button><IconButton type="reset" label="Reset changes" disabled={pending || !dirty}><RotateCcwIcon size="sm" /></IconButton>{pending ? <Button ref={cancel} variant="outline" onClick={cancelSave}>Cancel save</Button> : null}</div>
   </form>;
 }
 

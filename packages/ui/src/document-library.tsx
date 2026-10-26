@@ -7,14 +7,14 @@ import { DataTable, type DataTableColumn } from "./data-table.js";
 import { FileRow } from "./data-workflows.js";
 import { EmptyState, Spinner } from "./feedback.js";
 import { SearchField } from "./form-controls.js";
-import { ArrowRightIcon, EyeIcon, FolderIcon, LayoutGridIcon, ListIcon } from "./icons.js";
+import { IconButton } from "./icon-button.js";
+import { EyeIcon, FolderIcon, LayoutGridIcon, ListIcon } from "./icons.js";
 import { FilePreview, mediaFileTypeLabel, type MediaFile } from "./media-preview.js";
 import { Breadcrumbs, Pagination } from "./navigation.js";
 import { useRemoteTable, useTableSelection, type DataTableQuery, type RemoteTableLoadContext, type RemoteTableResult } from "./remote-table.js";
 import { Checkbox, SegmentedControl } from "./selection-controls.js";
 import { SelectField } from "./select.js";
 import { BulkActionBar, SortControl } from "./table-controls.js";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 export interface DocumentFolder { id: string; name: string; kind: "folder" }
 export interface DocumentFile extends MediaFile { kind: "file"; sizeBytes?: number }
@@ -94,19 +94,17 @@ export function DocumentLibrary({ entries, total, query, onQueryChange, path, on
   function navigate(next: readonly DocumentFolder[]) { search.current?.focus(); onNavigate(next); }
   function resetFilters() { search.current?.focus(); update({ search: "", kind: "all" }); }
   const removeAction = onRemove ? <Button size="sm" variant="outline" disabled={unavailable} onClick={() => onRemove(selection.selectedIds)}>Remove selected</Button> : null;
-  function openButton(entry: DocumentEntry, iconOnly = false) {
+  function openButton(entry: DocumentEntry) {
     const label = entry.kind === "folder" ? `Open folder ${entry.name}` : `Preview ${entry.name}`;
     const icon = entry.kind === "folder" ? <FolderIcon size="sm" /> : <EyeIcon size="sm" />;
-    const button = <Button size="sm" variant="ghost" className="pk-document-open" shape={iconOnly ? "icon" : "default"} aria-label={label}
-      {...(iconOnly ? {} : entry.kind === "folder" ? { endIcon: <ArrowRightIcon size="sm" /> } : { startIcon: icon })}
+    return <IconButton size="sm" variant="ghost" className="pk-document-open" label={label}
       onClick={event => { if (entry.kind === "folder") navigate([...path, entry]); else onPreview(entry, event.currentTarget); }}>
-      {iconOnly ? icon : entry.kind === "folder" ? "Open" : "Preview"}
-    </Button>;
-    return iconOnly ? <TooltipProvider><Tooltip><TooltipTrigger asChild>{button}</TooltipTrigger><TooltipContent>{label}</TooltipContent></Tooltip></TooltipProvider> : button;
+      {icon}
+    </IconButton>;
   }
   const columns: readonly DataTableColumn<DocumentEntry>[] = [
     { id: "name", header: "Name", accessor: entry => entry.name, hideable: false, cell: entry => <ul className="pk-document-file-row" data-kind={entry.kind}><FileRow name={entry.name} fileType={entryType(entry)} {...(entry.kind === "file" && entry.sizeBytes !== undefined ? { sizeBytes: entry.sizeBytes } : {})} preview={entry.kind === "folder" ? <FolderIcon /> : undefined} /></ul> },
-    { id: "actions", header: "Actions", accessor: () => "", align: "end", sortable: false, searchable: false, cell: entry => openButton(entry, true) },
+    { id: "actions", header: "Actions", accessor: () => "", align: "end", sortable: false, searchable: false, cell: entry => openButton(entry) },
   ];
   const filtered = query.search !== "" || query.kind !== "all";
   const emptyTitle = filtered ? "No matching documents" : "This folder is empty";

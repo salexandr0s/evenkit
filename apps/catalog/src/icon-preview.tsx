@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { foundation } from "@evenkit/tokens";
-import { ActionMessage, Badge, BellIcon, Button, CheckIcon, CopyIcon, EmptyState, IconProvider, Input, Label, PlusIcon, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconAnimation, type IconSize } from "@evenkit/ui";
+import { ActionMessage, Badge, BellIcon, Button, CheckIcon, CopyIcon, EmptyState, FilterXIcon, IconButton, IconProvider, Input, Label, PlusIcon, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconAnimation, type IconSize } from "@evenkit/ui";
 import { iconCategories, icons, type IconCategory } from "./icon-data";
 import "./icon-preview.css";
 
@@ -103,7 +103,7 @@ export function IconPreview() {
           <div className="icon-results-header">
             <p id={`${id}-results`} role="status">{visible.length} of {icons.length} icons</p>
             <span><code>--pk-icon-size-{size}</code> · {foundation.icon.size[size]}</span>
-            {visible.length > 0 && filtered && <Button size="sm" variant="ghost" onClick={resetFilters}>Reset icon filters</Button>}
+            {visible.length > 0 && filtered && <IconButton label="Reset icon filters" onClick={resetFilters}><FilterXIcon size="sm" /></IconButton>}
           </div>
           <p className="icon-copy-notice" role="status">{notice}</p>
           {visible.length > 0 ? (
