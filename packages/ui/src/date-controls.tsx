@@ -9,6 +9,7 @@ import { Calendar, type CalendarProps } from "./date-calendar.js";
 import { dateRangeValidationMessage, dateValidationMessage, displayLocalTime, parseDateOnly, parseLocalTime, timeValidationMessage, type DateConstraints, type DateOnly, type DateRange, type LocalTime } from "./date-utils.js";
 import { formatDateOnly } from "./formatting.js";
 import { Popover, PopoverContent, PopoverTrigger } from "./overlays.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 interface ValueProps {
   value?: string | null | undefined;
@@ -95,7 +96,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(function
   const change = (next: string | null) => { if (value === undefined) setLocal(next); onValueChange?.(next); };
   useFormReset(trigger, props.form, () => { if (value === undefined) setLocal(defaultValue); setOpen(false); });
   return <Popover open={open && !props.disabled && !props.readOnly} onOpenChange={next => setOpen(next && !trigger.current?.matches(":disabled"))}>
-    <DateField {...props} ref={ref} value={current} onValueChange={change} endAdornment={<PopoverTrigger asChild><Button ref={trigger} form={props.form} className="pk-date-trigger" variant="ghost" size="sm" shape="icon" aria-label={`${calendarLabel}${current ? `, ${formatDateOnly(current, { locale })}` : ""}`} disabled={props.disabled || props.readOnly}><CalendarDaysIcon /></Button></PopoverTrigger>} />
+    <DateField {...props} ref={ref} value={current} onValueChange={change} endAdornment={<TooltipProvider><Tooltip><TooltipTrigger asChild><PopoverTrigger asChild><Button ref={trigger} form={props.form} className="pk-date-trigger" variant="ghost" size="sm" shape="icon" aria-label={`${calendarLabel}${current ? `, ${formatDateOnly(current, { locale })}` : ""}`} disabled={props.disabled || props.readOnly}><CalendarDaysIcon /></Button></PopoverTrigger></TooltipTrigger><TooltipContent container={container}>{calendarLabel}</TooltipContent></Tooltip></TooltipProvider>} />
     <PopoverContent ref={popup} container={container} className="pk-date-popup" aria-label={calendarLabel} onOpenAutoFocus={event => { event.preventDefault(); requestAnimationFrame(() => popup.current?.querySelector<HTMLButtonElement>('[tabindex="0"]')?.focus()); }}>
       <Calendar value={current} onValueChange={date => { if (!trigger.current?.matches(":disabled")) change(date); setOpen(false); }} locale={locale} today={today} weekStartsOn={weekStartsOn} min={props.min} max={props.max} isDateUnavailable={props.isDateUnavailable} dir={props.dir === "rtl" ? "rtl" : props.dir === "ltr" ? "ltr" : undefined} />
     </PopoverContent>

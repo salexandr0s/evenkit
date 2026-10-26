@@ -89,7 +89,10 @@ test("search clear and password visibility preserve native input identity and fo
   if (!searchNode) throw new Error("Missing search input.");
   await search.fill("handbook");
   await expect(page.getByRole("list", { name: "Matching documents" }).getByRole("listitem")).toHaveCount(1);
-  await page.getByRole("button", { name: "Clear search", exact: true }).first().click();
+  const clear = page.getByRole("button", { name: "Clear search", exact: true }).first();
+  await clear.focus();
+  await expect(page.getByRole("tooltip", { name: "Clear search", exact: true })).toBeVisible();
+  await page.keyboard.press("Enter");
   await expect(search).toBeFocused();
   await expect(search).toHaveValue("");
   await expect(page.getByRole("list", { name: "Matching documents" }).getByRole("listitem")).toHaveCount(3);
@@ -167,6 +170,7 @@ test("form summaries focus the failing fields and disabled groups retain native 
 test("dirty form actions support discard, cancellation, failed save and retry without stale completion", async ({ page }) => {
   await page.clock.install({ time: new Date("2026-10-25T08:00:00Z") });
   await page.goto("/#form-actions");
+  await expect(page.getByRole("textbox", { name: "Editable project name", exact: true })).toBeVisible();
   await page.clock.pauseAt(new Date("2026-10-25T09:00:00Z"));
   const name = page.getByRole("textbox", { name: "Editable project name", exact: true });
   await name.fill("Revised Northwind");

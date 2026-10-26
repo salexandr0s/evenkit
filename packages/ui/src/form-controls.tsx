@@ -141,7 +141,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(functi
         aria-describedby={[describedBy, hasResults ? resultsId : undefined].filter(Boolean).join(" ") || undefined}
         onChange={event => { onChange?.(event); if (!event.defaultPrevented) change(event.currentTarget.value); }}
         startAdornment={<SearchIcon size="sm" />}
-        endAdornment={query && !disabled && !readOnly ? <Button type="button" className="pk-field-action" size="xs" variant="ghost" shape="icon" aria-label={clearLabel} onClick={clear}><XIcon size="sm" /></Button> : null}
+        endAdornment={query && !disabled && !readOnly ? <TooltipProvider><Tooltip><TooltipTrigger asChild><Button type="button" className="pk-field-action" size="xs" variant="ghost" shape="icon" aria-label={clearLabel} onClick={clear}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{clearLabel}</TooltipContent></Tooltip></TooltipProvider> : null}
       />
       {hasResults ? <p className="pk-field-hint pk-search-results" id={resultsId} role="status">{results}</p> : null}
     </div>
@@ -221,8 +221,10 @@ function ChoiceInput({ inputProps, inputRef, controlId, labelId, descriptionIds,
     <Group className="pk-combobox-control" data-size={controlSize} dir={inputProps.dir} data-invalid={(invalid === true || invalid === "true") || undefined}>
       <ComboboxPrimitive.Input {...inputProps} ref={inputRef} id={controlId} className={classes("pk-input pk-combobox-input", inputProps.className)} data-size={controlSize} aria-labelledby={inputProps["aria-labelledby"] ?? (inputProps["aria-label"] === undefined ? labelId : undefined)} aria-describedby={descriptionIds} aria-invalid={invalid} />
       <span className="pk-combobox-actions">
-        {clearable && !inputProps.readOnly ? <ComboboxPrimitive.Clear className="pk-combobox-action" aria-label={clearLabel}><XIcon size="sm" /></ComboboxPrimitive.Clear> : null}
-        <Trigger className="pk-combobox-action pk-combobox-trigger" aria-label={openLabel}><ChevronDownIcon size="sm" /></Trigger>
+        <TooltipProvider>
+          {clearable && !inputProps.readOnly ? <Tooltip><TooltipTrigger asChild><ComboboxPrimitive.Clear className="pk-combobox-action" aria-label={clearLabel}><XIcon size="sm" /></ComboboxPrimitive.Clear></TooltipTrigger><TooltipContent>{clearLabel}</TooltipContent></Tooltip> : null}
+          <Tooltip><TooltipTrigger asChild><Trigger className="pk-combobox-action pk-combobox-trigger" aria-label={openLabel}><ChevronDownIcon size="sm" /></Trigger></TooltipTrigger><TooltipContent>{openLabel}</TooltipContent></Tooltip>
+        </TooltipProvider>
       </span>
     </Group>
   );

@@ -6,6 +6,7 @@ import { classes } from "./classes.js";
 import { ChevronLeftIcon, ChevronRightIcon } from "./icons.js";
 import { addDateDays, addDateMonths, assertDateConstraints, dateOnlyToDate, dateValidationMessage, parseDateOnly, todayDateOnly, type DateConstraints, type DateOnly, type DateRange } from "./date-utils.js";
 import { formatDateOnly } from "./formatting.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 export interface CalendarProps extends DateConstraints {
   value?: DateOnly | null | undefined;
@@ -81,10 +82,10 @@ export function Calendar({ value, onValueChange, range, defaultMonth, today = to
   return <div ref={root} className={classes("pk-calendar", className)} dir={dir} data-disabled={disabled || undefined}>
     <div className="pk-calendar-header">
       <h3 id={headingId} aria-live="polite" aria-atomic="true">{monthLabel}</h3>
-      <div className="pk-calendar-navigation">
-        <Button variant="ghost" size="sm" shape="icon" aria-label={labels?.previousMonth ?? "Previous month"} disabled={disabled || month === "0001-01" || !!(min && month <= min.slice(0, 7))} onClick={() => changeMonth(-1)}><ChevronLeftIcon size="sm" /></Button>
-        <Button variant="ghost" size="sm" shape="icon" aria-label={labels?.nextMonth ?? "Next month"} disabled={disabled || month === "9999-12" || !!(max && month >= max.slice(0, 7))} onClick={() => changeMonth(1)}><ChevronRightIcon size="sm" /></Button>
-      </div>
+      <TooltipProvider><div className="pk-calendar-navigation">
+        <Tooltip><TooltipTrigger asChild><Button variant="ghost" size="sm" shape="icon" aria-label={labels?.previousMonth ?? "Previous month"} disabled={disabled || month === "0001-01" || !!(min && month <= min.slice(0, 7))} onClick={() => changeMonth(-1)}><ChevronLeftIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{labels?.previousMonth ?? "Previous month"}</TooltipContent></Tooltip>
+        <Tooltip><TooltipTrigger asChild><Button variant="ghost" size="sm" shape="icon" aria-label={labels?.nextMonth ?? "Next month"} disabled={disabled || month === "9999-12" || !!(max && month >= max.slice(0, 7))} onClick={() => changeMonth(1)}><ChevronRightIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{labels?.nextMonth ?? "Next month"}</TooltipContent></Tooltip>
+      </div></TooltipProvider>
     </div>
     <table role="grid" aria-label={`${label}, ${monthLabel}`} aria-describedby={helpId} aria-readonly={readOnly || undefined} aria-multiselectable={range ? true : undefined}>
       <thead><tr>{Array.from({ length: 7 }, (_, index) => {

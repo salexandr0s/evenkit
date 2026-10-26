@@ -154,6 +154,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar(
   const drawerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+  const [menuTooltipOpen, setMenuTooltipOpen] = useState(false);
   const [compact, setCompact] = useState<boolean>();
   const [contactVisible, setContactVisible] = useState(true);
   const contactVisibleRef = useRef(true);
@@ -299,7 +300,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar(
       {account ? <div ref={accountRef} className="pk-navbar-account"><NavbarAccountControl account={account} renderLink={renderLink} dir={dir === "rtl" ? "rtl" : "ltr"} /></div> : null}
       {contact ? <div ref={contactRef} className="pk-navbar-contact" aria-hidden={!contactVisible || undefined} inert={!contactVisible || undefined} onFocusCapture={event => { desktopFocus.current = event.target; }} onBlurCapture={desktopBlur}><NavbarActionControl action={contact} renderLink={renderLink} /></div> : null}
       <Dialog open={open} onOpenChange={next => { resizeClose.current = false; setOpen(next); }}>
-        <DialogTrigger asChild><Button ref={triggerRef} className="pk-navbar-mobile-trigger" variant="ghost" shape="icon" aria-label={menuLabel} onFocusCapture={() => { menuFocus.current = true; }} onBlurCapture={menuBlur}><MenuIcon /></Button></DialogTrigger>
+        <TooltipProvider><Tooltip open={!!compact && !open && menuTooltipOpen} onOpenChange={setMenuTooltipOpen}><TooltipTrigger asChild><DialogTrigger asChild><Button ref={triggerRef} className="pk-navbar-mobile-trigger" variant="ghost" shape="icon" aria-label={menuLabel} onFocusCapture={() => { menuFocus.current = true; }} onBlurCapture={menuBlur}><MenuIcon /></Button></DialogTrigger></TooltipTrigger><TooltipContent>{menuLabel}</TooltipContent></Tooltip></TooltipProvider>
         <DialogContent ref={drawerRef} dir={dir} className="pk-navbar-drawer" closeLabel={closeMenuLabel} onOpenAutoFocus={event => {
           const destination = drawerRef.current?.querySelector<HTMLElement>('nav a[href][aria-current="page"]:not([aria-disabled="true"])') ?? drawerRef.current?.querySelector<HTMLElement>('nav a[href]:not([aria-disabled="true"])');
           if (destination) { event.preventDefault(); destination.focus(); }

@@ -8,6 +8,7 @@ import { Columns3Icon, XIcon } from "./icons.js";
 import { Popover, PopoverContent, PopoverDescription, PopoverTitle, PopoverTrigger } from "./overlays.js";
 import { Checkbox } from "./selection-controls.js";
 import { Select } from "./select.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 export interface TableSort { id: string; direction: "asc" | "desc" }
 export interface SortControlProps {
@@ -32,7 +33,7 @@ export function SortControl({ fields, value, onValueChange, label = "Sort record
       <Select aria-label={`${label}: direction`} controlSize="sm" disabled={disabled || value === null} value={value?.direction ?? "asc"}
         options={[{ value: "asc", label: "Ascending" }, { value: "desc", label: "Descending" }]}
         onValueChange={direction => { if (value && (direction === "asc" || direction === "desc")) onValueChange({ ...value, direction }); }} />
-      {value ? <Button size="sm" variant="ghost" shape="icon" aria-label={`Clear ${label.toLowerCase()}`} disabled={disabled} onClick={() => { fieldRef.current?.focus(); onValueChange(null); }}><XIcon size="sm" /></Button> : null}
+      {value ? <TooltipProvider><Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" shape="icon" aria-label={`Clear ${label.toLowerCase()}`} disabled={disabled} onClick={() => { fieldRef.current?.focus(); onValueChange(null); }}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Clear ${label.toLowerCase()}`}</TooltipContent></Tooltip></TooltipProvider> : null}
     </div>
   </div>;
 }
@@ -51,7 +52,7 @@ export function BulkActionBar({ count, scopeLabel, children, onClear, disabled =
   if (count <= 0) return null;
   return <div className={classes("pk-bulk-action-bar", className)} role="group" aria-label="Selected records" aria-busy={disabled || undefined}>
     <p><strong>{count} selected</strong><span>{scopeLabel}</span></p>
-    <fieldset className="pk-bulk-action-controls" aria-label="Bulk actions" disabled={disabled}>{children}<Button size="sm" variant="ghost" aria-label="Clear selection" onClick={onClear}>Clear selection</Button></fieldset>
+    <fieldset className="pk-bulk-action-controls" aria-label="Bulk actions" disabled={disabled}>{children}<TooltipProvider><Tooltip><TooltipTrigger asChild><Button size="sm" variant="ghost" shape="icon" aria-label="Clear selection" onClick={onClear}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Clear selection</TooltipContent></Tooltip></TooltipProvider></fieldset>
   </div>;
 }
 
