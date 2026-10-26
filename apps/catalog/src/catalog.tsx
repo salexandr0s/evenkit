@@ -14,7 +14,7 @@ import {
   MessageSquareTextIcon, PanelRightIcon, PanelsTopLeftIcon, PanelTopDashedIcon,
   PanelTopIcon, RectangleHorizontalIcon, SaveIcon, SeparatorHorizontalIcon,
   ShapesIcon, SlidersHorizontalIcon, SquareCheckIcon, Table2Icon, TagsIcon,
-  ToggleRightIcon, TriangleAlertIcon, TypeIcon, UploadIcon, UserIcon,
+  ToggleRightIcon, TriangleAlertIcon, TypeIcon, UploadIcon, UserIcon, UsersIcon,
   CalendarDaysIcon, ClockIcon, Building2Icon, ActivityIcon, CameraIcon, CalculatorIcon,
 } from "@evenkit/ui";
 import { entries, groups } from "./catalog-data";
@@ -97,6 +97,8 @@ const navigationIcons: Record<string, ReactNode> = {
   "website-faq": <CircleHelpIcon />, "website-forms": <ContactRoundIcon />,
   "website-article": <FileTextIcon />,
   "rich-chat": <MessageSquareTextIcon />,
+  "team-members": <UsersIcon />, "invitation-acceptance": <UserIcon />, "role-capability-editor": <SlidersHorizontalIcon />, "audit-viewer": <FileTextIcon />,
+  "notification-center": <BellIcon />, "notification-preferences": <SlidersHorizontalIcon />, "persistent-banner": <CircleAlertIcon />, "connection-status": <ActivityIcon />, "presence-unread": <UsersIcon />,
   statistic: <GaugeIcon />, "chart-frame": <LayoutDashboardIcon />,
   "line-chart": <ActivityIcon />, "bar-chart": <Columns3Icon />,
   "reporting-controls": <SlidersHorizontalIcon />, dashboard: <LayoutDashboardIcon />,

@@ -5,5 +5,5 @@ export default defineConfig({
   plugins: [react()],
   server: { strictPort: true },
   preview: { strictPort: true },
-  build: { sourcemap: true }
+  build: { sourcemap: true, manifest: true }
 });
