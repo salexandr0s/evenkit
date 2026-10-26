@@ -1,3 +1,37 @@
+# Team administration design handoff: 26 October 2026
+
+Status: DONE. Branch `codex/team-admin`, isolated checkout `/Users/nationalbank/.codex/worktrees/team-admin/design-tokens`. Design commit `5c26a1f96fb5be8a9e308ba8634a2b77efd03dd9` (`style(team-admin): refine administration layouts and visual hierarchy`) follows the implementation and documentation commits recorded below.
+
+## Completed design pass
+
+The four administration screens now have stronger headings, restrained neutral panels and clearer action areas. Members use a unified search/filter toolbar, decorative avatars, wrapping role labels and a distinct invitations section. The acceptance page uses one focused card with aligned account details. Capability rows show selected and locked states, with a footer summarizing draft changes. Audit events use framed rows, aligned desktop timestamps, expandable detail panels and visible time-zone metadata.
+
+Editable blocks remove duplicate invitation/audit headers, move the role selector beside its page heading, and use the full width for a members-only page. Real multi-section consumers retain SettingsLayout. Catalog response controls are grouped separately below each example. Public signatures, authorization boundaries, async guards and focus behavior remain intact. No dependencies were added.
+
+Changed files: `packages/ui/src/{team-members,invitation-acceptance,role-capability-editor,audit-viewer}.{tsx,css}`, the four matching `registry/blocks` files, `apps/catalog/src/team-admin-preview.{tsx,css}` and `docs/team-administration.md`. Shared primitives, token definitions and authentication pages were not modified.
+
+## Verification and evidence
+
+UI/catalog production builds, configured workspace TypeScript, full ESLint, all 90 copied examples and all 76 inventory mappings passed. All 17 relevant Chromium tests passed: eight host-boundary tests, five catalog journeys and four theme/viewport contracts. Coverage includes eight themes, light/dark, 360/768/1024/1440px, RTL/system modes, keyboard/focus recovery, denial, cancellation and stale context. Independent source review found no actionable issue; all CSS variables resolve to kit tokens and `git diff --check` passes. Existing unit and packed-consumer verification from the implementation is recorded below; it was not repeated for this presentation pass.
+
+Visual review covered all four screens on desktop and role/audit layouts in narrow RTL. Final audit screenshot: `.artifacts/team-admin-design/audit-desktop.png`. Earlier implementation screenshots remain in `.artifacts/team-admin/`. Firefox, Safari, physical touch and screen-reader speech were not exercised.
+
+## Remaining work and resume
+
+No required work remains for the design request. Final authentication integration stays with the integration agent. No push, production services, publishing or deployment occurred. The rebuilt preview is running at `http://127.0.0.1:5399/#audit-viewer` (other routes remain `/#team-members`, `/#invitation-acceptance`, `/#role-capability-editor`).
+
+```sh
+cd /Users/nationalbank/.codex/worktrees/team-admin/design-tokens
+git status --short
+git log -4 --oneline
+# Restart only if the preview is stopped:
+npm run preview --workspace @evenkit/catalog -- --port 5399 --strictPort
+```
+
+Earlier implementation and branch history is retained below.
+
+---
+
 # Team administration handoff: 25 October 2026
 
 Status: DONE. Branch `codex/team-admin`, isolated checkout `/Users/nationalbank/.codex/worktrees/team-admin/design-tokens`. Base `b588b1b1964ba2b26ee8453606f354f2c33eb10d` from the latest local `codex/component-improvements` after fetching origin. Implementation commit `3f591ea6fa13ffba7898c151caf3f158d2dc0774`.
