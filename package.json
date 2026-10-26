@@ -18,7 +18,9 @@
     "verify:packages": "node scripts/verify-packages.mjs",
     "verify:examples": "node scripts/verify-catalog-examples.mjs",
     "registry": "node scripts/registry/cli.mjs",
+    "pretest:registry": "npm run build --workspace @evenkit/tokens",
     "test:registry": "node --test scripts/registry/*.test.mjs",
+    "verify:registry-viewer": "npm run build --workspace @evenkit/tokens && node scripts/registry/verify-viewer.mjs",
     "verify:registry": "npm run test:registry && npm run build:packages && node scripts/verify-packages.mjs --registry"
   },
   "devDependencies": {
