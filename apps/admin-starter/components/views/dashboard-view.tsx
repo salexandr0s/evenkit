@@ -1,16 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { Button, Card, CardBody, CardHeader, DataList, DataListItem, Heading, Inline } from "@evenkit/ui";
+import { Card, CardBody, CardHeader, DataList, DataListItem, Heading } from "@evenkit/ui";
 import { useStarter } from "../starter-providers";
 import { useDemoLoad } from "../use-demo-load";
+import { RefreshViewButton } from "../refresh-view-button";
 import { ViewLoadState } from "../view-load-state";
 
 export function DashboardView() {
-  const { data, workspaceName } = useStarter();
+  const { data } = useStarter();
   const load = useDemoLoad();
   return <section aria-label="Workspace dashboard" className="starter-stack">
-    <Inline justify="between"><p className="starter-muted">Current workspace: {workspaceName}</p><Button variant="outline" onClick={load.reload} disabled={load.state === "loading"}>Refresh dashboard</Button></Inline>
+    <div className="starter-toolbar"><Heading as="h2" size="4">Project summary</Heading><RefreshViewButton label="Refresh dashboard" onRefresh={load.reload} loading={load.state === "loading"} /></div>
     <ViewLoadState load={load} label="Dashboard" />
     {load.state === "ready" ? <>
       <div className="starter-metrics">

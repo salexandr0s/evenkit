@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     if ("email" in input && input.email === "fail@example.test") return failure("The demo request failed. Use another fictional address to retry.", 503);
     if (input.action === "login") return reply({ status: "success", message: "Demo sign-in completed.", redirect: returnTo });
     if (input.action === "signup") return reply({ status: "success", message: "Demo account request received. No account or email was created." });
-    if (input.action === "request-reset") return reply({ status: "success", message: "If an account matches that email, reset instructions will be sent." });
+    if (input.action === "request-reset") return reply({ status: "success", message: "Demo reset requested. No email was sent." });
     return reply({ status: "success", message: "Demo password change completed. No password was stored.", redirect: returnTo });
   }
   try {

@@ -23,7 +23,7 @@ export function StarterAuthForm({ action, mode, returnTo, recoveryState = "ready
   const common = {
     brand: <a href="/dashboard">Evenkit admin</a>,
     contextKey: `${mode}:${action}:${returnTo}`,
-    additionalMethods: mode === "demo" ? <p>Fictional demo. Use any email and password to try sign-in; fail@example.test exercises failure and retry. Nothing is stored.</p> : undefined,
+    additionalMethods: mode === "demo" ? <p>Demo only. No accounts are created or emails sent. Use fail@example.test to try failure and retry.</p> : undefined,
   };
   const policy = { passwordHint: "Use 12 to 128 characters.", validatePassword: (value: string) => value.length < 12 || value.length > 128 ? "Use 12 to 128 characters." : undefined };
   if (action === "login") return <LoginPage {...common} onSubmit={(values, context) => submit({ action, ...values }, context)} forgotPasswordLink={<a href={`/forgot-password${query}`}>Forgot password?</a>} footer={<a href={`/signup${query}`}>Create an account</a>} />;

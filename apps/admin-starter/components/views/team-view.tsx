@@ -20,8 +20,8 @@ export function TeamView() {
   const [query, setQuery] = useState<AuditQuery>({ search: "", actorId: null, kind: null, outcome: null, pageIndex: 0, pageSize: 5 });
   const content = useRef<HTMLDivElement>(null);
   return <div className="starter-stack" ref={content} tabIndex={-1}>
-    <p className="starter-muted">Members, roles and invitations are fictional. Actions update this tab and do not send email or change provider membership.</p>
-    <p role="status">{actions.notice}</p>
+    <p className="starter-muted">Sample team changes stay in this tab. Invitations send no email, and provider membership stays unchanged.</p>
+    <p className="starter-notice" role="status">{actions.notice}</p>
     <TeamAdministration teamName={workspaceName} section={section} onSectionChange={next => { setSection(next); requestAnimationFrame(() => content.current?.focus()); }}
       members={{ contextKey: actions.contextKey, teamName: workspaceName, roles: data.team.roles.map(role => ({ ...role, disabled: role.id === "coordinator" })), memberStatuses, loadMembers: actions.loadMembers, invitations: data.team.invitations,
         onInvite: actions.invite, onResend: actions.resend, onRevoke: actions.revoke,
