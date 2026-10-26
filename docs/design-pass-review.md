@@ -1,80 +1,74 @@
 # Evenkit design and copy review
 
-26 October 2026. Isolated branch `codex/evenkit-design-pass`, based on integrated commit `71f8aa6`. The original checkout and its uncommitted catalog work are preserved. No push, publication or deployment is part of this pass.
+26 October 2026. This pass covers all seven workstreams in the requested screenshot, the 116-entry catalog and their assembled admin flows. The work preserves Evenkit’s neutral surfaces, theme accents, `--pk-` tokens, named Lucide icons and host-owned behavior. The installed `avoid-ai-writing` skill, its patterns/headline references, applicable workspace instructions and Apple Minimal contracts informed the review.
 
-## Audit and priorities
+## Scope and priorities
 
-The audit covers the current 116-entry catalog, maintained components, editable blocks and the assembled Next.js admin starter. It uses the existing Apple Minimal contracts, `--pk-` tokens, named Lucide icons and the installed `avoid-ai-writing` skill, including its patterns and headline references. Existing APIs, routing and application callbacks remain the compatibility boundary.
+The seven feature chats had completed separate design passes that were not yet in the integrated checkout. We reviewed their commits, code, handoffs and rendered evidence, incorporated those passes and the earlier broad design pass, then corrected problems visible in the combined result. The audit plan was recorded before the follow-up edits in `.artifacts/design-pass/seven-workstreams/plan.md` in the earlier design-pass worktree.
 
-| Priority | Finding | Planned batch |
-| --- | --- | --- |
-| 1 | At 360px, document list filenames collapse to one character per line. Mixed previews and long names also misalign grid actions. | Correct shared document layout and utility controls; retain all content and intentional table scrolling. |
-| 1 | Unequal website feature headings push descriptions to different baselines. | Use shared content-sized rows and responsive stacking without fixed content heights. |
-| 2 | Statistic values and metadata diverge with long labels; newer data screens contain implementation-oriented status copy. | Align related statistics and simplify user-facing wording while preserving demo and service boundaries. |
-| 2 | Assembled admin pages repeat workspace headings, reserve space for empty status, and overstate document capabilities. | Tighten page rhythm, action presentation and factual copy. |
-| 2 | Website forms stretch to 1050px, article media overwhelms its reading column, and examples repeat demo disclaimers. | Bound reading/form widths, normalize gaps and improve copy. |
-| 2 | Some familiar utility icons lack keyboard tooltips; chat citations repeat text buttons. | Reuse the existing tooltip/button primitives, preserve accessible names and test focus recovery. |
+Priorities were readable mobile layouts; alignment across unequal content; consistent assembled headers and action areas; accessible utility controls; concise, accurate copy; and preservation of callbacks, focus recovery and public APIs. Concurrent integration continued in its own worktree. All seven feature tips, the admin integration branch and the original main history are ancestors of the completed design branch.
 
-Implementation follows rendered before captures for each batch. Pure styling/copy changes use visual review; interaction changes extend existing journeys where useful. Final verification includes configured build/type/lint, browser journeys, copied examples and packed consumers. Evidence and final outcomes follow below.
+## Improvements by workstream
 
-## Implemented changes
+| Workstream | Integrated improvements and final refinements |
+| --- | --- |
+| Editable block registry | Searchable local viewer, source inspection and readable CLI output. The expanded 23-item mobile chooser now occupies 236px instead of 985px; selected items and keyboard focus stay visible. Mobile controls meet 44px targets, and appearance help supports focus, hover and Escape. Source validation, CSP and dry-run safeguards remain intact. |
+| Document library | Clearer toolbar groups, passive thumbnails, consistent selection surfaces, bounded media previews and avatar settings. Mobile filenames remain readable inside a 480px local scroll surface; compact list actions have accessible names and tooltips. The app uses the updated upload composition. Undo is unavailable during list reloads so the target cannot move during activation. |
+| Team administration | Clearer member, invitation, role and audit layouts. The assembled app uses a compact role header/selector and removes the duplicate audit heading/timezone wrapper. Permissions, invitation delivery, cancellation, stale-response guards and application callbacks remain unchanged. |
+| Notifications and status | Refined inbox rows, selected states, preference categories, banners and presence indicators. The app’s copied inbox/preferences now match those designs and retain cancellation. Bulk buttons appear after selection; the idle mobile toolbar shrinks from 206px to 110px. Accessible read/unread names contain their complete visible labels. |
+| Rich chat | Improved Markdown and code hierarchy, stable copy feedback, numbered citations/domain metadata, attachment surfaces and a unified composer. Icon-only citations stay in their row on narrow screens, reducing the example source section from 334px to 240px. Preview/close controls keep 44px touch targets; nested Escape and focus recovery work in normal/reduced motion. |
+| Reporting | Stronger KPI hierarchy, compact report controls, improved chart proportions and stable inspectors. Shared statistic tracks align long labels, values and optional footers across rows. Corrected the dashboard gap override and kept wrapped field controls aligned. RTL number/date isolation and accessible chart tables remain intact. |
+| Website blocks | Display typography, original botanical artwork, feature cards, composed forms, FAQ and article layouts. Feature descriptions/actions share baselines. Removing an obsolete 720px section cap restores desktop form columns while their fields stay bounded. Mobile stacking, reading-width media and articles without contents navigation remain correct. |
 
-- **Documents:** the list keeps a readable 480px minimum inside its existing named scroll region. The toolbar wraps controls at their useful widths. Grid cards share content-sized tracks, so previews, names and actions align without clipping long filenames. List Preview/Open actions use named Eye/Folder icons and keyboard tooltips; grid actions retain labels.
-- **Statistics and reports:** explicit statistic groups and dashboard metrics share label/value, period, comparison and status rows. Standalone cards keep natural flow. Long comparisons, missing periods and loading/error states no longer push adjacent values down. Reporting fields align at their controls. The group class is included in copied examples and documented in `docs/reporting.md`.
-- **Website blocks:** feature headings/descriptions/actions align across unequal content; forms and article media use the reading-width token; phone gutters recover usable space. An article without contents navigation uses the full body column. Shorter studio/article copy retains the fictional-example disclosure.
-- **Admin application:** removed the second layer of page padding, compacted mobile metrics, corrected nested Team heading hierarchy and removed empty-status spacing while preserving the live region. Refresh controls use named icons, tooltips and the existing busy behavior. Documents no longer claims access management; demo password-reset feedback explicitly says no email was sent.
-- **Core controls and chat:** added keyboard hints to search/choice clear actions, calendar/date triggers, numeric steppers, sort clearing, bulk-selection clearing and Navbar account/menu controls. Citation previews use Eye/X controls, retain custom labels, focus the excerpt first and restore the trigger without reopening a tooltip. Closing tooltip layers are removed when the preview opens/closes so they cannot consume the enclosing chat's Escape.
-- **Catalog and copy:** aligned Card owner rows, assigned specific navigation icons to the newly integrated families, replaced user-facing “selected IDs” and application-internal status language, and removed duplicated attachment-unavailable copy. Generated rich-chat copied source is synchronized.
+The broader copy pass removed internal implementation language and repeated explanations while preserving demo/service distinctions, uncertainty and functional strings. Familiar utility icons retain accessible names, keyboard hints and visible focus; primary and consequential actions keep labels.
 
-The review retained the existing typography, semantic palettes, chart rendering, navigation layout, standard form validation, profile settings, notification layouts and overlay footer treatment where they already met the brief. Primary actions, confirmations and unfamiliar actions keep visible labels. No public prop, identifier, route, URL or host callback was removed or renamed. The mathematical minus on numeric steppers remains a mathematical symbol; the kit has no named MinusIcon.
+## Compatibility and integration
+
+The final branch includes the seven source branches, the assembled admin work and the earlier global pass. Local main’s older authentication implementation was reconciled with the current canonical modules rather than duplicated. The public `LockIcon` export/catalog entry and optional `PasswordField.showText`/`hideText` props are preserved. Explicit captions retain their accessible naming; the current default remains icon-only. Independent packed fixtures exercise all four auth pages and both caption states. The authentication guide now describes the current package name and abort/context boundary.
+
+No public identifier, route, URL or application callback was removed or renamed by this pass. Primary-checkout metadata edits and unrelated worktrees were left intact. No push, publication or deployment occurred.
 
 ## Visual evidence
 
-Open the [before/after gallery](../.artifacts/design-pass/evidence.html). Files remain local in this worktree's ignored `.artifacts/design-pass/` directory.
+The [seven-family before/after gallery](../.artifacts/seven-workstreams/evidence.html) is retained in `/Users/nationalbank/.codex/worktrees/evenkit-design-refinements/design-tokens/.artifacts/`. Its images are local and ignored by Git. The original broad audit and 232 desktop/mobile captures remain in `/Users/nationalbank/.codex/worktrees/evenkit-design-pass/design-tokens/.artifacts/design-pass/`.
 
 | Family | Before | After |
 | --- | --- | --- |
-| Admin dashboard, 360px | [Before](../.artifacts/design-pass/admin/before-dashboard-360.png) | [After](../.artifacts/design-pass/admin/after-dashboard-360.png) |
-| Documents, 360px | [Before](../.artifacts/design-pass/admin/before-documents-360.png) | [After](../.artifacts/design-pass/admin/after-documents-360.png) |
-| Website features, long headings | [Before](../.artifacts/design-pass/website/before-features-1440.png) | [After](../.artifacts/design-pass/website/after-features-1440.png) |
-| Website forms | [Before](../.artifacts/design-pass/website/before-forms-1440.png) | [After](../.artifacts/design-pass/website/after-forms-1440.png) |
-| Citation preview | [Before](../.artifacts/design-pass/core/source-1440.png) | [After](../.artifacts/design-pass/core-after/source-detail-1440.png) |
-| Statistics | [Before](../.artifacts/design-pass/data/before-statistics-1440.png) | [Long-content check](../.artifacts/design-pass/data/subgrid-statistic-1024-stress.png) |
-| Card owner alignment | [Before](../.artifacts/design-pass/core/card-1440-preview.png) | [After](../.artifacts/design-pass/core-after/card-neutral-light-1440.png) |
+| Registry chooser | [Before](../.artifacts/seven-workstreams/registry-before-360.png) | [After](../.artifacts/seven-workstreams/registry/grove-light-360.png) |
+| Documents in the admin app | [Before](../.artifacts/seven-workstreams/admin/before-documents-360.png) | [After](../.artifacts/seven-workstreams/admin/after-documents-360.png) |
+| Assembled audit screen | [Before](../.artifacts/seven-workstreams/admin/before-audit-1440.png) | [After](../.artifacts/seven-workstreams/admin/after-audit-1440.png) |
+| Notification toolbar | [Before](../.artifacts/seven-workstreams/notifications-before-360.png) | [After](../.artifacts/seven-workstreams/notifications-after-360.png) |
+| Mobile citations | [Before](../.artifacts/design-refinements/chat/sources-before-360.png) | [After](../.artifacts/design-refinements/chat/sources-after-360.png) |
+| Dashboard spacing | [Before](../.artifacts/design-refinements/data/dashboard-before-cascade-1440.png) | [After](../.artifacts/design-refinements/data/dashboard-after-1440.png) |
+| Website form columns | [Before](../.artifacts/design-refinements/website/before-forms-reproduced-viewport.png) | [After](../.artifacts/design-refinements/website/after-forms-viewport.png) |
 
-The catalog baseline has 232 captures across all 116 entries at 1440/360px, with no page errors or document overflow. Contact sheets support the broad review; family captures cover stable content and active states. Some initial element captures include the sticky catalog header, and some asynchronous previews show loading states. They are not evidence of clipping in the component. Final focus/state captures and the family geometry reports establish the affected layouts. Admin development captures include Next's indicator and the application's intentional page-heading focus outline.
-
-Additional evidence includes all-theme matrices and screenshots under `data/`, `core/`, `core-after/`, `website/` and `admin/`. Reviewed states include short 360×500/600 viewports, narrow panels, long labels/filenames/comparisons, RTL, dark appearances, reduced motion, busy/disabled/error/retry, keyboard tooltip activation, modal dismissal and focus recovery. All eight themes retain the same semantic tokens.
+Registry, document, team and notification before captures show original rendered versions. Chat, dashboard and website follow-up comparisons reconstruct the exact previous CSS on the final markup; they are labelled accordingly. Notification component captures hide only sticky catalog chrome to prevent screenshot occlusion. Ordinary viewport captures were used for website comparisons because full-page capture briefly changed the sidebar layout. The final assembled audit capture waits for loaded activity. Development-only indicators in older app captures are not product changes.
 
 ## Verification
 
-All required checks passed. Logs and JSON reports are under `.artifacts/design-pass/`, with package/example reports in `.artifacts/`.
+Logs are under `.artifacts/seven-workstreams/`; focused geometry/state reports are under `.artifacts/design-refinements/`. Initial failures and subsequent checks are retained, not hidden.
 
-| Check | Result / evidence |
+| Check | Result |
 | --- | --- |
-| Production package/catalog build | Passed, `build-final.log`. |
-| Assembled Next.js admin production build | Passed, `admin/build-final.log`. |
-| Configured workspace TypeScript and full ESLint | Passed, `typecheck-final.log`, `lint-final.log`. |
-| Existing unit suite | 47 passed across 10 files, `unit.log`. |
-| Full Chromium suite | 294 passed, `browser-final.log`. The final tooltip-layer follow-up also passed all five rich-chat journeys in `chat-final.log`. |
-| Copied examples | 116 examples / 104 priority mappings passed, `examples-final.log`. |
-| Packed consumers | Independent Vite and Next production/HTTP/stylesheet checks passed on final packages, `packages-final.log`. |
-| Copied website assemblies | Independent Vite/Next builds and form/navigation/keyboard checks passed, `website/consumers.log` and `.artifacts/website-blocks/`. |
-| Additional visual/state checks | 145 data checks plus 16 statistic stress cases, 128 core checks, 64 date/numeric/sort checks, 24 Navbar checks, 14 assembled route/viewport checks and 16 admin theme/mode cases passed. Family notes and JSON files record their exact scope. |
-| Independent review | Both findings resolved; final production check covers four complete nested chat close paths in normal/reduced motion, RTL 360×600. |
+| Configured production build | Tokens, UI, auth-next, catalog and Next admin passed on the final compatible implementation. |
+| Configured TypeScript and ESLint | Passed: `typecheck-complete.log`, `lint-complete.log`. The later verifier/fixture change also passed focused lint and packed strict types. |
+| Unit suite | 47 tests across 10 files passed. |
+| Full catalog journeys | 296 Chromium journeys passed after the main design reconciliation. Subsequent localized auth/forms changes passed 12 affected journeys; four final icon journeys passed. |
+| Assembled app | 63 journeys passed across Chromium, Firefox and WebKit. Follow-up copied-block checks passed 35/39 initially; all four failures passed unchanged in isolated runs. After Undo hardening, the upload/removal/restore journey passed in all three browsers with one worker and unchanged timeouts. |
+| Registry | 34 tests passed again on the completed implementation; all seven viewer verification groups passed at four widths. The temporary dirty-source rejection was resolved by committing registered blocks; no guard was weakened. |
+| Copied examples | 116 examples and all 104 priority mappings passed, including the final repeat in `examples-final.log`. |
+| Packed consumers and installed registry blocks | Independent Vite and Next production builds, strict types, HTTP/styles, browser interactions and package boundaries passed with all 23 installed blocks. Report: `.artifacts/registry-package-verification.json`; log: `packages-hydration-final.log`. Temporary consumers and servers were removed. |
+| Visual and interactive checks | 128 data stress cases plus 18 RTL/short-viewport cases, 80 website cases, 32 registry cases, 32 notification cases, 32 citation cases plus four nested dismissal paths, 64 long-caption cases and 14 assembled captures passed. Theme-sensitive coverage includes all eight themes in light/dark. |
+| Independent review | Resolved merge/type errors, layout reconciliation findings and the password-caption API gap. No known source regression remains. |
 
-The broad suite passed before the last localized tooltip-layer correction; the affected five-journey suite, independent four-path check, build, type, lint and packed consumers passed afterward. No known failing check remains.
+The initial combined build exposed a source-metadata type mismatch and duplicate icon import; both were fixed. A resource-heavy follow-up run timed out in three Firefox journeys; they passed with the same assertions/timeouts in isolation. A WebKit trace showed the document list moving during an Undo click, so Undo now waits for the reload. One earlier packed Next run failed to open its dialog during parallel verification; the same checks passed in an isolated run. The concurrent integration branch then added a hydration-ready signal to the Next fixture and failure diagnostics; the combined verifier passed again. The earlier failure did not retain enough evidence to establish its precise cause.
 
-The existing dirty-form journey now waits for its lazy preview to appear before freezing the clock. Its discard, cancellation, failure, retry and stale-completion assertions are unchanged. Existing date, document, form, Navbar and rich-chat journeys were extended to cover tooltip composition and focus recovery. No cosmetic snapshot tests or new test framework were added.
+No existing check or assertion was weakened. Behavior tests cover focus recovery, page-scoped selection, cancellation, stale completions, copied blocks, safe source rendering and package boundaries. Cosmetic changes use visual/geometry inspection rather than snapshot tests.
 
-Independent review caught and resolved the citation initial-focus/closing-tooltip issues and statistic alignment under missing or longer metadata. The detailed review is in [reviewer notes](../.artifacts/design-pass/reviewer-notes.md).
+## Limits and local result
 
-## Limits
+Catalog and standalone viewer checks use Chromium; assembled admin journeys also cover Firefox and WebKit. Physical touch/IME devices and screen-reader speech were not exercised. Real authentication, mail, storage and provider services were not used; fictional examples remain explicit. Browsers without subgrid retain natural-flow fallback alignment.
 
-Browser verification uses Chromium. Safari, Firefox, physical touch/IME devices and screen-reader speech were not exercised. Real authentication, storage, mail and other provider services were not used; demo/service boundaries remain explicit. Older browsers without CSS subgrid retain the natural-flow fallback, with less cross-card alignment. No publication, push or deployment occurred.
+All seven feature branches, the admin integration branch, the earlier design pass and original main history are included. Final implementation commits include `2932a76` (team headers), `bdd116f` (notifications), `458d630` (responsive reconciliation), `6d8ab01` (registry viewer), `53e70d3`/`b3b2624` (auth compatibility), `6614a6c` (document recovery) and `0f9251c` (icon discovery). Concurrent verifier hardening is retained through `0706996`. The completed branch is merged into local `main` with a fast-forward; no existing history is rewritten.
 
-## Local commits and resume
-
-Implementation is committed in six logical units: `2d69f9c` website layouts, `688d8ea` documents/reporting, `8a2930c` admin application, `be04b00` utility tooltips, `05cef61` catalog/copy, and `fc80a25` chat source controls. The report and session handoff follow in a documentation commit.
-
-Worktree: `/Users/nationalbank/.codex/worktrees/evenkit-design-pass/design-tokens`, branch `codex/evenkit-design-pass`. The original checkout remains separate; these commits have not been integrated into it. Resume with `git status --short` and `git log --oneline 71f8aa6..HEAD` from this worktree. No required implementation work remains.
+The primary checkout’s concurrent metadata edits remain outside this worktree. No required design work is deferred. The earlier pass remains documented in the separate design-pass worktree and its committed history.

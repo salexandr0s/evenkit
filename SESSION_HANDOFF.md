@@ -1,3 +1,35 @@
+# Seven-workstream design handoff: 26 October 2026
+
+Status: DONE. Completed the requested goal across editable block registry tools, documents, team administration, notifications/status, rich chat, reporting and website blocks. The completed design branch is merged into local `main` in `/Users/nationalbank/.codex/worktrees/evenkit-design-refinements/design-tokens`. No push, publication or deployment occurred. The primary checkout's concurrent metadata edits remain untouched.
+
+## Result
+
+Integrated each feature's design pass and the earlier broad pass, then refined the combined interface: bounded mobile registry navigation, readable document layouts and stable Undo, compact team headers, selection-aware inbox actions, narrow chat citations, aligned metric rows, restored website form columns and concise UI copy. Preserved public APIs, callbacks, routes, original main history, `LockIcon` discovery and explicit password-toggle captions. Concurrent package-fixture hydration hardening is also included.
+
+See [the final review](docs/design-pass-review.md) for the workstream table, implementation commits, exact check scope, initial failures and limits. The seven-family gallery is `.artifacts/seven-workstreams/evidence.html`; evidence remains local and ignored by Git. Earlier broad evidence remains in the separate `evenkit-design-pass` worktree.
+
+## Verification
+
+Configured production build, TypeScript and ESLint passed. The broad runs passed 47 unit tests, 296 catalog journeys and 63 admin journeys across Chromium/Firefox/WebKit. Later affected checks passed: copied admin flows after isolated failure investigation, document upload/removal/restore in all three browsers, 12 auth/form journeys and four icon journeys. Final repeats passed all 34 registry tests and 116 copied examples/104 mappings. Independent Vite/Next consumers passed with all 23 installed registry blocks, strict types, production builds, browser interaction and package boundaries; temporary consumers were removed. The final verifier/fixture change passed focused lint and packed strict types.
+
+Visual review covers all eight themes in light/dark, desktop/mobile, long content, RTL, short viewports, keyboard/focus recovery, reduced motion and overflow. No known failing check or unresolved source regression remains. Physical touch/IME devices, screen-reader speech and real provider services were not exercised. Browsers without subgrid retain natural-flow alignment.
+
+## Resume
+
+```sh
+cd /Users/nationalbank/.codex/worktrees/evenkit-design-refinements/design-tokens
+git status --short
+git log --oneline -15
+# Catalog preview, if stopped:
+npm run preview --workspace @evenkit/catalog -- --port 5621 --strictPort
+# Admin production preview, if stopped:
+npm run start --workspace @evenkit/admin-starter -- --port 5625
+```
+
+Implementation is complete and locally merged. No required design work is deferred. Historical handoff entries below describe their own earlier snapshots; this entry and the final review supersede their integration status and verification limits.
+
+---
+
 # Session handoff: 26 October 2026
 
 Status: DONE. Completed the design and UI-copy pass across the expanded Evenkit catalog, editable blocks and assembled admin application. Worktree: `/Users/nationalbank/.codex/worktrees/evenkit-design-pass/design-tokens`; branch: `codex/evenkit-design-pass`; integrated base: `71f8aa6`. The original checkout and concurrent work remain separate and preserved. No push, publication or deployment occurred.
