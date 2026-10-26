@@ -1,5 +1,55 @@
 # Team administration design handoff: 26 October 2026
 
+# Session handoff: 26 October 2026
+
+## Reporting design pass completed
+
+Status: DONE. Branch: `codex/reporting`. Worktree: `/Users/nationalbank/.codex/worktrees/reporting/design-tokens`. Design commit: `b87cdb2de08e06fa704e89091a5a4805b7b35a57` (`style(reporting): refine dashboard hierarchy and chart interactions`). This continues the implementation recorded below. Concurrent work and the original checkout were preserved; nothing was pushed, published or deployed.
+
+### Design and APIs
+
+- Statistics use larger tabular numerals, secondary units, aligned comparison/period footers, static loading placeholders and explicit error treatment. Dashboard statistics share a neutral summary band.
+- Report fields form a compact wrapping strip with aligned actions and status. Narrow containers expand fields to the available width. Export preparation, progress, ready and error states have contained feedback and retain their focus behavior.
+- Chart headers group context and legends. Plots have more vertical room, quieter grid lines, proportionate circle/square/diamond markers and a clear table disclosure. Full keyboard instructions remain accessible. The inspector overlays the plot without moving the page.
+- Coverage and activity share a row on wide dashboards and stack in narrow containers. The catalog coverage table includes order counts and availability; sample export-state controls sit in a separate disclosure.
+- Mixed-direction metric strings and chart period labels use bidi isolation. A browser regression measures the displayed order of `6 of 7` and `19–25` under RTL. Existing zero, missing-data, keyboard, focus-recovery and export-invalidation contracts remain covered.
+
+Public APIs, dependencies, tokens and licenses are unchanged by this pass. See [component APIs and examples](docs/reporting.md). Changed sources are the statistic/reporting/chart modules and styles, `registry/blocks/dashboard.tsx`, the reporting preview and `tests/browser/reporting.spec.ts`.
+
+### Verification
+
+All final checks passed. Evidence is under `.artifacts/reporting-design/`:
+
+| Check | Result |
+| --- | --- |
+| Production build, workspace typecheck and ESLint | Passed; `build.log`, `typecheck.log`, `lint.log`. |
+| Unit tests | 33 tests in six files passed; `unit.log`. |
+| Reporting/theme/token browser journeys | Ten passed, including marker proportions at 360/1440px and RTL text order; `browser.log`. |
+| Six reporting catalog routes | Six passed across eight themes, both modes and four viewport widths (384 combinations); `catalog-matrix.log`. |
+| Chart matrix | 192 theme/mode/direction/width combinations, reduced motion and visible focus; included in `browser.log`. |
+| Copyable examples | All 92 examples and 78 inventory mappings passed; `examples.log`. |
+| Packed consumers | Independent Vite and Next builds, HTTP/CSS checks, Next SSR and copied dashboard passed; `packages.log`, `.artifacts/package-verification.json`. Temporary consumers and servers were removed. |
+| Visual review | 26 desktop/narrow/state/RTL captures; no runtime errors or overflow. Inspector activation moved the table disclosure by 0px at both widths; `visuals.json`, `interactions.json`. All referenced CSS tokens resolve; `css-token-audit.json`. Independent final source/visual review found no remaining actionable issue. |
+
+`final-inputs.json` records the design commit and source hashes. Screenshots temporarily made the catalog header static to avoid occluding the component; production styles were not altered for capture.
+
+### Preview and remaining work
+
+No required work remains. The rebuilt local preview is available at `http://127.0.0.1:49234/#dashboard` (owned Vite process 30923). Other agents' servers were preserved. Existing chart scope limits still apply: six series, ordered categorical buckets, host-owned queries/definitions/exports. Chromium was tested; Safari, Firefox, physical touch devices and assistive-technology applications were not tested.
+
+Resume with:
+
+```sh
+cd /Users/nationalbank/.codex/worktrees/reporting/design-tokens
+git status --short
+git log -5 --oneline
+npm run preview --workspace @evenkit/catalog -- --port 49234 --strictPort
+```
+
+Run the preview command only if the existing server has stopped. The verification commands from the implementation handoff below still apply; use `.artifacts/reporting-design/` for the latest evidence.
+
+## Previous implementation handoff: 25 October 2026
+
 Status: DONE. Branch `codex/team-admin`, isolated checkout `/Users/nationalbank/.codex/worktrees/team-admin/design-tokens`. Design commit `5c26a1f96fb5be8a9e308ba8634a2b77efd03dd9` (`style(team-admin): refine administration layouts and visual hierarchy`) follows the implementation and documentation commits recorded below.
 
 ## Completed design pass
