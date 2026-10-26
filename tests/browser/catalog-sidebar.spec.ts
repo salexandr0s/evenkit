@@ -195,3 +195,56 @@ test("library drawer keeps navigation reachable while preserving the hidden desk
   await header.getByRole("button", { name: "Expand sidebar", exact: true }).click();
   await expect(frame.locator(":scope > .pk-admin-sidebar")).toHaveCSS("width", "260px");
 });
+
+for (const kind of ["main-content select", "navbar account menu"] as const) {
+  test(`${kind} preserves sticky chrome and independent scroll positions`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const isSelect = kind === "main-content select";
+    await page.goto(isSelect ? "/#audit-viewer" : "/#navbar");
+    if (isSelect) await expect(page.getByText("6 matching events", { exact: true })).toBeVisible();
+    const trigger = isSelect
+      ? page.getByRole("combobox", { name: "Actor", exact: true })
+      : page.locator(".navbar-application-example").getByRole("button", { name: "Workspace account", exact: true });
+    await expect(trigger).toBeVisible();
+    await trigger.evaluate(element => window.scrollBy(0, element.getBoundingClientRect().top - 250));
+    await expect(trigger).toBeInViewport();
+    const frame = page.locator(".catalog-app > .pk-admin-frame");
+    const navigation = frame.locator(":scope > .pk-admin-sidebar .pk-admin-navigation");
+    await navigation.evaluate(element => { element.scrollTop = 180; });
+    await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+    const geometry = () => frame.evaluate(element => ({
+      page: window.scrollY,
+      sidebar: element.querySelector(":scope > .pk-admin-sidebar")!.getBoundingClientRect().top,
+      header: element.querySelector(":scope > .pk-admin-workspace > .pk-admin-header")!.getBoundingClientRect().top,
+      navigation: element.querySelector(".pk-admin-navigation")!.scrollTop,
+    }));
+    const before = await geometry();
+    expect(before.page).toBeGreaterThan(0);
+    expect(before.navigation).toBeGreaterThan(0);
+    expect(before.sidebar).toBe(0);
+    expect(before.header).toBe(0);
+
+    const popup = page.getByRole(isSelect ? "listbox" : "menu");
+    await trigger.click();
+    await expect(popup).toBeVisible();
+    await expect.poll(geometry).toEqual(before);
+    await page.mouse.move(1300, 800);
+    await page.mouse.wheel(0, 400);
+    await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+    expect(await geometry()).toEqual(before);
+    await page.getByRole(isSelect ? "option" : "menuitem", { name: isSelect ? "Mira Chen" : "Workspace profile", exact: true }).click();
+    await expect(popup).not.toBeVisible();
+    await expect(trigger).toBeFocused();
+    if (isSelect) await expect(trigger).toContainText("Mira Chen");
+    else await expect(page.getByRole("heading", { name: "Your workspace account", exact: true })).toBeVisible();
+    await expect.poll(geometry).toEqual(before);
+
+    await trigger.press("ArrowDown");
+    await expect(popup).toBeVisible();
+    await expect.poll(geometry).toEqual(before);
+    await page.keyboard.press("Escape");
+    await expect(popup).not.toBeVisible();
+    await expect(trigger).toBeFocused();
+    await expect.poll(geometry).toEqual(before);
+  });
+}

@@ -1,3 +1,15 @@
+# Sidebar dropdown scroll fix: 26 October 2026
+
+Status: DONE_WITH_CONCERNS. Fixed the dropdown/sidebar shift on `codex/component-improvements`. Fresh remote inspection confirmed the earlier fix `5bfdc8e` was pushed to `origin/main` but was absent from this branch. Opening the navbar Workspace account menu reproduced the screenshot: at page scroll 531px, the outer sidebar and header moved from 0px to -531px.
+
+Restored body-only horizontal clipping in `apps/catalog/src/catalog.css`, allowing modal body scroll locks to apply to the viewport. Added two regressions in `tests/browser/catalog-sidebar.spec.ts` for the audit Actor select and navbar account menu, using the current grouped navigation scroll container. They cover sticky geometry, independent scroll positions, blocked background scrolling, selection, keyboard reopening, Escape and focus recovery. The fixed navbar probe keeps sidebar/header at 0px with page scroll unchanged.
+
+Verification passed: catalog production build, configured workspace TypeScript, full ESLint, all 27 affected Chromium journeys, and all five WebKit sidebar journeys. Independent diff review found no actionable issues. Firefox could not launch because its profile folder was unavailable; retrying with `/tmp` did not resolve the environment failure. Logs and before/after captures are `.artifacts/sidebar-dropdown-*`. Deployment status could not be read through the Vercel connector because it lacks access to the linked team; no deployment was requested. Existing catalog HTML, Vite and `llms/` edits were preserved outside this fix.
+
+Resume with `git status --short`, `git log -3 --oneline` and `npx playwright test tests/browser/catalog-sidebar.spec.ts tests/browser/navbar-header.spec.ts tests/browser/overlays.spec.ts tests/browser/select*.spec.ts`. The review preview is `http://127.0.0.1:5647/#navbar`; restart with `npm run preview --workspace @evenkit/catalog -- --port 5647 --strictPort` if needed. Firefox validation remains open until its runtime launches successfully. Historical entries below describe earlier work.
+
+---
+
 # Component icon actions: 26 October 2026
 
 Status: DONE. Completed the requested component audit and compact-action goal in `/Users/nationalbank/GitHub/design-tokens`, branch `codex/component-improvements`. Implementation commit: `0eb9ff6` (`feat(ui): compact secondary actions with accessible icons`). The component-by-component coverage and API guidance are in [compact actions](docs/compact-actions.md).
