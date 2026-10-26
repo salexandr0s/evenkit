@@ -16,15 +16,22 @@ const verifyRegistry = process.argv.includes("--registry");
 const reportFilename = verifyRegistry ? "registry-package-verification.json" : "package-verification.json";
 const report = { status: "running", startedAt: new Date().toISOString(), node: process.version, allocatedDirectory: scratch, packages: [], consumers: [], resources: [] };
 
-async function browserSmoke(url) {
+async function browserSmoke(url, kind) {
   const browser = await chromium.launch();
+  let page;
+  const errors = [];
+  const consoleErrors = [];
+  const failedRequests = [];
   try {
-    const page = await browser.newPage();
-    const errors = [];
+    page = await browser.newPage();
     page.on("pageerror", error => errors.push(error.message));
+    page.on("console", message => { if (message.type() === "error") consoleErrors.push(message.text()); });
+    page.on("requestfailed", request => failedRequests.push({ url: request.url(), error: request.failure()?.errorText }));
     await page.goto(url);
     await expect(page.getByRole("heading", { name: "Packed package check", exact: true })).toBeVisible();
     const trigger = page.getByRole("button", { name: "Open package dialog", exact: true });
+    if (kind === "next") await expect(trigger).toHaveAttribute("data-package-hydrated", "true");
+    await expect(trigger).toBeEnabled();
     await trigger.click();
     await expect(page.getByRole("dialog", { name: "Package dialog", exact: true })).toBeVisible();
     await page.keyboard.press("Escape");
@@ -40,6 +47,27 @@ async function browserSmoke(url) {
     await expect(documentTrigger).toBeFocused();
     if (errors.length) throw new Error(`Packed consumer browser errors: ${errors.join("; ")}`);
     return { browser: "Chromium", hydration: "passed", dialogFocus: "passed", controlledInput: "passed", copiedDocumentAction: "passed" };
+  } catch (error) {
+    const diagnostics = { kind, url, error: error instanceof Error ? error.message : String(error), pageErrors: errors, consoleErrors, failedRequests };
+    const diagnosticPath = join(artifacts, `${verifyRegistry ? "registry-" : ""}package-${kind}-browser-failure.json`);
+    try {
+      if (page && !page.isClosed()) {
+        diagnostics.page = await page.evaluate(() => ({
+          url: location.href, readyState: document.readyState,
+          triggers: [...document.querySelectorAll("button")].filter(button => button.textContent?.trim() === "Open package dialog").map(button => button.outerHTML),
+          dialogs: [...document.querySelectorAll('[role="dialog"]')].map(dialog => dialog.outerHTML),
+          activeElement: document.activeElement?.outerHTML,
+        }));
+        diagnostics.screenshot = join(artifacts, `${verifyRegistry ? "registry-" : ""}package-${kind}-browser-failure.png`);
+        await page.screenshot({ path: diagnostics.screenshot });
+      }
+    } catch (captureError) {
+      diagnostics.captureError = captureError instanceof Error ? captureError.message : String(captureError);
+    }
+    report.browserFailures ??= [];
+    report.browserFailures.push(diagnostics);
+    await writeFile(diagnosticPath, JSON.stringify(diagnostics, null, 2) + "\n");
+    throw new Error(`${diagnostics.error}\n${kind} browser page errors: ${errors.join("; ") || "none"}. Diagnostics: ${diagnosticPath}`, { cause: error });
   } finally {
     await browser.close();
   }
@@ -200,7 +228,7 @@ async function smoke(kind, directory) {
     if (![".pk-website-section", ".pk-website-form", ".pk-website-article"].every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship the copied website styles.`);
     const reportingSelectors = [".pk-statistic", ".pk-reporting-controls", ".pk-export-action", ".pk-chart", "--pk-chart-series-1", "--pk-chart-series-6"];
     if (!reportingSelectors.every(selector => css.includes(selector))) throw new Error(`${kind} fixture did not ship the reporting styles and chart series tokens.`);
-    const browser = await browserSmoke(`http://127.0.0.1:${port}`);
+    const browser = await browserSmoke(`http://127.0.0.1:${port}`, kind);
     if (kind === "next") {
       const authResponse = await fetch(`http://127.0.0.1:${port}/auth-package`);
       const authHtml = await authResponse.text();

@@ -1,11 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, type DialogSize } from "@evenkit/ui";
 
 export function PreviewDialog() {
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => { setHydrated(true); }, []);
   const size: DialogSize = "lg";
   return <Dialog>
-    <DialogTrigger asChild><Button>Open package dialog</Button></DialogTrigger>
+    <DialogTrigger asChild><Button disabled={!hydrated} data-package-hydrated={hydrated}>Open package dialog</Button></DialogTrigger>
     <DialogContent size={size} scroll="body">
       <DialogHeader>
         <DialogTitle>Package dialog</DialogTitle>
