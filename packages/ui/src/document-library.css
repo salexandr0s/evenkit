@@ -5,6 +5,7 @@
 .pk-document-crumb { border: 0; background: transparent; font: inherit; cursor: pointer; text-align: start; min-height: var(--pk-layout-touch); padding: var(--pk-space-1); }
 .pk-document-crumb:focus-visible, .pk-document-status:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
 .pk-document-file-row { list-style: none; padding: 0; margin: 0; min-width: 0; }
+.pk-document-library .pk-data-table .pk-document-file-row { min-width: var(--pk-layout-sidebar); }
 .pk-document-file-row .pk-file-row { border: 0; background: transparent; padding: var(--pk-space-2) 0; box-shadow: none; }
 .pk-document-file-row .pk-file-name { white-space: normal; overflow-wrap: anywhere; }
 .pk-document-file-row .pk-file-state { display: none; }

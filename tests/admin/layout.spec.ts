@@ -32,6 +32,12 @@ for (const section of ["dashboard", "records", "team", "notifications", "documen
         return failures;
       }, { palettes: [...themeNames] });
       expect(failures).toEqual([]);
+      if (section === "documents") {
+        const name = page.locator(".pk-document-file-row .pk-file-name").first();
+        const bounds = await name.boundingBox();
+        expect(bounds?.width).toBeGreaterThanOrEqual(100);
+        expect(bounds?.height).toBeLessThanOrEqual(100);
+      }
     }
     await page.setViewportSize({ width: 360, height: 900 });
     const open = page.getByRole("button", { name: "Open navigation", exact: true });
