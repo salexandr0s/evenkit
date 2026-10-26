@@ -76,6 +76,34 @@ node scripts/registry/cli.mjs inspect record-detail --registry "$REGISTRY_SNAPSH
 
 The snapshot contains `registry.json` and one JSON file per item. The installer reads the self-contained `registry.json`; the individual files are schema-compatible exports for inspection or later integration. Preserve the snapshot directory while its commands are in use. `discover` lists registered entries and source files without metadata separately. It does not infer that an unregistered block is finished.
 
+## Explore the local viewer
+
+Export a standalone HTML viewer from a validated snapshot, then open that file in a browser:
+
+```sh
+# Run from the tooling checkout used above.
+npm run build --workspace @evenkit/tokens
+node scripts/registry/cli.mjs view \
+  --registry "$REGISTRY_SNAPSHOT/catalog" \
+  --output "$REGISTRY_SNAPSHOT/blocks.html"
+open "$REGISTRY_SNAPSHOT/blocks.html" # macOS; otherwise open the file in your browser
+```
+
+The viewer uses Evenkit's Grove tokens and wordmark, with light/dark appearances and layouts for desktop and mobile. Search by title, name, description or inventory ID. Select a block to inspect its file destinations, private package requirements, source revisions, hashes and license. The Source tab shows numbered source text and copies the complete file; previews stop at 5,000 lines. Arrow keys, Home and End switch tabs. If browser clipboard access is unavailable, the text is selected for manual copying.
+
+Enter the application's directory and a relative destination to prepare a quoted `sh`/`zsh` dry-run command. Copy it into a terminal to run the installer. The viewer itself does not execute commands or install dependencies. Generated files embed the catalog's source, local tooling paths, token CSS and logo, make no network requests, and require no service. Keep them with the private source. Re-export after moving the tooling or snapshot, changing the catalog, or rebuilding the tokens; an existing output file is refused. Application directory entries and appearance changes live only in the open page.
+
+The terminal interface groups file actions, dependencies, conflicts and next steps. It defaults to readable text in a terminal and JSON when stdout is piped. Select the format explicitly when needed:
+
+```sh
+node scripts/registry/cli.mjs inspect record-detail \
+  --registry "$REGISTRY_SNAPSHOT/catalog" --format text
+node scripts/registry/cli.mjs inspect record-detail \
+  --registry "$REGISTRY_SNAPSHOT/catalog" --json > "$REGISTRY_SNAPSHOT/record-detail.json"
+```
+
+Text output wraps to terminal width and removes terminal control characters from source metadata. Use `--json` (or `--format json`) for exact contents, complete hashes and unwrapped diffs. `NO_COLOR=1` disables terminal colors.
+
 ## Install with local or private packages
 
 Build and pack both Evenkit packages from the checkout that supplies the catalog:
@@ -111,7 +139,7 @@ For an existing application, set `EVENKIT_CONSUMER` to its absolute directory an
 
 Import `@evenkit/tokens/css` followed by `@evenkit/ui/css` once in the application's style entry point. Import the copied blocks from their local paths. Supply the host data, callbacks and routes documented in [data workflows](data-workflows.md), [record/settings contracts](records-settings.md), [wizard contracts](commands-wizard.md), [document library](document-library.md), [team administration](team-administration.md), [notifications](notifications.md), [reporting](reporting.md), and [website blocks](website-blocks.md). Website source imports its local styles. This installer does not scaffold a framework or route.
 
-JSON output goes to stdout; invalid inputs and operation errors go to stderr. Exit status `0` means success, `1` means invalid input or an operation failure, and `2` means a plan is blocked. Dry runs, discovery, inspection and diffs never write to the consumer. Invoking the CLI directly avoids npm's script banner when redirecting JSON to a file.
+Results go to stdout; invalid inputs and operation errors go to stderr in the selected format. Exit status `0` means success, `1` means invalid input or an operation failure, and `2` means a plan is blocked. Dry runs, discovery, inspection and diffs never write to the consumer. Invoking the CLI directly with `--json` avoids npm's script banner when redirecting JSON to a file.
 
 ## Ownership and upgrade review
 
@@ -187,10 +215,13 @@ The integration owner should merge the block's completed source and verification
 ```sh
 npm run registry -- discover
 npm run test:registry
+npm run verify:registry-viewer
 npm run verify:registry
 ```
 
 Unregistered files are listed without being installed. Do not add metadata for unfinished files merely to clear discovery output. Keep block source and behavior changes in their owning agents' commits. After integration, build a fresh snapshot from the integration commit; this refreshes source revision metadata without modifying source files.
+
+`test:registry` builds the token CSS needed by the viewer tests. `verify:registry-viewer` uses the existing Playwright Chromium installation and temporary catalogs to check keyboard navigation, search, clipboard fallbacks, command validation, escaped source and offline operation. It writes screenshots at 360, 768, 1024 and 1440 pixels, dark/source views and a JSON report under `.artifacts/block-registry-design/`, then removes its temporary catalogs. Install the configured browser with `npx playwright install chromium` if it is absent.
 
 ## Dependencies and licenses
 
@@ -209,6 +240,8 @@ The copied blocks are original internal Evenkit source. Metadata records `UNLICE
 Transitive UI dependencies and their notices remain in the packed UI package. The tooling introduces no consumer runtime dependency or hosted service. It requires the checkout's development dependencies; it is not a separately published installer package.
 
 The document, team, notification, reporting and website metadata declares `@evenkit/ui` and React, including the JSX runtime. Their token styles and React DOM renderer use the consumer setup above; charting, markdown and provider packages are not direct block dependencies. These blocks call application-owned functions for storage, mutations, permissions and account/workspace scoping.
+
+The viewer reuses the repository's Evenkit token CSS and logo under the same private distribution restriction. It adds no third-party UI package; its small SVG glyphs are authored in the tooling. Browser verification reuses the existing development dependency `@playwright/test`.
 
 ## Verification
 
