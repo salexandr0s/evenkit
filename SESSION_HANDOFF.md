@@ -393,3 +393,50 @@ The integration owner should include tooling commit `0193a171b8fb50bf8fd95d111c7
 Merge each finished block's source, dependency/license decisions and verification from its owning agent first. Run `registry discover` on the integration branch. Add one metadata file per finished block, including its full local import closure, destination layout and direct package dependencies. The tooling intentionally has no references to the unfinished document-library, notifications, reporting, rich-chat or team-admin worktrees. Their final block names and paths must come from their completed handoffs.
 
 After adding metadata, run `npm run verify:registry`, the integration branch's type/lint checks, and each new block's applicable behavior checks. The packed verification installs every registered block, while its runtime fixtures exercise the existing five; new blocks still need their owning agents' usage/runtime evidence. Build a fresh snapshot from the final integration commit and record that revision. Update inventory R05's status/link in the integration tracker there; this branch leaves the shared inventory document untouched to preserve ownership.
+
+## Registry design pass: 26 October 2026
+
+Status: DONE. Branch/worktree remain `codex/block-registry` at `/Users/nationalbank/.codex/worktrees/block-registry/design-tokens`. User selected readable CLI output plus a local visual registry viewer. Implementation commit: `13ac235` (`feat(registry): add visual explorer and readable terminal output`), following R05 commits `0193a17` and `a340aaf`. This appended handoff preserves other agents' source records.
+
+### Completed design work
+
+- `scripts/registry/presentation.mjs`: terminal summaries with grouped file actions, dependency blockers, provenance, upgrade comparisons and next steps. Text is default in a terminal; pipes retain JSON. `--format text`, `--format json` and `--json` override this. Colors respect `NO_COLOR`; metadata control sequences are removed from text output. Installer behavior and exit codes are retained.
+- `scripts/registry/viewer.mjs`, `viewer-client.js`, `viewer.css`: standalone local HTML export through `registry view`. Uses the existing Evenkit wordmark and Grove tokens, responsive library/inspector layout, light/dark appearance, search, file/dependency/provenance inspection, source text and a quoted dry-run command builder. Commands execute only when copied into a terminal. The page embeds its assets and catalog, uses a hash-based CSP, and makes no network requests.
+- `cli.test.mjs`, `presentation.test.mjs`, `viewer.test.mjs`: output compatibility, error formatting, terminal control handling, HTML/CSP escaping, exclusive export paths and literal shell arguments. `verify-viewer.mjs`: repeatable browser verification using the existing Playwright dependency.
+- `docs/block-registry.md`: viewer, format, installation/upgrade and verification commands, private-source handling and dependency/license decisions. Additive package scripts build tokens before registry tests and expose `verify:registry-viewer`.
+
+No package, app, component, block or fixture source changed from `b588b1b`. No new dependency or public license was added. The viewer is a source/metadata inspector; it does not render the blocks as application previews. It reuses private repository assets. Nothing was published or deployed, and all consumer testing used temporary directories.
+
+### Verification and evidence
+
+All 34 registry tests passed (21 installer/builder tests retained plus 13 CLI/presentation/viewer tests). The full configured `npm run typecheck` and `npm run lint` passed. Final focused ESLint passed after the browser verification additions. `git diff --check` passed. The earlier R05 packed Vite/Next consumer results remain applicable to unchanged installer/block source; those package builds were not repeated for presentation changes.
+
+`npm run verify:registry-viewer` passed in Chromium: search and empty state, keyboard tab navigation, clipboard success/manual-copy fallbacks, relative destination validation, exact source copying, source/overview layouts at 360/768/1024/1440px, light/dark token switching, reduced motion, escaped malicious metadata/source and a 6,001-line source fixture. Measured text contrast across representative body, muted, selected, input and primary-button pairs exceeded 4.5:1 in both appearances (minimum 4.94:1). All viewer CSS variables resolve to built token definitions. No browser runtime errors or network requests occurred; temporary catalogs were removed.
+
+Independent review found a mobile overflow in the long-file notice; wrapping and a 360px long-source check fixed it. Review reported no remaining actionable findings. Source previews cap at 5,000 lines to bound DOM size, while copying retains the complete source. Safari, Firefox and screen-reader testing were not run. Appearance and application-path fields persist only within the current page; regenerate exports after paths or snapshots change. The original R05 filesystem/upgrade limitations still apply.
+
+Ignored local evidence is under `.artifacts/block-registry-design/`: `tests.log`, `cli.log`, `typecheck.log`, `lint.log`, `final-lint.log`, `browser.log`, `browser-verification.json`, responsive and dark/source PNGs, and `verification-inputs.json` with implementation input hashes. `catalog-final/` was built from commit `13ac235`, and `blocks.html` is its usable local viewer; `preview.png` shows its initial state. Earlier versioned HTML drafts are historical artifacts.
+
+### Resume and integration commands
+
+```sh
+cd /Users/nationalbank/.codex/worktrees/block-registry/design-tokens
+git status --short
+git log -4 --oneline
+open .artifacts/block-registry-design/blocks.html
+node scripts/registry/cli.mjs list --registry .artifacts/block-registry-design/catalog-final --format text
+npm run test:registry
+npm run verify:registry-viewer
+```
+
+For a fresh export after integrating newly finished blocks:
+
+```sh
+npm run build --workspace @evenkit/tokens
+EVENKIT_DESIGN_SNAPSHOT=$(mktemp -d /tmp/evenkit-design.XXXXXX)
+node scripts/registry/cli.mjs build --output "$EVENKIT_DESIGN_SNAPSHOT/catalog"
+node scripts/registry/cli.mjs view --registry "$EVENKIT_DESIGN_SNAPSHOT/catalog" --output "$EVENKIT_DESIGN_SNAPSHOT/blocks.html"
+open "$EVENKIT_DESIGN_SNAPSHOT/blocks.html"
+```
+
+Include design commit `13ac235` after the original R05 commits. Keep root package-script changes additive and preserve other agents' source. Follow the earlier integration handoff to merge finished block source first, then add metadata; the viewer discovers all catalog items without a hard-coded block list. Run `npm run verify:registry`, `npm run verify:registry-viewer` and the integration branch's applicable checks, then export from its final commit. No design-pass work remains outstanding.
