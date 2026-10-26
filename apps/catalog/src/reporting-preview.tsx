@@ -14,7 +14,7 @@ import "./reporting-preview.css";
 function StatisticExample() {
   return <div className="reporting-preview">
     <div className="reporting-preview-heading"><h3>Weekly performance</h3><p>19–25 October 2026</p></div>
-    <Grid columns={3}>
+    <Grid columns={3} className="pk-statistic-group">
       <Statistic label="Completed orders" value={221} unit="orders" period="19–25 October 2026"
         comparison={{ text: "Up 12% from the previous week", direction: "up", tone: "positive" }} />
       <Statistic label="Failed deliveries" value={0} unit="deliveries" period="19–25 October 2026"
@@ -23,7 +23,7 @@ function StatisticExample() {
     </Grid>
     <section className="reporting-preview-section" aria-label="Customer and support metrics">
     <div className="reporting-preview-heading"><h3>Customers and support</h3><p>Monthly and daily measures</p></div>
-    <Grid columns={2}>
+    <Grid columns={2} className="pk-statistic-group">
       <Statistic label="Repeat customers" value={32} unit="%" period="October 2026"
         comparison={{ text: "Unchanged from September 2026", direction: "unchanged" }} />
       <Statistic label="Outstanding support requests from distribution partners" value={18} unit="requests" period="25 October 2026"
@@ -31,7 +31,7 @@ function StatisticExample() {
     </Grid>
     </section>
     <section className="reporting-preview-section" aria-label="Statistic states"><h3>Loading and unavailable values</h3>
-      <Grid columns={2}>
+      <Grid columns={2} className="pk-statistic-group">
         <Statistic label="Net revenue" value={null} unit="EUR" period="October 2026" loading />
         <Statistic label="Delivery time" value={null} unit="hours" period="October 2026" error="Delivery times could not be loaded." />
       </Grid>
@@ -88,7 +88,7 @@ function ExportPreviewOptions({ onStateChange, disabled = false }: { onStateChan
   return <details className="reporting-preview-export">
     <summary>Try export states</summary>
     <div className="reporting-preview-export-content">
-    <p className="reporting-preview-note">Set the sample to progress, ready, or error. The download contains two sample rows.</p>
+    <p className="reporting-preview-note">Try the export states below. The download is a sample CSV with two rows.</p>
     <div className="reporting-preview-actions">
       <Button variant="outline" size="sm" disabled={disabled} onClick={() => onStateChange({ status: "progress", value: 45 })}>Show progress</Button>
       <Button variant="outline" size="sm" disabled={disabled} onClick={() => onStateChange({ status: "ready", href: sampleExport, fileName: "sample-orders.csv" })}>Complete export</Button>

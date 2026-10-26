@@ -35,6 +35,7 @@ test("citations retain RTL, keyboard preview scrolling and modal Escape order", 
   const chat = page.getByRole("dialog", { name: "Rich chat widget", exact: true });
   const trigger = chat.getByRole("button", { name: "Preview: CommonMark reference", exact: true });
   await trigger.focus();
+  await expect(page.getByRole("tooltip", { name: "Preview: CommonMark reference", exact: true })).toBeVisible();
   await page.keyboard.press("Enter");
   const preview = page.getByRole("dialog", { name: "CommonMark reference", exact: true });
   await expect(preview).toHaveCSS("direction", "rtl");
@@ -47,6 +48,13 @@ test("citations retain RTL, keyboard preview scrolling and modal Escape order", 
   await page.keyboard.press("Escape");
   await expect(preview).toHaveCount(0);
   await expect(chat).toBeVisible();
+  await expect(trigger).toBeFocused();
+  await page.keyboard.press("Enter");
+  const close = page.getByRole("dialog", { name: "CommonMark reference", exact: true }).getByRole("button", { name: "Close preview", exact: true });
+  await close.focus();
+  await expect(page.getByRole("tooltip", { name: "Close preview", exact: true })).toBeVisible();
+  await page.keyboard.press("Enter");
+  await expect(preview).toHaveCount(0);
   await expect(trigger).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(chat).toHaveCount(0);

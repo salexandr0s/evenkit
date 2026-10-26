@@ -96,9 +96,9 @@ const initialRoles: readonly EditableRole[] = [
   { id: "coordinator", revision: "1", label: "Release coordinator", description: "Coordinates the research review and release handover.", capabilityIds: ["notes.read", "notes.comment", "release.prepare"] },
 ];
 const demoCapabilities = [
-  { id: "notes.read", label: "Read research notes", description: "Required for both roles in this example.", group: "Research", disabledReason: "The application requires this grant." },
+  { id: "notes.read", label: "Read research notes", description: "Required for both sample roles.", group: "Research", disabledReason: "This grant cannot be changed." },
   { id: "notes.comment", label: "Comment on research notes", group: "Research" },
-  { id: "release.prepare", label: "Prepare release handovers for international research and archive projects", description: "This long label demonstrates wrapping in narrow layouts.", group: "Delivery" },
+  { id: "release.prepare", label: "Prepare release handovers for international research and archive projects", description: "Prepare handover notes for research and archive teams.", group: "Delivery" },
   { id: "archive.export", label: "Export archive records", group: "Delivery" },
 ];
 function RolesExample() {
@@ -115,7 +115,7 @@ function RolesExample() {
         const result = await demo.act(context, "Role capabilities saved.");
         if (result.status === "success") {
           setRoles(current => current.map(role => role.id === next.roleId ? { ...role, capabilityIds: [...next.capabilityIds], revision: `${Number(role.revision) + 1}` } : role));
-          setNote("The application saved the role capabilities, including the retained legacy grant.");
+          setNote("Role capabilities saved, including the retained legacy grant.");
         }
         return result;
       }} onReload={() => { demo.setResponse("success"); setRevision(value => value + 1); setNote("Loaded the current role definitions and grants."); }} />

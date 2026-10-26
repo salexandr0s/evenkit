@@ -27,7 +27,8 @@
 .pk-chat-source-preview-trigger.pk-button:hover, .pk-chat-source-preview-trigger.pk-button[data-state="open"] { color: var(--pk-color-fg); background: var(--pk-color-bg-muted); }
 .pk-chat-source-preview.pk-popover-content { gap: 0; inline-size: var(--pk-layout-dialog-sm); max-inline-size: calc(100vw - var(--pk-space-6)); padding: 0; overflow-wrap: anywhere; }
 .pk-chat-source-preview-heading { display: flex; align-items: start; gap: var(--pk-space-3); padding: var(--pk-space-4); }
-.pk-chat-source-preview-heading .pk-popover-title { min-inline-size: 0; padding-block: var(--pk-space-0-5); font-size: var(--pk-font-size-sm); }
+.pk-chat-source-preview-heading .pk-popover-title { flex: 1; min-inline-size: 0; padding-block: var(--pk-space-0-5); font-size: var(--pk-font-size-sm); }
+.pk-chat-source-preview-heading > .pk-button { flex: none; }
 .pk-chat-source-excerpt {
   max-block-size: min(var(--pk-layout-dialog-sm), 50dvh); margin: 0 var(--pk-space-4) var(--pk-space-4);
   padding: var(--pk-space-3); overflow: auto; overscroll-behavior: contain; border-radius: var(--pk-radius-sm);

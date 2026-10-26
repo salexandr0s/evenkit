@@ -6,6 +6,7 @@ import { RecordWorkflow } from "../../blocks/record-workflow";
 import { RecordDetail } from "../../blocks/record-detail";
 import { useStarter } from "../starter-providers";
 import { useDemoLoad } from "../use-demo-load";
+import { RefreshViewButton } from "../refresh-view-button";
 import { ViewLoadState } from "../view-load-state";
 
 export function RecordsView({ recordId }: { recordId?: string }) {
@@ -14,7 +15,7 @@ export function RecordsView({ recordId }: { recordId?: string }) {
   const load = useDemoLoad();
   const record = data.records.find(item => item.id === recordId);
   return <div className="starter-stack">
-    <Inline justify="end"><Button variant="outline" onClick={load.reload} disabled={load.state === "loading"}>Refresh records</Button></Inline>
+    <Inline justify="end"><RefreshViewButton label="Refresh records" onRefresh={load.reload} loading={load.state === "loading"} /></Inline>
     <ViewLoadState load={load} label="Records" />
     {load.state === "ready" ? recordId ? record ? <RecordDetail key={record.id} record={record}
       metadata={[{ id: "workspace", label: "Workspace", value: workspaceName }, { id: "owner", label: "Owner", value: data.profile.name }, { id: "id", label: "Record ID", value: record.id }]}

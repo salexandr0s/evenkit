@@ -1,12 +1,13 @@
 "use client";
 
-import { forwardRef, useLayoutEffect, useRef, useState, type ComponentPropsWithoutRef, type MouseEvent, type ReactNode } from "react";
+import { forwardRef, useId, useLayoutEffect, useRef, useState, type ComponentPropsWithoutRef, type MouseEvent, type ReactNode } from "react";
 import { foundation } from "@evenkit/tokens";
 import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { ArrowRightIcon, UserIcon } from "./icons.js";
 import type { NavigationLinkProps } from "./navigation.js";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./overlays.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 export type NavbarAction = { label: string; href: string; onSelect?: () => void } | { label: string; href?: never; onSelect: () => void };
 export type NavbarAccountItem = NavbarAction & { id: string; disabled?: boolean; destructive?: boolean };
@@ -41,10 +42,11 @@ interface ActionControlProps {
   renderLink?: ((props: NavigationLinkProps) => ReactNode) | undefined;
   icon?: ReactNode;
   iconOnly?: boolean;
+  descriptionId?: string | undefined;
   onActivate?: (callback?: () => void) => void;
 }
 
-export function NavbarActionControl({ action, renderLink, iconOnly = false, icon, onActivate }: ActionControlProps) {
+export function NavbarActionControl({ action, renderLink, iconOnly = false, icon, descriptionId, onActivate }: ActionControlProps) {
   const activate = () => { if (onActivate) onActivate(action.onSelect); else action.onSelect?.(); };
   const content = iconOnly ? icon ?? <UserIcon /> : <><span>{action.label}</span><ArrowRightIcon size="sm" /></>;
   const className = iconOnly ? "pk-navbar-account-control" : "pk-navbar-contact-action";
@@ -53,6 +55,7 @@ export function NavbarActionControl({ action, renderLink, iconOnly = false, icon
     const linkProps: NavigationLinkProps = {
       ...appearance, href: action.href, className: classes("pk-button", className),
       "aria-label": iconOnly ? action.label : undefined,
+      "aria-describedby": descriptionId,
       children: content,
       onClick: event => {
         if (ordinaryNavbarActivation(event)) { action.onSelect?.(); onActivate?.(); }
@@ -60,11 +63,14 @@ export function NavbarActionControl({ action, renderLink, iconOnly = false, icon
     };
     return renderLink ? renderLink(linkProps) : <a {...linkProps} />;
   }
-  return <Button variant={iconOnly ? "outline" : "primary"} shape={iconOnly ? "icon" : "default"} aria-label={iconOnly ? action.label : undefined} className={className} onClick={activate}>{content}</Button>;
+  return <Button variant={iconOnly ? "outline" : "primary"} shape={iconOnly ? "icon" : "default"} aria-label={iconOnly ? action.label : undefined} aria-describedby={descriptionId} className={className} onClick={activate}>{content}</Button>;
 }
 
 export function NavbarAccountControl({ account, renderLink, dir }: { account: NavbarAccount; renderLink?: ((props: NavigationLinkProps) => ReactNode) | undefined; dir?: "ltr" | "rtl" }) {
   const [open, setOpen] = useState(false);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const tooltipId = useId();
+  const descriptionId = tooltipOpen && !open ? tooltipId : undefined;
   const pendingAction = useRef<(() => void) | undefined>(undefined);
   const trigger = useRef<HTMLButtonElement>(null);
   const wrapper = useRef<HTMLSpanElement>(null);
@@ -74,12 +80,14 @@ export function NavbarAccountControl({ account, renderLink, dir }: { account: Na
     if (!("items" in account)) setOpen(false);
     if (ownedFocus.current && document.activeElement === document.body) wrapper.current?.querySelector<HTMLElement>(".pk-navbar-account-control")?.focus({ preventScroll: true });
   }, [account]);
-  return <span ref={wrapper} className="pk-navbar-account-wrapper" onFocusCapture={event => {
+  // Anchor to the existing wrapper so custom links need no additional ref contract.
+  // Focus from its actual button or link bubbles to the tooltip trigger.
+  return <TooltipProvider><Tooltip open={tooltipOpen && !open} onOpenChange={setTooltipOpen}><TooltipTrigger asChild><span ref={wrapper} className="pk-navbar-account-wrapper" onFocusCapture={event => {
     if (event.currentTarget.contains(event.target) || menu.current?.contains(event.target)) ownedFocus.current = true;
   }} onBlurCapture={event => {
     if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget) && !menu.current?.contains(event.relatedTarget)) ownedFocus.current = false;
-  }}>{!("items" in account) ? <NavbarActionControl action={account} renderLink={renderLink} iconOnly icon={account.icon} /> : <DropdownMenu open={open} onOpenChange={setOpen} dir={dir}>
-    <DropdownMenuTrigger asChild><Button ref={trigger} variant="outline" shape="icon" className="pk-navbar-account-control" aria-label={account.label}>{account.icon ?? <UserIcon />}</Button></DropdownMenuTrigger>
+  }}>{!("items" in account) ? <NavbarActionControl action={account} renderLink={renderLink} iconOnly icon={account.icon} descriptionId={descriptionId} /> : <DropdownMenu open={open} onOpenChange={setOpen} dir={dir}>
+    <DropdownMenuTrigger asChild><Button ref={trigger} variant="outline" shape="icon" className="pk-navbar-account-control" aria-label={account.label} aria-describedby={descriptionId}>{account.icon ?? <UserIcon />}</Button></DropdownMenuTrigger>
     <DropdownMenuContent ref={menu} align="end" sideOffset={Number.parseFloat(foundation.space["6"])} className="pk-navbar-account-menu" onCloseAutoFocus={event => {
       if (pendingAction.current) {
         event.preventDefault();
@@ -105,5 +113,5 @@ export function NavbarAccountControl({ account, renderLink, dir }: { account: Na
         return <DropdownMenuItem key={item.id} destructive={!!item.destructive} onSelect={() => { pendingAction.current = item.onSelect; }}>{item.label}</DropdownMenuItem>;
       })}
     </DropdownMenuContent>
-  </DropdownMenu>}</span>;
+  </DropdownMenu>}</span></TooltipTrigger><TooltipContent id={tooltipId}>{account.label}</TooltipContent></Tooltip></TooltipProvider>;
 }

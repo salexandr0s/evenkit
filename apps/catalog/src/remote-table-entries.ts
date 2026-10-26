@@ -18,7 +18,7 @@ export function ProjectDirectory({ load }: {
     columns={[{ id: "name", header: "Project", accessor: row => row.name, hideable: false }]}
     remote={{ query, total: result.total, onQueryChange: setQuery }}
     loading={result.loading} error={result.error} onRetry={result.retry}
-    selection={{ ...selection, scopeLabel: "Selected IDs across pages of this search" }} />;
+    selection={{ ...selection, scopeLabel: "Records across pages of this search" }} />;
 }
 ` },
   { id: "sort-control", name: "Sort control", group: "Controls", inventoryIds: ["I04"], description: "Choose a sort field and direction for a table or list, and return to its default order.", tags: ["sort", "ascending", "descending", "list", "field", "I04"], source: "Original kit composition · Select", sourceUrl: "https://www.radix-ui.com/primitives/docs/components/select", usage: `${imports}
@@ -31,14 +31,14 @@ export function ProjectSort() {
     value={sort} onValueChange={setSort} />;
 }
 ` },
-  { id: "bulk-actions", name: "Bulk action bar", group: "Compositions", inventoryIds: ["I05"], description: "Announce the selected count and its scope, run host actions, or clear explicit selected IDs.", tags: ["bulk", "selection", "actions", "scope", "count", "I05"], source: "Original kit composition · native controls", sourceUrl: "https://tanstack.com/table/latest/docs/guide/row-selection", usage: `${imports}
+  { id: "bulk-actions", name: "Bulk action bar", group: "Compositions", inventoryIds: ["I05"], description: "Show how many records are selected, explain the selection scope, and offer actions or clear the selection.", tags: ["bulk", "selection", "actions", "scope", "count", "I05"], source: "Original kit composition · native controls", sourceUrl: "https://tanstack.com/table/latest/docs/guide/row-selection", usage: `${imports}
 import { BulkActionBar, Button } from "@evenkit/ui";
 
 export function SelectedProjects({ ids, pending, onReview, onClear }: {
   ids: readonly string[]; pending: boolean; onReview: (ids: readonly string[]) => void; onClear: () => void;
 }) {
   // Restore focus to a stable control when an action removes this bar.
-  return <BulkActionBar count={ids.length} scopeLabel="Selected IDs across pages of the current search"
+  return <BulkActionBar count={ids.length} scopeLabel="Records across pages of this search"
     disabled={pending} onClear={onClear}>
     <Button size="sm" onClick={() => onReview(ids)}>Mark for review</Button>
   </BulkActionBar>;

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { PageHeader, SettingsLayout, Stack, TeamMembers, type TeamMembersProps } from "@evenkit/ui";
+import { SectionHeader, SettingsLayout, Stack, TeamMembers, type TeamMembersProps } from "@evenkit/ui";
 
 export interface TeamAdministrationProps {
   teamName: string;
@@ -17,7 +17,7 @@ export function TeamAdministration({ teamName, section, onSectionChange, members
   const items = [{ id: "members", label: "Members and invitations" }, ...(roles ? [{ id: "roles", label: "Roles and capabilities" }] : []), ...(audit ? [{ id: "audit", label: "Audit history" }] : [])];
   const active = items.some(item => item.id === section) ? section : "members";
   return <Stack gap="6">
-    <PageHeader title={teamName} headingAs="h2" description="Manage the people and access settings for this team." />
+    <SectionHeader title={teamName} description="Members, roles and team activity." />
     <SettingsLayout items={items} activeId={active} navigationLabel="Team settings" onNavigate={next => { if (next === "members" || next === "roles" || next === "audit") onSectionChange(next); }}>
       {active === "members" ? <TeamMembers {...members} /> : active === "roles" ? roles : audit}
     </SettingsLayout>

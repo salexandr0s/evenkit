@@ -41,7 +41,10 @@ test("date picker validates drafts, restores focus and respects canceled form re
   await expect(form.locator('input[name="deadline"]')).toHaveValue("");
   await form.getByRole("button", { name: "Save deadline" }).click();
   await expect(form.getByRole("status")).toContainText("No deadline saved");
-  await page.getByRole("button", { name: "Choose deadline", exact: true }).click();
+  const trigger = page.getByRole("button", { name: "Choose deadline", exact: true });
+  await trigger.focus();
+  await expect(page.getByRole("tooltip", { name: "Choose deadline", exact: true })).toBeVisible();
+  await page.keyboard.press("Enter");
   await expect(page.locator('[data-date="2026-10-25"]')).toBeFocused();
   await page.locator('[data-date="2026-10-28"]').click();
   await expect(input).toHaveValue("2026-10-28");

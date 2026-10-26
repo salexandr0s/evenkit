@@ -2,11 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Button, Card, CardBody, CardHeader, DataList, DataListItem, Heading, Inline, type ExportState } from "@evenkit/ui";
+import { Button, Card, CardBody, CardHeader, DataList, DataListItem, Heading, type ExportState } from "@evenkit/ui";
 import { DashboardBlock } from "../../blocks/dashboard";
 import { reportCsv, reportData, reportPeriods, type ReportPeriod } from "../../lib/demo-reporting";
 import { useStarter } from "../starter-providers";
 import { useDemoLoad } from "../use-demo-load";
+import { RefreshViewButton } from "../refresh-view-button";
 import { ViewLoadState } from "../view-load-state";
 
 export function DashboardView() {
@@ -74,7 +75,7 @@ export function DashboardView() {
   }
 
   return <section aria-label="Workspace dashboard" className="starter-stack">
-    <Inline justify="between"><p className="starter-muted">Current workspace: {workspaceName}</p><Button variant="outline" onClick={() => { reportController.current?.abort(); clearExport(); setReportState("idle"); setMessage(""); load.reload(); }} disabled={load.state === "loading"}>Refresh dashboard</Button></Inline>
+    <div className="starter-toolbar"><Heading as="h2" size="4">Project summary</Heading><RefreshViewButton label="Refresh dashboard" onRefresh={() => { reportController.current?.abort(); clearExport(); setReportState("idle"); setMessage(""); load.reload(); }} loading={load.state === "loading"} /></div>
     <ViewLoadState load={load} label="Dashboard" />
     {load.state === "ready" ? <>
       <DashboardBlock title="Workspace report" description="Task measurements are fictional. Project counts reflect edits made in this tab."

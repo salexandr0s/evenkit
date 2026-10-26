@@ -89,7 +89,10 @@ test("search clear and password visibility preserve native input identity and fo
   if (!searchNode) throw new Error("Missing search input.");
   await search.fill("handbook");
   await expect(page.getByRole("list", { name: "Matching documents" }).getByRole("listitem")).toHaveCount(1);
-  await page.getByRole("button", { name: "Clear search", exact: true }).first().click();
+  const clear = page.getByRole("button", { name: "Clear search", exact: true }).first();
+  await clear.focus();
+  await expect(page.getByRole("tooltip", { name: "Clear search", exact: true })).toBeVisible();
+  await page.keyboard.press("Enter");
   await expect(search).toBeFocused();
   await expect(search).toHaveValue("");
   await expect(page.getByRole("list", { name: "Matching documents" }).getByRole("listitem")).toHaveCount(3);

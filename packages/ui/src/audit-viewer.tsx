@@ -142,7 +142,7 @@ export function AuditViewer({
   }
   function cancelExport() {
     action.cancel();
-    setNotice({ key: exportKey, text: "Export cancelled. Check with your application if delivery had already started." });
+    setNotice({ key: exportKey, text: "Export cancelled. A download or delivery that already started may still finish." });
   }
 
   const groups: readonly ActivityGroup[] = denied || remote.loading || remote.error || pageResetPending ? [] : [{ id: "events", label: "Events", events: remote.data.map(record => ({
@@ -177,9 +177,9 @@ export function AuditViewer({
       {hasFilters && !denied ? <Button className="pk-audit-reset" variant="ghost" size="sm" onClick={resetFilters}>Clear audit filters</Button> : null}
     </div>
     {action.pending ? <div className="pk-audit-export-pending"><p role="status"><Spinner size="sm" aria-hidden="true" />Preparing export…</p><Button ref={cancelButton} variant="outline" size="sm" onFocus={() => { exportHasFocus.current = true; }} onBlur={event => { if (event.relatedTarget) exportHasFocus.current = false; }} onClick={cancelExport}>Cancel export</Button></div> : null}
-    {action.result ? <ActionMessage tone={action.result.status === "success" ? "success" : stale || exportDenied ? "warning" : "error"} heading={action.result.status === "success" ? "Export ready" : stale ? "Activity context changed" : exportDenied ? "Export unavailable" : "Export failed"}
+    {action.result ? <ActionMessage tone={action.result.status === "success" ? "success" : stale || exportDenied ? "warning" : "error"} heading={action.result.status === "success" ? "Export ready" : stale ? "Activity or access changed" : exportDenied ? "Export unavailable" : "Export failed"}
       actions={action.result.status === "error" ? <Button variant="outline" size="sm" onClick={() => { void exportEvents(); }}>Retry export</Button> : stale || exportDenied ? <Button variant="outline" size="sm" onClick={refresh}>Refresh activity</Button> : undefined}>
-      {action.result.message ?? "Your application prepared the requested export."}
+      {action.result.message ?? "The requested export is ready."}
     </ActionMessage> : null}
     {notice?.key === exportKey ? <p className="pk-audit-note" role="status">{notice.text}</p> : null}
     {denied ? <ActionMessage tone="warning" heading="Activity unavailable" {...(onRefreshContext ? { actions: <Button variant="outline" size="sm" onClick={refresh}>Refresh access</Button> } : {})}>{denied}</ActionMessage> : <>

@@ -5,6 +5,7 @@ import { Button } from "./button.js";
 import { TextField, type TextFieldProps } from "./field.js";
 import { useValueFieldReset } from "./multi-value-reset.js";
 import { PlusIcon } from "./icons.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 import { assertNumberConstraints, parseLocaleNumber, stepNumber, validateNumber, type NumberConstraints } from "./number-field-utils.js";
 
 export { parseLocaleNumber, stepNumber, validateNumber, type ParsedNumber, type NumberConstraints } from "./number-field-utils.js";
@@ -95,10 +96,10 @@ export const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(functi
         if (event.key === "ArrowUp" || event.key === "ArrowDown") { event.preventDefault(); increment(event.key === "ArrowUp" ? 1 : -1); }
         else if (event.key === "Enter") commit();
       }}
-      endAdornment={<>{unit ? <span className="pk-number-unit">{unit}</span> : null}{showSteppers && !readOnly ? <span className="pk-number-steppers">
-        <Button type="button" variant="ghost" size="xs" shape="icon" aria-label={decreaseLabel} disabled={disabled || (parsed.status === "valid" && min !== undefined && parsed.value <= min)} onMouseDown={event => event.preventDefault()} onClick={() => increment(-1)}><span className="pk-number-minus" aria-hidden="true">−</span></Button>
-        <Button type="button" variant="ghost" size="xs" shape="icon" aria-label={increaseLabel} disabled={disabled || (parsed.status === "valid" && max !== undefined && parsed.value >= max)} onMouseDown={event => event.preventDefault()} onClick={() => increment(1)}><PlusIcon size="sm" /></Button>
-      </span> : null}</>} />
+      endAdornment={<>{unit ? <span className="pk-number-unit">{unit}</span> : null}{showSteppers && !readOnly ? <TooltipProvider><span className="pk-number-steppers">
+        <Tooltip><TooltipTrigger asChild><Button type="button" variant="ghost" size="xs" shape="icon" aria-label={decreaseLabel} disabled={disabled || (parsed.status === "valid" && min !== undefined && parsed.value <= min)} onMouseDown={event => event.preventDefault()} onClick={() => increment(-1)}><span className="pk-number-minus" aria-hidden="true">−</span></Button></TooltipTrigger><TooltipContent>{decreaseLabel}</TooltipContent></Tooltip>
+        <Tooltip><TooltipTrigger asChild><Button type="button" variant="ghost" size="xs" shape="icon" aria-label={increaseLabel} disabled={disabled || (parsed.status === "valid" && max !== undefined && parsed.value >= max)} onMouseDown={event => event.preventDefault()} onClick={() => increment(1)}><PlusIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{increaseLabel}</TooltipContent></Tooltip>
+      </span></TooltipProvider> : null}</>} />
     {name ? <input type="hidden" name={name} form={form} value={parsed.status === "valid" ? parsed.value : ""} disabled={disabled} /> : null}
   </div>;
 });

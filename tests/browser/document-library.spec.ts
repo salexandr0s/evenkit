@@ -135,6 +135,7 @@ test("cancelling removal ignores its late completion and preview dismissal resto
   await expect(library.getByRole("checkbox", { name: "Select Project brief.pdf", exact: true })).toBeChecked();
   await expect(page.getByRole("button", { name: "Undo removal", exact: true })).toHaveCount(0);
   await library.getByRole("button", { name: "Preview Project brief.pdf", exact: true }).focus();
+  await expect(page.getByRole("tooltip")).toHaveText("Preview Project brief.pdf");
   await page.keyboard.press("Enter");
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");

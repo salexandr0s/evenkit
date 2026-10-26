@@ -1,4 +1,4 @@
-:where(.pk-document-library, .pk-document-block) { box-sizing: border-box; min-width: 0; max-width: 100%; display: grid; gap: var(--pk-space-4); font-family: var(--pk-font-family-sans); color: var(--pk-color-fg); }
+:where(.pk-document-library, .pk-document-block) { box-sizing: border-box; min-width: 0; max-width: 100%; display: grid; gap: var(--pk-space-5); font-family: var(--pk-font-family-sans); color: var(--pk-color-fg); }
 .pk-document-library { container: pk-document-library / inline-size; width: 100%; padding: var(--pk-space-5); gap: var(--pk-space-5); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface); }
 .pk-document-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-4); }
 .pk-document-heading { display: flex; align-items: center; gap: var(--pk-space-3); min-width: 0; flex: 1 1 var(--pk-layout-menu-min); }
@@ -21,7 +21,7 @@
 .pk-document-toolbar-secondary .pk-sort-control-fields > .pk-button { --pk-button-height: var(--pk-control-height-md); }
 .pk-document-crumb { border: 0; background: transparent; font: inherit; cursor: pointer; text-align: start; min-height: var(--pk-layout-touch); padding: var(--pk-space-1); }
 .pk-document-crumb:focus-visible, .pk-document-status:focus-visible, .pk-document-upload-panel > summary:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); border-radius: var(--pk-radius-sm); }
-.pk-document-library .pk-data-table table { table-layout: fixed; min-width: calc(var(--pk-layout-sidebar) + var(--pk-space-16) * 2); }
+.pk-document-library .pk-data-table table { table-layout: fixed; min-inline-size: max(var(--pk-layout-form), calc(var(--pk-layout-sidebar) + var(--pk-space-16) * 2)); }
 .pk-document-library .pk-data-table th:last-child { width: calc(var(--pk-space-16) * 2); }
 .pk-document-library .pk-data-table-cell[data-overflow="custom"] { max-width: 100%; }
 .pk-document-library .pk-data-table caption { position: absolute; width: var(--pk-border-width-hairline); height: var(--pk-border-width-hairline); padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

@@ -3,7 +3,9 @@
 .pk-website-demo :where([tabindex="-1"]) { scroll-margin-block-start: var(--pk-space-16); }
 .pk-website-demo :where([tabindex="-1"]):focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: calc(-1 * var(--pk-border-width-thick)); }
 .pk-website-demo-note { padding: var(--pk-space-6); margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-relaxed); overflow-wrap: anywhere; }
-.pk-website-demo-forms { box-sizing: border-box; display: grid; gap: var(--pk-space-12); padding: var(--pk-space-12) var(--pk-space-6); }
+.pk-website-demo-forms { box-sizing: border-box; display: grid; gap: var(--pk-space-8); padding: var(--pk-space-8) var(--pk-space-6); }
+.pk-website-demo-forms > .pk-website-form { inline-size: 100%; max-inline-size: var(--pk-layout-reading); margin-inline: auto; }
+.pk-website-demo-forms > * + * { padding-block-start: var(--pk-space-8); }
 .pk-website-demo-brand { display: inline-flex; align-items: center; gap: var(--pk-space-3); min-inline-size: 0; max-inline-size: 100%; font-weight: var(--pk-font-weight-semibold); font-size: var(--pk-font-size-lg); line-height: var(--pk-font-line-height-tight); }
 .pk-website-demo-mark { display: grid; place-items: center; flex: none; inline-size: var(--pk-space-8); block-size: var(--pk-space-8); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-full); color: var(--pk-color-accent); background: var(--pk-color-bg-muted); }
 .pk-website-demo-contact { font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-relaxed); }

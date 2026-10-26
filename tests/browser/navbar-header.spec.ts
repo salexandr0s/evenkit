@@ -41,7 +41,9 @@ test("website contact and account actions update host state and restore focus", 
   await expect(contact).toBeFocused();
 
   const signIn = website.getByRole("button", { name: "Sign in", exact: true });
-  await signIn.click();
+  await signIn.focus();
+  await expect(page.getByRole("tooltip", { name: "Sign in", exact: true })).toBeVisible();
+  await signIn.press("Enter");
   const signInDialog = page.getByRole("dialog", { name: "Sign in to Northstar", exact: true });
   await signInDialog.getByRole("button", { name: "Use demo account", exact: true }).click();
   await expect(signInDialog).toBeHidden();
@@ -74,7 +76,9 @@ test("mobile website navigation keeps grouped links and contact reachable withou
     expect(bounds?.height).toBeGreaterThanOrEqual(44);
     expect(bounds?.width).toBeGreaterThanOrEqual(44);
   }
-  await trigger.click();
+  await trigger.focus();
+  await expect(page.getByRole("tooltip", { name: "Open studio navigation", exact: true })).toBeVisible();
+  await trigger.press("Enter");
   const drawer = page.getByRole("dialog", { name: "Studio navigation", exact: true });
   await expect(drawer.getByRole("link", { name: "Studio", exact: true })).toBeFocused();
   await expect(drawer.getByRole("link", { name: "Websites", exact: true })).toBeVisible();
@@ -140,6 +144,13 @@ test("application header and sidebar keep global and project destinations usable
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto("/#navbar");
   const app = page.locator(".navbar-application-example");
+  const account = app.getByRole("button", { name: "Workspace account", exact: true });
+  // Focusing this lower example scrolls the page; its wrapper tooltip must survive it.
+  await account.focus();
+  await expect(account).toBeInViewport();
+  await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+  await expect(page.getByRole("tooltip", { name: "Workspace account", exact: true })).toBeVisible();
+  await expect(account).toHaveAttribute("aria-describedby", /.+/);
   await expect(page.getByRole("main")).toHaveCount(1);
   await app.getByRole("navigation", { name: "Workspace navigation", exact: true }).getByRole("link", { name: "Activity", exact: true }).click();
   await expect(app.getByRole("heading", { name: "Workspace activity", exact: true })).toBeVisible();

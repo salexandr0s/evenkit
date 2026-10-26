@@ -24,9 +24,9 @@ const navigation: readonly AdminNavGroup[] = [{ label: "Workspace", items: [
   { id: "settings", label: "Settings", href: "/settings", icon: <SettingsIcon /> },
 ] }];
 const descriptions: Record<AdminSection, string> = {
-  dashboard: "Project activity and workspace updates.", records: "Review projects, edit details and follow their progress.",
-  team: "Manage members, invitations and roles.", notifications: "Review workspace updates and choose what reaches you.",
-  documents: "Organize files, review previews and manage access.", settings: "Manage your profile and workspace appearance.",
+  dashboard: "Project totals and current work.", records: "Review projects, edit details and follow their progress.",
+  team: "Manage members, invitations and roles.", notifications: "Read updates and choose notification preferences.",
+  documents: "Browse, upload and download workspace files.", settings: "Manage your profile and workspace appearance.",
 };
 
 export function AdminWorkspace({ section, session, recordId }: { section: AdminSection; session: StarterSession; recordId?: string }) {
