@@ -94,7 +94,7 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
     if (!navigation) return;
     const revealActive = () => {
       const active = navigation.querySelector<HTMLElement>(".pk-admin-nav-link[aria-current='page']");
-      if (!active || active.getClientRects().length === 0 || navigation.clientHeight === 0) return;
+      if (!active || active.closest("[inert]") || active.getClientRects().length === 0 || navigation.clientHeight === 0) return;
       const bounds = navigation.getBoundingClientRect();
       const item = active.getBoundingClientRect();
       const style = window.getComputedStyle(navigation);
@@ -106,6 +106,8 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
     revealActive();
     const observer = new ResizeObserver(revealActive);
     observer.observe(navigation);
+    const activeDisclosure = navigation.querySelector(".pk-admin-nav-group[data-active] .pk-admin-nav-disclosure");
+    if (activeDisclosure) observer.observe(activeDisclosure);
     return () => observer.disconnect();
   }, [activeItemId, activeGroupExpanded, collapsed]);
 
@@ -137,7 +139,9 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
               <TooltipContent side={tooltipSide}>{group.label}</TooltipContent>
             </Tooltip>
           ) : group.label ? <p className="pk-admin-nav-label">{group.label}</p> : null}
-          <ul id={listId} className="pk-admin-nav-list" role="list" hidden={disclosure && !group.expanded}>
+          <div className="pk-admin-nav-disclosure" data-expanded={disclosure ? group.expanded : undefined} aria-hidden={disclosure && !group.expanded || undefined} inert={disclosure && !group.expanded}>
+          <div className="pk-admin-nav-disclosure-inner">
+          <ul id={listId} className="pk-admin-nav-list" role="list">
             {group.items.map((item) => {
               const linkProps: AdminLinkProps = {
                 href: item.href,
@@ -150,6 +154,8 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
               return <li key={item.id}><Tooltip open={collapsed && tooltipsEnabled && !suppressTooltips && openItemId === item.id} onOpenChange={(open) => changeTooltipOpen(item.id, open)}><TooltipTrigger asChild><NavLink {...linkProps} renderLink={renderLink} /></TooltipTrigger><TooltipContent side={tooltipSide}>{item.label}</TooltipContent></Tooltip></li>;
             })}
           </ul>
+          </div>
+          </div>
         </div>
         );
       })}
