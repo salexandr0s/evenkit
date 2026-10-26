@@ -6,6 +6,7 @@ import { RecordDetail } from "./blocks/record-detail";
 import { ProfileSettings, AppearanceSettings } from "./blocks/account-settings";
 import { TeamAdminFixture } from "./team-admin-fixture";
 import { OnboardingWizard } from "./blocks/onboarding-wizard";
+import { WebsiteFixture } from "./website-fixture";
 import { DocumentLibraryFixture } from "./document-library-fixture";
 import { NotificationCenter } from "./blocks/notification-center";
 import { NotificationPreferences } from "./blocks/notification-preferences";
@@ -33,6 +34,7 @@ export function RoadmapFixture() {
   for (const name of requiredExports) if (Kit[name] === undefined) throw new Error(`Missing roadmap export: ${name}`);
   return <Kit.Stack aria-label="Packed roadmap controls">
     <h2>Roadmap package controls</h2>
+    <WebsiteFixture />
     <DocumentLibraryFixture />
     <TeamAdminFixture />
     <h3>Packed notification family</h3>

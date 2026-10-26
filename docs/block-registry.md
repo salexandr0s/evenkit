@@ -78,7 +78,7 @@ The snapshot contains `registry.json` and one JSON file per item. The installer 
 
 ## Install with local or private packages
 
-Build and pack both Evenkit packages from the checkout that supplies the catalog:
+Build and pack the two generic Evenkit packages from the checkout that supplies the catalog:
 
 ```sh
 EVENKIT_ROOT="$PWD"
@@ -214,4 +214,6 @@ The document, team, notification, reporting and website metadata declares `@even
 
 `npm run test:registry` runs Node integration tests in temporary consumers. They cover committed-source discovery, metadata/schema integrity, fresh/repeated installs, missing and incompatible dependencies, existing application files, local edits/deletions, upgrades/removals, shared ownership, review tokens, traversal, symlinks, corrupt inputs, interrupted batches and recovery conflicts.
 
-`npm run verify:registry` adds package builds and the existing independent Vite/Next verification with `--registry`. It packs both private packages, installs them in disposable consumers, installs all registered blocks through this CLI, repeats the install, and runs the existing framework build, SSR, HTTP and stylesheet checks. It records `.artifacts/registry-package-verification.json`, stops owned servers and removes its temporary consumers. Fixture package acquisition may use npm for third-party dependencies; the registry installer itself has no network operations. See the R05 session handoff for the executed results and commit IDs.
+`npm run verify:registry` adds package builds and the independent Vite/Next verification with `--registry`. It installs the packed generic packages in disposable consumers, installs all registered blocks through this CLI, repeats the install, and runs framework builds, strict types, SSR, HTTP, stylesheet and Chromium interaction checks. The Next consumer also installs the separate auth adapter and verifies that importing its server entry from a Client Component fails. The minimal Vite consumer records emitted modules and JavaScript sizes and rejects framework, provider and optional chart/markdown engine imports.
+
+The assembled run installed all 23 registered items in both consumers and passed on 26 October 2026. It records `.artifacts/registry-package-verification.json`, stops owned servers and removes its temporary consumers. Fixture package acquisition may use npm for third-party dependencies; the registry installer itself has no network operations. See [the consumer handoff](handoffs/admin-consumers.md) for exact commands, counts, sizes and limits, and the R05 track handoff for the installer contract tests.

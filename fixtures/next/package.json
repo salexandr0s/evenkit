@@ -2,7 +2,7 @@
   "name": "kit-next-consumer",
   "private": true,
   "type": "module",
-  "scripts": { "build": "next build", "start": "next start --hostname 127.0.0.1" },
+  "scripts": { "build": "next build", "typecheck": "tsc --noEmit", "start": "next start --hostname 127.0.0.1" },
   "dependencies": {
     "@evenkit/tokens": "0.1.0",
     "@evenkit/ui": "0.1.0",
