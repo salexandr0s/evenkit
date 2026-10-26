@@ -1,11 +1,18 @@
-.pk-invitation-acceptance { box-sizing: border-box; display: grid; gap: var(--pk-space-5); min-width: 0; max-width: 100%; color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); overflow-wrap: anywhere; }
-.pk-invitation-heading { display: grid; justify-items: start; gap: var(--pk-space-3); }
-.pk-invitation-heading h2 { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-xl); font-weight: var(--pk-font-weight-semibold); }
+.pk-invitation-acceptance { --pk-invitation-gutter: var(--pk-space-6); box-sizing: border-box; display: grid; min-inline-size: 0; max-inline-size: 100%; border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface); box-shadow: var(--pk-shadow-sm); color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); overflow-wrap: anywhere; }
+.pk-invitation-heading { display: grid; justify-items: start; gap: var(--pk-space-3); padding: var(--pk-invitation-gutter); }
+.pk-invitation-identity { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-3); inline-size: 100%; margin-block-end: var(--pk-space-2); }
+.pk-invitation-mark { box-sizing: border-box; display: grid; place-items: center; flex: none; inline-size: var(--pk-space-12); block-size: var(--pk-space-12); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-bg-muted); color: var(--pk-color-fg-muted); box-shadow: var(--pk-shadow-xs); }
+.pk-invitation-heading h2 { margin: 0; font-family: var(--pk-font-family-heading); font-size: var(--pk-font-size-2xl); line-height: var(--pk-font-line-height-tight); font-weight: var(--pk-font-weight-semibold); letter-spacing: var(--pk-font-letter-spacing-tight); }
 .pk-invitation-heading h2:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-1); }
 .pk-invitation-heading p, .pk-invitation-note { margin: 0; color: var(--pk-color-fg-muted); }
-.pk-invitation-details { display: grid; gap: var(--pk-space-4); margin: 0; padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); }
-.pk-invitation-details > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--pk-layout-sidebar)), 1fr)); gap: var(--pk-space-1) var(--pk-space-4); min-width: 0; }
-.pk-invitation-details dt { color: var(--pk-color-fg-muted); }
-.pk-invitation-details dd { margin: 0; min-width: 0; }
+.pk-invitation-details { display: grid; margin: 0 var(--pk-invitation-gutter) var(--pk-invitation-gutter); padding: 0; border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.pk-invitation-details > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: baseline; gap: var(--pk-space-2) var(--pk-space-4); min-inline-size: 0; padding-block: var(--pk-space-3); border-block-end: var(--pk-border-width-hairline) solid var(--pk-color-border); }
+.pk-invitation-details dt { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
+.pk-invitation-details dd { margin: 0; min-inline-size: 0; font-weight: var(--pk-font-weight-medium); }
+.pk-invitation-acceptance > .pk-action-message { margin-inline: var(--pk-invitation-gutter); margin-block-end: var(--pk-space-4); }
+.pk-invitation-footer { display: grid; gap: var(--pk-space-3); padding: var(--pk-space-5) var(--pk-invitation-gutter); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); border-end-start-radius: var(--pk-radius-lg); border-end-end-radius: var(--pk-radius-lg); background: var(--pk-color-bg-muted); }
+.pk-invitation-footer:has(.pk-invitation-actions:empty):not(:has(.pk-invitation-note)) { display: none; }
 .pk-invitation-actions { display: flex; flex-wrap: wrap; gap: var(--pk-space-2); }
 .pk-invitation-actions:empty { display: none; }
+.pk-invitation-actions > .pk-button { flex: 1 1 auto; }
+@media (max-width: 640px) { .pk-invitation-acceptance { --pk-invitation-gutter: var(--pk-space-4); } }

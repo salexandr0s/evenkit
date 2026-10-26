@@ -6,6 +6,7 @@ import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { ActionMessage, Badge, Spinner } from "./feedback.js";
 import { SearchField } from "./form-controls.js";
+import { ChevronDownIcon, DownloadIcon } from "./icons.js";
 import { Pagination } from "./navigation.js";
 import { useRemoteTable, type DataTableQuery, type RemoteTableResult } from "./remote-table.js";
 import { SelectField } from "./select.js";
@@ -147,10 +148,10 @@ export function AuditViewer({
   const groups: readonly ActivityGroup[] = denied || remote.loading || remote.error || pageResetPending ? [] : [{ id: "events", label: "Events", events: remote.data.map(record => ({
     id: record.id, actor: record.actor, action: record.action, timestamp: record.timestamp,
     detail: <div className="pk-audit-event-detail">
-      <div className="pk-audit-event-meta"><span>{optionLabel(kinds, record.kind)}</span><Badge size="sm">{optionLabel(outcomes, record.outcome)}</Badge></div>
+      <div className="pk-audit-event-meta"><span>{optionLabel(kinds, record.kind)}</span><Badge size="sm" variant="outline">{optionLabel(outcomes, record.outcome)}</Badge></div>
       <details className="pk-audit-details">
-        <summary>Event details<span className="pk-visually-hidden">: {record.action} by {record.actor}</span></summary>
-        <dl><div><dt>Event ID</dt><dd>{record.id}</dd></div><div><dt>Actor ID</dt><dd>{record.actorId}</dd></div>
+        <summary><span>Event details<span className="pk-visually-hidden">: {record.action} by {record.actor}</span></span><ChevronDownIcon size="sm" animation="static" /></summary>
+        <dl><div><dt>Event ID</dt><dd className="pk-audit-identifier">{record.id}</dd></div><div><dt>Actor ID</dt><dd className="pk-audit-identifier">{record.actorId}</dd></div>
           {record.details?.map((detail, index) => <div key={`${detail.label}-${index}`}><dt>{detail.label}</dt><dd>{detail.value}</dd></div>)}
         </dl>
       </details>
@@ -162,17 +163,19 @@ export function AuditViewer({
   return <section {...props} ref={root} className={classes("pk-audit-viewer", className)} aria-labelledby={props["aria-label"] ? undefined : id}
     onFocusCapture={event => { if (event.target instanceof HTMLElement) focusedControl.current = event.target; props.onFocusCapture?.(event); }}
     onBlurCapture={event => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) focusedControl.current = null; props.onBlurCapture?.(event); }}>
-    <header className="pk-audit-header"><div><h2 ref={heading} tabIndex={-1} id={id}>{label}</h2><p>Review recorded events and their details.</p></div>
-      {onExport ? <Button ref={exportButton} variant="outline" disabled={cannotExport} onClick={() => { void exportEvents(); }} aria-describedby={exportDisabledReason ? `${id}-export-reason` : undefined}>Export matching events</Button> : null}
+    <header className="pk-audit-header"><div className="pk-audit-heading"><div className="pk-audit-heading-meta"><span className="pk-audit-eyebrow">Team administration</span><Badge size="sm" variant="outline">Read only</Badge></div><h2 ref={heading} tabIndex={-1} id={id}>{label}</h2><p>Recorded activity, with the actor and outcome of each event.</p></div>
+      {onExport ? <Button ref={exportButton} variant="outline" startIcon={<DownloadIcon size="sm" animation="static" />} disabled={cannotExport} onClick={() => { void exportEvents(); }} aria-describedby={exportDisabledReason ? `${id}-export-reason` : undefined}>Export matching events</Button> : null}
     </header>
     {onExport && exportDisabledReason ? <p className="pk-audit-note" id={`${id}-export-reason`}>{exportDisabledReason}</p> : null}
-    <div className="pk-audit-filters" role="group" aria-label="Filter audit activity">
-      <SearchField ref={search} label="Search audit activity" value={query.search} disabled={Boolean(denied)} onValueChange={value => changeCriteria({ search: value })} />
-      <SelectField label="Actor" value={query.actorId === null ? "all" : `value:${query.actorId}`} options={filterOptions(actors, query.actorId, "All actors")} disabled={Boolean(denied)} onValueChange={value => changeCriteria({ actorId: filterValue(value) })} />
-      <SelectField label="Event type" value={query.kind === null ? "all" : `value:${query.kind}`} options={filterOptions(kinds, query.kind, "All event types")} disabled={Boolean(denied)} onValueChange={value => changeCriteria({ kind: filterValue(value) })} />
-      <SelectField label="Outcome" value={query.outcome === null ? "all" : `value:${query.outcome}`} options={filterOptions(outcomes, query.outcome, "All outcomes")} disabled={Boolean(denied)} onValueChange={value => changeCriteria({ outcome: filterValue(value) })} />
+    <div className="pk-audit-filter-panel" role="group" aria-label="Filter audit activity">
+      <div className="pk-audit-filters">
+        <SearchField ref={search} fieldClassName="pk-audit-search" label="Search audit activity" placeholder="Search recorded activity…" value={query.search} disabled={Boolean(denied)} onValueChange={value => changeCriteria({ search: value })} />
+        <SelectField label="Actor" value={query.actorId === null ? "all" : `value:${query.actorId}`} options={filterOptions(actors, query.actorId, "All actors")} disabled={Boolean(denied)} onValueChange={value => changeCriteria({ actorId: filterValue(value) })} />
+        <SelectField label="Event type" value={query.kind === null ? "all" : `value:${query.kind}`} options={filterOptions(kinds, query.kind, "All event types")} disabled={Boolean(denied)} onValueChange={value => changeCriteria({ kind: filterValue(value) })} />
+        <SelectField label="Outcome" value={query.outcome === null ? "all" : `value:${query.outcome}`} options={filterOptions(outcomes, query.outcome, "All outcomes")} disabled={Boolean(denied)} onValueChange={value => changeCriteria({ outcome: filterValue(value) })} />
+      </div>
+      {hasFilters && !denied ? <Button className="pk-audit-reset" variant="ghost" size="sm" onClick={resetFilters}>Clear audit filters</Button> : null}
     </div>
-    {hasFilters && !denied ? <Button className="pk-audit-reset" variant="ghost" size="sm" onClick={resetFilters}>Clear audit filters</Button> : null}
     {action.pending ? <div className="pk-audit-export-pending"><p role="status"><Spinner size="sm" aria-hidden="true" />Preparing export…</p><Button ref={cancelButton} variant="outline" size="sm" onFocus={() => { exportHasFocus.current = true; }} onBlur={event => { if (event.relatedTarget) exportHasFocus.current = false; }} onClick={cancelExport}>Cancel export</Button></div> : null}
     {action.result ? <ActionMessage tone={action.result.status === "success" ? "success" : stale || exportDenied ? "warning" : "error"} heading={action.result.status === "success" ? "Export ready" : stale ? "Activity context changed" : exportDenied ? "Export unavailable" : "Export failed"}
       actions={action.result.status === "error" ? <Button variant="outline" size="sm" onClick={() => { void exportEvents(); }}>Retry export</Button> : stale || exportDenied ? <Button variant="outline" size="sm" onClick={refresh}>Refresh activity</Button> : undefined}>
@@ -182,7 +185,7 @@ export function AuditViewer({
     {denied ? <ActionMessage tone="warning" heading="Activity unavailable" {...(onRefreshContext ? { actions: <Button variant="outline" size="sm" onClick={refresh}>Refresh access</Button> } : {})}>{denied}</ActionMessage> : <>
       <ActivityTimeline key={JSON.stringify([scopeKey, query.pageIndex, query.pageSize])} label="Audit events" groups={groups} timeZone={timeZone} locale={locale} loading={remote.loading || pageResetPending} error={remote.error}
         onRetry={() => { heading.current?.focus(); remote.retry(); }} emptyMessage={hasFilters ? "No events match these filters. Clear the filters to see more activity." : "No events have been recorded."} />
-      <div className="pk-audit-pagination"><p className="pk-audit-note" role="status">{remote.loading ? "" : `${remote.total} matching ${remote.total === 1 ? "event" : "events"}`}</p>
+      <div className="pk-audit-pagination"><div className="pk-audit-pagination-info"><p className="pk-audit-note" role="status">{remote.loading ? "" : <><strong>{remote.total}</strong> matching {remote.total === 1 ? "event" : "events"}</>}</p><p className="pk-audit-timezone">Times shown in {timeZone}.</p></div>
         <Pagination label="Audit pages" compact page={query.pageIndex + 1} pageCount={Math.max(1, Math.ceil(remote.total / query.pageSize))} busy={remote.loading || pageResetPending} disabled={Boolean(remote.error)} onPageChange={page => { heading.current?.focus(); changeQuery({ ...query, pageIndex: page - 1 }); }} />
       </div>
     </>}
