@@ -155,21 +155,62 @@ export function RichChatExample() {
     attachments: { queue, label: "Attach files", accept: "image/png,image/jpeg,image/webp,.pdf,.txt", maxBytes: 5 * 1024 * 1024, hint: "Up to 4 files, 5 MB each. PNG, JPEG, WebP, PDF or text." },
   };
 
-  return <div className="rich-chat-example" style={{ display: "grid", gap: "var(--pk-space-4)", minWidth: 0 }}>
-    <style>{".rich-chat-example > .pk-chat-launcher { position: static; inset: auto; justify-self: start; max-inline-size: 100%; }"}</style>
-    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "var(--pk-space-2)" }}>
-      <Button variant="outline" disabled={busy} onClick={streamReply}>Stream rich reply</Button>
-      <Button variant="outline" disabled={busy} onClick={addSamples}>Add sample files</Button>
-      <Button variant="outline" aria-pressed={failNext} disabled={busy} onClick={() => { fail.current = !failNext; setFailNext(!failNext); }}>Fail next upload</Button>
-      <Button variant="ghost" aria-pressed={rtl} onClick={() => setRtl(!rtl)}>Right-to-left layout</Button>
-    </div>
-    <p style={{ margin: 0, color: "var(--pk-color-fg-muted)" }}>Uploads stay in this browser. Turn on “Fail next upload”, then add files to try recovery. Send with an empty draft to send attachments alone.</p>
-    <p role="status" style={{ margin: 0 }}>{sampleMessage}</p>
-    <ChatPanel {...chat} title="Research assistant"
-      style={{ height: "var(--pk-layout-reading)", minHeight: "var(--pk-layout-dialog-sm)", maxHeight: "85dvh" }} />
-    <ChatWidget {...chat} title="Rich chat widget" launcherLabel="Open rich chat" />
-    <section aria-label="Reusable code block" style={{ minWidth: 0 }}>
+  return <div className="rich-chat-example">
+    <style>{`
+      .rich-chat-example {
+        display: grid; gap: var(--pk-space-5); min-inline-size: 0; inline-size: 100%;
+        max-inline-size: calc(var(--pk-layout-reading) + var(--pk-space-16) * 2); margin-inline: auto;
+      }
+      .rich-chat-example-intro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-4); }
+      .rich-chat-example-intro > div { flex: 1; min-inline-size: min(100%, var(--pk-layout-sidebar)); }
+      .rich-chat-example-intro h3, .rich-chat-example-control-group h4, .rich-chat-example-specimen h3 { margin: 0; font-weight: var(--pk-font-weight-semibold); line-height: var(--pk-font-line-height-snug); }
+      .rich-chat-example-intro h3 { font-size: var(--pk-font-size-lg); }
+      .rich-chat-example-intro p, .rich-chat-example-controls p, .rich-chat-example-specimen > p {
+        margin: var(--pk-space-1) 0 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); overflow-wrap: anywhere;
+      }
+      .rich-chat-example-panel { block-size: var(--pk-layout-reading); min-block-size: var(--pk-layout-dialog-sm); max-block-size: 85dvh; }
+      .rich-chat-example-controls {
+        display: flex; flex-wrap: wrap; gap: var(--pk-space-5); padding: var(--pk-space-4);
+        border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-bg-muted);
+      }
+      .rich-chat-example-control-group { display: grid; align-content: start; gap: var(--pk-space-3); flex: 1; min-inline-size: min(100%, var(--pk-layout-sidebar)); }
+      .rich-chat-example-control-group h4 { font-size: var(--pk-font-size-sm); }
+      .rich-chat-example-control-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-2); }
+      .rich-chat-example-controls .rich-chat-example-status { flex-basis: 100%; margin: 0; color: var(--pk-color-fg); }
+      .rich-chat-example-controls .pk-chat-launcher {
+        position: static; inset: auto; max-inline-size: 100%; --pk-button-height: var(--pk-control-height-sm);
+        padding: var(--pk-space-1) var(--pk-control-padding-x-sm); border-radius: var(--pk-radius-sm); font-size: var(--pk-font-size-sm); box-shadow: var(--pk-shadow-none);
+      }
+      .rich-chat-example-specimen { display: grid; gap: var(--pk-space-3); min-inline-size: 0; padding-block-start: var(--pk-space-2); }
+      .rich-chat-example-specimen h3 { font-size: var(--pk-font-size-base); }
+      .rich-chat-example-specimen > p { margin: calc(var(--pk-space-2) * -1) 0 0; }
+    `}</style>
+    <header className="rich-chat-example-intro">
+      <div><h3>Project review</h3><p>Read the response, inspect its sources, then add your files.</p></div>
+      <Button size="sm" disabled={busy} onClick={streamReply}>Stream rich reply</Button>
+    </header>
+    <ChatPanel {...chat} title="Research assistant" className="rich-chat-example-panel" />
+    <section className="rich-chat-example-controls" aria-label="Preview controls">
+      <div className="rich-chat-example-control-group">
+        <div><h4>Try attachments</h4><p>Files stay in this browser. Send with an empty draft to send files alone.</p></div>
+        <div className="rich-chat-example-control-actions" role="group" aria-label="Attachment preview controls">
+          <Button size="sm" variant="outline" disabled={busy} onClick={addSamples}>Add sample files</Button>
+          <Button size="sm" variant="ghost" aria-pressed={failNext} disabled={busy} onClick={() => { fail.current = !failNext; setFailNext(!failNext); }}>Fail next upload</Button>
+        </div>
+        <p>Turn on “Fail next upload” before adding files to try recovery.</p>
+      </div>
+      <div className="rich-chat-example-control-group">
+        <div><h4>Try another view</h4><p>The floating widget shares this conversation and draft.</p></div>
+        <div className="rich-chat-example-control-actions" role="group" aria-label="Layout preview controls">
+          <ChatWidget {...chat} title="Rich chat widget" launcherLabel="Open rich chat" />
+          <Button size="sm" variant="ghost" aria-pressed={rtl} onClick={() => setRtl(!rtl)}>Right-to-left layout</Button>
+        </div>
+      </div>
+      <p role="status" className={sampleMessage ? "rich-chat-example-status" : "pk-visually-hidden"}>{sampleMessage}</p>
+    </section>
+    <section className="rich-chat-example-specimen" aria-label="Reusable code block">
       <h3>Reusable code block</h3>
+      <p>Use the same copy control and code surface outside a conversation.</p>
       <CodeBlock language="typescript" code={'const title = "Release notes";\nconsole.log(title);'} />
     </section>
   </div>;
