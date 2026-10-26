@@ -1,7 +1,7 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, type FormEvent } from "react";
-import { Button, FormActions, FormSection, SaveStatus, Switch } from "@evenkit/ui";
+import { useId, useLayoutEffect, useRef, useState, type FormEvent } from "react";
+import { Badge, Button, FormActions, FormSection, SaveStatus, Switch } from "@evenkit/ui";
 
 export interface NotificationChannel { id: string; label: string; description?: string; unavailable?: string }
 export interface NotificationPreferencePolicy {
@@ -45,6 +45,7 @@ function normalize(value: NotificationPreferenceValue, categories: readonly Noti
 export function NotificationPreferences({ contextKey, revision, channels, categories, value, readOnlyReason,
   label = "Notification preferences", description = "Choose how you receive updates for each category.", onSave, onSaved }: NotificationPreferencesProps) {
   const scope = JSON.stringify([contextKey, revision, channels, categories, readOnlyReason]);
+  const descriptionId = useId();
   const [saved, setSaved] = useState(() => normalize(value, categories, channels));
   const [draft, setDraft] = useState(saved);
   const [pending, setPending] = useState(false);
@@ -130,32 +131,46 @@ export function NotificationPreferences({ contextKey, revision, channels, catego
         });
       }
     }}>
-    <FormSection heading={label} description={description}>
-      {readOnlyReason ? <p className="pk-settings-note">{readOnlyReason}</p> : null}
-      {categories.length === 0 || channels.length === 0 ? <p className="pk-settings-note">No notification preferences are available.</p> : categories.map(category => <fieldset className="pk-notification-preference-category" key={category.id}>
-        <legend>{category.label}</legend>
-        {category.description ? <p>{category.description}</p> : null}
-        {category.readOnlyReason ? <p>{category.readOnlyReason}</p> : null}
-        <div className="pk-notification-preference-channels">{channels.map(channel => {
-          const policy = category.policies?.[channel.id];
-          const reason = readOnlyReason || category.readOnlyReason || policy?.required || policy?.readOnlyReason || policy?.unavailable || channel.unavailable;
-          return <Switch key={channel.id} label={channel.label} aria-label={`${category.label}: ${channel.label}`} checked={draft[category.id]?.[channel.id] === true}
-            aria-disabled={Boolean(reason) || pending || undefined} controlSize="md"
-            hint={[channel.description, reason].filter(Boolean).join(" ") || undefined}
-            onCheckedChange={checked => {
-              if (reason || request.current) return;
-              setDraft(current => ({ ...current, [category.id]: { ...current[category.id], [channel.id]: checked } }));
-              setError(""); setNote("");
-            }} />;
-        })}</div>
-      </fieldset>)}
+    <FormSection className="pk-notification-preference-section" heading={label} description={description}>
+      {readOnlyReason ? <p className="pk-notification-preference-access"><Badge size="sm">View only</Badge><span>{readOnlyReason}</span></p> : null}
+      {channels.some(channel => channel.description) ? <dl className="pk-notification-preference-guide" aria-label="Delivery channels">{channels.map((channel, index) => channel.description ? <div key={channel.id}>
+        <dt>{channel.label}</dt><dd id={`${descriptionId}-${index}`}>{channel.description}</dd>
+      </div> : null)}</dl> : null}
+      {categories.length === 0 || channels.length === 0 ? <p className="pk-settings-note">No notification preferences are available.</p> : <div className="pk-notification-preference-categories">{categories.map(category => <fieldset className="pk-notification-preference-category" key={category.id}>
+        <legend className="pk-visually-hidden">{category.label}</legend>
+        <div className="pk-notification-preference-category-body">
+          <div className="pk-notification-preference-category-heading">
+            <h3>{category.label}</h3>
+            {category.description ? <p>{category.description}</p> : null}
+            {category.readOnlyReason ? <p>{category.readOnlyReason}</p> : null}
+          </div>
+          <div className="pk-notification-preference-channels">{channels.map((channel, channelIndex) => {
+            const policy = category.policies?.[channel.id];
+            const reason = readOnlyReason || category.readOnlyReason || policy?.required || policy?.readOnlyReason || policy?.unavailable || channel.unavailable;
+            const policyLabel = readOnlyReason ? "View only" : category.readOnlyReason ? "Managed" : policy?.required ? "Required" : policy?.readOnlyReason ? "Managed" : policy?.unavailable || channel.unavailable ? "Unavailable" : null;
+            return <div key={channel.id} className="pk-notification-preference-option" data-locked={Boolean(reason) || undefined}>
+              <Switch label={channel.label} aria-label={`${category.label}: ${channel.label}`} checked={draft[category.id]?.[channel.id] === true}
+                aria-disabled={Boolean(reason) || pending || undefined} controlSize="md"
+                aria-describedby={channel.description ? `${descriptionId}-${channelIndex}` : undefined}
+                hint={reason ? <><Badge size="sm" variant="outline">{policyLabel}</Badge><span>{reason}</span></> : undefined}
+                onCheckedChange={checked => {
+                  if (reason || request.current) return;
+                  setDraft(current => ({ ...current, [category.id]: { ...current[category.id], [channel.id]: checked } }));
+                  setError(""); setNote("");
+                }} />
+            </div>;
+          })}</div>
+        </div>
+      </fieldset>)}</div>}
     </FormSection>
-    <SaveStatus state={error ? "error" : pending ? "saving" : note === "Notification preferences saved." ? "saved" : dirty ? "dirty" : "idle"}
-      role={error ? "alert" : "status"}>{error || (pending ? "Saving notification preferences…" : note || (dirty ? "You have unsaved changes." : "No changes to save."))}</SaveStatus>
-    <FormActions>
-      <Button ref={saveButton} type="submit" aria-disabled={pending || !dirty || !editable || undefined} aria-busy={pending || undefined}>{error ? "Retry save" : "Save preferences"}</Button>
-      <Button type="reset" variant="ghost" aria-disabled={pending || !dirty || undefined}>Reset changes</Button>
-      {pending ? <Button ref={cancelButton} variant="outline" onClick={cancel}>Cancel save</Button> : null}
-    </FormActions>
+    <div className="pk-notification-preference-footer">
+      <SaveStatus state={error ? "error" : pending ? "saving" : note === "Notification preferences saved." ? "saved" : dirty ? "dirty" : "idle"}
+        role={error ? "alert" : "status"}>{error || (pending ? "Saving notification preferences…" : note || (dirty ? "You have unsaved changes." : "No changes to save."))}</SaveStatus>
+      <FormActions>
+        <Button ref={saveButton} type="submit" aria-disabled={pending || !dirty || !editable || undefined} aria-busy={pending || undefined}>{error ? "Retry save" : "Save preferences"}</Button>
+        <Button type="reset" variant="ghost" aria-disabled={pending || !dirty || undefined}>Reset changes</Button>
+        {pending ? <Button ref={cancelButton} variant="outline" onClick={cancel}>Cancel save</Button> : null}
+      </FormActions>
+    </div>
   </form>;
 }

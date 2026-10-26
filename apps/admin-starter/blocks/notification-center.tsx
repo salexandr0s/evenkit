@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useLayoutEffect, useRef, useState } from "react";
-import { ActionMessage, Button, Checkbox, EmptyState, InboxIcon, NotificationList, Pagination, Spinner, type NotificationGroup, type NotificationOperation, type NotificationPage, type NotificationRequestContext } from "@evenkit/ui";
+import { ActionMessage, Button, CheckIcon, Checkbox, EmptyState, InboxIcon, NotificationList, Pagination, Spinner, UnreadIndicator, type NotificationGroup, type NotificationOperation, type NotificationPage, type NotificationRequestContext } from "@evenkit/ui";
 
 export interface NotificationCenterProps extends NotificationPage {
   /** Change for account, workspace, filter, or other security/context boundaries. */
@@ -38,6 +38,7 @@ export function NotificationCenter({ groups, page, pageCount, contextKey, revisi
   const eligible = disabled ? [] : items.filter(item => !item.readOnlyReason);
   const selectedIds = selected.filter(id => eligible.some(item => item.id === id));
   const unreadIds = eligible.filter(item => !item.read).map(item => item.id);
+  const pageUnreadCount = items.filter(item => !item.read).length;
   const requestKey = JSON.stringify([contextKey, revision, page, pageCount, disabled, dataIdentity(groups)]);
   const committedKey = useRef(requestKey);
   const scopeKey = JSON.stringify([contextKey, page]);
@@ -106,12 +107,20 @@ export function NotificationCenter({ groups, page, pageCount, contextKey, revisi
   const selectionState = selectedIds.length === 0 ? false : selectedIds.length === eligible.length ? true : "indeterminate";
 
   return <section className="pk-notification-center" aria-labelledby={headingId} onFocusCapture={event => { if (event.target instanceof HTMLElement) focused.current = event.target; }}>
-    <h2 id={headingId} ref={heading} tabIndex={-1} className="pk-notification-center-heading">{title}</h2>
+    <header className="pk-notification-header">
+      <span className="pk-notification-header-icon" aria-hidden="true"><InboxIcon size="lg" /></span>
+      <div className="pk-notification-header-content">
+        <div className="pk-notification-heading-row"><h2 id={headingId} ref={heading} tabIndex={-1} className="pk-notification-center-heading">{title}</h2><UnreadIndicator count={pageUnreadCount} label={`${pageUnreadCount} unread ${pageUnreadCount === 1 ? "notification" : "notifications"} on this page`} /><span className="pk-notification-unread-label" aria-hidden="true">unread</span></div>
+        <p className="pk-notification-context">{items.length} {items.length === 1 ? "notification" : "notifications"} on this page{pageCount > 0 ? ` · Page ${page} of ${pageCount}` : ""}</p>
+      </div>
+      <Button className="pk-notification-mark-page" size="sm" variant="outline" startIcon={<CheckIcon size="sm" />} disabled={disabled || unreadIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(unreadIds, true); }}>Mark all on this page as read</Button>
+    </header>
     <div className="pk-notification-toolbar" role="group" aria-label="Current page notification actions">
-      <Checkbox label="Select this page" checked={selectionState} disabled={disabled || eligible.length === 0} aria-disabled={busy || undefined} onCheckedChange={checked => { if (!busy) setSelected(checked === true ? eligible.map(item => item.id) : []); }} />
-      <Button size="sm" variant="outline" disabled={disabled || selectedIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(selectedIds, true); }}>Mark selected as read</Button>
-      <Button size="sm" variant="ghost" disabled={disabled || selectedIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(selectedIds, false); }}>Mark selected as unread</Button>
-      <Button size="sm" variant="ghost" disabled={disabled || unreadIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(unreadIds, true); }}>Mark all on this page as read</Button>
+      <div className="pk-notification-selection"><Checkbox label="Select this page" checked={selectionState} disabled={disabled || eligible.length === 0} aria-disabled={busy || undefined} onCheckedChange={checked => { if (!busy) setSelected(checked === true ? eligible.map(item => item.id) : []); }} /></div>
+      <div className="pk-notification-selection-actions">
+        <Button size="sm" variant="ghost" disabled={disabled || selectedIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(selectedIds, true); }}>Mark selected as read</Button>
+        <Button size="sm" variant="ghost" disabled={disabled || selectedIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(selectedIds, false); }}>Mark selected as unread</Button>
+      </div>
       <p className="pk-notification-scope">{selectedIds.length} selected on this page. Selection and mark all exclude other pages and unavailable items.</p>
     </div>
     {error ? <ActionMessage tone="error" heading="Notifications could not be loaded" actions={<Button size="sm" variant="outline" disabled={disabled} aria-disabled={busy || undefined} onClick={() => { if (!busy) void run({ type: "page", page }); }}>Retry loading notifications</Button>}>{error}</ActionMessage> : null}
@@ -119,8 +128,10 @@ export function NotificationCenter({ groups, page, pageCount, contextKey, revisi
       {items.length ? <NotificationList groups={groups} selectedIds={selectedIds} disabled={disabled} busy={busy} onSelectionChange={(id, checked) => setSelected(current => checked ? [...new Set([...current, id])] : current.filter(value => value !== id))} onReadChange={(id, read) => mark([id], read)} onAction={(notificationId, actionId) => { void run({ type: "operation", operation: { type: "action", notificationId, actionId } }); }} /> : !loading && !error && !pending ? <EmptyState title="No notifications" description="New updates will appear here." icon={<InboxIcon />} size="sm" /> : null}
     </div>
     {failure ? <ActionMessage tone="error" heading={failure.task.type === "page" ? "Page could not be loaded" : "Notification action failed"} actions={<Button size="sm" variant="outline" disabled={disabled} aria-disabled={busy || undefined} onClick={() => { if (!busy) void run(failure.task); }}>Retry notification request</Button>}>{failure.message}</ActionMessage> : null}
-    <p className="pk-notification-note" role="status" aria-atomic="true">{busy ? <><Spinner size="sm" aria-hidden="true" /> {pending?.type === "operation" ? "Updating notifications…" : "Loading notifications…"}</> : note}</p>
-    {pending ? <Button size="sm" variant="outline" onClick={cancel}>Cancel notification request</Button> : null}
-    <Pagination page={page} pageCount={pageCount} label="Notification pages" aria-disabled={busy || undefined} disabled={disabled} onPageChange={next => { if (!busy) void run({ type: "page", page: next }); }} />
+    <footer className="pk-notification-footer">
+      <p className="pk-notification-note" role="status" aria-atomic="true">{busy ? <><Spinner size="sm" aria-hidden="true" /> {pending?.type === "operation" ? "Updating notifications…" : "Loading notifications…"}</> : note}</p>
+      {pending ? <Button size="sm" variant="outline" onClick={cancel}>Cancel notification request</Button> : null}
+      <Pagination page={page} pageCount={pageCount} label="Notification pages" aria-disabled={busy || undefined} disabled={disabled} onPageChange={next => { if (!busy) void run({ type: "page", page: next }); }} />
+    </footer>
   </section>;
 }
