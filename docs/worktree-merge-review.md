@@ -3,7 +3,7 @@
 26 October 2026. Target: `codex/component-improvements`, starting at `71f8aa6`.
 Temporary integration checkout: `/Users/nationalbank/.codex/worktrees/merge-recent-worktrees/design-tokens`, branch `codex/merge-recent-worktrees`.
 
-Ten completed worktree snapshots are integrated and verified. The primary checkout was fast-forwarded to `8187a1a`, retaining its uncommitted catalog/LLM metadata changes. A final build, typecheck and lint in that checkout passed. Later uncommitted sidebar edits are outside this verification snapshot.
+Ten completed worktree snapshots are integrated and verified. The primary checkout was fast-forwarded to `8187a1a`, retaining its uncommitted catalog/LLM metadata changes. A final build, typecheck and lint in that checkout passed. Later uncommitted UI/sidebar edits are outside this verification snapshot.
 
 ## Source revisions
 
@@ -20,7 +20,7 @@ Ten completed worktree snapshots are integrated and verified. The primary checko
 | `codex/team-admin` | `1dc9ae5` | Audited deltas applied; ancestry reconciled |
 | `codex/website-blocks` | `caff633` | Audited deltas applied; ancestry reconciled |
 
-The refinement snapshot includes lock-icon discovery, explicit password-toggle captions, document Undo availability, package-fixture hydration and final design evidence. Existing `main` and `codex/auth-pages` histories are retained. These cutoffs identify completed work; subsequent sidebar edits started after this cutoff and remain uncommitted outside the merge.
+The refinement snapshot includes lock-icon discovery, explicit password-toggle captions, document Undo availability, package-fixture hydration and final design evidence. Existing `main` and `codex/auth-pages` histories are retained. These cutoffs identify completed work; subsequent UI/sidebar edits started after this cutoff and remain uncommitted outside the merge.
 
 ## Merge decisions
 
@@ -66,4 +66,4 @@ Historical feature screenshots and checks remain in each source checkout at `/Us
 
 Admin coverage across three browser engines does not establish physical Safari/mobile-device behavior. Physical touch, native mobile keyboards and spoken screen-reader output remain unverified. Live provider delivery, production authorization and private-storage behavior require their own application environments; local fictional flows and browser checks do not establish those properties.
 
-No packages were published, no site was deployed and no application was migrated. Source branches/worktrees are retained. The temporary integration checkout can be archived after its ignored verification evidence is copied to the primary checkout; that evidence is now under `.artifacts/worktree-integration/`. No required merge work remains for the recorded cutoffs.
+No packages were published, no site was deployed and no application was migrated. Source branches/worktrees are retained. Verification evidence was copied to the primary checkout under `.artifacts/worktree-integration/`. The app rejected archiving the integration checkout because it is this task's primary checkout, so that clean snapshot is retained. No required merge work remains for the recorded cutoffs.
