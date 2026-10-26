@@ -40,12 +40,10 @@
   padding-block: var(--pk-space-2); padding-inline: var(--pk-space-4) var(--pk-space-3); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border);
 }
 .pk-chat-source-preview-footer small { min-inline-size: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); overflow-wrap: anywhere; }
-.pk-chat-source-preview-footer .pk-button { margin-inline-start: auto; }
 /* 360px is twice foundation.layout.menuMin. */
 @container pk-chat-sources (max-width: 360px) {
-  .pk-chat-source-row { grid-template-columns: auto minmax(0, 1fr); gap: var(--pk-space-2) var(--pk-space-3); }
-  .pk-chat-source-preview-trigger.pk-button { grid-column: 2; justify-self: start; margin-inline-start: calc(var(--pk-space-2) * -1); }
+  .pk-chat-source-row { gap: var(--pk-space-2); }
 }
 @media (max-width: 639px), (pointer: coarse) {
-  .pk-chat-source-preview-trigger.pk-button, .pk-chat-source-preview-footer .pk-button { min-block-size: var(--pk-layout-touch); }
+  .pk-chat-source-preview-trigger.pk-button, .pk-chat-source-preview-heading > .pk-button { min-block-size: var(--pk-layout-touch); min-inline-size: var(--pk-layout-touch); }
 }

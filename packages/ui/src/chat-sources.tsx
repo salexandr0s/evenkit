@@ -41,7 +41,7 @@ function sourceDomain(href: string | undefined): string | undefined {
 }
 
 function SourcePreview({ source, labels, available, dir, domain, index }: {
-  source: ChatSource; labels: ChatSourcesLabels; available: boolean; dir: ChatSourcesProps["dir"]; domain?: string; index: number;
+  source: ChatSource; labels: ChatSourcesLabels; available: boolean; dir: ChatSourcesProps["dir"]; domain: string | undefined; index: number;
 }) {
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);

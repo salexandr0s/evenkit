@@ -16,7 +16,7 @@ import {
   ShapesIcon, SlidersHorizontalIcon, SquareCheckIcon, Table2Icon, TagsIcon,
   ToggleRightIcon, TriangleAlertIcon, TypeIcon, UploadIcon, UserIcon, UsersIcon,
   CalendarDaysIcon, ClockIcon, Building2Icon, ActivityIcon, CameraIcon, CalculatorIcon,
-  UsersIcon, UserPlusIcon, ShieldIcon, WifiIcon,
+  UserPlusIcon, ShieldIcon, WifiIcon,
 } from "@evenkit/ui";
 import { entries, groups } from "./catalog-data";
 import { foundationsEntries } from "./foundations-entries";

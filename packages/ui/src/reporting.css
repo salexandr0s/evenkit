@@ -22,6 +22,9 @@
 .pk-dashboard-statistics { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--pk-layout-sidebar)), 1fr)); gap: var(--pk-space-6); padding-block: var(--pk-space-6); border-block: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .pk-dashboard-statistics > .pk-statistic { padding: 0; border: 0; border-radius: 0; background: transparent; }
 .pk-dashboard-statistics .pk-statistic-footer { border: 0; padding: 0; }
+@supports (grid-template-rows: subgrid) {
+  .pk-dashboard-statistics { row-gap: 0; }
+}
 .pk-dashboard-support { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--pk-space-6); min-inline-size: 0; }
 .pk-dashboard-section { display: grid; flex: 2 1 var(--pk-layout-form); gap: var(--pk-space-3); min-inline-size: 0; max-inline-size: 100%; }
 .pk-dashboard-activity { display: grid; flex: 1 1 var(--pk-layout-sidebar); gap: var(--pk-space-5); min-inline-size: 0; max-inline-size: 100%; padding: var(--pk-space-5); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface); }

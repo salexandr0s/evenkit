@@ -28,7 +28,8 @@ test("rich content keeps plain text, safe links and keyboard copy feedback", asy
   await expect(page).toHaveURL("https://commonmark.org/help/");
 });
 
-test("citations retain RTL, keyboard preview scrolling and modal Escape order", async ({ page }) => {
+for (const reducedMotion of ["reduce", "no-preference"] as const) test(`citations retain RTL, keyboard preview scrolling and modal Escape order (${reducedMotion})`, async ({ page }) => {
+  await page.emulateMedia({ reducedMotion });
   await page.goto("/#rich-chat");
   await page.getByRole("button", { name: "Right-to-left layout", exact: true }).click();
   await page.getByRole("button", { name: "Open rich chat", exact: true }).click();
@@ -49,6 +50,12 @@ test("citations retain RTL, keyboard preview scrolling and modal Escape order", 
   await expect(preview).toHaveCount(0);
   await expect(chat).toBeVisible();
   await expect(trigger).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(chat).toHaveCount(0);
+  const launcher = page.getByRole("button", { name: "Open rich chat", exact: true });
+  await expect(launcher).toBeFocused();
+  await page.keyboard.press("Enter");
+  await trigger.focus();
   await page.keyboard.press("Enter");
   const close = page.getByRole("dialog", { name: "CommonMark reference", exact: true }).getByRole("button", { name: "Close preview", exact: true });
   await close.focus();
