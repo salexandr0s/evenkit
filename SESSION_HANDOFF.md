@@ -1,3 +1,35 @@
+# Session handoff: 26 October 2026
+
+Status: DONE. Completed the design and UI-copy pass across the expanded Evenkit catalog, editable blocks and assembled admin application. Worktree: `/Users/nationalbank/.codex/worktrees/evenkit-design-pass/design-tokens`; branch: `codex/evenkit-design-pass`; integrated base: `71f8aa6`. The original checkout and concurrent work remain separate and preserved. No push, publication or deployment occurred.
+
+## Completed
+
+Readable mobile document tables; aligned document cards, statistics, website features and Card owner rows; bounded website forms/article media; consistent admin gutters and compact mobile metrics; keyboard tooltips for familiar utility controls; compact chat citation actions with preserved excerpt focus and nested Escape behavior; specific UI copy with accurate demo/service boundaries. Existing public props, URLs, routing and application callbacks remain intact.
+
+Implementation commits: `2d69f9c` website, `688d8ea` data/reporting, `8a2930c` admin, `be04b00` utility controls, `05cef61` catalog/copy, `fc80a25` chat. Full change/evidence/verification details are in [docs/design-pass-review.md](docs/design-pass-review.md). Before/after gallery: `.artifacts/design-pass/evidence.html`.
+
+## Verification
+
+Package/catalog and Next admin production builds, configured workspace TypeScript and full ESLint passed. All 47 unit tests and 294 Chromium browser journeys passed. The final localized tooltip-layer correction then passed all five affected rich-chat journeys, an independent four-path normal/reduced-motion RTL dismissal check, rebuilt packages/catalog, TypeScript, lint and independent packed Vite/Next consumers. All 116 copied examples/104 mappings passed. Copied website assemblies also passed independent Vite/Next checks.
+
+Visual/state checks include all eight themes in light/dark, desktop/mobile, short viewports, long content, RTL, reduced motion, focus recovery, busy/error/retry, and overflow. The baseline includes 232 catalog captures; targeted family evidence and matrix scope are recorded in the review. No known failing check or unresolved review finding remains.
+
+## Limits and resume
+
+Chromium only; Safari/Firefox, physical touch/IME and screen-reader speech were not tested. Real provider services were not used. Older browsers without subgrid use natural-flow fallback alignment. Local ignored evidence stays in this attached worktree. These local commits are ready for review/integration; they were not merged into the original checkout.
+
+```sh
+cd /Users/nationalbank/.codex/worktrees/evenkit-design-pass/design-tokens
+git status --short
+git log --oneline 71f8aa6..HEAD
+# Catalog preview, if stopped:
+npm run preview --workspace @evenkit/catalog -- --port 5591 --strictPort
+```
+
+The retained catalog preview is `http://127.0.0.1:5591/`; assembled admin development preview is `http://127.0.0.1:5596/`. Other temporary verification servers are cleaned up. Earlier integrated handoff history follows for reference.
+
+---
+
 # Team administration handoff: 25 October 2026
 
 Status: DONE. Branch `codex/team-admin`, isolated checkout `/Users/nationalbank/.codex/worktrees/team-admin/design-tokens`. Base `b588b1b1964ba2b26ee8453606f354f2c33eb10d` from the latest local `codex/component-improvements` after fetching origin. Implementation commit `3f591ea6fa13ffba7898c151caf3f158d2dc0774`.
