@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type RefObject } from "react";
+import { useLayoutEffect, useRef, type RefObject } from "react";
 import { Button, ButtonLink } from "./button.js";
 import { classes } from "./classes.js";
 import { Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./dialog.js";
@@ -29,25 +29,45 @@ export interface FilePreviewProps {
   file: MediaFile;
   /** The application refreshes access and publishes a new preview state. */
   onRefresh?: (file: MediaFile) => void;
+  /** Thumbnails are passive: the containing card supplies its preview action. */
+  variant?: "default" | "thumbnail";
   showActions?: boolean;
   className?: string;
 }
 
 const textLimit = 100_000;
 
+const fileTypeLabels = new Map([
+  ["image/png", "PNG image"], ["image/jpeg", "JPEG image"], ["image/webp", "WebP image"],
+  ["image/avif", "AVIF image"], ["image/gif", "GIF image"], ["image/svg+xml", "SVG image"],
+  ["text/plain", "Plain text"], ["text/html", "HTML document"], ["application/pdf", "PDF document"],
+]);
+
+/** Shared display labels for file metadata; preview support is a separate policy. */
+export function mediaFileTypeLabel(mimeType: string) {
+  return fileTypeLabels.get(mimeType.split(";", 1)[0]?.trim().toLowerCase() ?? "") ?? "File";
+}
+
 function FileActions({ file }: { file: MediaFile }) {
   const open = mediaHref(file.openHref);
   const download = mediaHref(file.downloadHref);
   if (!open && !download) return null;
   return <div className="pk-file-preview-actions">
-    {open ? <ButtonLink href={open} target="_blank" rel="noopener noreferrer" variant="outline" startIcon={<ExternalLinkIcon />} aria-label={`Open ${file.name} in a new tab`}>Open file</ButtonLink> : null}
-    {download ? <ButtonLink href={download} download={file.name} variant="outline" startIcon={<DownloadIcon />} aria-label={`Download ${file.name}`}>Download</ButtonLink> : null}
+    {open ? <ButtonLink href={open} target="_blank" rel="noopener noreferrer" size="sm" variant="ghost" startIcon={<ExternalLinkIcon />} aria-label={`Open ${file.name} in a new tab`}>Open file</ButtonLink> : null}
+    {download ? <ButtonLink href={download} download={file.name} size="sm" variant="outline" startIcon={<DownloadIcon />} aria-label={`Download ${file.name}`}>Download</ButtonLink> : null}
   </div>;
 }
 
 /** Images and escaped plain text only. Files are never fetched or embedded as documents. */
-export function FilePreview({ file, onRefresh, showActions = true, className }: FilePreviewProps) {
+export function FilePreview({ file, onRefresh, variant = "default", showActions = true, className }: FilePreviewProps) {
   const frame = useRef<HTMLElement | null>(null);
+  const focused = useRef<HTMLElement | null>(null);
+  const thumbnail = variant === "thumbnail";
+  useLayoutEffect(() => {
+    const previous = focused.current;
+    const doc = frame.current?.ownerDocument;
+    if (!thumbnail && previous && !previous.isConnected && doc && doc.activeElement === doc.body) frame.current?.focus({ preventScroll: true });
+  });
   const kind = mediaPreviewKind(file.mimeType);
   const preview = file.preview;
   const url = preview?.status === "ready" && "url" in preview ? mediaHref(preview.url) : undefined;
@@ -55,18 +75,25 @@ export function FilePreview({ file, onRefresh, showActions = true, className }: 
   const hasPreview = kind === "image" ? Boolean(url) : kind === "text" && text !== undefined;
   const state = preview?.status === "ready" ? hasPreview ? "ready" : "unavailable" : preview?.status ?? "unavailable";
   const hasActions = Boolean(mediaHref(file.openHref) || mediaHref(file.downloadHref));
+  const typeLabel = mediaFileTypeLabel(file.mimeType);
+  const fallbackTitle = state === "expired" ? "Preview expired" : kind === "unsupported" ? "Preview not supported" : "Preview unavailable";
   const message = preview && "message" in preview && preview.message
     ? preview.message
     : state === "expired" ? "Preview access has expired. Request a fresh preview to continue."
       : kind === "unsupported" ? "This file type has no inline preview."
         : "This preview is unavailable. The file may have moved or access may have changed.";
   function refresh() { frame.current?.focus({ preventScroll: true }); onRefresh?.(file); }
-  return <section ref={frame} tabIndex={-1} className={classes("pk-file-preview", className)} aria-label={`Preview of ${file.name}`} data-state={state}>
-    {state === "loading" ? <div className="pk-file-preview-placeholder" role="status"><Spinner aria-hidden="true" /><span>{preview?.status === "loading" && preview.message ? preview.message : `Loading preview for ${file.name}…`}</span></div>
-      : state === "ready" && kind === "image" && url ? <Image key={`${file.id}:${url}`} src={url} alt={file.name} fit="contain" loading="eager" fallback="Image unavailable. Open or download the file, or try again." retryLabel={`Retry preview of ${file.name}`} {...(onRefresh ? { onRetry: refresh } : {})} />
-        : state === "ready" && kind === "text" && text !== undefined ? <div className="pk-file-preview-text"><pre tabIndex={0} role="region" aria-label={`Text content of ${file.name}`}>{text.slice(0, textLimit)}</pre>{text.length > textLimit ? <p>Showing the first {textLimit.toLocaleString("en")} characters. Open or download the file to read the rest.</p> : null}</div>
-          : <EmptyState size="sm" icon={<FileTextIcon />} title={state === "expired" ? "Preview expired" : kind === "unsupported" ? "Preview not supported" : "Preview unavailable"} description={<><p>{message}</p><p>{hasActions ? showActions ? "Open or download the file below." : "Open the file preview for available actions." : "Ask the file owner for access or a download link."}</p></>} action={onRefresh && kind !== "unsupported" ? <Button variant="outline" onClick={refresh} startIcon={<RotateCcwIcon />} aria-label={`Refresh preview of ${file.name}`}>Refresh preview</Button> : undefined} />}
-    {showActions ? <FileActions file={file} /> : null}
+  return <section ref={frame} tabIndex={thumbnail ? undefined : -1} className={classes("pk-file-preview", className)} aria-label={`Preview of ${file.name}`} data-state={state} data-variant={variant}
+    onFocusCapture={event => { focused.current = event.target; }} onBlurCapture={event => { if (event.relatedTarget !== null) focused.current = null; }}>
+    {!thumbnail ? <div className="pk-file-preview-header"><span className="pk-file-preview-icon" aria-hidden="true"><FileTextIcon /></span><div><strong>{file.name}</strong><span>{typeLabel}</span></div></div> : null}
+    <div className="pk-file-preview-stage" data-kind={kind}>
+      {state === "loading" ? <div className="pk-file-preview-placeholder" role="status" tabIndex={thumbnail ? undefined : 0}><Spinner aria-hidden="true" /><span>{thumbnail ? "Loading preview…" : preview?.status === "loading" && preview.message ? preview.message : `Loading preview for ${file.name}…`}</span></div>
+        : state === "ready" && kind === "image" && url ? <Image key={`${file.id}:${url}`} src={url} alt={file.name} fit="contain" loading="eager" fallback={thumbnail ? "Preview unavailable" : "Image unavailable. Open or download the file, or try again."} retryable={!thumbnail} retryLabel={`Retry preview of ${file.name}`} {...(!thumbnail && onRefresh ? { onRetry: refresh } : {})} />
+          : state === "ready" && kind === "text" && text !== undefined ? <div className="pk-file-preview-text"><pre tabIndex={thumbnail ? undefined : 0} role={thumbnail ? undefined : "region"} aria-label={thumbnail ? undefined : `Text content of ${file.name}`}>{text.slice(0, thumbnail ? 240 : textLimit)}</pre>{!thumbnail && text.length > textLimit ? <p>Showing the first {textLimit.toLocaleString("en")} characters. Open or download the file to read the rest.</p> : null}</div>
+            : thumbnail ? <div className="pk-file-preview-summary"><FileTextIcon aria-hidden="true" /><strong>{typeLabel}</strong><span>{fallbackTitle}</span></div>
+              : <EmptyState size="sm" tabIndex={0} role="region" aria-label={`Preview status for ${file.name}`} icon={<FileTextIcon />} title={fallbackTitle} description={<><p>{message}</p><p>{hasActions ? showActions ? "Open or download the file below." : "Open the file preview for available actions." : "Ask the file owner for access or a download link."}</p></>} action={onRefresh && kind !== "unsupported" ? <Button size="sm" variant="outline" onClick={refresh} startIcon={<RotateCcwIcon />} aria-label={`Refresh preview of ${file.name}`}>Refresh preview</Button> : undefined} />}
+    </div>
+    {showActions && !thumbnail ? <FileActions file={file} /> : null}
   </section>;
 }
 

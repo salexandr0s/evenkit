@@ -31,6 +31,12 @@ test("expired and failed previews recover while plain text stays inert and unsup
   await preview.getByRole("button", { name: "Refresh preview of Evenkit logo.png", exact: true }).click();
   await expect(preview.locator(".pk-image")).toHaveAttribute("data-state", "loaded");
   await expect(preview).toBeFocused();
+  await page.getByRole("button", { name: "Show loading", exact: true }).click();
+  await preview.locator(".pk-file-preview-placeholder").focus();
+  // A host completion can replace the focused scroll area without another click.
+  await page.getByRole("button", { name: "Restore preview", exact: true }).evaluate(button => { if (button instanceof HTMLButtonElement) button.click(); });
+  await expect(preview.locator(".pk-image")).toHaveAttribute("data-state", "loaded");
+  await expect(preview).toBeFocused();
   await page.getByRole("button", { name: "Break image", exact: true }).click();
   await expect(preview.locator(".pk-image")).toHaveAttribute("data-state", "error");
   await preview.getByRole("button", { name: "Retry preview of Evenkit logo.png", exact: true }).click();

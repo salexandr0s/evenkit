@@ -101,6 +101,13 @@ consumers are the catalog and independent packed Vite/Next fixtures. Internal
 source remains unlicensed for public distribution; existing dependency notices
 retain their terms. Contracts, copyable examples and verification references
 are in `docs/document-library.md` and `docs/document-library-handoff.md`.
+
+The subsequent design pass adds original token-based layouts for the document
+toolbar, file cards, preview canvas and avatar settings panel. Passive thumbnail
+previews reuse the same MIME policy and Image component. A neutral checkerboard
+uses the kit's existing foundation palette to reveal image transparency in both
+modes. No external visual assets, component source or dependencies were added.
+
 ## Team administration
 
 `TeamMembers`, `InvitationAcceptance`, `RoleCapabilityEditor` and `AuditViewer` are original kit compositions. They reuse the existing remote DataTable, fields, dialogs, checkboxes, settings layout and ActivityTimeline. The editable team, invitation, role and audit blocks in `registry/blocks` are original source recipes. Their catalog data and simulated host operations are fictional.

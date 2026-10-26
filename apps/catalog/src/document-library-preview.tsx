@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, type DocumentEntry, type DocumentLibraryLoad } from "@evenkit/ui";
 import { DocumentLibraryBlock, type DocumentLibraryBlockProps } from "../../../registry/blocks/document-library.js";
+import "./document-library-preview.css";
 
 type SampleEntry = DocumentEntry & { parentId: string | null };
 const samples: readonly SampleEntry[] = [
@@ -70,17 +71,17 @@ export function DocumentLibraryPreview() {
       preview: text === null ? { status: "ready", url } : { status: "ready", text }, openHref: url, downloadHref: url }]);
     onProgress(100); return { href: url, downloadHref: url };
   }, []);
-  return <div className="pk-document-block">
+  return <div className="document-library-preview">
     <DocumentLibraryBlock scopeKey={`sample-workspace-${scope}`} load={load} upload={upload} onRemove={remove} onRestore={restore}
       onRefreshPreview={file => setRecords(current => current.map(entry => entry.id === file.id && entry.kind === "file" ? { ...entry, preview: { status: "ready", url: "/evenkit-logo.png" } } : entry))} />
-    <section aria-label="Document demo controls" className="pk-document-block"><h3>Preview options</h3>
-      <div className="pk-settings-actions">
+    <details aria-label="Document demo controls" className="document-library-demo-options" open><summary>Preview options</summary>
+      <div className="document-library-demo-actions">
         <Button variant="outline" size="sm" onClick={() => { failLoad.current = true; setRevision(value => value + 1); }}>Fail next load</Button>
         <Button variant="outline" size="sm" onClick={() => { failRemove.current = true; }}>Fail next removal</Button>
         <Button variant="outline" size="sm" onClick={() => { failRestore.current = true; }}>Fail next restore</Button>
         <Button variant="outline" size="sm" onClick={() => { slowRemove.current = true; }}>Delay next removal</Button>
         <Button variant="ghost" size="sm" onClick={() => { setScope(value => value + 1); setRecords(samples); setRemovedIds([]); urls.current.forEach(url => URL.revokeObjectURL(url)); urls.current.clear(); }}>Reset library</Button>
       </div><p className="pk-settings-note">Uploads and removals use local sample data. Changing folders cancels pending uploads. Selection follows the current folder and filter.</p>
-    </section>
+    </details>
   </div>;
 }
