@@ -1,6 +1,12 @@
-# Session handoff: 25 October 2026
+# Session handoff: 26 October 2026
 
-## Latest session: rich chat
+## Latest session: rich chat design pass
+
+**DONE** on `codex/rich-chat` in `/Users/nationalbank/.codex/worktrees/rich-chat/design-tokens`. Commit `05d0ce0` refines Markdown rhythm, code headers and copy feedback, citation rows/previews, message files, the unified upload/composer surface and catalog presentation. All checks passed: production build, configured typecheck, full ESLint, 32 unit tests, nine focused Chromium journeys, the extended short-window layout journey, 87 copied examples and packed Next/Vite consumers. The layout journey includes 128 theme/mode/direction/width combinations and a 360×320 widget with failed files and a multiline draft.
+
+The [design pass record](./docs/rich-chat-design-pass.md) contains decisions, evidence and remaining verification limits. Final screenshots are in `.artifacts/rich-chat-design/`; logs are `.artifacts/rich-chat/design-*.log`. Firefox/Safari, physical devices and assistive technology were not tested. No implementation work remains. No publishing or deployment occurred. The rebuilt preview is available at `http://127.0.0.1:5388/#rich-chat`; restart it with `npm run preview --workspace @evenkit/catalog -- --port 5388 --strictPort` if needed. Resume with `git status --short` and `git log -5 --oneline` in this worktree. Earlier session notes are preserved below.
+
+## Rich chat implementation: 25 October 2026
 
 **DONE** on `codex/rich-chat` in `/Users/nationalbank/.codex/worktrees/rich-chat/design-tokens`, based on `b588b1b`. N01/N02/N03/H07 are complete. Local commits: `64f3196` (UI and safe rendering) and `363f84b` (catalog, docs and verification). Build, typecheck, lint, 32 unit tests, 11 focused Chromium journeys, 87 copied examples and packed Next/Vite checks passed. No publishing or deployment occurred. See [rich chat handoff](./docs/rich-chat-handoff.md) for evidence, decisions, integration notes and resume commands. Earlier session notes below are retained for the other ongoing work.
 
