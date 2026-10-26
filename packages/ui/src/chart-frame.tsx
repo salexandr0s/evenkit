@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 
 import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { SemanticTable, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, TableScrollRegion } from "./data-workflows.js";
+import { ChevronDownIcon, Table2Icon } from "./icons.js";
 import { chartColor, chartValue, defaultChartFormat, hasChartData, seriesDashes, seriesPatterns, validChartData } from "./chart-model.js";
 import { chartLabels, type ChartDatum, type ChartProps, type ChartSeries } from "./chart-types.js";
 
@@ -13,7 +14,7 @@ export function ChartLegend({ series, label = chartLabels.legend, variant = "lin
   return <ul className="pk-chart-legend" aria-label={label}>{series.map((item, index) => <li key={item.id}>
     <svg viewBox="0 0 32 16" className="pk-chart-swatch" aria-hidden="true" style={{ color: chartColor(item, index) }}>
       {variant === "bar" ? <><defs><pattern id={`${id}-${index}`} width={8} height={8} patternUnits="userSpaceOnUse"><rect width={8} height={8} fill="currentColor" />{index ? <path d={seriesPatterns[index]} className="pk-chart-pattern" /> : null}</pattern></defs><rect y={2} width={32} height={12} fill={`url(#${id}-${index})`} /></> : <path d="M0 8H32" stroke="currentColor" strokeWidth="2" strokeDasharray={seriesDashes[index]} />}
-    </svg><span className="pk-chart-key" aria-hidden="true">{index + 1}</span><span>{item.label}</span>
+    </svg><span>{item.label}</span>
   </li>)}</ul>;
 }
 export interface ChartTooltipProps {
@@ -29,7 +30,7 @@ export function ChartTooltip({ datum, series, unit, id, formatValue = defaultCha
   return <div id={id} className="pk-chart-tooltip" role="tooltip" aria-live={announce ? "polite" : "off"} aria-atomic="true">
     <strong>{datum.label}</strong><dl>{series.map((item, index) => {
       const value = chartValue(datum.values[item.id]);
-      return <div key={item.id}><dt><span className="pk-chart-key" aria-hidden="true" style={{ borderColor: chartColor(item, index) }}>{index + 1}</span>{item.label}</dt><dd>{value === null ? missingLabel : <>{formatValue(value)} <span>{unit}</span></>}</dd></div>;
+      return <div key={item.id}><dt><span className="pk-chart-tooltip-mark" aria-hidden="true" style={{ background: chartColor(item, index) }} />{item.label}</dt><dd>{value === null ? missingLabel : <>{formatValue(value)} <span>{unit}</span></>}</dd></div>;
     })}</dl>
   </div>;
 }
@@ -86,11 +87,12 @@ export function ChartFrame({ title, description, unit, categoryLabel = "Category
   const active = activeIndex === null ? undefined : data[activeIndex];
   const select = (index: number | null) => setActiveId(index === null ? null : data[index]?.id ?? null);
   return <figure {...props} className={classes("pk-chart-frame", className)} aria-labelledby={`${id}-title`} aria-busy={loading || undefined}>
-    <figcaption className="pk-chart-caption"><h3 id={`${id}-title`}>{title}</h3>{description ? <div className="pk-chart-description">{description}</div> : null}
-      <p className="pk-chart-context">{[period, aggregation, unit].filter(Boolean).join(" · ")}</p>
+    <figcaption className="pk-chart-caption"><div className="pk-chart-heading"><h3 id={`${id}-title`}>{title}</h3>{description ? <div className="pk-chart-description">{description}</div> : null}</div>
+      <div className="pk-chart-caption-meta"><p className="pk-chart-context">{period ? <span className="pk-chart-period"><bdi dir="auto">{period}</bdi></span> : null}{aggregation ? <span><bdi dir="auto">{aggregation}</bdi></span> : null}<span className="pk-chart-unit"><bdi dir="auto">{unit}</bdi></span></p>
+        {series.length > 0 && !invalid ? <ChartLegend series={series} label={text.legend} variant={legendVariant} /> : null}
+      </div>
     </figcaption>
-    {series.length > 0 && !invalid ? <ChartLegend series={series} label={text.legend} variant={legendVariant} /> : null}
-    {hasData ? <p className="pk-chart-instructions" id={`${id}-instructions`}>{text.instructions}</p> : null}
+    {hasData ? <p className="pk-chart-instructions pk-visually-hidden" id={`${id}-instructions`}>{text.instructions}</p> : null}
     <div className="pk-chart-inspectable" onPointerLeave={event => { if (!focused && event.pointerType !== "touch") select(null); }}>
       <div ref={interaction} className="pk-chart-interaction" role="group" tabIndex={hasData ? 0 : -1} aria-label={`${title}: chart`} aria-describedby={hasData ? `${id}-instructions${active ? ` ${id}-tooltip` : ""}` : `${id}-status`}
         onFocus={() => { setFocused(true); if (activeId === null && hasData) select(0); }}
@@ -113,9 +115,9 @@ export function ChartFrame({ title, description, unit, categoryLabel = "Category
         </div>
         {hasData ? typeof children === "function" ? children({ activeIndex, onActiveIndexChange: select, patternId: id.replace(/:/g, "") }) : children : null}
       </div>
-      <div className="pk-chart-inspector">{active ? <ChartTooltip id={`${id}-tooltip`} datum={active} series={series} unit={unit} formatValue={formatValue} missingLabel={text.missing} announce={focused} /> : null}</div>
+      <div className="pk-chart-inspector" data-side={activeIndex !== null && activeIndex >= data.length / 2 ? "left" : "right"}>{active ? <ChartTooltip id={`${id}-tooltip`} datum={active} series={series} unit={unit} formatValue={formatValue} missingLabel={text.missing} announce={focused} /> : null}</div>
     </div>
-    {ready && data.length > 0 && series.length > 0 ? <details ref={recoverFocus} className="pk-chart-data"><summary>{text.showTable}</summary>
+    {ready && data.length > 0 && series.length > 0 ? <details ref={recoverFocus} className="pk-chart-data"><summary><span className="pk-chart-data-label"><Table2Icon size="sm" animation="static" />{text.showTable}</span><span className="pk-chart-data-tools">{hasData ? <span className="pk-chart-key-hint" aria-hidden="true" title={text.instructions}><kbd>←</kbd><kbd>→</kbd></span> : null}<ChevronDownIcon size="sm" animation="static" className="pk-chart-disclosure-icon" /></span></summary>
       <ChartDataTable title={title} unit={unit} categoryLabel={categoryLabel} data={data} series={series} formatValue={formatValue} missingLabel={text.missing} />
     </details> : null}
   </figure>;

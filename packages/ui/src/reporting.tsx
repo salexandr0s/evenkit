@@ -3,7 +3,7 @@
 import { useCallback, useId, useRef, type ReactNode, type RefObject } from "react";
 import { Button, ButtonLink } from "./button.js";
 import { classes } from "./classes.js";
-import { DownloadIcon } from "./icons.js";
+import { CircleAlertIcon, CircleCheckIcon, DownloadIcon } from "./icons.js";
 import { Progress } from "./selection-controls.js";
 import { SelectField, type SelectOption } from "./select.js";
 
@@ -34,19 +34,19 @@ export interface ReportingControlsProps {
 /** Without onApply, selection changes are immediate. Queries and applied snapshots remain in the host. */
 export function ReportingControls({ period, comparison, unit, filters, onApply, onReset, dirty = false, pending = false, disabled = false, status, label = "Reporting controls", dir, className }: ReportingControlsProps) {
   const id = useId();
-  return <div className={classes("pk-reporting-controls", className)} role="group" aria-label={label} dir={dir}>
+  return <div className={classes("pk-reporting-controls", className)} role="group" aria-label={label} dir={dir} data-pending={pending || undefined} data-dirty={dirty || undefined}>
     <fieldset className="pk-reporting-fields" disabled={disabled}>
       <legend className="pk-visually-hidden">{label}</legend>
-      <SelectField {...period} disabled={disabled} {...(dir ? { dir } : {})} />
-      {comparison ? <SelectField {...comparison} disabled={disabled} {...(dir ? { dir } : {})} /> : null}
-      {unit ? <SelectField {...unit} disabled={disabled} {...(dir ? { dir } : {})} /> : null}
+      <SelectField {...period} controlSize="sm" disabled={disabled} {...(dir ? { dir } : {})} />
+      {comparison ? <SelectField {...comparison} controlSize="sm" disabled={disabled} {...(dir ? { dir } : {})} /> : null}
+      {unit ? <SelectField {...unit} controlSize="sm" disabled={disabled} {...(dir ? { dir } : {})} /> : null}
       {filters}
     </fieldset>
     {onApply || onReset ? <div className="pk-reporting-actions">
-      {onApply ? <Button aria-describedby={`${id}-status`} disabled={disabled} aria-disabled={pending || undefined} onClick={() => { if (!pending) onApply(); }}>Apply report</Button> : null}
-      {onReset ? <Button variant="outline" disabled={disabled} onClick={onReset}>Reset report</Button> : null}
+      {onApply ? <Button size="sm" aria-describedby={`${id}-status`} disabled={disabled} aria-disabled={pending || undefined} onClick={() => { if (!pending) onApply(); }}>Apply report</Button> : null}
+      {onReset ? <Button size="sm" variant="ghost" disabled={disabled} onClick={onReset}>Reset report</Button> : null}
     </div> : null}
-    <p id={`${id}-status`} className="pk-reporting-status" role="status">{pending ? "Updating report…" : dirty && onApply ? "Changes have not been applied." : status}</p>
+    <p id={`${id}-status`} className={classes("pk-reporting-status", !pending && !(dirty && onApply) && !status && "pk-visually-hidden")} role="status">{pending ? "Updating report…" : dirty && onApply ? "Changes have not been applied." : status}</p>
   </div>;
 }
 
@@ -93,7 +93,12 @@ export function ExportAction({ state, onPrepare, onCancel, onRetry, label = "Exp
       {pending && onCancel ? <Button ref={cancelRef} variant="ghost" disabled={disabled} onClick={() => { prepareRef.current?.focus(); onCancel(); }}>Cancel export</Button> : null}
       {state.status === "ready" ? <ButtonLink ref={downloadRef} href={disabled ? undefined : state.href} download={state.fileName ?? true} aria-disabled={disabled || undefined} tabIndex={disabled ? -1 : undefined}>Download export</ButtonLink> : null}
     </div>
-    {pending ? <Progress label="Export progress" {...(progress === undefined ? {} : { value: progress })} /> : null}
-    <p id={`${id}-status`} className="pk-export-status" role={state.status === "error" ? "alert" : "status"}>{message}</p>
+    <div className={classes("pk-export-feedback", !pending && !message && "pk-visually-hidden")}>
+      {pending ? <Progress label="Export progress" {...(progress === undefined ? {} : { value: progress })} /> : null}
+      <p id={`${id}-status`} className="pk-export-status" role={state.status === "error" ? "alert" : "status"}>
+        {state.status === "error" ? <CircleAlertIcon size="sm" animation="static" aria-hidden="true" /> : state.status === "ready" ? <CircleCheckIcon size="sm" animation="static" aria-hidden="true" /> : null}
+        <span>{message}</span>
+      </p>
+    </div>
   </div>;
 }
