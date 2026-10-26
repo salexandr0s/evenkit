@@ -8,14 +8,17 @@ import { demoAudit, demoDelay, demoInvitations, demoMembers, demoResponses, demo
 import "./team-admin-preview.css";
 
 function DemoFrame({ children }: { children: ReactNode }) {
-  return <div className="team-admin-preview"><p className="team-admin-demo-note">Fictional local data. These controls simulate application responses; no invitations are delivered.</p>{children}</div>;
+  return <div className="team-admin-preview"><p className="team-admin-demo-note"><span>Local preview</span>Fictional data. No invitations are delivered.</p>{children}</div>;
 }
 
 function ResponseControls({ demo, onContextChange, children }: { demo: ReturnType<typeof useDemoAction>; onContextChange: () => void; children?: ReactNode }) {
-  return <div className="team-admin-demo-controls" aria-label="Demo controls">
+  return <section className="team-admin-demo-controls" aria-label="Demo controls">
+    <div className="team-admin-demo-controls-heading"><h3>Try a different outcome</h3><p>Explore recovery states and changes to the team context.</p></div>
+    <div className="team-admin-demo-controls-fields">
     <SelectField label="Simulated response" value={demo.response} options={demoResponses} onValueChange={next => { if (next === "success" || next === "error" || next === "denied" || next === "stale" || next === "slow") demo.setResponse(next); }} />
     <Button variant="outline" size="sm" onClick={onContextChange}>Switch team context</Button>{children}
-  </div>;
+    </div>
+  </section>;
 }
 
 function MembersExample() {

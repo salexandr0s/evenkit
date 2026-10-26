@@ -4,6 +4,7 @@ import { useId, useLayoutEffect, useRef, useState } from "react";
 import { Button } from "./button.js";
 import { ActionMessage, Badge } from "./feedback.js";
 import { FormattedTimestamp } from "./formatting.js";
+import { MailIcon } from "./icons.js";
 import type { TeamActionContext, TeamActionResult } from "./team-admin-types.js";
 import { useTeamAction } from "./use-team-action.js";
 
@@ -89,7 +90,7 @@ function AcceptancePanel({ invitation, contextKey, currentAccountLabel, timeZone
 
   return <section className="pk-invitation-acceptance" aria-labelledby={headingId}>
     <header className="pk-invitation-heading">
-      <Badge tone={success || invitation.status === "already-accepted" ? "success" : invitation.status === "ready" ? "accent" : "warning"}>Team invitation</Badge>
+      <div className="pk-invitation-identity"><span className="pk-invitation-mark" aria-hidden="true"><MailIcon size="lg" animation="static" /></span><Badge tone={success || invitation.status === "already-accepted" ? "success" : invitation.status === "ready" ? "accent" : "warning"}>Team invitation</Badge></div>
       <h2 id={headingId} ref={heading} tabIndex={-1}>{message.title}</h2>
       <p>{message.message}</p>
     </header>
@@ -103,7 +104,7 @@ function AcceptancePanel({ invitation, contextKey, currentAccountLabel, timeZone
     {deniedReason ? <ActionMessage tone="warning" heading="Acceptance unavailable">{deniedReason}</ActionMessage> : null}
     {action.result ? <ActionMessage tone={success ? "success" : action.result.status === "error" ? "error" : "warning"} heading={success ? "You joined the team" : action.result.status === "denied" ? "Acceptance denied" : action.result.status === "stale" ? "Invitation changed" : "Could not accept invitation"}>{action.result.message ?? "Invitation accepted."}</ActionMessage> : null}
     {note ? <ActionMessage tone={uncertain ? "warning" : "info"}>{note}</ActionMessage> : null}
-    <div className="pk-invitation-actions">
+    <footer className="pk-invitation-footer"><div className="pk-invitation-actions">
       {canAccept ? <Button ref={accept} loading={action.pending} onClick={() => { void join(); }}>{action.result?.status === "error" ? "Retry acceptance" : "Accept invitation"}</Button> : null}
       {action.pending ? <Button ref={cancel} variant="outline" onClick={stopWaiting}>Stop waiting</Button> : null}
       {invitation.status === "signed-out" && onSignIn ? <Button onClick={onSignIn}>Sign in</Button> : null}
@@ -113,5 +114,6 @@ function AcceptancePanel({ invitation, contextKey, currentAccountLabel, timeZone
       {(stale || denied) && onReload ? <Button variant="outline" onClick={onReload}>Reload invitation</Button> : null}
     </div>
     {action.pending ? <p className="pk-invitation-note" role="status">Accepting invitation…</p> : null}
+    </footer>
   </section>;
 }

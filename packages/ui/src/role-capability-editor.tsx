@@ -5,6 +5,7 @@ import { Button } from "./button.js";
 import { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./dialog.js";
 import { ActionMessage, Badge } from "./feedback.js";
 import { SearchField } from "./form-controls.js";
+import { SlidersHorizontalIcon } from "./icons.js";
 import { Checkbox, CheckboxGroup } from "./selection-controls.js";
 import type { TeamActionContext, TeamActionResult } from "./team-admin-types.js";
 import { useTeamAction } from "./use-team-action.js";
@@ -97,19 +98,22 @@ function RoleEditorPanel({ role, capabilities, contextKey, onSave, readOnlyReaso
   const resultMessage = action.result ? <ActionMessage tone={action.result.status === "success" ? "success" : action.result.status === "error" ? "error" : "warning"} heading={action.result.status === "success" ? "Role saved" : action.result.status === "denied" ? "Save denied" : action.result.status === "stale" ? "Role changed" : "Could not save role"}>{action.result.message ?? "The role's capabilities were saved."}</ActionMessage> : null;
 
   return <section className="pk-role-editor" aria-labelledby={headingId}>
-    <header className="pk-role-heading"><h2 id={headingId} ref={heading} tabIndex={-1}>{role.label}</h2>{role.description ? <p>{role.description}</p> : null}<Badge tone="neutral">{draft.length} selected</Badge></header>
+    <header className="pk-role-heading"><span className="pk-role-mark" aria-hidden="true"><SlidersHorizontalIcon size="lg" animation="static" /></span><div className="pk-role-heading-copy"><p className="pk-role-eyebrow">Role capabilities</p><h2 id={headingId} ref={heading} tabIndex={-1}>{role.label}</h2>{role.description ? <p>{role.description}</p> : null}</div><Badge tone="neutral">{draft.length} selected</Badge></header>
     {readOnlyReason || deniedReason ? <ActionMessage tone={deniedReason ? "warning" : "info"} heading={deniedReason ? "Editing unavailable" : "Read-only role"}>{deniedReason ?? readOnlyReason}</ActionMessage> : null}
     {note ? <ActionMessage tone={uncertain ? "warning" : "info"}>{note}</ActionMessage> : null}
-    <SearchField ref={search} label="Search capabilities" value={query} onValueChange={setQuery} />
-    <div className="pk-role-capabilities">{groups.map(group => <CheckboxGroup key={group} label={group} disabled={blocked || action.pending}>{filtered.filter(capability => (capability.group ?? "Capabilities") === group).map(capability => <Checkbox key={capability.id} label={capability.label} hint={capability.disabledReason ? `${capability.description ? `${capability.description} ` : ""}${capability.disabledReason}` : capability.description} checked={draft.includes(capability.id)} disabled={blocked || action.pending || Boolean(capability.disabledReason)} onCheckedChange={checked => change(capability.id, checked === true)} />)}</CheckboxGroup>)}</div>
+    <div className="pk-role-search"><SearchField ref={search} label="Search capabilities" value={query} onValueChange={setQuery} /></div>
+    <div className="pk-role-capabilities">{groups.map(group => {
+      const items = filtered.filter(capability => (capability.group ?? "Capabilities") === group);
+      return <CheckboxGroup key={group} label={<span className="pk-role-group-heading"><span>{group}</span><span className="pk-role-group-count" aria-hidden="true">{items.filter(capability => draft.includes(capability.id)).length} of {items.length} selected</span></span>} disabled={blocked || action.pending}>{items.map(capability => <div className="pk-role-capability-row" key={capability.id} data-checked={draft.includes(capability.id) || undefined} data-locked={Boolean(capability.disabledReason) || undefined}><Checkbox label={capability.label} hint={capability.disabledReason ? `${capability.description ? `${capability.description} ` : ""}${capability.disabledReason}` : capability.description} checked={draft.includes(capability.id)} disabled={blocked || action.pending || Boolean(capability.disabledReason)} onCheckedChange={checked => change(capability.id, checked === true)} />{capability.disabledReason ? <span className="pk-role-capability-lock" aria-hidden="true">Locked</span> : null}</div>)}</CheckboxGroup>;
+    })}</div>
     {filtered.length === 0 ? <p className="pk-role-note">No matching capabilities.</p> : null}
     {unknown.length ? <ActionMessage tone="warning" heading="Additional grants retained"><p>These grants are absent from the supplied definitions. Saving keeps them unchanged.</p><ul className="pk-role-unknown">{unknown.map(id => <li key={id}><code>{id}</code></li>)}</ul></ActionMessage> : null}
     {!confirm ? resultMessage : null}
-    <div className="pk-role-actions">
+    <footer className="pk-role-footer"><div className="pk-role-change-summary" role="status"><strong>{dirty ? `${added.length + removed.length} unsaved ${added.length + removed.length === 1 ? "change" : "changes"}` : "No unsaved changes"}</strong><span>{dirty ? `${added.length} added · ${removed.length} removed` : "Changes apply after review and save."}</span></div><div className="pk-role-actions">
       <Button ref={review} disabled={blocked || !dirty || action.pending} onClick={() => { action.reset(); setNote(""); setConfirm(true); }}>Review changes</Button>
       <Button variant="outline" disabled={!dirty || action.pending} onClick={() => { setDraft(baseline); if (action.result?.status !== "denied" && action.result?.status !== "stale") action.reset(); setNote("Draft changes discarded."); search.current?.focus(); }}>Discard changes</Button>
       {(uncertain || action.result?.status === "stale" || action.result?.status === "denied" || deniedReason) && onReload ? <Button variant="outline" onClick={onReload}>Reload role</Button> : null}
-    </div>
+    </div></footer>
     <Dialog open={confirm} onOpenChange={open => { if (!open) close(); }}>
       <DialogContent className="pk-role-confirmation" onOpenAutoFocus={event => { event.preventDefault(); cancel.current?.focus(); }} onCloseAutoFocus={event => { event.preventDefault(); restoreFocus(); }}>
         <DialogHeader><DialogTitle>Save capabilities for {role.label}?</DialogTitle><DialogDescription>Review the grants being added and removed.</DialogDescription></DialogHeader>

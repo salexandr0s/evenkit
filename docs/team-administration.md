@@ -78,9 +78,17 @@ Each `AuditRecord` has a stable ID, actor name/ID, action, timestamp, kind and o
 
 ## Presentation and accessibility
 
-Controls reuse the kit's fields, dialogs, checkboxes and feedback. Members use the remote DataTable; audit events use ActivityTimeline. Editable settings pages use SettingsLayout. Styles use semantic `--pk-*` tokens, logical spacing and wrapping for long names and labels. Theme attributes belong on the document root so portals inherit them. Light, dark and system preference use the existing kit behavior.
+Controls reuse the kit's fields, dialogs, checkboxes and feedback. Members use the remote DataTable; audit events use ActivityTimeline. The team block uses SettingsLayout when more than one section is supplied; a members-only page uses the full available width. Styles use semantic `--pk-*` tokens, logical spacing and wrapping for long names and labels. Theme attributes belong on the document root so portals inherit them. Light, dark and system preference use the existing kit behavior.
 
 Dialogs restore focus to a live trigger or a stable section fallback when a row disappears. Pending operations expose a cancellation action, and errors remain visible with recovery controls. Draft invalidation must not leave focus on a removed element. Audit details use native disclosure controls. Horizontal table scrolling stays inside the table region at narrow widths.
+
+### Design refinement: 26 October 2026
+
+The members directory combines search and filters in the table toolbar, with decorative initials, wrapping role labels and neutral member-status markers. Invitations have a separate heading, a count of pending invitations from the complete supplied collection, and compact confirmation details. The acceptance page presents one invitation card with aligned account details and a distinct action footer.
+
+Capability groups use individual rows with a selected edge, visible locked labels and a footer summarizing unsaved additions and removals. The role selector sits beside the page heading when space allows. Audit search takes more space than its selectors; framed event rows align actors and timestamps, expandable detail panels use label/value rows, and the footer identifies the display time zone. Outcome styling stays neutral because outcome definitions belong to the host. Catalog scenario controls are grouped separately below each example.
+
+This pass preserves public signatures, host decisions, asynchronous action guards and focus recovery. It adds no dependencies or source copies. UI and catalog production builds, workspace TypeScript, ESLint, all 90 copied examples and all 17 relevant Chromium tests passed on the final implementation. The browser run includes the four theme/viewport contracts across eight themes, light/dark and 360/768/1024/1440px, plus narrow RTL/system-mode and keyboard journeys. Independent source review found no remaining actionable issue. Visual review covered all four screens on desktop and role/audit layouts in narrow RTL. Final screenshot evidence is in `.artifacts/team-admin-design/`; earlier implementation captures remain in `.artifacts/team-admin/`.
 
 ## Dependencies and source records
 
