@@ -20,7 +20,7 @@ const nextHeading: Record<HeadingTag, HeadingTag> = { h1: "h2", h2: "h3", h3: "h
 export function FaqSection({ title, description, items, defaultOpenIds = [], headingAs = "h2", questionHeadingAs: QuestionHeading = nextHeading[headingAs], dir, className, ...props }: FaqSectionProps) {
   const titleId = useId();
   return <section aria-labelledby={titleId} {...props} dir={dir} className={["pk-website-section pk-website-faq", className].filter(Boolean).join(" ")}>
-    <Container width="reading">
+    <Container className="pk-website-faq-layout">
       <Stack gap="3" className="pk-website-section-intro">
         <Heading id={titleId} as={headingAs} size="2">{title}</Heading>
         {description ? <Prose className="pk-website-description">{description}</Prose> : null}

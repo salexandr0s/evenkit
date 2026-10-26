@@ -1,6 +1,32 @@
-# Session handoff: 25 October 2026
+# Session handoff: 26 October 2026
 
 Project: `/Users/nationalbank/GitHub/design-tokens`. Active worktree: `/Users/nationalbank/.codex/worktrees/website-blocks/design-tokens`. Branch: `codex/website-blocks`.
+
+## Website design pass: 26 October 2026
+
+Status: DONE. Completed the requested visual design pass on P01–P06 and P10. Website heroes now have a larger display scale and a tighter reading measure. Feature grids, service rows, alternating sections, CTA panels, FAQ and footer have distinct spacing and hierarchy. Contact pairs its introduction with a bordered field panel; newsletter uses a separate neutral band. Articles have clearer metadata, a larger title, a contents rail and visibly labeled code regions. The examples include an original imagined fern illustration, a detail view and a studio mark using the existing Leaf icon. Demo content remains fictional.
+
+Changed `registry/blocks/website/website.css`, `website-forms.css`, `website-article.css`, the corresponding composition markup, `examples.tsx` and `examples.css`. `apps/catalog/src/website-preview.css` improves the preview frame and controls. Updated `docs/website-blocks.md` and source provenance. The article spacing regression now measures the new code frame; code focus, accessible naming, direction and scrolling assertions remain intact. Public component APIs and submission behavior are preserved. No shared primitive or homepage changes.
+
+Verification passed:
+
+- Catalog production build, configured workspace TypeScript, full ESLint and `git diff --check`.
+- All 93 copied catalog examples and 79 inventory mappings compile.
+- All 22 website Chromium tests passed, covering eight themes in light/dark, mobile/intermediate/desktop widths, long text, RTL, headings, keyboard navigation, form recovery and reduced motion. Results: `.artifacts/website-blocks/design-browser-results/.last-run.json`.
+- Independently packed Vite and Next consumers built and passed render, stylesheet, interaction, repeated-form, duplicate-submission and unmount-abort checks with no runtime errors. Report: `.artifacts/website-blocks/copied-consumption.json`; previous evidence is preserved in `before-design-consumption/`.
+- Final read-only code review found no actionable issues. Visual review covered heroes, full copied website, article and desktop/mobile RTL forms. Captures are under `.artifacts/website-blocks/design-visual/`; composition captures are under `.artifacts/website-design-compositions/`.
+- The final artwork detail crop was moved below the illustration labels to avoid a partial heading in the cropped image. Catalog build and focused ESLint passed again after that static SVG viewport change; the browser and consumer suites precede only this artwork crop.
+
+No requested work remains. Browser automation used Chromium; Firefox, Safari, physical touch and live submission services were not tested. No publication, push or deployment. The local production preview was restarted at `http://127.0.0.1:5427/#website-heroes`; temporary viewport overrides were cleared and Neutral dark restored.
+
+Resume with the commands below. If the preview has stopped, start it again from this worktree.
+
+```sh
+cd /Users/nationalbank/.codex/worktrees/website-blocks/design-tokens
+git status --short
+git log -3 --oneline
+npm run preview --workspace @evenkit/catalog -- --host 127.0.0.1 --port 5427 --strictPort
+```
 
 ## Website blocks: 25 October 2026
 

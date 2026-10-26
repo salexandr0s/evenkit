@@ -25,7 +25,7 @@ const nextHeading: Record<HeadingTag, HeadingTag> = { h1: "h2", h2: "h3", h3: "h
 
 export function FeatureSection({ title, description, items, presentation = "grid", headingAs = "h2", itemHeadingAs = nextHeading[headingAs], className, ...props }: FeatureSectionProps) {
   const titleId = useId();
-  return <section aria-labelledby={titleId} {...props} className={["pk-website-section", className].filter(Boolean).join(" ")}>
+  return <section aria-labelledby={titleId} {...props} className={["pk-website-section pk-website-feature-section", className].filter(Boolean).join(" ")} data-presentation={presentation}>
     <Container>
       <Stack gap="3" className="pk-website-section-intro">
         <Heading id={titleId} as={headingAs} size="2">{title}</Heading>
@@ -37,7 +37,7 @@ export function FeatureSection({ title, description, items, presentation = "grid
             {item.icon ? <span aria-hidden="true" className="pk-website-feature-icon">{item.icon}</span> : null}
             <Heading as={itemHeadingAs} size="4">{item.title}</Heading>
           </Stack>
-          <Stack gap="4">
+          <Stack gap="4" className="pk-website-feature-body">
             <Prose className="pk-website-description">{item.description}</Prose>
             {item.action ? <div className="pk-website-actions">{item.action}</div> : null}
           </Stack>
@@ -56,7 +56,7 @@ export interface AlternatingSectionsProps extends Omit<FeatureSectionProps, "pre
 /** Text precedes media in the DOM; only the wider-screen visual placement alternates. */
 export function AlternatingSections({ title, description, items, headingAs = "h2", itemHeadingAs = nextHeading[headingAs], className, ...props }: AlternatingSectionsProps) {
   const titleId = useId();
-  return <section aria-labelledby={titleId} {...props} className={["pk-website-section", className].filter(Boolean).join(" ")}>
+  return <section aria-labelledby={titleId} {...props} className={["pk-website-section pk-website-alternating-section", className].filter(Boolean).join(" ")}>
     <Container>
       <Stack gap="3" className="pk-website-section-intro">
         <Heading id={titleId} as={headingAs} size="2">{title}</Heading>

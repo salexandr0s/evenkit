@@ -169,9 +169,11 @@ test("article contents move keyboard focus and code scrolls within the reading c
   await expect(code).toBeFocused();
   await expect(code).toHaveCSS("direction", "ltr");
   const gaps = await code.evaluate(element => {
-    const box = element.getBoundingClientRect();
-    const previous = element.previousElementSibling?.getBoundingClientRect();
-    const next = element.nextElementSibling?.getBoundingClientRect();
+    const frame = element.closest(".pk-website-code-frame");
+    if (!frame) throw new Error("The labeled code region needs its frame.");
+    const box = frame.getBoundingClientRect();
+    const previous = frame.previousElementSibling?.getBoundingClientRect();
+    const next = frame.nextElementSibling?.getBoundingClientRect();
     return { before: previous ? box.top - previous.bottom : 0, after: next ? next.top - box.bottom : 0 };
   });
   expect(gaps.before, "The paragraph before code needs reading space").toBeGreaterThan(0);

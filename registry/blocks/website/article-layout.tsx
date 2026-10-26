@@ -31,12 +31,12 @@ export function ArticleLayout({ id, title, introduction, metadata, media, sectio
   const sectionTag: HeadingTag = headingAs === "h1" ? "h2" : headingAs === "h2" ? "h3" : "h4";
   const sectionId = (key: string) => `${articleId}-section-${key}`;
   return <article id={articleId} className="pk-website-article" aria-labelledby={`${articleId}-title`}>
-    <Container>
-      <Stack gap="8">
+    <Container className="pk-website-article-inner">
+      <Stack gap="8" className="pk-website-article-flow">
         <header className="pk-website-article-header">
-          <Heading id={`${articleId}-title`} as={headingAs} size="1">{title}</Heading>
           {metadata ? <div className="pk-website-article-metadata">{metadata}</div> : null}
-          {introduction ? <Prose>{introduction}</Prose> : null}
+          <Heading id={`${articleId}-title`} as={headingAs} size="1">{title}</Heading>
+          {introduction ? <Prose className="pk-website-article-introduction">{introduction}</Prose> : null}
         </header>
         {media ? <div className="pk-website-article-media">{media}</div> : null}
         <div className="pk-website-article-grid">
@@ -64,5 +64,5 @@ export function ArticleLayout({ id, title, introduction, metadata, media, sectio
 
 /** Plain text only; syntax highlighting and arbitrary HTML are host concerns. */
 export function ArticleCode({ children, label }: { children: string; label: string }) {
-  return <pre className="pk-website-code" tabIndex={0} role="region" aria-label={label} dir="ltr"><code>{children}</code></pre>;
+  return <div className="pk-website-code-frame"><div className="pk-website-code-label" aria-hidden="true">{label}</div><pre className="pk-website-code" tabIndex={0} role="region" aria-label={label} dir="ltr"><code>{children}</code></pre></div>;
 }
