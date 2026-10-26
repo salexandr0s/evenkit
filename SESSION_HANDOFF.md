@@ -1,3 +1,21 @@
+# Component icon actions: 26 October 2026
+
+Status: DONE. Completed the requested component audit and compact-action goal in `/Users/nationalbank/GitHub/design-tokens`, branch `codex/component-improvements`. Implementation commit: `0eb9ff6` (`feat(ui): compact secondary actions with accessible icons`). The component-by-component coverage and API guidance are in [compact actions](docs/compact-actions.md).
+
+Reviewed all implemented UI families, registry blocks and catalog examples. Added exported `IconButton`/`IconButtonLink` with required labels, contextual accessible names, hover/focus tooltips, native refs/events and button/link semantics. Converted familiar secondary actions throughout notifications, data/filter controls, documents/uploads/previews, teams/settings, reporting/audit, records/onboarding and chat/feedback. Tightened notification, document, audit, banner and history spacing; embedded the date-range calendar control. Updated related copied examples. Primary submissions, confirmations, choices, reasons and recovery instructions retain visible text.
+
+Key sources: `packages/ui/src/icon-button.tsx`, `notifications.tsx`/`.css`, `selection-controls.tsx`/`.css`, `navigation.tsx`/`.css`, and the affected UI modules, registry blocks and catalog previews listed by `git show --stat 0eb9ff6`. Existing tooltips already covered many controls. New icon-action tooltips unmount immediately on dismissal so retained layers cannot swallow the next Escape; the general Tooltip component keeps its motion contract. Navbar trigger tooltips unmount while the drawer is open. Grouped icons keep their fixed touch size when neighboring text grows.
+
+Verification passed: final full production build; configured TypeScript and ESLint; 47 unit tests; 116 copied examples/104 mappings; 297 catalog Chromium journeys; 63 admin journeys across Chromium/Firefox/WebKit; and independent packed Vite/Next builds, strict types, browser interaction and package boundaries. The full registry run passed 33 checks and rejected the intentionally uncommitted source; the remaining committed-source build/inspection check passed after `0eb9ff6`. The final one-line grouped-button CSS safeguard followed the full browser/packed runs, with a fresh production build, 8 passing selection journeys and direct long-label mobile LTR/RTL geometry checks (44px square, no overflow).
+
+Evidence: `.artifacts/compact-actions/` contains build/type/lint/unit/example logs, final catalog/admin/package logs, the registry run and committed-source rerun, focused reruns, notification screenshots and button-group geometry. Initial tooltip failures were fixed and the full catalog rerun passed. The first admin lazy check lacked `.artifacts/admin-integration/`; creating that expected report directory resolved it and the full admin rerun passed. No failing check or required implementation remains. Physical touch hardware and screen-reader speech were not exercised.
+
+Original catalog HTML, Vite/LLM plugin edits remain untouched and uncommitted. Concurrent sidebar work was committed separately by its owner during this session; it is outside the icon-action implementation commit. No push, publication, deployment or migration occurred. A preview started by this chat remains at `http://127.0.0.1:5636/#notification-center` for review.
+
+Resume with `git status --short`, `git log -5 --oneline`, and `cat docs/compact-actions.md`. Rebuild with `npm run build` after code changes. Start the review preview with `npm run preview --workspace @evenkit/catalog -- --port 5636 --strictPort` if it has stopped. Registered block source must match a committed revision before registry build/inspection.
+
+---
+
 # Completed worktree integration: 26 October 2026
 
 Target: `/Users/nationalbank/GitHub/design-tokens`, branch `codex/component-improvements`. Ten completed source worktree snapshots, including feature refinements, the admin starter, registry tooling and the shared design pass, are integrated through code merge `8187a1a`. Earlier main/auth history is retained. See [the merge review](docs/worktree-merge-review.md) for source cutoffs and conflict decisions.
