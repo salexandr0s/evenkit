@@ -1,3 +1,13 @@
+# Production dropdown fix: 26 October 2026
+
+Status: DONE. Deployed committed fix `e43a8f56dbe955f78ecc257099bb1297cb433872` to the existing `blockconsult/evenkit` Vercel production project at the user's request. Deployment `dpl_Hij4NJqSsVwa8MApFjK3NxMobqFi` is READY and serves `https://evenkit.dev` and `https://www.evenkit.dev`. Its immutable URL is `https://evenkit-8g1jmg340-blockconsult.vercel.app`.
+
+The connected Vercel tool lacked team access; the authenticated local CLI had access to the exact linked project and team. Deployed a clean Git archive of the committed fix, excluding unfinished local catalog HTML, Vite and `llms/` edits. The CLI lost its build-log connection with a fetch error; inspection confirmed that the same deployment completed successfully, so no duplicate deployment was created.
+
+All 10 catalog sidebar journeys passed against `https://evenkit.dev` in Chromium and WebKit, including the audit select and navbar account menu scroll regressions, desktop sidebar controls and mobile drawer behavior. Evidence: `.artifacts/sidebar-dropdown-live.log`, `.artifacts/sidebar-dropdown-production-deployment.json`, and `.artifacts/sidebar-dropdown-live-results/`. Verify deployment state with `vercel inspect https://evenkit-8g1jmg340-blockconsult.vercel.app --scope team_luOipoW354gDuRyyUaYVO2mg`; rerun the live checks with `npx playwright test tests/browser/catalog-sidebar.spec.ts --config=.artifacts/sidebar-dropdown-live.config.ts`. No required deployment work remains. The earlier Firefox runtime gap is recorded below.
+
+---
+
 # Sidebar dropdown scroll fix: 26 October 2026
 
 Status: DONE_WITH_CONCERNS. Fixed the dropdown/sidebar shift on `codex/component-improvements`. Fresh remote inspection confirmed the earlier fix `5bfdc8e` was pushed to `origin/main` but was absent from this branch. Opening the navbar Workspace account menu reproduced the screenshot: at page scroll 531px, the outer sidebar and header moved from 0px to -531px.
