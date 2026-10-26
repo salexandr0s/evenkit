@@ -8,7 +8,7 @@
   "scripts": {
     "predev": "npm run build:packages",
     "dev": "npm run dev --workspace @evenkit/catalog",
-    "build:packages": "npm run build --workspace @evenkit/tokens && npm run build --workspace @evenkit/ui",
+    "build:packages": "npm run build --workspace @evenkit/tokens && npm run build --workspace @evenkit/ui && npm run build --workspace @evenkit/auth-next",
     "build": "npm run build:packages && npm run build --workspace @evenkit/catalog",
     "typecheck": "tsc -p tsconfig.checks.json && npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
