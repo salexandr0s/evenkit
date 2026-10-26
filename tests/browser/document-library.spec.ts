@@ -18,6 +18,17 @@ test("document selection follows IDs across pages and views, and clears on folde
   await expect(library.getByText("8 items · 1 selected", { exact: true })).toBeVisible();
   await library.getByRole("button", { name: "Previous page", exact: true }).click();
   await expect(library.getByRole("checkbox", { name: "Select Brand assets", exact: true })).toBeChecked();
+  const thumbnail = library.getByRole("region", { name: "Preview of Expired preview.png", exact: true });
+  await expect(thumbnail).toHaveAttribute("data-variant", "thumbnail");
+  await expect(thumbnail).toContainText("Preview expired");
+  await expect(thumbnail.locator("button, a, input, [tabindex]")).toHaveCount(0);
+  const previewLauncher = library.getByRole("button", { name: "Preview Expired preview.png", exact: true });
+  await previewLauncher.focus();
+  await page.keyboard.press("Enter");
+  const previewDialog = page.getByRole("dialog", { name: "Expired preview.png", exact: true });
+  await expect(previewDialog.getByRole("button", { name: "Refresh preview of Expired preview.png", exact: true })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(previewLauncher).toBeFocused();
   await library.getByRole("button", { name: "Open folder Brand assets", exact: true }).click();
   await expect(library.getByText("1 item · 0 selected", { exact: true })).toBeVisible();
   await expect(library.getByRole("searchbox", { name: "Search documents", exact: true })).toBeFocused();

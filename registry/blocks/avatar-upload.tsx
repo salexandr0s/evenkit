@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
-import { Avatar, Button, FileInput, FileRow, FormSection, Image, SaveStatus, formatFileSize } from "@evenkit/ui";
+import { Avatar, Button, FileInput, FileRow, FormSection, Image, RotateCcwIcon, SaveStatus, TrashIcon, Undo2Icon, formatFileSize } from "@evenkit/ui";
 
 export const avatarImageTypes = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/avif"] as const;
 export type AvatarImageType = typeof avatarImageTypes[number];
@@ -132,28 +132,36 @@ function AvatarUploadForm({ ownerId, name, value, kind = "avatar", maxBytes = 5 
     }
     if (completed) onSaved?.(completed.value);
   }
-  return <form className="pk-avatar-upload" aria-label={`${name} ${kind} settings`} onSubmit={event => { void save(event); }} onReset={event => { event.preventDefault(); reset(); }}>
-    <FormSection heading={kind === "logo" ? "Workspace logo" : "Profile image"} description="Choose an image, then save your changes.">
-      <div className="pk-avatar-upload-summary" data-kind={kind}>
-        {src ? <Image className="pk-avatar-upload-image" src={src} alt={previewLabel} aspectRatio={1} fit={kind === "logo" ? "contain" : "cover"} loading="eager" retryable={false} fallback={`${kind === "logo" ? "Logo" : "Avatar"} preview unavailable`} /> : <Avatar name={name} size="lg" aria-label={`${name}: ${removed ? "image marked for removal" : "image preview unavailable; showing initials"}`} />}
-        <div className="pk-avatar-upload-copy"><strong>{name}</strong><p>{removed ? saved ? "The saved image will be removed when you save." : "Selected image removed. Undo to restore it." : selected ? "Selected image. Save to apply it." : saved?.previewState === "expired" ? "This preview has expired. Your saved image is unchanged." : saved && !src ? "The saved image is unavailable. You can replace or remove it." : saved ? "Current saved image" : "No image saved. Your initials are shown."}</p>
-          {!selected && saved && !removed && onRefreshPreview ? <Button size="sm" variant="ghost" disabled={pending || disabled} onClick={onRefreshPreview}>Refresh preview</Button> : null}
+  return <form className="pk-avatar-upload" data-kind={kind} aria-label={`${name} ${kind} settings`} onSubmit={event => { void save(event); }} onReset={event => { event.preventDefault(); reset(); }}>
+    <FormSection className="pk-avatar-upload-section" heading={kind === "logo" ? "Workspace logo" : "Profile image"} description="Choose an image, then save your changes.">
+      <div className="pk-avatar-upload-editor">
+        <figure className="pk-avatar-upload-stage" data-changed={Boolean(draft) || undefined}>
+          <div className="pk-avatar-upload-visual">
+            {src ? <Image className="pk-avatar-upload-image" src={src} alt={previewLabel} aspectRatio={1} fit={kind === "logo" ? "contain" : "cover"} loading="eager" retryable={false} fallback={`${kind === "logo" ? "Logo" : "Avatar"} preview unavailable`} /> : <Avatar name={name} size="lg" aria-label={`${name}: ${removed ? "image marked for removal" : "image preview unavailable; showing initials"}`} />}
+          </div>
+          <figcaption>{removed ? "Removal preview" : selected ? `Selected ${kind}` : saved ? `Current ${kind}` : "Initials preview"}</figcaption>
+        </figure>
+        <div className="pk-avatar-upload-content">
+          <div className="pk-avatar-upload-copy"><strong>{name}</strong><p>{removed ? saved ? "The saved image will be removed when you save." : "Selected image removed. Undo to restore it." : selected ? "Selected image. Save to apply it." : saved?.previewState === "expired" ? "This preview has expired. Your saved image is unchanged." : saved && !src ? "The saved image is unavailable. You can replace or remove it." : saved ? "Current saved image" : "No image saved. Your initials are shown."}</p></div>
+          <FileInput key={pickerRevision} ref={picker} label={`Choose ${kind}`} name={kind} accept={avatarImageTypes.join(",")} multiple={false} maxFiles={1} maxBytes={maxBytes} files={selected ? [selected] : []} disabled={pending || disabled}
+            chooseLabel={saved || selected ? `Replace ${kind}` : `Choose ${kind}`}
+            hint={`PNG, JPEG, WebP, GIF or AVIF. Up to ${formatFileSize(maxBytes, { base: 1024 })}.`}
+            onFilesSelected={({ accepted }) => { const next = accepted[0]; if (next) { setDraft({ kind: "replace", file: next }); setBeforeRemoval(null); clearFeedback(); } }} />
+          {selected ? <ul className="pk-avatar-upload-files" aria-label="Selected image"><FileRow name={selected.name} sizeBytes={selected.size} fileType={selected.type} state="ready" message="Ready to save" /></ul> : null}
+          <div className="pk-avatar-upload-actions">
+            {removed ? <Button ref={undo} size="sm" variant="outline" startIcon={<Undo2Icon size="sm" />} disabled={pending || disabled} onClick={() => { setDraft(beforeRemoval); setBeforeRemoval(null); clearFeedback(); focusAfterChange.current = "picker"; }}>Undo removal</Button> : saved || selected ? <Button size="sm" variant="ghost" startIcon={<TrashIcon size="sm" />} disabled={pending || disabled} onClick={remove}>Remove {kind}</Button> : null}
+            {!selected && saved && !removed && onRefreshPreview ? <Button size="sm" variant="ghost" startIcon={<RotateCcwIcon size="sm" />} disabled={pending || disabled} onClick={onRefreshPreview}>Refresh preview</Button> : null}
+          </div>
         </div>
       </div>
-      <FileInput key={pickerRevision} ref={picker} label={`Choose ${kind}`} name={kind} accept={avatarImageTypes.join(",")} multiple={false} maxFiles={1} maxBytes={maxBytes} files={selected ? [selected] : []} disabled={pending || disabled}
-        chooseLabel={saved || selected ? `Replace ${kind}` : `Choose ${kind}`}
-        hint={`PNG, JPEG, WebP, GIF or AVIF. Up to ${formatFileSize(maxBytes, { base: 1024 })}.`}
-        onFilesSelected={({ accepted }) => { const next = accepted[0]; if (next) { setDraft({ kind: "replace", file: next }); setBeforeRemoval(null); clearFeedback(); } }} />
-      {selected ? <ul className="pk-avatar-upload-files" aria-label="Selected image"><FileRow name={selected.name} sizeBytes={selected.size} fileType={selected.type} state="ready" message="Ready to save" /></ul> : null}
-      <div className="pk-avatar-upload-actions">
-        {removed ? <Button ref={undo} variant="outline" disabled={pending || disabled} onClick={() => { setDraft(beforeRemoval); setBeforeRemoval(null); clearFeedback(); focusAfterChange.current = "picker"; }}>Undo removal</Button> : saved || selected ? <Button variant="outline" disabled={pending || disabled} onClick={remove}>Remove {kind}</Button> : null}
-      </div>
     </FormSection>
-    <SaveStatus state={error ? "error" : pending ? "saving" : dirty ? "dirty" : note ? "saved" : "idle"} role={error ? "alert" : "status"}>{error || (pending ? `Saving ${kind}…` : note || (dirty ? removed ? "Removal is not saved yet." : "You have unsaved changes." : "No changes to save."))}</SaveStatus>
-    <div className="pk-settings-actions">
-      <Button type="submit" loading={pending} disabled={disabled || (!dirty && !pending)}>{error ? "Retry save" : `Save ${kind}`}</Button>
-      <Button type="reset" variant="ghost" disabled={pending || disabled || !draft}>Reset changes</Button>
-      {pending ? <Button ref={cancel} variant="outline" onClick={cancelSave}>Cancel save</Button> : null}
-    </div>
+    <footer className="pk-avatar-upload-footer">
+      <SaveStatus state={error ? "error" : pending ? "saving" : dirty ? "dirty" : note ? "saved" : "idle"} role={error ? "alert" : "status"}>{error || (pending ? `Saving ${kind}…` : note || (dirty ? removed ? "Removal is not saved yet." : "You have unsaved changes." : "No changes to save."))}</SaveStatus>
+      <div className="pk-avatar-upload-save-actions">
+        <Button type="reset" variant="ghost" disabled={pending || disabled || !draft}>Reset changes</Button>
+        {pending ? <Button ref={cancel} variant="outline" onClick={cancelSave}>Cancel save</Button> : null}
+        <Button type="submit" loading={pending} disabled={disabled || (!dirty && !pending)}>{error ? "Retry save" : `Save ${kind}`}</Button>
+      </div>
+    </footer>
   </form>;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Button, Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DocumentLibrary, FileLightbox, SaveStatus, UploadQueue, useDocumentLibrary, useUploadQueue, type DocumentFolder, type DocumentLibraryLoad, type DocumentLibraryQuery, type MediaFile, type UploadContext, type UploadResult } from "@evenkit/ui";
+import { Button, ChevronDownIcon, Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DocumentLibrary, FileLightbox, RotateCcwIcon, SaveStatus, UploadIcon, UploadQueue, useDocumentLibrary, useUploadQueue, type DocumentFolder, type DocumentLibraryLoad, type DocumentLibraryQuery, type MediaFile, type UploadContext, type UploadResult } from "@evenkit/ui";
 
 export interface DocumentMutationContext { signal: AbortSignal; folderId: string | null }
 export interface DocumentLibraryBlockProps {
@@ -74,8 +74,8 @@ function LibraryWorkspace({ scopeKey, load, upload, onRemove, onRestore, onRefre
     <DocumentLibrary entries={result.data} total={result.total} query={query} onQueryChange={setQuery} path={path} onNavigate={navigate} view={view} onViewChange={setView}
       selection={result.selection} loading={result.loading} error={result.error} onRetry={result.retry}
       onPreview={(file, trigger) => { trigger.focus(); setSelectedPreview(file); }} {...(onRemove ? { onRemove: (ids: readonly string[]) => { setError(""); setRemovalIds([...ids]); } } : {})}
-      actions={<Button ref={refresh} variant="outline" onClick={result.retry}>Refresh documents</Button>} />
-    <SaveStatus state={error ? "error" : pending ? "saving" : note ? "saved" : "idle"} role={error && removalIds === null ? "alert" : "status"}>{removalIds === null ? error || note : ""}</SaveStatus>
+      actions={<Button ref={refresh} size="sm" variant="outline" startIcon={<RotateCcwIcon size="sm" />} aria-label="Refresh documents" onClick={result.retry}>Refresh</Button>} />
+    {removalIds === null && (error || note || pending === "restore") ? <SaveStatus state={error ? "error" : pending ? "saving" : "saved"} role={error ? "alert" : "status"}>{error || note || "Restoring items…"}</SaveStatus> : null}
     {removed && onRestore ? <div className="pk-document-recovery"><p>{removed.ids.length} {removed.ids.length === 1 ? "item can" : "items can"} be restored from the last removal.</p>
       <Button variant="outline" loading={pending === "restore"} onClick={() => { void mutate("restore"); }}>Undo removal</Button>
       {pending === "restore" ? <Button variant="ghost" onClick={() => { cancelRequest(); setNote("Restore cancelled. You can try undo again."); refresh.current?.focus(); }}>Cancel restore</Button> : null}
@@ -99,5 +99,8 @@ function DocumentUploads({ folderId, upload, onComplete }: { folderId: string | 
   const completed = queue.items.filter(item => item.state === "complete").map(item => item.id).join("|");
   const lastComplete = useRef("");
   useEffect(() => { if (completed !== lastComplete.current) { lastComplete.current = completed; if (completed) onComplete(); } }, [completed, onComplete]);
-  return <UploadQueue queue={queue} label="Upload to this folder" accept="image/png,image/jpeg,image/webp,image/avif,image/gif,text/plain,application/pdf" maxBytes={5 * 1024 * 1024} showPreviews={false} hint="Images, plain text or PDF. Up to 8 files, 5 MB each. Changing folders cancels pending uploads." />;
+  return <details className="pk-document-upload-panel" open>
+    <summary><UploadIcon size="sm" aria-hidden="true" /><span>Add files<small>Up to 8 files, 5 MB each</small></span><ChevronDownIcon size="sm" aria-hidden="true" /></summary>
+    <UploadQueue queue={queue} label="Upload to this folder" accept="image/png,image/jpeg,image/webp,image/avif,image/gif,text/plain,application/pdf" maxBytes={5 * 1024 * 1024} showPreviews={false} hint="Images, plain text or PDF. Changing folders cancels pending uploads." />
+  </details>;
 }

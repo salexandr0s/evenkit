@@ -7,8 +7,8 @@ import { DataTable, type DataTableColumn } from "./data-table.js";
 import { FileRow } from "./data-workflows.js";
 import { EmptyState, Spinner } from "./feedback.js";
 import { SearchField } from "./form-controls.js";
-import { FolderIcon } from "./icons.js";
-import { FilePreview, type MediaFile } from "./media-preview.js";
+import { ArrowRightIcon, EyeIcon, FolderIcon, LayoutGridIcon, ListIcon } from "./icons.js";
+import { FilePreview, mediaFileTypeLabel, type MediaFile } from "./media-preview.js";
 import { Breadcrumbs, Pagination } from "./navigation.js";
 import { useRemoteTable, useTableSelection, type DataTableQuery, type RemoteTableLoadContext, type RemoteTableResult } from "./remote-table.js";
 import { Checkbox, SegmentedControl } from "./selection-controls.js";
@@ -70,6 +70,7 @@ export interface DocumentLibraryProps {
 }
 
 const sortFields = [{ id: "name", label: "Name" }, { id: "size", label: "File size" }];
+function entryType(entry: DocumentEntry) { return entry.kind === "folder" ? "Folder" : mediaFileTypeLabel(entry.mimeType); }
 
 export function DocumentLibrary({ entries, total, query, onQueryChange, path, onNavigate, view, onViewChange, selection, onPreview, onRemove, loading = false, error, onRetry, actions, rootLabel = "All documents", className }: DocumentLibraryProps) {
   const search = useRef<HTMLInputElement>(null);
@@ -93,11 +94,11 @@ export function DocumentLibrary({ entries, total, query, onQueryChange, path, on
   function resetFilters() { search.current?.focus(); update({ search: "", kind: "all" }); }
   const removeAction = onRemove ? <Button size="sm" variant="outline" disabled={unavailable} onClick={() => onRemove(selection.selectedIds)}>Remove selected</Button> : null;
   const openButton = (entry: DocumentEntry) => entry.kind === "folder"
-    ? <Button size="sm" variant="ghost" aria-label={`Open folder ${entry.name}`} onClick={() => navigate([...path, entry])}>Open folder</Button>
-    : <Button size="sm" variant="ghost" aria-label={`Preview ${entry.name}`} onClick={event => onPreview(entry, event.currentTarget)}>Preview</Button>;
+    ? <Button size="sm" variant="ghost" className="pk-document-open" endIcon={<ArrowRightIcon size="sm" />} aria-label={`Open folder ${entry.name}`} onClick={() => navigate([...path, entry])}>Open</Button>
+    : <Button size="sm" variant="ghost" className="pk-document-open" startIcon={<EyeIcon size="sm" />} aria-label={`Preview ${entry.name}`} onClick={event => onPreview(entry, event.currentTarget)}>Preview</Button>;
   const columns: readonly DataTableColumn<DocumentEntry>[] = [
-    { id: "name", header: "Name", accessor: entry => entry.name, hideable: false, cell: entry => <ul className="pk-document-file-row"><FileRow name={entry.name} fileType={entry.kind === "folder" ? "Folder" : entry.mimeType || "File"} {...(entry.kind === "file" && entry.sizeBytes !== undefined ? { sizeBytes: entry.sizeBytes } : {})} preview={entry.kind === "folder" ? <FolderIcon /> : undefined} /></ul> },
-    { id: "actions", header: "Actions", accessor: () => "", sortable: false, searchable: false, cell: openButton },
+    { id: "name", header: "Name", accessor: entry => entry.name, hideable: false, cell: entry => <ul className="pk-document-file-row" data-kind={entry.kind}><FileRow name={entry.name} fileType={entryType(entry)} {...(entry.kind === "file" && entry.sizeBytes !== undefined ? { sizeBytes: entry.sizeBytes } : {})} preview={entry.kind === "folder" ? <FolderIcon /> : undefined} /></ul> },
+    { id: "actions", header: "Actions", accessor: () => "", align: "end", sortable: false, searchable: false, cell: openButton },
   ];
   const filtered = query.search !== "" || query.kind !== "all";
   const emptyTitle = filtered ? "No matching documents" : "This folder is empty";
@@ -107,13 +108,18 @@ export function DocumentLibrary({ entries, total, query, onQueryChange, path, on
   const allSelected = pageIds.length > 0 && pageIds.every(id => selection.selectedIds.includes(id));
   const someSelected = pageIds.some(id => selection.selectedIds.includes(id));
   return <section className={classes("pk-document-library", className)} aria-label="Document library">
-    <Breadcrumbs label="Document folders" items={[{ id: "root:", label: rootLabel, href: "#documents-root" }, ...path.map((folder, index) => ({ id: `folder:${folder.id}`, label: folder.name, href: `#documents-path-${index}` }))]} renderLink={({ children, href }) => <button type="button" className="pk-breadcrumb-link pk-document-crumb" onClick={() => navigate(href === "#documents-root" ? [] : path.slice(0, Number(href.split("-").at(-1)) + 1))}>{children}</button>} />
+    {path.length ? <Breadcrumbs label="Document folders" items={[{ id: "root:", label: rootLabel, href: "#documents-root" }, ...path.map((folder, index) => ({ id: `folder:${folder.id}`, label: folder.name, href: `#documents-path-${index}` }))]} renderLink={({ children, href }) => <button type="button" className="pk-breadcrumb-link pk-document-crumb" onClick={() => navigate(href === "#documents-root" ? [] : path.slice(0, Number(href.split("-").at(-1)) + 1))}>{children}</button>} /> : null}
+    <header className="pk-document-header">
+      <div className="pk-document-heading"><span className="pk-document-heading-icon" aria-hidden="true"><FolderIcon /></span><div><h3>{path.at(-1)?.name ?? rootLabel}</h3><p>{loading ? "Loading your files…" : error ? "Refresh to try again" : `${total} ${total === 1 ? "item" : "items"}${filtered ? total === 1 ? " matches your filters" : " match your filters" : " in this folder"}`}</p></div></div>
+      {actions ? <div className="pk-document-header-actions">{actions}</div> : null}
+    </header>
     <div className="pk-document-toolbar" role="group" aria-label="Document controls">
-      <SearchField ref={search} label="Search documents" value={query.search} onValueChange={value => update({ search: value })} />
-      <SelectField label="Show" value={query.kind} options={[{ value: "all", label: "All items" }, { value: "files", label: "Files" }, { value: "folders", label: "Folders" }]} onValueChange={kind => { if (kind === "all" || kind === "files" || kind === "folders") update({ kind }); }} />
-      <SortControl label="Sort documents" fields={sortFields} value={query.sort} onValueChange={sort => update({ sort })} />
-      <SegmentedControl label="Document view" value={view} onValueChange={next => { if (next === "list" || next === "grid") onViewChange(next); }} options={[{ value: "list", label: "List" }, { value: "grid", label: "Grid" }]} />
-      {actions}
+      <div className="pk-document-toolbar-primary"><SearchField ref={search} label="Search documents" placeholder="Search by filename…" value={query.search} onValueChange={value => update({ search: value })} />
+        <SegmentedControl label="Document view" value={view} onValueChange={next => { if (next === "list" || next === "grid") onViewChange(next); }} options={[{ value: "list", label: <span className="pk-document-view-label"><ListIcon size="sm" aria-hidden="true" />List</span> }, { value: "grid", label: <span className="pk-document-view-label"><LayoutGridIcon size="sm" aria-hidden="true" />Grid</span> }]} />
+      </div>
+      <div className="pk-document-toolbar-secondary"><SelectField label="Show" value={query.kind} options={[{ value: "all", label: "All items" }, { value: "files", label: "Files" }, { value: "folders", label: "Folders" }]} onValueChange={kind => { if (kind === "all" || kind === "files" || kind === "folders") update({ kind }); }} />
+        <SortControl label="Sort documents" fields={sortFields} value={query.sort} onValueChange={sort => update({ sort })} />
+      </div>
     </div>
     {view === "list" ? <DataTable data={entries} columns={columns} getRowId={entry => entry.id} caption="Documents" searchable={false}
       onClearSearch={() => { search.current?.focus(); update({ search: "" }); }}
@@ -127,11 +133,12 @@ export function DocumentLibrary({ entries, total, query, onQueryChange, path, on
         {unavailable || resetPending ? <div className="pk-document-state">{error ? <div role="alert"><EmptyState title="Documents could not be loaded" description={error} action={onRetry ? <Button variant="outline" onClick={onRetry}>Try again</Button> : null} /></div> : <Spinner label="Loading documents" />}</div>
           : entries.length === 0 ? <EmptyState title={emptyTitle} description={emptyDescription} action={filtered ? <Button variant="outline" onClick={resetFilters}>Clear filters</Button> : null} />
             : <><Checkbox label="Select all items on this page" checked={allSelected ? true : someSelected ? "indeterminate" : false} onCheckedChange={checked => selection.onSelectionChange(checked === true ? [...new Set([...selection.selectedIds, ...pageIds])] : selection.selectedIds.filter(id => !pageIds.includes(id)))} />
-              <ul className="pk-document-grid" aria-label="Documents">{entries.map(entry => <li key={entry.id} className="pk-document-card" data-selected={selection.selectedIds.includes(entry.id) || undefined}>
-                <Checkbox aria-label={`Select ${entry.name}`} checked={selection.selectedIds.includes(entry.id)} onCheckedChange={checked => selection.onSelectionChange(checked === true ? [...selection.selectedIds, entry.id] : selection.selectedIds.filter(id => id !== entry.id))} />
-                {entry.kind === "file" ? <FilePreview file={entry} showActions={false} className="pk-document-card-preview" /> : <div className="pk-document-folder-preview" aria-hidden="true"><FolderIcon /></div>}
-                <ul className="pk-document-file-row"><FileRow name={entry.name} fileType={entry.kind === "folder" ? "Folder" : entry.mimeType || "File"} {...(entry.kind === "file" && entry.sizeBytes !== undefined ? { sizeBytes: entry.sizeBytes } : {})} preview={entry.kind === "folder" ? <FolderIcon /> : undefined} /></ul>
-                {openButton(entry)}
+              <ul className="pk-document-grid" aria-label="Documents">{entries.map(entry => <li key={entry.id} className="pk-document-card" data-kind={entry.kind} data-selected={selection.selectedIds.includes(entry.id) || undefined}>
+                <div className="pk-document-card-selection"><Checkbox aria-label={`Select ${entry.name}`} checked={selection.selectedIds.includes(entry.id)} onCheckedChange={checked => selection.onSelectionChange(checked === true ? [...selection.selectedIds, entry.id] : selection.selectedIds.filter(id => id !== entry.id))} /></div>
+                {entry.kind === "file" ? <FilePreview file={entry} variant="thumbnail" className="pk-document-card-preview" /> : <div className="pk-document-folder-preview" aria-hidden="true"><FolderIcon /><span>Folder</span></div>}
+                <div className="pk-document-card-body"><ul className="pk-document-file-row" data-kind={entry.kind}><FileRow name={entry.name} fileType={entryType(entry)} {...(entry.kind === "file" && entry.sizeBytes !== undefined ? { sizeBytes: entry.sizeBytes } : {})} preview={entry.kind === "folder" ? <FolderIcon /> : undefined} /></ul>
+                  {openButton(entry)}
+                </div>
               </li>)}</ul></>}
         <Pagination page={query.pageIndex + 1} pageCount={pageCount} busy={unavailable || resetPending} onPageChange={page => onQueryChange({ ...query, pageIndex: page - 1 })} label="Document pages" />
       </div>}

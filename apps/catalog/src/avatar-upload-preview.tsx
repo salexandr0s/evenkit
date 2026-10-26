@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { Button, Checkbox, SelectField, Stack } from "@evenkit/ui";
+import { Button, Checkbox, ChevronDownIcon, SelectField, SlidersHorizontalIcon } from "@evenkit/ui";
 import { AvatarUpload, avatarImageTypes, type AvatarUploadProps, type AvatarValue } from "../../../registry/blocks/avatar-upload";
+import "./avatar-upload-preview.css";
 
 const initial: AvatarValue = { id: "meridian-logo", name: "Meridian logo.png", mimeType: "image/png", src: "/evenkit-logo.png" };
 
@@ -36,22 +37,28 @@ export function AvatarUploadPreview() {
     if (!mimeType) throw new Error("Choose a supported image type.");
     return { id: crypto.randomUUID(), name: change.file.name, mimeType, src: await readImage(change.file) };
   };
-  return <Stack gap="6">
+  return <div className="avatar-upload-preview">
     <AvatarUpload ownerId={owner} name={owner === "meridian" ? "Meridian workspace" : "Cedar workspace"} kind={kind} value={value} revision={revision} onSave={save}
       onSaved={next => { setValue(next); setSavedCount(count => count + 1); }}
       onRefreshPreview={() => { setValue(current => current ? { ...current, src: "/evenkit-logo.png", previewState: "available" } : current); }} />
-    <section aria-label="Avatar preview options"><Stack gap="3">
-      <h3>Preview options</h3>
-      <SelectField label="Image use" value={kind} options={[{ value: "avatar", label: "Avatar" }, { value: "logo", label: "Workspace logo" }]} onValueChange={next => { if (next === "avatar" || next === "logo") setKind(next); }} />
-      <Checkbox label="Fail the next save" checked={failNext} onCheckedChange={checked => { failure.current = checked === true; setFailNext(checked === true); }} />
-      <Checkbox label="Simulate a late save response" checked={late} onCheckedChange={checked => setLate(checked === true)} />
-      <div className="pk-settings-actions">
-        <Button variant="outline" onClick={() => setValue(current => current ? { ...current, previewState: "expired" } : initial)}>Expire preview</Button>
-        <Button variant="outline" onClick={() => { setValue(initial); setRevision(current => current + 1); }}>Restore saved image</Button>
-        <Button variant="outline" onClick={() => { setOwner(current => current === "meridian" ? "cedar" : "meridian"); setValue(initial); }}>Switch workspace</Button>
+    <details className="avatar-upload-demo" aria-label="Avatar preview options" open>
+      <summary><SlidersHorizontalIcon size="sm" /><span>Preview options</span><ChevronDownIcon className="avatar-upload-demo-chevron" size="sm" /></summary>
+      <div className="avatar-upload-demo-content">
+        <div className="avatar-upload-demo-fields">
+          <SelectField label="Image use" value={kind} options={[{ value: "avatar", label: "Avatar" }, { value: "logo", label: "Workspace logo" }]} onValueChange={next => { if (next === "avatar" || next === "logo") setKind(next); }} />
+          <div className="avatar-upload-demo-checks">
+            <Checkbox label="Fail the next save" checked={failNext} onCheckedChange={checked => { failure.current = checked === true; setFailNext(checked === true); }} />
+            <Checkbox label="Simulate a late save response" checked={late} onCheckedChange={checked => setLate(checked === true)} />
+          </div>
+        </div>
+        <div className="avatar-upload-demo-actions">
+          <Button size="sm" variant="outline" onClick={() => setValue(current => current ? { ...current, previewState: "expired" } : initial)}>Expire preview</Button>
+          <Button size="sm" variant="outline" onClick={() => { setValue(initial); setRevision(current => current + 1); }}>Restore saved image</Button>
+          <Button size="sm" variant="outline" onClick={() => { setOwner(current => current === "meridian" ? "cedar" : "meridian"); setValue(initial); }}>Switch workspace</Button>
+        </div>
+        <p className="avatar-upload-demo-note">This example saves images in memory. Reloading restores the sample image.</p>
+        <p className="avatar-upload-demo-result" role="status">Completed saves: {savedCount}. Saved image: {value?.name ?? "None"}.</p>
       </div>
-      <p className="pk-settings-note">This example saves images in memory. Reloading restores the sample image.</p>
-      <p className="pk-settings-note" role="status">Completed saves: {savedCount}. Saved image: {value?.name ?? "None"}.</p>
-    </Stack></section>
-  </Stack>;
+    </details>
+  </div>;
 }

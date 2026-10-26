@@ -55,6 +55,15 @@ Dialog and control motion follows the existing reduced-motion rules. Uploaded
 animated images retain their own animation; supply a static rendition when your
 application needs to suppress that motion.
 
+The default preview has a file header, a bounded canvas and an action footer.
+`variant="thumbnail"` provides a passive 4:3 image/text summary for cards: it
+keeps the accessible filename and fallback status, but omits actions, retry
+controls and text tab stops. Give its containing card a separate, named preview
+button to open the complete view. `DocumentLibrary` does this automatically.
+Image canvases use a light neutral checkerboard to expose transparency in either
+mode; the image pixels are unchanged. Error and loading copy uses the current
+theme's neutral surfaces.
+
 ```tsx
 "use client";
 
@@ -97,6 +106,12 @@ last saved value. The file picker and undo/cancel controls provide focus recover
 An owner, revision or authoritative value change remounts the editor, aborts the
 old attempt and prevents its late result from updating the new context.
 
+The editor groups the current image and file picker in a bounded settings panel.
+Avatar previews are circular; logos retain their rectangular frame. Narrow
+containers stack the image stage above the picker, with status and save controls
+in a shared footer. Image errors keep enough room for their explanation and
+recovery controls.
+
 ## Document browsing
 
 `DocumentEntry` is a folder (`id`, `name`, `kind: "folder"`) or file
@@ -118,6 +133,12 @@ List uses the existing DataTable in remote mode and FileRow. Grid uses FilePrevi
 Checkbox and Pagination. Both show loading, error/retry, empty-folder and empty-
 search states. Folder breadcrumbs are application data. The UI never assumes
 that navigating a path grants access to its contents.
+
+The library header identifies the current folder and keeps refresh separate from
+the search, view and sort controls. File rows give filenames the available width;
+grid cards use consistent thumbnail canvases and retain a separate selection
+target. The block places the existing upload queue in an open disclosure below
+the browser. Collapsing that disclosure leaves queued transfers running.
 
 For a custom composition, `DocumentLibrary` requires `entries`, `total`, `query`,
 `onQueryChange`, `path`, `onNavigate`, `view`, `onViewChange`, `selection` and
