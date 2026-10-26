@@ -2,6 +2,7 @@ import { ArrowRightIcon, Badge, Button, ButtonLink, PlusIcon, Select, SelectFiel
 import { PreviewDialog } from "./preview-dialog";
 import { PreviewAdmin } from "./preview-admin";
 import { PreviewChat } from "./preview-chat";
+import { PreviewAuth } from "./preview-auth";
 import { PriorityFixture } from "./priority-fixture";
 import { ActionMessage, EmptyState, Skeleton, Spinner, type ActionMessageTone, type BadgeSize, type BadgeTone, type BadgeVariant, type EmptyStateAlign, type EmptyStateSize, type EmptyStateTitleTag, type SkeletonSize, type SkeletonVariant, type SpinnerSize } from "@evenkit/ui";
 
@@ -22,6 +23,7 @@ export default function Page() {
   return <main>
     <h1>Packed package check</h1>
     <PriorityFixture />
+    <PreviewAuth />
     <Badge tone={badgeTone} size={badgeSize} variant={badgeVariant} dot>Next.js consumer</Badge>
     <ActionMessage tone={messageTone} heading="Review the package" title="Packed feedback" role="note" icon={null}
       actions={<ButtonLink href="#projects">Review projects</ButtonLink>}>Persistent feedback from the installed package.</ActionMessage>

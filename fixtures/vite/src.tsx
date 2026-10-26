@@ -1,6 +1,7 @@
 import { createRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { PriorityFixture } from "./priority-fixture";
+import { PreviewAuth } from "./auth-preview";
 import { AdminShell, ArrowRightIcon, Badge, Button, ButtonLink, ChatWidget, DataTable, Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, FolderIcon, PlusIcon, Select, SelectField, TextareaField, TextField, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UserIcon, type AdminSidebarState, type ButtonShape, type ChatMessage, type DataTableColumn, type DialogSize, type SelectOptionGroup, type TextareaFieldProps } from "@evenkit/ui";
 import "@evenkit/tokens/css";
 import "@evenkit/ui/css";
@@ -59,6 +60,7 @@ function PreviewChat() {
 createRoot(element).render(<main>
   <h1>Packed package check</h1>
   <PriorityFixture />
+  <PreviewAuth />
   <Badge {...badgeProps} ref={badgeRef}>Vite consumer</Badge>
   <ActionMessage {...messageProps} ref={messageRef} actions={<ButtonLink href="#projects">Review projects</ButtonLink>}>Persistent feedback from the installed package.</ActionMessage>
   <Spinner {...spinnerProps} ref={spinnerRef} />

@@ -12,7 +12,7 @@ export {
   CheckIcon, ChevronDownIcon, ChevronUpIcon, ChevronLeftIcon, ChevronRightIcon,
   CircleAlertIcon, CircleCheckIcon, CircleHelpIcon, InfoIcon, TriangleAlertIcon,
   DownloadIcon, ExternalLinkIcon, FileTextIcon, FolderIcon,
-  LayoutDashboardIcon, LogOutIcon, MailIcon, MenuIcon, MoreHorizontalIcon, PlusIcon,
+  LayoutDashboardIcon, LockIcon, LogOutIcon, MailIcon, MenuIcon, MoreHorizontalIcon, PlusIcon,
   SearchIcon, SettingsIcon, ShieldIcon, TrashIcon, UsersIcon, XIcon, SunIcon, MoonIcon,
   UserIcon, UserPlusIcon, UserCheckIcon, ContactRoundIcon, Building2Icon, BriefcaseBusinessIcon,
   BellIcon, CalendarDaysIcon, InboxIcon, MessageSquareIcon, ChartNoAxesCombinedIcon, ClockIcon,

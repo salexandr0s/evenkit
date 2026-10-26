@@ -22,6 +22,7 @@ import {
   FileText,
   Folder,
   LayoutDashboard,
+  Lock,
   LogOut,
   Mail,
   Menu,
@@ -176,6 +177,7 @@ export const ExternalLinkIcon = /* @__PURE__ */ createKitIcon(ExternalLink, "Ext
 export const FileTextIcon = /* @__PURE__ */ createKitIcon(FileText, "FileTextIcon", FileTextMotion);
 export const FolderIcon = /* @__PURE__ */ createKitIcon(Folder, "FolderIcon", "pulse");
 export const LayoutDashboardIcon = /* @__PURE__ */ createKitIcon(LayoutDashboard, "LayoutDashboardIcon", "columns");
+export const LockIcon = /* @__PURE__ */ createKitIcon(Lock, "LockIcon", "pulse");
 export const LogOutIcon = /* @__PURE__ */ createKitIcon(LogOut, "LogOutIcon", LogOutMotion);
 export const MailIcon = /* @__PURE__ */ createKitIcon(Mail, "MailIcon", "mail");
 export const MenuIcon = /* @__PURE__ */ createKitIcon(Menu, "MenuIcon", MenuMotion);

@@ -165,6 +165,7 @@ async function smoke(kind, directory) {
     if (!response?.ok) throw new Error(`${kind} fixture did not become ready: ${logs}`);
     const html = await response.text();
     if (kind === "next" && !html.includes("Packed package check")) throw new Error("Next server did not render the package fixture.");
+    if (kind === "next" && !["Packed login", "Packed signup", "Packed password reset", "Packed new password"].every(title => html.includes(title))) throw new Error("Next server did not render the packed authentication pages.");
     if (kind === "next" && !html.includes("Packed projects")) throw new Error("Next server did not render the client shell/table fixture.");
     if (kind === "next" && !html.includes("Package assistant")) throw new Error("Next server did not render the client chat fixture.");
     if (kind === "next" && !html.includes("Packed rich chat")) throw new Error("Next server did not render the rich chat fixture.");
@@ -184,6 +185,7 @@ async function smoke(kind, directory) {
       return css.text();
     }));
     const css = styles.join("\n");
+    if (!css.includes(".pk-auth-layout")) throw new Error(`${kind} fixture did not ship the authentication page styles.`);
     if (!["--pk-color-accent", ".pk-button", ".pk-icon", ".pk-tooltip-content", ".pk-admin-shell", ".pk-data-table", ".pk-chat", ".pk-card", ".pk-check-control", ".pk-combobox", ".pk-tabs", ".pk-menu", ".pk-filter-bar", ".pk-navbar"].every(selector => css.includes(selector))) {
       throw new Error(`${kind} fixture did not ship the existing and priority component styles.`);
     }
