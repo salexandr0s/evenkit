@@ -23,7 +23,7 @@ export interface ExampleHandlers {
   onNewsletter: WebsiteSubmitHandler<NewsletterFormValues>;
 }
 function useExampleId() { return `field-notes-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`; }
-const fictionalNotice = "Paper Observatory is a fictional studio. These examples do not describe a real service.";
+const fictionalNotice = "Paper Observatory is a fictional studio used in these examples.";
 const specimenSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480"><rect width="720" height="480" fill="#f4f4f5"/><g fill="none" stroke="#52525b" stroke-width="2"><rect x="56" y="48" width="608" height="384" rx="8"/><path d="M360 365V140m0 135c-90 0-130-55-130-100 95 0 130 50 130 100Zm0-45c85 0 115-50 115-95-85 0-115 50-115 95Z"/><path d="M90 100h120m-120 20h80m300 240h120m-120 20h80"/></g><g fill="#52525b" font-family="monospace" font-size="14"><text x="90" y="78">FICTIONAL SPECIMEN / A</text><text x="90" y="400">OBSERVE · DRAW · ANNOTATE</text></g></svg>`;
 const specimenSource = `data:image/svg+xml,${encodeURIComponent(specimenSvg)}`;
 
@@ -38,7 +38,7 @@ export function HeroesExample({ headingAs = "h1", longContent = false, dir = "lt
     <Hero headingAs={headingAs} eyebrow="Paper Observatory · fictional example" title={longContent ? "Ein Notizbuch für Beobachtungen, gemeinsame Zeichenstunden und ausführliche Beschreibungen" : "A place for field notes"}
       description={<p>Draw an imagined specimen, describe its shape, and keep your observations together.</p>}
       actions={<ButtonLink href={`#${id}-media`}>View the specimen sheet</ButtonLink>} />
-    <Hero id={`${id}-media`} tabIndex={-1} headingAs={next} variant="media" eyebrow="A second introduction" title="Look closely. Leave a note."
+    <Hero id={`${id}-media`} tabIndex={-1} headingAs={next} variant="media" eyebrow="Drawing workshop" title="Drawing and observation"
       description={<p>This fictional workshop pairs a drawing prompt with room for notes. Bring your own subject and materials.</p>}
       media={<SpecimenMedia />} />
   </div>;
@@ -132,6 +132,6 @@ export function ArticleExample({ headingAs = "h1", longContent = false }: Exampl
     metadata={<><span>Paper Observatory editorial example</span><time dateTime="2026-10-25">25 October 2026</time><span>Fictional field guide</span></>}
     media={<SpecimenMedia />} sections={[
       { id: "observation", title: "Start with an observation", content: observation },
-      { id: "specimen", title: "Describe the specimen", content: <><p>A small record can keep a sketch and its caption together. This is sample data for the fictional notebook.</p><ArticleCode label="Notebook example (JSON)">{'{\n  "specimen": "Imaginary two-leaf plant",\n  "note": "A long annotation stays within the code region so that the surrounding article continues to fit a narrow screen."\n}'}</ArticleCode><p>Keep code as text and supply accessible descriptions for media.</p></> },
+      { id: "specimen", title: "Describe the specimen", content: <><p>A small record can keep a sketch and its caption together. This is sample data for the fictional notebook.</p><ArticleCode label="Notebook example (JSON)">{'{\n  "specimen": "Imaginary two-leaf plant",\n  "note": "A long annotation stays within the code region so that the surrounding article continues to fit a narrow screen."\n}'}</ArticleCode><p>Store the record as plain text and describe each drawing in its caption.</p></> },
     ]} related={<Stack gap="3"><Heading as={headingAs === "h1" ? "h2" : headingAs === "h2" ? "h3" : "h4"} size="4">Continue in your notebook</Heading><Prose><p>Write a caption for a second drawing and compare the shapes.</p></Prose></Stack>} />;
 }

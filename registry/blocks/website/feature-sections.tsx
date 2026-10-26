@@ -37,7 +37,7 @@ export function FeatureSection({ title, description, items, presentation = "grid
             {item.icon ? <span aria-hidden="true" className="pk-website-feature-icon">{item.icon}</span> : null}
             <Heading as={itemHeadingAs} size="4">{item.title}</Heading>
           </Stack>
-          <Stack gap="4">
+          <Stack gap="4" className="pk-website-feature-content">
             <Prose className="pk-website-description">{item.description}</Prose>
             {item.action ? <div className="pk-website-actions">{item.action}</div> : null}
           </Stack>
