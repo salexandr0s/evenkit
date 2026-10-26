@@ -5,7 +5,7 @@ import { foundation } from "@evenkit/tokens";
 import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "./dialog.js";
-import { CircleIcon, LayoutDashboardIcon, MenuIcon, PanelLeftCloseIcon, PanelLeftIcon, PanelLeftOpenIcon } from "./icons.js";
+import { ChevronDownIcon, CircleIcon, LayoutDashboardIcon, MenuIcon, PanelLeftCloseIcon, PanelLeftIcon, PanelLeftOpenIcon } from "./icons.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 import { sidebarWidths, useAdminSidebarDrag } from "./use-admin-sidebar-drag.js";
 
@@ -20,7 +20,11 @@ export interface AdminNavItem {
 }
 
 export interface AdminNavGroup {
+  id?: string;
   label?: string;
+  icon?: ReactNode;
+  expanded?: boolean;
+  onExpandedChange?: (expanded: boolean) => void;
   items: readonly AdminNavItem[];
 }
 
@@ -71,9 +75,11 @@ const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(function NavLink({ r
 });
 
 function Navigation({ groups, activeItemId, label, renderLink, onNavigate, collapsed = false, tooltipsEnabled = true, suppressTooltips = false }: NavigationProps) {
+  const navigationId = useId();
   const navigationRef = useRef<HTMLElement>(null);
   const [tooltipSide, setTooltipSide] = useState<"left" | "right">("right");
   const [openItemId, setOpenItemId] = useState<string | null>(null);
+  const activeGroupExpanded = groups.find(group => group.items.some(item => item.id === activeItemId))?.expanded;
   const navigate: MouseEventHandler<HTMLAnchorElement> = (event) => {
     if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) onNavigate?.();
   };
@@ -83,6 +89,26 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
     if (suppressTooltips || !collapsed || (!tooltipsEnabled && navigationRef.current?.getClientRects().length === 0)) setOpenItemId(null);
   }, [collapsed, tooltipsEnabled, suppressTooltips]);
 
+  useLayoutEffect(() => {
+    const navigation = navigationRef.current;
+    if (!navigation) return;
+    const revealActive = () => {
+      const active = navigation.querySelector<HTMLElement>(".pk-admin-nav-link[aria-current='page']");
+      if (!active || active.getClientRects().length === 0 || navigation.clientHeight === 0) return;
+      const bounds = navigation.getBoundingClientRect();
+      const item = active.getBoundingClientRect();
+      const style = window.getComputedStyle(navigation);
+      const top = bounds.top + Number.parseFloat(style.paddingTop);
+      const bottom = bounds.bottom - Number.parseFloat(style.paddingBottom);
+      if (item.bottom > bottom) navigation.scrollTop += item.bottom - bottom;
+      else if (item.top < top) navigation.scrollTop -= top - item.top;
+    };
+    revealActive();
+    const observer = new ResizeObserver(revealActive);
+    observer.observe(navigation);
+    return () => observer.disconnect();
+  }, [activeItemId, activeGroupExpanded, collapsed]);
+
   function changeTooltipOpen(itemId: string, open: boolean) {
     if (suppressTooltips || !collapsed || (open && navigationRef.current?.getClientRects().length === 0)) return;
     if (open && navigationRef.current) setTooltipSide(window.getComputedStyle(navigationRef.current).direction === "rtl" ? "left" : "right");
@@ -90,11 +116,28 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
   }
 
   return (
-    <nav ref={navigationRef} className="pk-admin-navigation" aria-label={label}>
-      {groups.map((group, index) => (
-        <div className="pk-admin-nav-group" key={index}>
-          {group.label ? <p className="pk-admin-nav-label">{group.label}</p> : null}
-          <ul className="pk-admin-nav-list" role="list">
+    <nav ref={navigationRef} className="pk-admin-navigation" data-grouped={groups.some(group => group.expanded !== undefined && group.onExpandedChange) || undefined} aria-label={label}>
+      {groups.map((group, index) => {
+        const disclosure = !!group.label && group.expanded !== undefined && !!group.onExpandedChange;
+        const groupId = group.id ?? String(index);
+        const listId = `${navigationId}-group-${groupId}`;
+        const tooltipId = `group:${groupId}`;
+        return (
+        <div className="pk-admin-nav-group" key={groupId} data-collapsible={disclosure || undefined} data-active={group.items.some(item => item.id === activeItemId) || undefined}>
+          {disclosure ? (
+            <Tooltip open={collapsed && tooltipsEnabled && !suppressTooltips && openItemId === tooltipId} onOpenChange={(open) => changeTooltipOpen(tooltipId, open)}>
+              <TooltipTrigger asChild>
+                <button type="button" className="pk-admin-nav-group-trigger" aria-expanded={group.expanded} aria-controls={listId} aria-label={group.label} onClick={() => { setOpenItemId(null); group.onExpandedChange?.(!group.expanded); }}>
+                  <span className="pk-admin-nav-icon" aria-hidden="true">{group.icon ?? <LayoutDashboardIcon />}</span>
+                  <span className="pk-admin-nav-group-text">{group.label}</span>
+                  <span className="pk-admin-nav-group-count" aria-hidden="true">{group.items.length}</span>
+                  <ChevronDownIcon className="pk-admin-nav-group-chevron" aria-hidden="true" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side={tooltipSide}>{group.label}</TooltipContent>
+            </Tooltip>
+          ) : group.label ? <p className="pk-admin-nav-label">{group.label}</p> : null}
+          <ul id={listId} className="pk-admin-nav-list" role="list" hidden={disclosure && !group.expanded}>
             {group.items.map((item) => {
               const linkProps: AdminLinkProps = {
                 href: item.href,
@@ -108,7 +151,8 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
             })}
           </ul>
         </div>
-      ))}
+        );
+      })}
     </nav>
   );
 }

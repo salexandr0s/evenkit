@@ -17,7 +17,7 @@ The dev command builds the packages first. If you edit package source while the 
 
 The catalog includes 116 sections with live previews and copied usage examples, covering controls, application flows, reporting, authentication, rich chat and website blocks. Search a component name or an inventory ID such as `J07`. Open `/#themes` to compare eight palettes and apply one across the library. The catalog follows your system appearance until you choose light or dark; your choice is remembered. Preview actions use fictional local data.
 
-The catalog uses AdminShell for its own navigation. Each entry has an icon. Drag the sidebar edge or use the single header button to expand, minimise, or hide it; the display mode is remembered. Search stays in the header, and narrow screens use a navigation drawer.
+The catalog uses AdminShell for its own navigation. Its 116 entries are arranged in 13 collapsible sections, with section icons, entry icons and counts. The current section opens on deep links and history navigation; open sections and the sidebar display mode are remembered. Search reveals matches across closed sections and restores your section choices when cleared. The navigation scrolls independently of the brand and footer. Drag the sidebar edge or use the single header button to expand, minimise, or hide it. Narrow screens use the same sections in a navigation drawer.
 
 ## Run the admin starter
 
@@ -258,6 +258,8 @@ TooltipContent includes the compact surface, text wrapper, and matching arrow. I
 ## Admin shell and tables
 
 `AdminShell` provides expanded (260px), collapsed (72px icon rail), and hidden desktop sidebar states. One header button cycles through these modes; its icon, label, and tooltip describe the next action. Use `defaultSidebarState` for an uncontrolled shell, or `sidebarState` and `onSidebarStateChange` for application state. The shell keeps that desktop choice while narrow containers use a full-label drawer.
+
+Navigation groups can supply a stable `id`, decorative `icon`, controlled `expanded` value and `onExpandedChange` callback. With a label and both expansion props, a group becomes a keyboard-operable disclosure with an entry count. Its section icon remains available with a tooltip in the compact rail. Groups without expansion props stay open. The host owns expansion state and persistence; navigation scrolls within the sidebar or drawer while the brand and footer remain visible.
 
 Drag the sidebar's outer edge to resize it. The edge attracts gently toward each mode and snaps to the nearest one on release. A grip remains available when hidden. Dragging follows the pointer directly; buttons and release use a short eased transition, disabled for reduced motion. The separator also supports Left/Right arrows, Home to hide, and End to expand, with direction-aware arrows in RTL. Escape cancels a drag. The change callback runs when a new mode is committed, not on each pointer move.
 

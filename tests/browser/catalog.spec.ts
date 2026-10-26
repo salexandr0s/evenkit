@@ -233,9 +233,12 @@ test("narrow layouts preserve controls and recoverable feedback", async ({ page 
   const loading = page.getByRole("button", { name: "Loading state", exact: true });
   await expect(loading).toBeDisabled();
   await expect(loading).toHaveAttribute("aria-busy", "true");
-  for (const entry of ["Fields", "Select", "Dialog", "Design tokens", "Empty state"]) {
+  for (const [entry, section] of [["Fields", "Forms & input"], ["Select", "Forms & input"], ["Dialog", "Overlays"], ["Design tokens", "Foundations"], ["Empty state", "Feedback & chat"]] as const) {
     await page.getByRole("button", { name: "Open navigation", exact: true }).click();
-    await page.getByRole("navigation", { name: "Components", exact: true }).getByRole("link", { name: entry, exact: true }).click();
+    const navigation = page.getByRole("navigation", { name: "Components", exact: true });
+    const disclosure = navigation.getByRole("button", { name: section, exact: true });
+    if (await disclosure.getAttribute("aria-expanded") === "false") await disclosure.click();
+    await navigation.getByRole("link", { name: entry, exact: true }).click();
     await expect(page.getByRole("heading", { name: entry, exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   }

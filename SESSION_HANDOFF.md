@@ -832,3 +832,13 @@ Physical phones/tablets, installed Safari, screen readers, forced-color modes, o
 ## Continue from here
 
 Use the isolated branch for review/adoption. The working tree is intended to be clean after the final documentation commit. Logs under `.artifacts/` are local ignored evidence; commands, tests, source handoffs and the integration record are tracked. Rebuild before independent consumer checks; registered source files must match committed blobs. There is no pending publication, deployment, migration or production verification step authorized by this task.
+
+## Catalog sidebar organization — 26 October 2026
+
+Completed the sidebar organization goal. The catalog's 116 entries now appear once each in 13 collapsible sections, with section icons/counts and more distinct table, chart, file, authentication and settings icons. Open sections persist locally; search exposes matching destinations across closed sections and clearing it restores the saved choices. Deep links and history reveal the selected section and scroll only the navigation region. Brand/footer stay visible in the desktop sidebar and mobile drawer. Existing AdminShell groups remain static unless the host supplies expansion state and a callback.
+
+Source: `apps/catalog/src/catalog-navigation.tsx`, `apps/catalog/src/catalog.tsx`, `packages/ui/src/admin-shell.tsx`, `packages/ui/src/admin-shell.css`. README documents the section API. Browser changes are in `catalog-sidebar.spec.ts`, `catalog.spec.ts`, `homepage.spec.ts` and `themes.spec.ts`.
+
+Verification: UI and catalog production builds, root `npm run typecheck`, focused ESLint and `git diff --check` passed. The five focused catalog spec files passed 34 journeys (33 in the initial run plus the new inventory/section journey after correcting its loading readiness); shared sidebar/admin shell specs passed 11 journeys. An independent browser review confirmed sidebar-only scrolling, Escape dismissal and focus preservation for compact group tooltips, and search-result activation. Desktop, rail and 360px mobile captures were inspected. Logs and captures are under `.artifacts/sidebar-*`; browser traces use `.artifacts/sidebar-browser*` and `.artifacts/sidebar-shell-browser`.
+
+Local preview: `http://127.0.0.1:5397/#buttons`, started with `npm run preview --workspace @evenkit/catalog -- --port 5397 --strictPort`. Rebuild packages before the catalog when package source changes. No sidebar work remains; deployment was not requested. Other concurrent working-tree changes were preserved and are outside this goal.

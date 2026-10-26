@@ -1,24 +1,12 @@
-import { lazy, Suspense, useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, type MouseEvent } from "react";
 import { themes, themeNames, type ColorMode, type ThemeName } from "@evenkit/tokens";
 import {
-  AdminShell, Badge, Button, ChevronDownIcon, CircleCheckIcon, CircleHelpIcon,
-  EmptyState, ExternalLinkIcon, FileTextIcon, InboxIcon, InfoIcon, Input, Label, LayoutDashboardIcon,
-  MaximizeIcon, MessageSquareIcon, MoonIcon, PanelLeftIcon, PencilIcon, RotateCcwIcon,
-  SearchIcon, Select, Spinner, SquareIcon, SunIcon, Tooltip, TooltipContent, TooltipProvider,
+  AdminShell, Badge, Button, EmptyState, ExternalLinkIcon, Input, Label, MoonIcon,
+  SearchIcon, Select, Spinner, SunIcon, Tooltip, TooltipContent, TooltipProvider,
   TooltipTrigger, type AdminLinkProps, type AdminNavGroup, type AdminSidebarState,
-  AccessibilityIcon, ArrowLeftRightIcon, BellIcon, BoldIcon, ChevronRightIcon,
-  ChevronsUpDownIcon, CircleAlertIcon, CircleDotIcon, CloudCheckIcon, Columns3Icon,
-  ContactRoundIcon, CopyIcon, FilePenLineIcon, FilterIcon, FilterXIcon, GaugeIcon,
-  GroupIcon, HeadingIcon, KeyboardIcon, KeyRoundIcon, LayoutGridIcon, ListChecksIcon,
-  ListCollapseIcon, ListFilterIcon, ListIcon, ListTreeIcon, ListXIcon, MenuIcon,
-  MessageSquareTextIcon, PanelRightIcon, PanelsTopLeftIcon, PanelTopDashedIcon,
-  PanelTopIcon, RectangleHorizontalIcon, SaveIcon, SeparatorHorizontalIcon,
-  ShapesIcon, SlidersHorizontalIcon, SquareCheckIcon, Table2Icon, TagsIcon,
-  ToggleRightIcon, TriangleAlertIcon, TypeIcon, UploadIcon, UserIcon, UsersIcon,
-  CalendarDaysIcon, ClockIcon, Building2Icon, ActivityIcon, CameraIcon, CalculatorIcon,
-  UserPlusIcon, ShieldIcon, WifiIcon,
 } from "@evenkit/ui";
-import { entries, groups } from "./catalog-data";
+import { entries } from "./catalog-data";
+import { catalogSections, navigationIcons, sectionForEntry } from "./catalog-navigation";
 import { foundationsEntries } from "./foundations-entries";
 import { selectionEntries } from "./selection-entries";
 import { formsEntries } from "./forms-entries";
@@ -59,57 +47,22 @@ const AuthPreview = lazy(() => import("./auth-preview").then(module => ({ defaul
 
 const sidebarStates = ["expanded", "collapsed", "hidden"] as const;
 const themeOptions = themeNames.map((name) => ({ value: name, label: themes[name].name }));
-const navigationIcons: Record<string, ReactNode> = {
-  login: <KeyRoundIcon />, signup: <UserIcon />, "password-reset": <KeyRoundIcon />, "new-password": <KeyRoundIcon />,
-  themes: <SunIcon />, tokens: <LayoutDashboardIcon />, icons: <ShapesIcon />,
-  buttons: <SquareIcon />, fields: <PencilIcon />, select: <ChevronDownIcon />,
-  dialog: <MaximizeIcon />, tooltips: <CircleHelpIcon />, "admin-shell": <PanelLeftIcon />,
-  "data-table": <FileTextIcon />, chat: <MessageSquareIcon />, status: <CircleCheckIcon />,
-  loading: <RotateCcwIcon />, empty: <InboxIcon />,
-  typography: <TypeIcon />, "layout-widths": <RectangleHorizontalIcon />,
-  "layout-groups": <LayoutGridIcon />, separator: <SeparatorHorizontalIcon />,
-  card: <PanelTopIcon />, "page-header": <HeadingIcon />, toolbar: <SlidersHorizontalIcon />,
-  accessibility: <AccessibilityIcon />, avatar: <UserIcon />, tags: <TagsIcon />,
-  "data-list": <ListTreeIcon />, "list-item": <ListIcon />, kbd: <KeyboardIcon />,
-  checkbox: <SquareCheckIcon />, "radio-group": <CircleDotIcon />, switch: <ToggleRightIcon />,
-  "toggle-group": <BoldIcon />, "segmented-control": <Columns3Icon />, "button-group": <GroupIcon />,
-  "copy-action": <CopyIcon />, progress: <GaugeIcon />, fieldset: <ListChecksIcon />,
-  "form-summary": <ListXIcon />, "search-field": <SearchIcon />, "password-field": <KeyRoundIcon />,
-  combobox: <ListFilterIcon />, "form-actions": <SaveIcon />, "save-status": <CloudCheckIcon />,
-  tabs: <PanelsTopLeftIcon />, accordion: <ListCollapseIcon />, collapsible: <ChevronsUpDownIcon />,
-  breadcrumbs: <ChevronRightIcon />, navbar: <PanelTopDashedIcon />, pagination: <ArrowLeftRightIcon />,
-  "dropdown-menu": <MenuIcon />, popover: <MessageSquareTextIcon />, "alert-dialog": <TriangleAlertIcon />,
-  sheet: <PanelRightIcon />, toast: <BellIcon />, "account-menu": <ContactRoundIcon />,
-  "semantic-table": <Table2Icon />, filters: <FilterIcon />, "applied-filters": <FilterXIcon />,
-  "file-input": <UploadIcon />, "file-row": <FileTextIcon />, "list-page": <ListIcon />,
-  "edit-page": <FilePenLineIcon />, "error-pages": <CircleAlertIcon />,
-  calendar: <CalendarDaysIcon />, "date-picker": <CalendarDaysIcon />, "date-range": <CalendarDaysIcon />,
-  "time-field": <ClockIcon />, formatting: <TypeIcon />, "multi-select": <ListChecksIcon />,
-  "token-input": <TagsIcon />, "number-field": <CalculatorIcon />, "number-recipes": <CalculatorIcon />,
-  "remote-data-table": <Table2Icon />, "sort-control": <ListFilterIcon />, "bulk-actions": <ListChecksIcon />,
-  "column-settings": <Columns3Icon />, "activity-timeline": <ActivityIcon />, "record-detail": <FileTextIcon />,
-  "workspace-switcher": <Building2Icon />, "settings-layout": <SlidersHorizontalIcon />,
-  "profile-settings": <UserIcon />, "appearance-preferences": <SunIcon />, "upload-queue": <UploadIcon />,
-  image: <CameraIcon />, "command-palette": <SearchIcon />, "step-indicator": <ListChecksIcon />,
-  "onboarding-wizard": <PanelsTopLeftIcon />,
-  "avatar-upload": <UserIcon />, "file-preview": <CameraIcon />, "document-library": <FileTextIcon />,
-  "website-shell": <PanelTopIcon />, "website-heroes": <HeadingIcon />,
-  "website-features": <LayoutGridIcon />, "website-cta": <SquareIcon />,
-  "website-faq": <CircleHelpIcon />, "website-forms": <ContactRoundIcon />,
-  "website-article": <FileTextIcon />,
-  "rich-chat": <MessageSquareTextIcon />,
-  "team-members": <UsersIcon />, "invitation-acceptance": <UserPlusIcon />,
-  "role-capability-editor": <ShieldIcon />, "audit-viewer": <ActivityIcon />,
-  "notification-center": <BellIcon />, "notification-preferences": <SlidersHorizontalIcon />,
-  "persistent-banner": <InfoIcon />, "connection-status": <WifiIcon />, "presence-unread": <CircleDotIcon />,
-  statistic: <GaugeIcon />, "chart-frame": <LayoutDashboardIcon />,
-  "line-chart": <ActivityIcon />, "bar-chart": <Columns3Icon />,
-  "reporting-controls": <SlidersHorizontalIcon />, dashboard: <LayoutDashboardIcon />,
-};
 
 function selectedFromHash() {
   const id = window.location.hash.slice(1);
   return entries.some((entry) => entry.id === id) ? id : "buttons";
+}
+
+function readExpandedSections(selectedId: string): string[] {
+  const activeSection = sectionForEntry(selectedId)?.id;
+  let saved: string[] = [];
+  try {
+    const stored: unknown = JSON.parse(localStorage.getItem("evenkit.catalog.sections") ?? "[]");
+    if (Array.isArray(stored)) saved = catalogSections.filter(section => stored.includes(section.id)).map(section => section.id);
+  } catch {
+    // The active section remains available without saved preferences.
+  }
+  return [...new Set([...saved, ...(activeSection ? [activeSection] : [])])];
 }
 
 function Preview({ id, theme, mode, onThemeChange }: { id: string; theme: ThemeName; mode: ColorMode; onThemeChange: (theme: ThemeName) => void }) {
@@ -144,6 +97,7 @@ function Preview({ id, theme, mode, onThemeChange }: { id: string; theme: ThemeN
 export function Catalog({ theme, mode, onThemeChange: setTheme, onToggleAppearance }: CatalogPreferences) {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(selectedFromHash);
+  const [expandedSections, setExpandedSections] = useState(() => readExpandedSections(selectedId));
   const [sidebarState, setSidebarState] = useState<AdminSidebarState>(() => readPreference("sidebar", sidebarStates, "expanded"));
   const searchRef = useRef<HTMLInputElement>(null);
   const appearanceAction = mode === "light" ? "Switch to dark mode" : "Switch to light mode";
@@ -162,10 +116,24 @@ export function Catalog({ theme, mode, onThemeChange: setTheme, onToggleAppearan
   }, [sidebarState]);
 
   useEffect(() => {
+    try {
+      localStorage.setItem("evenkit.catalog.sections", JSON.stringify(expandedSections));
+    } catch {
+      // Section controls still work when browser storage is unavailable.
+    }
+  }, [expandedSections]);
+
+  function revealEntry(id: string) {
+    const sectionId = sectionForEntry(id)?.id;
+    if (sectionId) setExpandedSections(current => current.includes(sectionId) ? current : [...current, sectionId]);
+  }
+
+  useEffect(() => {
     const change = () => {
       const id = window.location.hash.slice(1);
       if (!entries.some((entry) => entry.id === id)) return;
       setSelectedId(id);
+      revealEntry(id);
       setQuery("");
     };
     window.addEventListener("hashchange", change);
@@ -173,19 +141,27 @@ export function Catalog({ theme, mode, onThemeChange: setTheme, onToggleAppearan
   }, []);
 
   const search = query.trim().toLowerCase();
-  const visible = entries.filter((entry) => [entry.name, entry.group, entry.description, ...entry.tags, ...(entry.inventoryIds ?? [])].join(" ").toLowerCase().includes(search));
+  const visible = entries.filter((entry) => [entry.name, entry.group, sectionForEntry(entry.id)?.label, entry.description, ...entry.tags, ...(entry.inventoryIds ?? [])].join(" ").toLowerCase().includes(search));
   const active = visible.find((entry) => entry.id === selectedId) ?? visible[0];
-  const navigation: readonly AdminNavGroup[] = groups.flatMap((group) => {
-    const items = visible.filter((entry) => entry.group === group).map((entry) => ({
-      id: entry.id, label: entry.name, href: `#${entry.id}`, icon: navigationIcons[entry.id],
-    }));
-    return items.length > 0 ? [{ label: group, items }] : [];
+  const navigation: readonly AdminNavGroup[] = catalogSections.flatMap((section) => {
+    const items = section.entryIds.flatMap(id => {
+      const entry = visible.find(entry => entry.id === id);
+      return entry ? [{ id, label: entry.name, href: `#${id}`, icon: navigationIcons[id] }] : [];
+    });
+    return items.length > 0 ? [{
+      id: section.id, label: section.label, icon: section.icon, items,
+      ...(!search ? {
+        expanded: expandedSections.includes(section.id),
+        onExpandedChange: (expanded: boolean) => setExpandedSections(current => expanded ? [...current, section.id] : current.filter(id => id !== section.id)),
+      } : {}),
+    }] : [];
   });
 
   function selectEntry(event: MouseEvent<HTMLAnchorElement>, id: string) {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (event.currentTarget.hasAttribute("download") || (event.currentTarget.target && event.currentTarget.target !== "_self")) return;
     setSelectedId(id);
+    revealEntry(id);
     setQuery("");
   }
 
