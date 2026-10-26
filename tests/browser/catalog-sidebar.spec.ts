@@ -114,3 +114,48 @@ test("library drawer keeps navigation reachable while preserving the hidden desk
   await header.getByRole("button", { name: "Expand sidebar", exact: true }).click();
   await expect(frame.locator(":scope > .pk-admin-sidebar")).toHaveCSS("width", "260px");
 });
+
+test("opening a main-content select preserves sticky chrome and both scroll positions", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/#audit-viewer");
+  await expect(page.getByText("6 matching events", { exact: true })).toBeVisible();
+  const actor = page.getByRole("combobox", { name: "Actor", exact: true });
+  await page.evaluate(() => {
+    window.scrollTo(0, 350);
+    document.querySelector<HTMLElement>(".catalog-app > .pk-admin-frame > .pk-admin-sidebar .pk-admin-sidebar-inner")!.scrollTop = 1800;
+  });
+  const geometry = () => page.evaluate(() => {
+    const frame = document.querySelector(".catalog-app > .pk-admin-frame")!;
+    return {
+      page: window.scrollY,
+      sidebar: frame.querySelector(":scope > .pk-admin-sidebar")!.getBoundingClientRect().top,
+      header: frame.querySelector(":scope > .pk-admin-workspace > .pk-admin-header")!.getBoundingClientRect().top,
+      navigation: frame.querySelector(".pk-admin-sidebar-inner")!.scrollTop,
+    };
+  });
+  const before = await geometry();
+  expect(before.page).toBeGreaterThan(0);
+  expect(before.navigation).toBeGreaterThan(0);
+  expect(before.sidebar).toBe(0);
+  expect(before.header).toBe(0);
+
+  await actor.click();
+  await expect(page.getByRole("listbox")).toBeVisible();
+  await expect.poll(geometry).toEqual(before);
+  await page.mouse.move(1300, 800);
+  await page.mouse.wheel(0, 400);
+  await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+  expect(await geometry()).toEqual(before);
+  await page.getByRole("option", { name: "Mira Chen", exact: true }).click();
+  await expect(actor).toBeFocused();
+  await expect(actor).toContainText("Mira Chen");
+  await expect.poll(geometry).toEqual(before);
+
+  await actor.press("ArrowDown");
+  await expect(page.getByRole("listbox")).toBeVisible();
+  await expect.poll(geometry).toEqual(before);
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("listbox")).not.toBeVisible();
+  await expect(actor).toBeFocused();
+  await expect.poll(geometry).toEqual(before);
+});

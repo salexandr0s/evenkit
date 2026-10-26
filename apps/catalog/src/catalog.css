@@ -2,7 +2,9 @@
  * built: the project · redesign: polish · v2.0.0
  * finish-review: subagent · 1 correction resolved · 1 finish finding answered
  * Findings and retained product requirements: docs/hallmark-design-pass.md */
-html, body { overflow-x: clip; }
+/* Keep root overflow visible so modal body scroll locks apply to the viewport
+ * without creating a new scroll container for the sticky sidebar and header. */
+body { overflow-x: clip; }
 body { margin: 0; background: var(--pk-color-bg); color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); }
 .catalog-app, .catalog-app *, .catalog-app *::before, .catalog-app *::after { box-sizing: border-box; }
 .catalog-app { min-height: 100dvh; }

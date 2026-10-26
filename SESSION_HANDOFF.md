@@ -1,3 +1,9 @@
+# Sidebar dropdown fix: 26 October 2026
+
+Status: DONE. Fixed catalog sidebar/header jumping upward when a main-content dropdown opens on a scrolled page. Horizontal clipping now applies only to the body, preserving viewport scroll locking and sticky positioning. Added a regression covering both scroll positions, selection, Escape, focus recovery and blocked background scrolling. Reproduced in all three browser engines; 17 Chromium journeys and six Firefox/WebKit sidebar journeys pass, as do catalog build, configured types and full lint. Before/after evidence and details are appended to `docs/design-pass-review.md`. Committed and merged into local `main`; no push or deployment.
+
+---
+
 # Seven-workstream design handoff: 26 October 2026
 
 Status: DONE. Completed the requested goal across editable block registry tools, documents, team administration, notifications/status, rich chat, reporting and website blocks. The completed design branch is merged into local `main` in `/Users/nationalbank/.codex/worktrees/evenkit-design-refinements/design-tokens`. No push, publication or deployment occurred. The primary checkout's concurrent metadata edits remain untouched.
