@@ -112,11 +112,11 @@ export function NotificationCenter({ groups, page, pageCount, contextKey, revisi
     </header>
     <div className="pk-notification-toolbar" role="group" aria-label="Current page notification actions">
       <div className="pk-notification-selection"><Checkbox label="Select this page" checked={selectionState} disabled={disabled || eligible.length === 0} aria-disabled={busy || undefined} onCheckedChange={checked => { if (!busy) setSelected(checked === true ? eligible.map(item => item.id) : []); }} /></div>
-      <div className="pk-notification-selection-actions">
+      {selectedIds.length > 0 ? <div className="pk-notification-selection-actions">
         <Button size="sm" variant="ghost" disabled={disabled || selectedIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(selectedIds, true); }}>Mark selected as read</Button>
         <Button size="sm" variant="ghost" disabled={disabled || selectedIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(selectedIds, false); }}>Mark selected as unread</Button>
-      </div>
-      <p className="pk-notification-scope">{selectedIds.length} selected on this page. Selection and mark all exclude other pages and unavailable items.</p>
+      </div> : null}
+      <p className="pk-notification-scope">{selectedIds.length} selected on this page. Bulk actions exclude other pages and unavailable items.</p>
     </div>
     {error ? <ActionMessage tone="error" heading="Notifications could not be loaded" actions={<Button size="sm" variant="outline" disabled={disabled} aria-disabled={busy || undefined} onClick={() => { if (!busy) void run({ type: "page", page }); }}>Retry loading notifications</Button>}>{error}</ActionMessage> : null}
     <div aria-busy={busy || undefined}>

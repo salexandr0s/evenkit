@@ -47,22 +47,22 @@ test("report filters and exports recover from failures and cancel without stale 
 
 test("notification read state and delivery preferences remain scoped across navigation and requests", async ({ page }) => {
   await page.goto("/notifications");
-  const mark = page.getByRole("button", { name: "Mark Community field guide needs a review as read", exact: true });
+  const mark = page.getByRole("button", { name: "Mark as read: Community field guide needs a review", exact: true });
   await expect(mark).toBeVisible();
   await controls(page);
   await page.getByRole("button", { name: "Fail next request", exact: true }).click();
   await mark.click();
   await page.getByRole("button", { name: "Retry notification request", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Mark Community field guide needs a review as unread", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Mark as unread: Community field guide needs a review", exact: true })).toBeVisible();
   await page.getByRole("navigation", { name: "Admin navigation", exact: true }).getByRole("link", { name: "Dashboard", exact: true }).click();
   await page.getByRole("navigation", { name: "Admin navigation", exact: true }).getByRole("link", { name: "Notifications", exact: true }).click();
-  await expect(page.getByRole("button", { name: "Mark Community field guide needs a review as unread", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Mark as unread: Community field guide needs a review", exact: true })).toBeVisible();
   await controls(page);
   await page.getByRole("switch", { name: "Slow requests", exact: true }).click();
-  await page.getByRole("button", { name: "Mark Community field guide needs a review as unread", exact: true }).click();
+  await page.getByRole("button", { name: "Mark as unread: Community field guide needs a review", exact: true }).click();
   await page.getByRole("button", { name: "Cancel notification request", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Notification inbox", exact: true })).toBeFocused();
-  await expect(page.getByRole("button", { name: "Mark Community field guide needs a review as unread", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Mark as unread: Community field guide needs a review", exact: true })).toBeVisible();
   await controls(page);
   await page.getByRole("switch", { name: "Slow requests", exact: true }).click();
   await page.getByRole("tab", { name: "Preferences", exact: true }).click();
