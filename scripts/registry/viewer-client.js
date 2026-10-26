@@ -36,15 +36,57 @@ export function mountViewer(data, makeInstallCommand) {
   function setAppearance(mode) {
     document.documentElement.dataset.kitMode = mode;
     byId("appearance").replaceChildren(icon(mode === "light" ? "moon" : "sun"));
-    byId("appearance").setAttribute("aria-label", `Switch to ${mode === "light" ? "dark" : "light"} appearance`);
+    const label = `Switch to ${mode === "light" ? "dark" : "light"} appearance`;
+    byId("appearance").setAttribute("aria-label", label);
+    byId("appearance-tooltip").textContent = label;
   }
   setAppearance(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  byId("appearance").addEventListener("click", () => setAppearance(document.documentElement.dataset.kitMode === "light" ? "dark" : "light"));
+  let appearanceHovered = false;
+  let appearanceFocused = false;
+  let appearanceDismissed = false;
+  function updateAppearanceTooltip() {
+    const visible = !appearanceDismissed && (appearanceHovered || appearanceFocused);
+    byId("appearance-tooltip").hidden = !visible;
+    if (visible) byId("appearance").setAttribute("aria-describedby", "appearance-tooltip");
+    else byId("appearance").removeAttribute("aria-describedby");
+  }
+  byId("appearance").parentElement.addEventListener("pointerenter", event => {
+    if (event.pointerType === "touch") return;
+    appearanceHovered = true; appearanceDismissed = false; updateAppearanceTooltip();
+  });
+  byId("appearance").parentElement.addEventListener("pointerleave", () => { appearanceHovered = false; updateAppearanceTooltip(); });
+  byId("appearance").addEventListener("focus", () => { appearanceFocused = true; appearanceDismissed = false; updateAppearanceTooltip(); });
+  byId("appearance").addEventListener("blur", () => { appearanceFocused = false; updateAppearanceTooltip(); });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") { appearanceDismissed = true; updateAppearanceTooltip(); }
+  });
+  byId("appearance").addEventListener("click", () => {
+    appearanceDismissed = true; updateAppearanceTooltip();
+    setAppearance(document.documentElement.dataset.kitMode === "light" ? "dark" : "light");
+  });
   byId("search-icon").append(icon("search"));
   byId("block-emblem").append(icon("blocks"));
   fact(byId("snapshot-facts"), "Blocks", String(catalog.items.length).padStart(2, "0"));
   fact(byId("snapshot-facts"), "Source files", String(new Set(catalog.items.flatMap(item => item.files.map(file => file.path))).size).padStart(2, "0"));
   fact(byId("snapshot-facts"), "Revision", catalog.items[0].meta.evenkit.sourceRevision.slice(0, 7));
+
+  function revealLibraryChoice() {
+    const list = byId("block-list");
+    const scrollable = list.scrollHeight > list.clientHeight;
+    byId("library-scroll-hint").hidden = !scrollable;
+    if (scrollable) list.setAttribute("aria-describedby", "library-scroll-hint");
+    else list.removeAttribute("aria-describedby");
+    const choice = list.contains(document.activeElement) ? document.activeElement : list.querySelector('[aria-current="true"]');
+    if (!scrollable || !choice) return;
+    const bounds = list.getBoundingClientRect();
+    const item = choice.getBoundingClientRect();
+    const padding = Number.parseFloat(getComputedStyle(list).paddingBlockStart);
+    // Adjust only this chooser, keeping the page and current keyboard focus still.
+    if (item.top < bounds.top + padding) list.scrollTop -= bounds.top + padding - item.top;
+    else if (item.bottom > bounds.bottom - padding) list.scrollTop += item.bottom - bounds.bottom + padding;
+  }
+  window.addEventListener("resize", revealLibraryChoice);
+  byId("block-list").addEventListener("focusin", revealLibraryChoice);
 
   function renderLibrary() {
     const query = byId("search").value.trim().toLowerCase();
@@ -68,6 +110,7 @@ export function mountViewer(data, makeInstallCommand) {
     byId("item-count").textContent = matches.length;
     byId("empty").hidden = matches.length !== 0;
     byId("search-status").textContent = `${matches.length} ${matches.length === 1 ? "block" : "blocks"} found.`;
+    revealLibraryChoice();
   }
   byId("search").addEventListener("input", renderLibrary);
   byId("clear-search").addEventListener("click", () => { byId("search").value = ""; renderLibrary(); byId("search").focus(); });

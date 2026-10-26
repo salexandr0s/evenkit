@@ -26,6 +26,53 @@ try {
   await expect(page.locator("#block-heading")).toHaveText("Record detail");
   await expect(page.locator("#block-list button")).toHaveCount(catalog.items.length);
   await expect(page.locator("#copy-command")).toBeDisabled();
+  const appearance = page.locator("#appearance");
+  const appearanceTooltip = page.getByRole("tooltip");
+  await appearance.focus();
+  await expect(appearanceTooltip).toHaveText("Switch to dark appearance");
+  await expect(appearanceTooltip).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(appearanceTooltip).toBeHidden();
+  await expect(appearance).toBeFocused();
+  await appearance.press("Enter");
+  await expect(page.locator("html")).toHaveAttribute("data-kit-mode", "dark");
+  await expect(appearanceTooltip).toBeHidden();
+  await appearance.press("Enter");
+  await page.locator("#search").focus();
+  await appearance.hover();
+  await expect(appearanceTooltip).toBeVisible();
+  await appearanceTooltip.hover();
+  await expect(appearanceTooltip).toBeVisible();
+  await page.mouse.move(0, 0);
+  await expect(appearanceTooltip).toBeHidden();
+  report.checks.push("Appearance tooltip supports focus, hover, Escape and keyboard activation");
+
+  await page.setViewportSize({ width: 360, height: 800 });
+  const chooser = page.locator("#block-list");
+  await expect.poll(() => chooser.evaluate(node => node.clientHeight)).toBeLessThanOrEqual(320);
+  const choiceIsContained = button => button.evaluate(node => {
+    const item = node.getBoundingClientRect();
+    const list = node.parentElement.getBoundingClientRect();
+    return item.top >= list.top && item.bottom <= list.bottom;
+  });
+  await expect.poll(() => choiceIsContained(chooser.locator('[aria-current="true"]')), { message: "Selected block is visible in the compact chooser" }).toBe(true);
+  for (const button of await page.locator("#appearance, #block-list button").all()) {
+    const box = await button.boundingBox();
+    assert.ok(box.width >= 44 && box.height >= 44, "Mobile chooser and appearance targets are at least 44px");
+  }
+  await page.locator("#search").focus();
+  await page.keyboard.press("Tab");
+  await expect(chooser.locator("button").first()).toBeFocused();
+  assert.equal(await choiceIsContained(chooser.locator("button").first()), true);
+  const lastChoice = chooser.locator("button").last();
+  const lastTitle = await lastChoice.locator(".block-link-title").textContent();
+  await lastChoice.focus();
+  assert.equal(await choiceIsContained(lastChoice), true, "Keyboard focus scrolls the chooser to its last block");
+  await lastChoice.press("Enter");
+  await expect(page.locator("#block-heading")).toBeFocused();
+  await expect(page.locator("#block-heading")).toHaveText(lastTitle);
+  report.checks.push("Expanded mobile chooser preserves selected and keyboard-focused blocks, 44px targets and activation focus");
+
   await page.locator("#search").fill("O11");
   await expect(page.locator("#block-list button")).toHaveCount(1);
   await page.locator("#block-list button").click();

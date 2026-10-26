@@ -51,7 +51,7 @@ export async function createViewer({ registry, output, cliPath = fileURLToPath(n
 <a class="skip-link" href="#block-heading">Skip to block details</a>
 <header class="topbar shell">
   <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>evenkit</span><span class="brand-divider" aria-hidden="true">/</span><span class="brand-context">Block registry</span></div>
-  <div class="header-actions"><span class="local-label"><span class="status-dot" aria-hidden="true"></span>Local snapshot</span><button id="appearance" class="button icon-button" type="button" aria-label="Switch to dark appearance"></button></div>
+  <div class="header-actions"><span class="local-label"><span class="status-dot" aria-hidden="true"></span>Local snapshot</span><span class="appearance-control"><button id="appearance" class="button icon-button" type="button" aria-label="Switch to dark appearance"></button><span id="appearance-tooltip" class="appearance-tooltip" role="tooltip" hidden></span></span></div>
 </header>
 <main class="shell">
   <section class="intro" aria-labelledby="page-heading">
@@ -63,7 +63,7 @@ export async function createViewer({ registry, output, cliPath = fileURLToPath(n
       <div class="library-heading"><h2>Library</h2><span id="item-count" class="count"></span></div>
       <label class="search-label" for="search">Find a block</label><div class="search-wrap"><span id="search-icon" aria-hidden="true"></span><input id="search" type="search" placeholder="Search blocks…" autocomplete="off" aria-controls="block-list"></div>
       <div id="search-status" class="sr-only" role="status"></div>
-      <nav id="block-list" class="block-list" aria-label="Choose a block"></nav>
+      <nav id="block-list" class="block-list" aria-label="Choose a block"></nav><p id="library-scroll-hint" class="library-scroll-hint" hidden>Scroll to browse blocks.</p>
       <div id="empty" class="empty" hidden><p>No matching blocks.</p><button id="clear-search" type="button" class="text-button">Clear search</button></div>
       <div class="library-note"><span class="eyebrow">APPLICATION SOURCE</span><p>Install source into your app.<br>Keep the changes you make.</p><span class="private-note">Private Evenkit packages required</span></div>
     </aside>
