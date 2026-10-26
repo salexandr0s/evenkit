@@ -89,6 +89,29 @@ describe("theme trust boundary", () => {
     expect(() => createBrandCss(input)).toThrow();
   });
 
+  it("rejects status colors that pass on tinted backgrounds but disappear on ordinary surfaces", () => {
+    for (const mode of colorModes) {
+      for (const [role, minimum] of [["success", 4.5], ["warning", 3]] as const) {
+        const input = structuredClone(themes.neutral);
+        const colors = input.modes[mode];
+        colors[role] = mode === "light" ? "#FFFFFF" : "#000000";
+        colors[`${role}-bg`] = mode === "light" ? "#000000" : "#FFFFFF";
+        expect(contrastRatio(colors[role], colors[`${role}-bg`])).toBe(21);
+
+        const result = brandSchema.safeParse(input);
+        expect(result.success).toBe(false);
+        if (!result.success) {
+          for (const background of ["bg", "bg-muted", "surface", "surface-elevated"] as const) {
+            expect(contrastRatio(colors[role], colors[background])).toBeLessThan(minimum);
+            expect(result.error.issues.some((issue) => issue.path.join(".") === `modes.${mode}.${role}`
+              && issue.message.includes(`against ${background} is`))).toBe(true);
+          }
+        }
+        expect(() => createBrandCss(input)).toThrow();
+      }
+    }
+  });
+
   it("requires safe chart colors and validates every series on plotting surfaces", () => {
     for (const role of ["chart-series-1", "chart-series-2", "chart-series-3", "chart-series-4", "chart-series-5", "chart-series-6"] as const) {
       const base = structuredClone(themes.neutral);

@@ -60,6 +60,8 @@ const css = createBrandCss({
 
 Validation includes secondary text (`fg-muted`, at least 4.5:1) and focus rings (`ring`, at least 3:1) against `accent-soft`, which the kit uses for selected and hovered surfaces. Custom brands accepted before these checks may need a darker or lighter `accent-soft` value. Built-in highlights meet these checks with the shared neutral text colours.
 
+Success text requires at least 4.5:1 contrast against `bg`, `bg-muted`, `surface`, and `surface-elevated`. Warning icons require at least 3:1 against those surfaces. Both status colours also require 4.5:1 against their matching tinted backgrounds for badge text. Custom brands must meet both sets of checks; a readable badge alone does not ensure readable status content elsewhere.
+
 ## Build and checks
 
 `npm run build --workspace @evenkit/tokens` compiles TypeScript, then generates `dist/tokens.css` and `dist/tokens.json` from the same exported values. Generated outputs have no timestamps and do not read files outside the package. `npm run typecheck --workspace @evenkit/tokens` checks the package. The root test runner executes the focused schema, contrast, and output tests.

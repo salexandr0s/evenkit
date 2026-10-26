@@ -73,6 +73,8 @@ export const contrastChecks: readonly ContrastCheck[] = [
     { foreground: "fg-muted" as const, background, minimum: 4.5 },
     { foreground: "accent" as const, background, minimum: 4.5 },
     { foreground: "danger" as const, background, minimum: 4.5 },
+    { foreground: "success" as const, background, minimum: 4.5 },
+    { foreground: "warning" as const, background, minimum: 3 },
     { foreground: "border-strong" as const, background, minimum: 3 },
     { foreground: "ring" as const, background, minimum: 3 },
     ...(["chart-series-1", "chart-series-2", "chart-series-3", "chart-series-4", "chart-series-5", "chart-series-6"] as const)
