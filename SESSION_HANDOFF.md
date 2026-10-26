@@ -1,3 +1,17 @@
+# Two token improvement passes: 26 October 2026
+
+Status: DONE. Completed the requested two-pass goal in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`.
+
+Pass 1, commit `bdc7fa9`, adds missing contrast validation for success text (4.5:1) and warning icons (3:1) against ordinary document surfaces. Existing 4.5:1 checks against tinted status backgrounds remain. Both light and dark regressions prove that a readable badge pairing cannot conceal invisible status content elsewhere. All eight built-in themes pass without palette changes. Custom brands that fail these additional checks are now rejected.
+
+Pass 2, commit `9e8bd67`, freezes foundation values and metadata at runtime using the existing theme freeze implementation, extracted into `packages/tokens/src/deep-freeze.ts`. This prevents JavaScript mutations from making direct token values and JSON disagree with generated CSS. The public token types retain literal values. Custom brand configuration and returned CSS variable maps remain editable. `packages/tokens/README.md` documents both contracts; `packages/tokens/tests/tokens.test.ts` covers the regressions.
+
+Verification passed: token package build, configured workspace typecheck, focused token source/test ESLint, all 49 unit tests across 10 files, whitespace checks, and independent code review. Each pass also passed its focused token suite before proceeding. Generated `tokens.css` and `tokens.json` hashes are unchanged across pass 2. Browser tests were not rerun because generated styles and token values are unchanged.
+
+No required work remains for these two passes. Existing catalog HTML, Vite configuration and `llms/` edits remain outside the commits. No push or deployment occurred. Resume with `git status --short`, `git log -3 --oneline`, and `npm test -- packages/tokens/tests/tokens.test.ts`. Historical handoff entries follow.
+
+---
+
 # Production dropdown fix: 26 October 2026
 
 Status: DONE. Deployed committed fix `e43a8f56dbe955f78ecc257099bb1297cb433872` to the existing `blockconsult/evenkit` Vercel production project at the user's request. Deployment `dpl_Hij4NJqSsVwa8MApFjK3NxMobqFi` is READY and serves `https://evenkit.dev` and `https://www.evenkit.dev`. Its immutable URL is `https://evenkit-8g1jmg340-blockconsult.vercel.app`.
