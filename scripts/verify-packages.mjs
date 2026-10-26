@@ -32,6 +32,15 @@ async function browserSmoke(url) {
     const checkbox = page.getByRole("checkbox", { name: "Accept package preview", exact: true });
     await checkbox.check();
     await expect(checkbox).toBeChecked();
+    const captionedPassword = page.getByLabel("Captioned password", { exact: true });
+    const revealPassword = page.getByRole("button", { name: "Reveal sample password", exact: true });
+    await expect(revealPassword).toHaveText("Reveal");
+    await revealPassword.click();
+    await expect(captionedPassword).toHaveAttribute("type", "text");
+    const concealPassword = page.getByRole("button", { name: "Conceal sample password", exact: true });
+    await expect(concealPassword).toHaveText("Conceal");
+    await concealPassword.click();
+    await expect(captionedPassword).toHaveAttribute("type", "password");
     const documentTrigger = page.getByRole("button", { name: "Preview Packed document.txt", exact: true });
     await documentTrigger.click();
     const preview = page.getByRole("dialog", { name: "Packed document.txt", exact: true });

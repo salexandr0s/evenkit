@@ -5,6 +5,7 @@ import { LoginPage, NewPasswordPage, PasswordField, PasswordResetPage, SignupPag
 export function PreviewAuth() {
   return <div aria-label="Packed authentication">
     <PasswordField label="Beispielpasswort" showLabel="Passwort anzeigen" hideLabel="Passwort verbergen" />
+    <PasswordField label="Captioned password" showText="Reveal" hideText="Conceal" showLabel="sample password" hideLabel="sample password" />
     <LoginPage contentAs="section" headingAs="h2" title="Packed login"
       onSubmit={async () => ({ status: "success", message: "Package login callback completed." })} />
     <SignupPage contentAs="section" headingAs="h2" title="Packed signup"
