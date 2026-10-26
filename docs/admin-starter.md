@@ -18,13 +18,13 @@ npm run build:admin
 npm run start --workspace @evenkit/admin-starter
 ```
 
-To use another port, append `-- --port 5397` to the workspace `dev` or `start` command. The packages are local, unpublished workspace packages; a copied application must install their locally packed tarballs or remain in a workspace that provides them.
+To use another port, append `-- --port 5397` to the workspace `dev` or `start` command and set `EVENKIT_APP_ORIGIN=http://127.0.0.1:5397`. Authentication writes validate that configured origin in demo and provider modes. An optional `.env.example` lists the settings; copy it to `.env.local` before customizing. The packages are local, unpublished workspace packages; a copied application must install their locally packed tarballs or remain in a workspace that provides them.
 
 ## Pages and behavior
 
 | Address | Purpose |
 | --- | --- |
-| `/dashboard` | Workspace metrics and links to project records. |
+| `/dashboard` | Workspace metrics, period filters, chart/data table, cancellable CSV exports and links to records. |
 | `/records` | Search, filter, paginate, create and edit projects. |
 | `/records/[recordId]` | A record's details and sample activity. |
 | `/team` | Team members, invitations and role controls. |
@@ -35,6 +35,8 @@ To use another port, append `-- --port 5397` to the workspace `dev` or `start` c
 The workspace switcher changes the active data context. Pending requests are aborted and the next view starts with that workspace's state. Changes to one workspace's records and profile do not alter the other workspace. A record URL from another workspace displays a recovery action instead of showing the previous workspace's record.
 
 Team actions create, renew and revoke sample invitations without sending email. Role changes update the local capability list and add a sample audit event. The demo policy prevents Coordinator invitations or edits and retains the `audit.read` grant; the host callback enforces these restrictions as well as displaying them. Audit export downloads every event matching the current filters as JSON.
+
+Reporting uses the copied `DashboardBlock`. Project totals follow the editable records; task measurements are explicit fictional fixtures in `lib/demo-reporting.ts`. Applying a period retains the previous report during a request, supports failure/retry/cancellation and discards results after a workspace change. CSV export snapshots the applied report, creates a local download and releases its object URL on replacement or unmount. Replace metric definitions, aggregation and export transport in the application.
 
 Documents support folders, search, sort, list/grid views, previews, downloads, uploads, removal and undo. Sample text files are served from the app's `public/sample-files` directory. Uploaded files stay in memory through object URLs; they are never posted to a server. The demo checks the size and supported MIME type, decodes images, and checks PDF headers. PDF files have open/download actions instead of an embedded preview. Removal retains the data for undo. URLs are revoked when the admin provider unmounts, including on session recovery. A production transport needs its own file inspection, authorization, durable storage and URL lifecycle.
 

@@ -1,58 +1,40 @@
 # Tested compatibility
 
-Integrated component, theme, chat and 48-priority review, 25 October 2026. These packages are local pilots; no production application has adopted them yet.
+Integrated admin-starter verification, 26 October 2026. These packages remain local pilots. [The integration record](./admin-integration.md) lists accepted source revisions, exact commands, bundle evidence and limits; [the session handoff](../SESSION_HANDOFF.md) records the final result.
 
-| Area | Version/environment exercised | Evidence |
-|---|---|---|
-| Runtime/tooling | Node.js 26.12.1, npm 11.20.0 | Local builds and validation commands |
-| React | React and React DOM 19.3.1 | Catalog plus independent consumers |
-| TypeScript | 6.0.3, strict mode | Package, catalog, test/config, and consumer checks |
-| Validation | Zod 4.6.7 | Eight schema, contrast, and output tests |
-| Controls and feedback | Kit Button, fields, Badge, ActionMessage, Spinner, Skeleton, and EmptyState | Busy-state names and geometry, field identity and validation, recovery actions, persistent announcements, RTL and narrow layouts |
-| Dialog | Radix Dialog 1.3.1 | Focus containment/restoration, Escape, theme inheritance, sizes, body scrolling, and short-window recovery |
-| Custom dropdown | Radix Select 2.4.1 | Keyboard/typeahead, form values, groups/descriptions, empty options, touch targets, RTL, and closing when disabled asynchronously |
-| Tooltips | Radix Tooltip 1.4.1 | Accessible descriptions, Escape dismissal, viewport wrapping, sidebar labels, and overflowing table cells |
-| Icons | Lucide React 1.61.0 | 60 named wrappers, token sizes, decorative/labelled semantics, alias/category filtering, and import copying |
-| Table engine | TanStack React Table 9.3.1 | Numeric sorting, search/page reset, stable ID selection, bulk removal, wrap/truncate, unclipped actions, asynchronous focus recovery, and mobile overflow |
-| Admin shell | Kit composition with Radix Dialog and Tooltip | Expanded/collapsed/hidden states, pointer and keyboard resizing, RTL, drawer dismissal, focus recovery, reduced motion, and skip link |
-| Chat | Kit ChatWidget and ChatPanel | Draft persistence, IME/multiline input, stop/retry, streaming scroll position, answer copying, narrow/short RTL layouts, and focus restoration |
-| Vite | 8.3.5 | Catalog build; independent packed consumer builds controls, shell/table, and ChatWidget and serves their CSS |
-| Next.js | 16.4.3, App Router | Independent packed consumer build, server-rendered controls/shell/table/ChatPanel, and CSS HTTP smoke |
-| Browser | Chromium through Playwright 1.64.1 | 127 passing journeys, covering all priority routes, component interactions and existing regression suites |
-| Layout widths | 360, 768, 1024, 1440, 1700 CSS pixels | Overflow checks, touch targets, container navigation, resize cleanup, short windows, and RTL |
-| Themes | Neutral, Grove, Graphite, Linen, Ocean, Dusk, Clay, Rose; light, dark, and system | 560 contrast pairs; gallery selection, persistence, computed colours/fonts, system precedence, and dialog inheritance |
+| Area | Environment exercised | Evidence |
+| --- | --- | --- |
+| Tooling | Node 26.12.1, npm 11.20.0, TypeScript 6.0.3 strict | Clean lockfile installation; combined builds, configured types and lint |
+| React | React/React DOM 19.3.1 | Catalog, assembled admin and independently packed consumers |
+| Generic Vite | Vite 8.3.5 | 116 copied catalog examples, packed Next/Vite consumers and independently installed/copied blocks |
+| Next | Next 16.4.3 App Router and proxy | Runnable admin, packed server rendering, explicit server-only rejection and route journeys |
+| Browser automation | Playwright 1.64.1; Chromium catalog/consumers; Chromium, Firefox and WebKit admin | Interaction, cancellation, retry, context isolation, focus, mobile drawer and downloaded content checks |
+| Themes and widths | Eight themes, light/dark; assembled admin at 360/1440px | 576 admin route/theme/mode/width/engine combinations; catalog has additional RTL/intermediate-width matrices |
+| Reporting | d3-shape 3.2.0/d3-path 3.1.0 | Keyboard chart inspection, semantic data tables, period filtering, cancellable downloads and series/surface contrast |
+| Rich chat | react-markdown 10.1.0/remark-gfm 4.0.1 | Escaped HTML, safe URLs, code copying, attachment/source states and copied examples |
+| Supabase | SSR 0.12.7/SDK 2.118.0; disposable local GoTrue v2.194.0 | Nine real provider/Next groups including cookies, eligibility, recovery email/PKCE/password update, sign-out and Chromium expiry cleanup |
+| Block distribution | Local registry with 23 items/34 files | Schema/import closure, dry run/install/repeat, owned edits/upgrade recovery and independent consumer builds |
 
-The declared Node minimum is 22.12.0; the current verification ran on Node 26.12.1. TypeScript 6.0.3 was selected because the installed lint parser's supported range excludes TypeScript 7. The lockfile records the actual development dependency graph.
+The declared Node minimum is 22.12.0; only Node 26.12.1 was exercised. TypeScript 6.0.3 matches the installed lint parser's supported range. The reconciled lockfile and [dependency record](./dependency-reconciliation.md) retain exact dependencies and licenses.
 
-On 25 October 2026, `npm run verify` passed against the integrated checkout: production build, package/catalog/test type checks, ESLint, eight token tests, and all 39 Chromium journeys. All 14 copied catalog snippets also passed strict TypeScript checks, including unused declarations and CSS side-effect imports.
+## Adoption boundaries
 
-`npm run verify:packages` passed for independent Vite and Next.js consumers. Both production builds served HTTP 200 and delivered token, control, icon, tooltip, shell, table, and chat CSS. The Next.js response also contained the rendered shell, table, and chat content. Both temporary servers stopped and the allocated directory was removed. The local run records are `.artifacts/integration-verify.log` and `.artifacts/integration-package-verification.json`.
+Import token CSS before UI CSS. Consumers need no Tailwind. Set theme/mode attributes on the document root so body-mounted dialog/select/tooltip portals inherit them. Nested theme scopes are outside the supported setup. React remains a peer and interactive emitted UI preserves `"use client"`.
 
-## Priority expansion verification
+Custom brands now require six `chart-series-1` through `chart-series-6` values in each mode. Spread a built-in mode before overriding, or supply every validated semantic token. The addition preserves neutral surfaces. Chart contrast validation concerns marks against neutral surfaces; use labels, markers/dashes/patterns and the data table to supplement color.
 
-All 48 Next items have a public component or documented recipe/editable block, an individual catalog entry, complete usage and per-family contracts. The catalog now has 62 entries, with 211 resolved variables and the existing eight themes/560 contrast pairs. The [completion tracker](./priority-build-plan.md) links each item to source and evidence.
+The UI and tokens have no Next, Supabase or server-only dependencies. The optional adapter has explicit `/server`, `/client`, `/paths` and `/policy` subpaths. Server pages verify identity and application-owned eligibility. The starter uses confirmed-email UUID allowlisting and closed signup by default; it does not add provider membership/data schemas. Hosted email, OAuth, magic links and MFA remain outside its bounded verification.
 
-The final source passed production build, configured package/catalog/test TypeScript checks, ESLint, eight token tests and all 127 Chromium journeys. Every priority route was checked at 360/768/1024/1440px in all eight themes and both color modes. All 62 copied usage examples passed strict TypeScript with unused-code and CSS side-effect checks; all 48 inventory IDs map exactly once.
+Editable blocks are application-owned source. Preserve cancellation signals and reject stale results after workspace, record, revision or permission changes. Cancellation cannot reverse a remote operation already committed. Tables use stable IDs and application-owned remote queries; authorization and backend pagination stay in the host. Admin navigation uses the existing container breakpoint and custom router links must preserve supplied navigation props/ref.
 
-Independent packed Vite and Next consumers built and served HTTP 200 with the new stylesheet families. The fixtures also copied the editable record/recovery blocks independently; Next server rendering included their content. Owned servers and temporary consumers were cleaned. Seventeen representative captures had no runtime errors; a separate reviewer inspected seven component/mobile captures and found no actionable visual issue.
+The demo keeps business data, uploads, notification state and role changes in memory. Workspace changes abort pending requests; authentication transitions unmount the provider and release file URLs. Appearance preferences use browser storage by workspace. Production transports must enforce authorization, validate files and manage durable storage/download URLs independently.
 
-Evidence: `.artifacts/priority-build-confirm.log`, `priority-typecheck-confirm.log`, `priority-lint-confirm.log`, `priority-examples-confirm.log`, `priority-release-browser.log`, `priority-token-final.log`, `priority-packages-confirm.log`, `catalog-examples.json`, `package-verification.json`, and `priority-visual/report.json`. Source hashes are in `priority-verification-inputs.json`.
+Markdown rendering is opt-in per message and uses a fixed safe pipeline. Its dependencies currently share the chat module, so importing ChatPanel also brings that renderer graph. Unused chart/Markdown engines are absent from the independent Button-only Vite build. The catalog's workstream previews are lazy; all UI CSS is delivered together. Sizes and this tradeoff are recorded in the integration report.
 
-Combobox/Autocomplete use Base UI 1.9.0. Disabled options remain available for keyboard discovery but cannot be selected. Their dialog composition uses the dialog content as its popup container and a Radix DismissableLayer 1.2.1 bridge. Native field/group validation, controlled resets, clipboard failure, stale async results, file cancellation/removal, popup dismissal and responsive focus recovery have dedicated journeys. These are UI behaviors; storage, server access, routing and persistence remain application responsibilities.
+## Verification gaps
 
-## Supported boundaries
+Physical touch devices, installed Safari, screen readers, forced-color modes, older React/Node versions, other frameworks and production deployment were not tested. WebKit automation is engine coverage, not a physical iOS/Safari device claim. Catalog and packed-consumer browser journeys use Chromium; only the assembled admin runs all three engines. No full WCAG-conformance claim is made.
 
-- Import token CSS before UI CSS. The libraries ship their own CSS and do not need Tailwind in the consumer. Both independent fixtures build without it.
-- Set theme/mode attributes on the document root. This also supplies body-mounted dialog, select, and tooltip portals. Nested theme scopes are outside this release's support.
-- React is a peer dependency. Interactive modules retain `"use client"` in emitted JavaScript.
-- Custom brands accept complete semantic light/dark colors, bounded radii, and a deliberately restricted valid font-family syntax. Validation checks the color pairs used by current controls; it does not certify arbitrary application CSS or imagery.
-- Source packages export built artifacts, CSS declarations, and token JSON. Packed consumers do not read workspace source or the original `ai-config` repository.
-- Tables process the entire supplied client dataset. Selection is controlled using stable IDs and can include IDs outside the current dataset; consumers decide when to remove them. The header checkbox selects the current page. Backend processing and virtualization are outside this release.
-- Admin navigation adapts at the 768px container breakpoint. The shell uses CSS container queries and ResizeObserver, so embedded panes can collapse independently of the viewport while retaining the desktop sidebar choice. Custom router links must preserve supplied navigation props and forward the anchor ref.
-- Chat messages, conversations, drafts, storage, and AI requests belong to the host. The catalog and packed fixtures use local responses; no AI service or persistence backend is part of these checks.
+The real local provider check did not exercise external email delivery, hosted configuration, bot/rate limits, OAuth/magic links/MFA, production entitlements, expiry-timed token refresh or an injected sign-out outage. Cookie issuance/SSR reads, successful local sign-out and expiry recovery were exercised. All disposable provider resources and credentials were removed. Existing applications and production schemas were not modified.
 
-## Limits
-
-Firefox, Safari, older React versions, other frameworks, and production deployment were not verified. Packed consumer checks exercise installation, build, Next.js server rendering, and CSS delivery. Interactive browser journeys run against the Vite catalog and a test-only table host that changes props without moving focus. There is no claim of full WCAG conformance or compatibility testing of Mantine, HeroUI, or Chakra runtimes.
-
-Before upgrading a dependency or adopting a new consumer, run the checks for the affected package/interface and record the new evidence. Later auth, server-table, and upload modules need their own server and data-boundary verification.
+Before adopting or upgrading, run `npm run verify`, `npm run verify:examples`, `npm run verify:packages`, `node scripts/verify-packages.mjs --registry`, `node scripts/verify-website-blocks.mjs` and `npm run verify:bundle`. Build packages before independent consumer checks; registered sources must match committed Git blobs. The local-provider script and setup are documented in [the auth adapter guide](./auth-adapter.md).

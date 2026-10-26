@@ -4,7 +4,7 @@ Research date: 25 October 2026. Project: `@evenkit` in `design-tokens`.
 
 The kit should cover complete application and website flows, from small controls to editable page templates. The research baseline had 14 catalog sections. The tables below preserve that baseline and the proposed expansion scope.
 
-The original 48 priority entries and 24 application additions are implemented. Subsequent verified families include [document-library](./document-library.md), [team administration](./team-administration.md) and auth pages. The final combined counts and evidence are tracked in [admin integration](./admin-integration.md). Remaining Follow-up and Optional entries are proposals.
+The combined release has 116 catalog entries and 104 distinct inventory mappings. It integrates the original 48 priority entries, 24 application additions, authentication, documents, team administration, notifications, rich chat, reporting and website blocks. R01 is the bounded Supabase/Next adapter, R05 distributes 23 editable blocks, and R06 delivers the runnable Next admin starter. Exact scope and evidence are in [admin integration](./admin-integration.md). Remaining Follow-up and Optional entries are proposals.
 
 This is a proposed inventory, based on the original project review, the internal Apple Minimal contracts, current public exports, and fresh research of the original upstream libraries. Priorities are recommendations. An entry records a reusable family or work item; it does not promise a separate package, export, or ready implementation for every name.
 
@@ -245,15 +245,15 @@ Reuse the original SME Manager/Brainwave/Moving Project findings from the [initi
 
 | ID | Family | When / delivery | Scope |
 | --- | --- | --- | --- |
-| L01 | Auth layout | Follow-up / Block | Compact and split layouts, brand/legal/help slots, responsive content. |
+| L01 | Auth layout | Built / Block | Compact and split layouts, brand/legal/help slots, responsive content. |
 | L02 | Magic-link sign-in | Follow-up / Block | Email, pending/error/sent, resend/change-address recovery. |
 | L03 | Verification/callback result | Follow-up / Block | Confirming, success, invalid/expired link, resend and safe continuation. |
 | L04 | Invitation acceptance | Built / Block | Invitation details, account mismatch, expired/revoked/accepted states. |
 | L05 | MFA challenge and enrollment | Optional / Block | Code entry, setup, recovery, pending/error states under provider policy. |
 | L06 | Session expired and reauthentication | Follow-up / Block | Preserve context, explain expiry, safe continuation and sign-out. |
 | L07 | Access denied/request access | Follow-up / Block | Clear denial, supported next step, anonymous versus unavailable provider. |
-| L08 | Password login and recovery | Optional / Block | Add login/reset/change-password together when password auth is supported. |
-| L09 | Signup/onboarding entry | Optional / Block | Open versus invitation-only policy, verification and duplicate-account recovery. |
+| L08 | Password login and recovery | Built / Block | Add login/reset/change-password together when password auth is supported. |
+| L09 | Signup/onboarding entry | Built / Block | Open versus invitation-only policy, verification and duplicate-account recovery. |
 | L10 | Social login/passkey/SSO entry | Optional / Block | Only configured methods; provider redirects, cancelled and failed states. |
 
 ## Account, organization, and settings
@@ -354,12 +354,12 @@ These make the UI usable in real projects. They are separate deliverables from s
 
 | ID | Family | When / delivery | Scope |
 | --- | --- | --- | --- |
-| R01 | Supabase/Next auth integration | Follow-up / Adapter | Server/client boundaries, callbacks, safe return paths, sign-out, eligibility hooks. |
+| R01 | Supabase/Next auth integration | Built / Adapter | Bounded password/PKCE adapter, server/client boundaries, safe return paths, sign-out, session recovery and application eligibility. See [auth adapter](./auth-adapter.md) for verified scope and exclusions. |
 | R02 | Private upload integration | Follow-up / Adapter | Prepare/upload/finalize, server validation, cleanup, authorization and download policy. |
 | R03 | Router bindings | Follow-up / Adapter | Thin Next/router links, active destinations and navigation recovery. |
 | R04 | Form-state/validation examples | Follow-up / Adapter | One evaluated integration, field errors, async submit, reset and server feedback. |
-| R05 | Editable block registry | Follow-up / Adapter | Dependencies, source revision, install path, owned edits and upgrade comparison. |
-| R06 | Starters | Follow-up / Block | Next admin, Vite app and website shells using the same packages and fictional data. |
+| R05 | Editable block registry | Built / Adapter | 23 editable blocks: dependency/source metadata, safe local installation, owned edits and upgrade comparison. See [registry](./block-registry.md). |
+| R06 | Starters | Built / Block (bounded) | Runnable Next admin: dashboard, records, settings, team, notifications, documents and auth. Generic Vite consumption is verified; separate Vite/website starters remain follow-up. See [starter](./admin-starter.md). |
 | R07 | Theme/brand configuration tooling | Follow-up / Adapter | Validated configuration, token preview, export and contrast feedback. |
 
 ## Standards for every prepared item

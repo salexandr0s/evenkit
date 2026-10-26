@@ -15,9 +15,22 @@ Open `http://127.0.0.1:5173` for the Evenkit homepage, with interactive componen
 
 The dev command builds the packages first. If you edit package source while the catalog is running, run `npm run build:packages` to update its public artifacts. The catalog itself has Vite hot reload.
 
-The catalog includes 89 sections: the original 14, 48 priority examples, and 27 additions for dates, multiple values, numbers, remote tables, records, accounts, uploads, documents, search and onboarding. Search a component name or an inventory ID such as `J07`. Open `/#themes` to compare eight palettes and apply one across the library. The catalog follows your system appearance until you choose light or dark with the sun/moon button; your choice is remembered. Forms, navigation, table state changes, uploads and chat replies are local previews.
+The catalog includes 116 sections with live previews and copied usage examples, covering controls, application flows, reporting, authentication, rich chat and website blocks. Search a component name or an inventory ID such as `J07`. Open `/#themes` to compare eight palettes and apply one across the library. The catalog follows your system appearance until you choose light or dark; your choice is remembered. Preview actions use fictional local data.
 
 The catalog uses AdminShell for its own navigation. Each entry has an icon. Drag the sidebar edge or use the single header button to expand, minimise, or hide it; the display mode is remembered. Search stays in the header, and narrow screens use a navigation drawer.
+
+## Run the admin starter
+
+The Next.js starter uses fictional workspace data. From this checkout:
+
+```sh
+npm ci
+npm run dev:admin
+```
+
+Open `http://127.0.0.1:5396/dashboard`. The demo needs no credentials. Its controls let you delay or fail requests, cancel operations and switch workspaces. See [setup and customization](docs/admin-starter.md) for production builds, local state, copied blocks and optional authentication. The [integration evidence](docs/admin-integration.md) records the exact source revisions and verification limits.
+
+Authentication is optional and isolated in `@evenkit/auth-next`. Generic UI consumers continue to install only `@evenkit/tokens` and `@evenkit/ui`. Configure the adapter only against a disposable/local provider while evaluating this starter; application eligibility is supplied by server-owned policy.
 
 ## Deploy the catalog
 
@@ -38,6 +51,8 @@ The root `vercel.json` installs the workspace dependencies, builds both packages
 | `@evenkit/tokens` | Typed scales, palettes, eight themes, brand validation, contrast checks, generated CSS/JSON | Main export, `/css`, `/tokens.json` |
 | `@evenkit/ui` | Controls, layouts, forms, navigation, overlays, files and feedback; 215 Lucide icons, AdminShell, DataTable and chat | Main export, `/css` |
 | `@evenkit/catalog` | Searchable examples and usage reference | Local application |
+| `@evenkit/auth-next` | Optional Supabase/Next auth adapter | `/server`, `/client`, `/paths`, `/policy` |
+| `@evenkit/admin-starter` | Runnable Next application with fictional data | Local application |
 
 Both libraries export built files and declarations. UI styles use `pk-` classes and `--pk-` variables, with no global reset. Consumers need React 19 and React DOM 19; no Tailwind, Next.js, database, or authentication dependency is required by the UI package.
 
@@ -317,9 +332,12 @@ The [component roadmap](docs/component-roadmap-plan.md) tracks the 24 additional
 
 The [document-library guide](docs/document-library.md) covers J05–J07: avatar/logo replacement and save recovery, file previews/lightbox, and a remote document list/grid. Copy `avatar-upload.tsx` or `document-library.tsx` from `registry/blocks` and supply application callbacks for storage and authorization.
 
-Run `npm run verify:examples` to compile all copied catalog examples and inventory mappings. Run `npm run verify:packages` after building for independent packed Vite/Next builds, server rendering and stylesheet checks.
 The [notification and persistent-feedback guide](docs/notifications.md) covers O08, M06, H10, G03 and G06. Copy `notification-center.tsx` and `notification-preferences.tsx` from `registry/blocks` for application-owned inboxes and settings; the UI package supplies persistent banners, connection/session status and presence/unread indicators.
+
+The [team administration guide](docs/team-administration.md), [reporting guide](docs/reporting.md) and [rich chat guide](docs/rich-chat.md) describe the completed team, dashboard/chart and message/attachment families.
 
 The [website blocks guide](docs/website-blocks.md) covers P01–P06 and P10: header/footer, heroes, features, calls to action, FAQ, contact/newsletter and article layouts. Copy [registry/blocks/website](registry/blocks/website), including CSS and declarations. Complete fictional examples keep content, assets, routing, consent and submission configurable.
 
-Run `npm run verify:examples` to compile all 93 copied catalog examples and check all 79 inventory ID mappings. Run `npm run verify:packages` after building to install packed packages in independent Vite/Next consumers, copy the editable blocks, and check builds, server rendering and delivered styles. Run `node scripts/verify-website-blocks.mjs` for copied website source builds and browser checks in both consumers.
+Run `npm run verify:examples` to compile all 116 copied catalog examples and check all 104 inventory ID mappings. Run `npm run verify:packages` after building to install packed packages in independent Vite/Next consumers, copy the editable blocks, and check builds, server rendering and delivered styles. Run `node scripts/verify-website-blocks.mjs` for copied website source builds and browser checks in both consumers.
+
+The [admin integration record](docs/admin-integration.md) records R01/R05/R06 scope, accepted revisions, compatibility changes, bundle sizes and verification limits. See [dependency reconciliation](docs/dependency-reconciliation.md) for pinned additions and license metadata.
