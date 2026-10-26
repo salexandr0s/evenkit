@@ -103,7 +103,7 @@ function RoleEditorPanel({ role, capabilities, contextKey, onSave, readOnlyReaso
     <SearchField ref={search} label="Search capabilities" value={query} onValueChange={setQuery} />
     <div className="pk-role-capabilities">{groups.map(group => <CheckboxGroup key={group} label={group} disabled={blocked || action.pending}>{filtered.filter(capability => (capability.group ?? "Capabilities") === group).map(capability => <Checkbox key={capability.id} label={capability.label} hint={capability.disabledReason ? `${capability.description ? `${capability.description} ` : ""}${capability.disabledReason}` : capability.description} checked={draft.includes(capability.id)} disabled={blocked || action.pending || Boolean(capability.disabledReason)} onCheckedChange={checked => change(capability.id, checked === true)} />)}</CheckboxGroup>)}</div>
     {filtered.length === 0 ? <p className="pk-role-note">No matching capabilities.</p> : null}
-    {unknown.length ? <ActionMessage tone="warning" heading="Additional grants retained"><p>These grants are absent from the supplied definitions. Saving keeps them unchanged.</p><ul className="pk-role-unknown">{unknown.map(id => <li key={id}><code>{id}</code></li>)}</ul></ActionMessage> : null}
+    {unknown.length ? <ActionMessage tone="warning" heading="Additional grants retained"><p>These grants are not listed above. Saving keeps them unchanged.</p><ul className="pk-role-unknown">{unknown.map(id => <li key={id}><code>{id}</code></li>)}</ul></ActionMessage> : null}
     {!confirm ? resultMessage : null}
     <div className="pk-role-actions">
       <Button ref={review} disabled={blocked || !dirty || action.pending} onClick={() => { action.reset(); setNote(""); setConfirm(true); }}>Review changes</Button>

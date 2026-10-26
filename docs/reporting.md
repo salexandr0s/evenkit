@@ -19,7 +19,7 @@ import "@evenkit/ui/css";
 import { Grid, Statistic } from "@evenkit/ui";
 
 export function DeliverySummary() {
-  return <Grid columns={2}>
+  return <Grid columns={2} className="pk-statistic-group">
     <Statistic label="Failed deliveries" value={0} unit="deliveries"
       period="19–25 October 2026"
       comparison={{ text: "Down 3 deliveries from the previous week", direction: "down", tone: "positive" }} />
@@ -28,6 +28,8 @@ export function DeliverySummary() {
   </Grid>;
 }
 ```
+
+Add `className="pk-statistic-group"` to a `Grid` whose direct children are statistics to align labels, values, periods, comparisons and status messages across each row. Tracks grow with the longest content; missing optional content does not create a separate fixed-height slot. The dashboard uses this grouping automatically. Standalone statistics keep their natural flow, and browsers without CSS subgrid retain readable, content-sized cards.
 
 ## Chart data and series
 

@@ -13,3 +13,13 @@
 .pk-statistic-status { margin: 0; color: var(--pk-color-fg-muted); }
 .pk-statistic-status:not(:empty) { margin-block-start: var(--pk-space-2); }
 .pk-statistic[data-state="error"] .pk-statistic-status { color: var(--pk-color-danger); }
+
+/* Align equivalent content tracks only inside statistic groups. Standalone cards keep natural flow. */
+@supports (grid-template-rows: subgrid) {
+  :is(.pk-statistic-group, .pk-dashboard-statistics) { row-gap: 0; margin-block: calc(-1 * var(--pk-space-2)); }
+  :is(.pk-statistic-group, .pk-dashboard-statistics) > .pk-statistic { display: grid; margin-block: var(--pk-space-2); grid-row: span 5; grid-template-rows: subgrid; row-gap: 0; align-items: start; }
+  :is(.pk-statistic-group, .pk-dashboard-statistics) > .pk-statistic > .pk-statistic-measurement { grid-row: 1 / span 2; display: grid; grid-template-rows: subgrid; align-self: stretch; align-items: start; }
+  :is(.pk-statistic-group, .pk-dashboard-statistics) > .pk-statistic > .pk-statistic-period { grid-row: 3; }
+  :is(.pk-statistic-group, .pk-dashboard-statistics) > .pk-statistic > .pk-statistic-comparison { grid-row: 4; }
+  :is(.pk-statistic-group, .pk-dashboard-statistics) > .pk-statistic > .pk-statistic-status { grid-row: 5; }
+}

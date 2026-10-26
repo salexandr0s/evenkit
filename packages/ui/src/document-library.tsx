@@ -7,13 +7,14 @@ import { DataTable, type DataTableColumn } from "./data-table.js";
 import { FileRow } from "./data-workflows.js";
 import { EmptyState, Spinner } from "./feedback.js";
 import { SearchField } from "./form-controls.js";
-import { FolderIcon } from "./icons.js";
+import { EyeIcon, FolderIcon } from "./icons.js";
 import { FilePreview, type MediaFile } from "./media-preview.js";
 import { Breadcrumbs, Pagination } from "./navigation.js";
 import { useRemoteTable, useTableSelection, type DataTableQuery, type RemoteTableLoadContext, type RemoteTableResult } from "./remote-table.js";
 import { Checkbox, SegmentedControl } from "./selection-controls.js";
 import { SelectField } from "./select.js";
 import { BulkActionBar, SortControl } from "./table-controls.js";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
 
 export interface DocumentFolder { id: string; name: string; kind: "folder" }
 export interface DocumentFile extends MediaFile { kind: "file"; sizeBytes?: number }
@@ -92,12 +93,19 @@ export function DocumentLibrary({ entries, total, query, onQueryChange, path, on
   function navigate(next: readonly DocumentFolder[]) { search.current?.focus(); onNavigate(next); }
   function resetFilters() { search.current?.focus(); update({ search: "", kind: "all" }); }
   const removeAction = onRemove ? <Button size="sm" variant="outline" disabled={unavailable} onClick={() => onRemove(selection.selectedIds)}>Remove selected</Button> : null;
-  const openButton = (entry: DocumentEntry) => entry.kind === "folder"
-    ? <Button size="sm" variant="ghost" aria-label={`Open folder ${entry.name}`} onClick={() => navigate([...path, entry])}>Open folder</Button>
-    : <Button size="sm" variant="ghost" aria-label={`Preview ${entry.name}`} onClick={event => onPreview(entry, event.currentTarget)}>Preview</Button>;
+  function openButton(entry: DocumentEntry, iconOnly = false) {
+    const label = entry.kind === "folder" ? `Open folder ${entry.name}` : `Preview ${entry.name}`;
+    const icon = entry.kind === "folder" ? <FolderIcon size="sm" /> : <EyeIcon size="sm" />;
+    const button = <Button size="sm" variant="ghost" shape={iconOnly ? "icon" : "default"} aria-label={label}
+      {...(iconOnly ? {} : { startIcon: icon })}
+      onClick={event => { if (entry.kind === "folder") navigate([...path, entry]); else onPreview(entry, event.currentTarget); }}>
+      {iconOnly ? icon : entry.kind === "folder" ? "Open folder" : "Preview"}
+    </Button>;
+    return iconOnly ? <TooltipProvider><Tooltip><TooltipTrigger asChild>{button}</TooltipTrigger><TooltipContent>{label}</TooltipContent></Tooltip></TooltipProvider> : button;
+  }
   const columns: readonly DataTableColumn<DocumentEntry>[] = [
     { id: "name", header: "Name", accessor: entry => entry.name, hideable: false, cell: entry => <ul className="pk-document-file-row"><FileRow name={entry.name} fileType={entry.kind === "folder" ? "Folder" : entry.mimeType || "File"} {...(entry.kind === "file" && entry.sizeBytes !== undefined ? { sizeBytes: entry.sizeBytes } : {})} preview={entry.kind === "folder" ? <FolderIcon /> : undefined} /></ul> },
-    { id: "actions", header: "Actions", accessor: () => "", sortable: false, searchable: false, cell: openButton },
+    { id: "actions", header: "Actions", accessor: () => "", sortable: false, searchable: false, cell: entry => openButton(entry, true) },
   ];
   const filtered = query.search !== "" || query.kind !== "all";
   const emptyTitle = filtered ? "No matching documents" : "This folder is empty";
@@ -118,11 +126,11 @@ export function DocumentLibrary({ entries, total, query, onQueryChange, path, on
     {view === "list" ? <DataTable data={entries} columns={columns} getRowId={entry => entry.id} caption="Documents" searchable={false}
       onClearSearch={() => { search.current?.focus(); update({ search: "" }); }}
       remote={{ query, total, onQueryChange: next => onQueryChange({ ...query, ...next }) }} loading={loading} error={error} {...(onRetry ? { onRetry } : {})}
-      selection={{ ...selection, getRowLabel: entry => entry.name, scopeLabel: "Selected IDs in this folder and filter, across pages", actions: removeAction }}
+      selection={{ ...selection, getRowLabel: entry => entry.name, scopeLabel: "Selected items in this folder and filter, across pages", actions: removeAction }}
       pageSizeOptions={[6, 12, 24]} emptyTitle={emptyTitle} emptyDescription={emptyDescription}
       emptyAction={filtered ? <Button variant="outline" onClick={resetFilters}>Clear filters</Button> : null} />
       : <div ref={grid} className="pk-document-grid-region" onFocusCapture={event => { gridFocus.current = event.target; }} onBlurCapture={event => { if (event.relatedTarget !== null) gridFocus.current = null; }}>
-        <BulkActionBar count={selection.selectedIds.length} scopeLabel="Selected IDs in this folder and filter, across pages" disabled={unavailable} onClear={() => { gridStatus.current?.focus(); selection.onSelectionChange([]); }}>{removeAction}</BulkActionBar>
+        <BulkActionBar count={selection.selectedIds.length} scopeLabel="Selected items in this folder and filter, across pages" disabled={unavailable} onClear={() => { gridStatus.current?.focus(); selection.onSelectionChange([]); }}>{removeAction}</BulkActionBar>
         <p ref={gridStatus} tabIndex={-1} className="pk-document-status" role="status">{status}</p>
         {unavailable || resetPending ? <div className="pk-document-state">{error ? <div role="alert"><EmptyState title="Documents could not be loaded" description={error} action={onRetry ? <Button variant="outline" onClick={onRetry}>Try again</Button> : null} /></div> : <Spinner label="Loading documents" />}</div>
           : entries.length === 0 ? <EmptyState title={emptyTitle} description={emptyDescription} action={filtered ? <Button variant="outline" onClick={resetFilters}>Clear filters</Button> : null} />

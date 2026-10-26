@@ -22,7 +22,7 @@ export const reportingEntries: readonly CatalogEntry[] = [
 import { Grid, Statistic } from "@evenkit/ui";
 
 export function WeeklyMetrics() {
-  return <Grid columns={3}>
+  return <Grid columns={3} className="pk-statistic-group">
     <Statistic label="Completed orders" value={221} unit="orders"
       period="19–25 October 2026"
       comparison={{ text: "Up 12% from the previous week", direction: "up", tone: "positive" }} />

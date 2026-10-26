@@ -13,21 +13,21 @@ import "./reporting-preview.css";
 
 function StatisticExample() {
   return <div className="reporting-preview">
-    <Grid columns={3}>
+    <Grid columns={3} className="pk-statistic-group">
       <Statistic label="Completed orders" value={221} unit="orders" period="19–25 October 2026"
         comparison={{ text: "Up 12% from the previous week", direction: "up", tone: "positive" }} />
       <Statistic label="Failed deliveries" value={0} unit="deliveries" period="19–25 October 2026"
         comparison={{ text: "Down 3 deliveries from the previous week", direction: "down", tone: "positive" }} />
       <Statistic label="Average response time" value={null} unit="minutes" period="19–25 October 2026" missingLabel="Not measured for this period" />
     </Grid>
-    <Grid columns={2}>
+    <Grid columns={2} className="pk-statistic-group">
       <Statistic label="Repeat customers" value={32} unit="%" period="October 2026"
         comparison={{ text: "Unchanged from September 2026", direction: "unchanged" }} />
       <Statistic label="Outstanding support requests from distribution partners" value={18} unit="requests" period="25 October 2026"
         comparison={{ text: "Up 4 requests from yesterday", direction: "up", tone: "negative" }} />
     </Grid>
     <section className="reporting-preview-section" aria-label="Statistic states"><h3>Loading and unavailable values</h3>
-      <Grid columns={2}>
+      <Grid columns={2} className="pk-statistic-group">
         <Statistic label="Net revenue" value={null} unit="EUR" period="October 2026" loading />
         <Statistic label="Delivery time" value={null} unit="hours" period="October 2026" error="Delivery times could not be loaded." />
       </Grid>
@@ -82,7 +82,7 @@ function BarExample() {
 
 function ExportPreviewOptions({ onStateChange, disabled = false }: { onStateChange: (state: ExportState) => void; disabled?: boolean }) {
   return <section className="reporting-preview-export" aria-label="Preview export states">
-    <p className="reporting-preview-note">Advance the sample export state. The download uses a prepared two-row CSV fixture.</p>
+    <p className="reporting-preview-note">Try the export states below. The download is a sample CSV with two rows.</p>
     <div className="reporting-preview-actions">
       <Button variant="outline" size="sm" disabled={disabled} onClick={() => onStateChange({ status: "progress", value: 45 })}>Show progress</Button>
       <Button variant="outline" size="sm" disabled={disabled} onClick={() => onStateChange({ status: "ready", href: sampleExport, fileName: "sample-orders.csv" })}>Complete export</Button>
