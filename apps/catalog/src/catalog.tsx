@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState, type MouseEvent, type Reac
 import { themes, themeNames, type ColorMode, type ThemeName } from "@evenkit/tokens";
 import {
   AdminShell, Badge, Button, ChevronDownIcon, CircleCheckIcon, CircleHelpIcon,
-  EmptyState, ExternalLinkIcon, FileTextIcon, InboxIcon, Input, Label, LayoutDashboardIcon,
+  EmptyState, ExternalLinkIcon, FileTextIcon, InboxIcon, InfoIcon, Input, Label, LayoutDashboardIcon,
   MaximizeIcon, MessageSquareIcon, MoonIcon, PanelLeftIcon, PencilIcon, RotateCcwIcon,
   SearchIcon, Select, Spinner, SquareIcon, SunIcon, Tooltip, TooltipContent, TooltipProvider,
   TooltipTrigger, type AdminLinkProps, type AdminNavGroup, type AdminSidebarState,
@@ -16,6 +16,7 @@ import {
   ShapesIcon, SlidersHorizontalIcon, SquareCheckIcon, Table2Icon, TagsIcon,
   ToggleRightIcon, TriangleAlertIcon, TypeIcon, UploadIcon, UserIcon,
   CalendarDaysIcon, ClockIcon, Building2Icon, ActivityIcon, CameraIcon, CalculatorIcon,
+  UsersIcon, UserPlusIcon, ShieldIcon, WifiIcon,
 } from "@evenkit/ui";
 import { entries, groups } from "./catalog-data";
 import { foundationsEntries } from "./foundations-entries";
@@ -97,6 +98,10 @@ const navigationIcons: Record<string, ReactNode> = {
   "website-faq": <CircleHelpIcon />, "website-forms": <ContactRoundIcon />,
   "website-article": <FileTextIcon />,
   "rich-chat": <MessageSquareTextIcon />,
+  "team-members": <UsersIcon />, "invitation-acceptance": <UserPlusIcon />,
+  "role-capability-editor": <ShieldIcon />, "audit-viewer": <ActivityIcon />,
+  "notification-center": <BellIcon />, "notification-preferences": <SlidersHorizontalIcon />,
+  "persistent-banner": <InfoIcon />, "connection-status": <WifiIcon />, "presence-unread": <CircleDotIcon />,
   statistic: <GaugeIcon />, "chart-frame": <LayoutDashboardIcon />,
   "line-chart": <ActivityIcon />, "bar-chart": <Columns3Icon />,
   "reporting-controls": <SlidersHorizontalIcon />, dashboard: <LayoutDashboardIcon />,

@@ -14,6 +14,8 @@
 .foundations-preview-layout-footer { padding-block-start: var(--pk-space-4); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .foundations-preview-metadata { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
 .foundations-preview-card-label { margin-block-end: var(--pk-space-3); }
+.foundations-preview-card-body, .foundations-preview-card-body > .pk-stack { display: flex; flex: 1; flex-direction: column; }
+.foundations-preview-card-owner { margin-block-start: auto; }
 .foundations-preview-card-footer { justify-content: space-between; }
 .foundations-preview-owner { font-weight: var(--pk-font-weight-medium); }
 .foundations-preview-status { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }

@@ -40,7 +40,7 @@ const initialMessages: ChatMessage[] = [
       { id: "archived", title: "Archived project notes", unavailable: true, preview: "The application no longer grants access to these notes." },
       { id: "unsafe", title: "Blocked source address", href: "javascript:alert('blocked')" },
     ],
-    attachments: [{ id: "missing", name: "Previous draft.pdf", mediaType: "application/pdf", unavailable: true, description: "This file is no longer available." }],
+    attachments: [{ id: "missing", name: "Previous draft.pdf", mediaType: "application/pdf", unavailable: true }],
   },
 ];
 

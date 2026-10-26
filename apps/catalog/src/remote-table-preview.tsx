@@ -61,7 +61,7 @@ function RemoteExample() {
     <DataTable data={result.data} columns={columns} getRowId={row => row.id} caption="Remote projects" searchLabel="Search remote projects"
       remote={{ query, total: result.total, onQueryChange: setQuery }} loading={result.loading} error={result.error} onRetry={result.retry}
       initialPageSize={5} pageSizeOptions={[5, 10]} hiddenColumnIds={hiddenIds} density={density}
-      selection={{ ...selection, getRowLabel: row => row.name, scopeLabel: "Selected IDs across pages of this search", actions: <Button size="sm" variant="outline" onClick={() => {
+      selection={{ ...selection, getRowLabel: row => row.name, scopeLabel: "Records across pages of this search", actions: <Button size="sm" variant="outline" onClick={() => {
         const ids = selection.selectedIds;
         retryRef.current?.focus();
         setProjects(current => current.filter(row => !ids.includes(row.id)));
@@ -90,7 +90,7 @@ function BulkExample() {
   const [count, setCount] = useState(3);
   const [message, setMessage] = useState("");
   const resetRef = useRef<HTMLButtonElement>(null);
-  return <div className="remote-table-preview"><BulkActionBar count={count} scopeLabel="Selected IDs across all pages of the active search" onClear={() => { resetRef.current?.focus(); setCount(0); }}><Button size="sm" onClick={() => { resetRef.current?.focus(); setMessage(`${count} selected records marked for review.`); setCount(0); }}>Mark for review</Button></BulkActionBar>
+  return <div className="remote-table-preview"><BulkActionBar count={count} scopeLabel="Records across all pages of this search" onClear={() => { resetRef.current?.focus(); setCount(0); }}><Button size="sm" onClick={() => { resetRef.current?.focus(); setMessage(`${count} selected records marked for review.`); setCount(0); }}>Mark for review</Button></BulkActionBar>
     {message ? <ActionMessage>{message}</ActionMessage> : null}<Button ref={resetRef} variant="outline" onClick={() => { setCount(3); setMessage(""); }}>Select sample records</Button></div>;
 }
 
