@@ -64,6 +64,8 @@ Every field label, required/optional cue, validation string and feedback message
 
 Apply theme and mode on `document.documentElement` so Navbar's dialog portal inherits them. The website styles use existing `--pk-` typography, spacing, neutral surfaces, theme accents and focus tokens. Container queries adapt compositions to embedded widths; logical spacing supports RTL. Layout changes add no animation. Accordion, Navbar, Image and buttons retain the kit's motion and reduced-motion behavior.
 
+Website display headings use a larger scale derived from the kit's font-size tokens, independently of semantic heading level. The text hero grows to 72px and the media hero to 60px with the default tokens. Feature grids use three columns once their content container reaches 768px; service lists retain row dividers. FAQ and contact introductions sit beside their content at wider widths. Newsletter has a separate neutral band. Article metadata precedes the title, contents remain beside the reading column on desktop, and code has a visible label above its scroll region. These styles are local to the copied blocks.
+
 Keep a single host main landmark. The catalog's shell example uses an embedded focus target and headings below the catalog title. Production examples use a main landmark and a page heading. Native footer details, contents links, form recovery and code regions remain keyboard accessible. Host content and custom action/media slots must maintain these contracts.
 
 ## Verification

@@ -101,31 +101,33 @@ export function ContactForm({ heading, description, headingAs = "h2", onSubmit, 
   }
 
   const label = (text: string, required: boolean) => <span className="pk-website-form-label">{text}<span className="pk-website-form-cue" aria-hidden="true">{required ? copy.required : copy.optional}</span></span>;
-  return <section id={baseId} dir={dir} className={["pk-website-form", className].filter(Boolean).join(" ")} aria-labelledby={`${baseId}-heading`}>
-    <header className="pk-website-form-header"><Heading as={headingAs} size="2" id={`${baseId}-heading`}>{heading}</Heading>{description != null ? <div className="pk-website-form-description" id={`${baseId}-description`}>{description}</div> : null}</header>
-    <form noValidate onSubmit={submit} onReset={event => event.preventDefault()} aria-labelledby={`${baseId}-heading`} aria-describedby={description != null ? `${baseId}-description` : undefined}>
-      <Stack gap="6">
-        {submission.status === "sent" ? <>
-          <ActionMessage tone="success" heading={copy.sentHeading} ref={feedback} tabIndex={-1}>{copy.sent}</ActionMessage>
-          <div className="pk-website-form-actions"><Button variant="outline" onClick={startAgain}>{copy.startAgain}</Button></div>
-        </> : <>
-          <FormErrorSummary ref={summary} heading={copy.errorSummary} errors={Object.entries(errors).map(([field, message]) => ({ fieldId: `${baseId}-${field}`, message }))} />
-          <fieldset className="pk-website-form-fields" disabled={pending} aria-busy={pending || undefined}>
-            <legend className="pk-visually-hidden">{heading}</legend>
-            <Stack gap="4">
-              <div className="pk-website-form-pair">
-                <TextField ref={firstField} id={`${baseId}-name`} name="name" label={label(copy.name, true)} autoComplete="name" required value={values.name} error={errors.name} onChange={event => change("name", event.currentTarget.value)} />
-                <TextField ref={emailField} id={`${baseId}-email`} name="email" type="email" label={label(copy.email, true)} autoComplete="email" required value={values.email} error={errors.email} onChange={event => change("email", event.currentTarget.value)} />
-              </div>
-              <TextField id={`${baseId}-organization`} name="organization" label={label(copy.organization, false)} autoComplete="organization" value={values.organization} onChange={event => change("organization", event.currentTarget.value)} />
-              <TextareaField id={`${baseId}-message`} name="message" label={label(copy.message, true)} required rows={5} value={values.message} error={errors.message} onChange={event => change("message", event.currentTarget.value)} />
-              {consent ? <Checkbox id={`${baseId}-consent`} name="consent" label={<span className="pk-website-form-label">{consent.label}<span className="pk-website-form-cue" aria-hidden="true">{consent.required ? copy.required : copy.optional}</span></span>} hint={consent.hint} required={consent.required} checked={values.consent === true} error={errors.consent} onCheckedChange={checked => change("consent", checked === true)} /> : null}
-            </Stack>
-          </fieldset>
-          {submission.status === "error" ? <ActionMessage tone="error" heading={copy.failureHeading} ref={feedback} tabIndex={-1}>{copy.failure}</ActionMessage> : null}
-          <div className="pk-website-form-actions"><Button ref={submitButton} type="submit" aria-disabled={pending || undefined} aria-busy={pending || undefined} startIcon={pending ? <Spinner aria-hidden="true" /> : undefined}>{submission.status === "error" ? copy.retry : copy.submit}</Button><span className="pk-website-form-status" role="status">{pending ? copy.pending : ""}</span></div>
-        </>}
-      </Stack>
-    </form>
+  return <section id={baseId} dir={dir} className={["pk-website-form", "pk-website-contact", className].filter(Boolean).join(" ")} aria-labelledby={`${baseId}-heading`}>
+    <div className="pk-website-form-layout">
+      <header className="pk-website-form-header"><Heading as={headingAs} size="2" id={`${baseId}-heading`}>{heading}</Heading>{description != null ? <div className="pk-website-form-description" id={`${baseId}-description`}>{description}</div> : null}</header>
+      <form className="pk-website-form-panel" noValidate onSubmit={submit} onReset={event => event.preventDefault()} aria-labelledby={`${baseId}-heading`} aria-describedby={description != null ? `${baseId}-description` : undefined}>
+        <Stack gap="6">
+          {submission.status === "sent" ? <>
+            <ActionMessage tone="success" heading={copy.sentHeading} ref={feedback} tabIndex={-1}>{copy.sent}</ActionMessage>
+            <div className="pk-website-form-actions"><Button variant="outline" onClick={startAgain}>{copy.startAgain}</Button></div>
+          </> : <>
+            <FormErrorSummary ref={summary} heading={copy.errorSummary} errors={Object.entries(errors).map(([field, message]) => ({ fieldId: `${baseId}-${field}`, message }))} />
+            <fieldset className="pk-website-form-fields" disabled={pending} aria-busy={pending || undefined}>
+              <legend className="pk-visually-hidden">{heading}</legend>
+              <Stack gap="4">
+                <div className="pk-website-form-pair">
+                  <TextField ref={firstField} id={`${baseId}-name`} name="name" label={label(copy.name, true)} autoComplete="name" required value={values.name} error={errors.name} onChange={event => change("name", event.currentTarget.value)} />
+                  <TextField ref={emailField} id={`${baseId}-email`} name="email" type="email" label={label(copy.email, true)} autoComplete="email" required value={values.email} error={errors.email} onChange={event => change("email", event.currentTarget.value)} />
+                </div>
+                <TextField id={`${baseId}-organization`} name="organization" label={label(copy.organization, false)} autoComplete="organization" value={values.organization} onChange={event => change("organization", event.currentTarget.value)} />
+                <TextareaField id={`${baseId}-message`} name="message" label={label(copy.message, true)} required rows={5} value={values.message} error={errors.message} onChange={event => change("message", event.currentTarget.value)} />
+                {consent ? <Checkbox id={`${baseId}-consent`} name="consent" label={<span className="pk-website-form-label">{consent.label}<span className="pk-website-form-cue" aria-hidden="true">{consent.required ? copy.required : copy.optional}</span></span>} hint={consent.hint} required={consent.required} checked={values.consent === true} error={errors.consent} onCheckedChange={checked => change("consent", checked === true)} /> : null}
+              </Stack>
+            </fieldset>
+            {submission.status === "error" ? <ActionMessage tone="error" heading={copy.failureHeading} ref={feedback} tabIndex={-1}>{copy.failure}</ActionMessage> : null}
+            <div className="pk-website-form-actions"><Button ref={submitButton} type="submit" aria-disabled={pending || undefined} aria-busy={pending || undefined} startIcon={pending ? <Spinner aria-hidden="true" /> : undefined}>{submission.status === "error" ? copy.retry : copy.submit}</Button><span className="pk-website-form-status" role="status">{pending ? copy.pending : ""}</span></div>
+          </>}
+        </Stack>
+      </form>
+    </div>
   </section>;
 }
