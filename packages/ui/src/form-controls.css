@@ -34,6 +34,7 @@
 .pk-field-action { margin-block: var(--pk-space-0-5); }
 .pk-password-field .pk-input-adornment[data-side="end"] { padding-inline: var(--pk-space-1); border-inline-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .pk-password-field .pk-password-action { flex: none; color: var(--pk-color-fg-muted); }
+.pk-password-field .pk-input-adornment[data-side="end"]:has(.pk-password-action[data-shape="default"]) { flex: 0 1 auto; max-width: calc(100% - var(--pk-input-min-width)); }
 .pk-password-action[aria-pressed="true"] { color: var(--pk-color-fg); background: var(--pk-color-bg-muted); }
 .pk-combobox-control { --pk-choice-height: var(--pk-control-height-md); display: flex; align-items: center; width: 100%; min-height: var(--pk-choice-height); border: var(--pk-border-width-hairline) solid var(--pk-color-border-strong); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); transition: border-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
 .pk-combobox-control[data-size="sm"] { --pk-choice-height: var(--pk-control-height-sm); border-radius: var(--pk-radius-sm); }

@@ -35,6 +35,8 @@ Signup receives `{ email, password }`; password confirmation stays local. Its su
 
 Use `showLabel` and `hideLabel` for the toggle’s accessible name and tooltip. For example, a standalone German control can use `showLabel="Passwort anzeigen"` and `hideLabel="Passwort verbergen"`. The page fields, submit actions, form names, and built-in validation messages remain in English; changing a page title does not translate the entire form.
 
+Existing consumers can also supply `showText` and `hideText` to display captions. Supplying either enables captions; a missing or blank counterpart uses `Show` or `Hide`. The accessible name and tooltip include the visible caption. Without either prop, the control keeps its icon-only presentation.
+
 ## Password recovery
 
 `PasswordResetPage` receives `{ email }`. A successful request always shows the same neutral confirmation for matching and nonmatching accounts. The adapter should map those cases to the same successful result. Consistent service timing, rate limits, reset email delivery, and secure single-use tokens remain responsibilities of the authentication service. [OWASP password recovery guidance](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html).

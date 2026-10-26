@@ -77,7 +77,7 @@ function LibraryWorkspace({ scopeKey, load, upload, onRemove, onRestore, onRefre
       actions={<Button ref={refresh} size="sm" variant="outline" startIcon={<RotateCcwIcon size="sm" />} aria-label="Refresh documents" onClick={result.retry}>Refresh</Button>} />
     {removalIds === null && (error || note || pending === "restore") ? <SaveStatus state={error ? "error" : pending ? "saving" : "saved"} role={error ? "alert" : "status"}>{error || note || "Restoring items…"}</SaveStatus> : null}
     {removed && onRestore ? <div className="pk-document-recovery"><p>{removed.ids.length} {removed.ids.length === 1 ? "item can" : "items can"} be restored from the last removal.</p>
-      <Button variant="outline" loading={pending === "restore"} onClick={() => { void mutate("restore"); }}>Undo removal</Button>
+      <Button variant="outline" disabled={result.loading} loading={pending === "restore"} onClick={() => { void mutate("restore"); }}>Undo removal</Button>
       {pending === "restore" ? <Button variant="ghost" onClick={() => { cancelRequest(); setNote("Restore cancelled. You can try undo again."); refresh.current?.focus(); }}>Cancel restore</Button> : null}
     </div> : null}
     {upload ? <DocumentUploads key={JSON.stringify([query.folderId])} folderId={query.folderId} upload={upload} onComplete={result.retry} /> : null}

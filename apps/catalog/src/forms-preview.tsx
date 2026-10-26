@@ -105,7 +105,7 @@ function PasswordExample() {
     </FormSection>
     <section className="forms-preview-stack forms-preview-secondary" aria-label="Password field states">
       <header className="forms-preview-header"><h4>Read-only and unavailable</h4><p>A read-only value can still be revealed and copied.</p></header>
-      <PasswordField label="Read-only password" defaultValue="sample-reference" readOnly autoComplete="off" />
+      <PasswordField label="Read-only password" defaultValue="sample-reference" readOnly autoComplete="off" showText="Reveal" hideText="Hide" showLabel="read-only password" hideLabel="Hide read-only password" />
       <PasswordField label="Unavailable password" disabled autoComplete="off" />
     </section>
   </form>;
