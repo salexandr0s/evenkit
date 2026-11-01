@@ -80,17 +80,21 @@ export function ContactForm({ heading, description, headingAs = "h2", onSubmit, 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending || submission.status === "sent") return;
+    const data = new FormData(event.currentTarget);
+    const text = (name: string) => { const value = data.get(name); return typeof value === "string" ? value : ""; };
+    const current: ContactFormValues = { name: text("name"), email: text("email"), organization: text("organization"), message: text("message"), consent: consent ? data.has("consent") : null };
+    setValues(current);
     const next: Errors = {};
-    if (!values.name.trim()) next.name = copy.missingName;
-    if (!values.email.trim() || emailField.current?.validity.typeMismatch) next.email = copy.invalidEmail;
-    if (!values.message.trim()) next.message = copy.missingMessage;
-    if (consent?.required && !values.consent) next.consent = consent.errorMessage;
+    if (!current.name.trim()) next.name = copy.missingName;
+    if (!current.email.trim() || emailField.current?.validity.typeMismatch) next.email = copy.invalidEmail;
+    if (!current.message.trim()) next.message = copy.missingMessage;
+    if (consent?.required && !current.consent) next.consent = consent.errorMessage;
     focusSummary.current = Object.keys(next).length > 0;
     setErrors(next);
     if (Object.keys(next).length) return;
     // Keep keyboard focus in the form before its fields become disabled.
     if (event.currentTarget.contains(document.activeElement)) submitButton.current?.focus();
-    void submission.send({ name: values.name.trim(), email: values.email.trim(), organization: values.organization.trim(), message: values.message.trim(), consent: consent ? values.consent === true : null });
+    void submission.send({ name: current.name.trim(), email: current.email.trim(), organization: current.organization.trim(), message: current.message.trim(), consent: current.consent });
   }
 
   function startAgain() {
