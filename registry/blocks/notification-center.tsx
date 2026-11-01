@@ -105,7 +105,7 @@ export function NotificationCenter({ groups, page, pageCount, contextKey, revisi
     <header className="pk-notification-header">
       <span className="pk-notification-header-icon" aria-hidden="true"><InboxIcon size="lg" /></span>
       <div className="pk-notification-header-content">
-        <div className="pk-notification-heading-row"><h2 id={headingId} ref={heading} tabIndex={-1} className="pk-notification-center-heading">{title}</h2><UnreadIndicator count={pageUnreadCount} label={`${pageUnreadCount} unread ${pageUnreadCount === 1 ? "notification" : "notifications"} on this page`} /><span className="pk-notification-unread-label" aria-hidden="true">unread</span></div>
+        <div className="pk-notification-heading-row"><h2 id={headingId} ref={heading} tabIndex={-1} className="pk-notification-center-heading">{title}</h2><span className="pk-notification-unread-summary"><UnreadIndicator count={pageUnreadCount} label={`${pageUnreadCount} unread ${pageUnreadCount === 1 ? "notification" : "notifications"} on this page`} /><span className="pk-notification-unread-label" aria-hidden="true">unread</span></span></div>
         <p className="pk-notification-context">{items.length} {items.length === 1 ? "notification" : "notifications"} on this page{pageCount > 0 ? ` · Page ${page} of ${pageCount}` : ""}</p>
       </div>
       <IconButton className="pk-notification-mark-page" label="Mark all on this page as read" variant="outline" disabled={disabled || unreadIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(unreadIds, true); }}><CheckIcon size="sm" /></IconButton>

@@ -9,6 +9,7 @@
 .pk-notification-center-heading:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-1); border-radius: var(--pk-radius-sm); }
 .pk-notification-context { margin: var(--pk-space-1) 0 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); overflow-wrap: anywhere; }
 .pk-notification-unread-label { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
+.pk-notification-unread-summary { display: inline-flex; align-items: center; gap: var(--pk-space-2); }
 .pk-notification-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-1) var(--pk-space-3); padding: var(--pk-space-2) var(--pk-space-4); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); border-block-end: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .pk-notification-selection { min-width: 0; }
 .pk-notification-selection-actions, .pk-notification-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-1); min-width: 0; }
