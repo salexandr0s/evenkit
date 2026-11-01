@@ -1,3 +1,32 @@
+# Third complete catalog improvement pass: 1 November 2026
+
+Status: DONE. Completed the additional improvement pass in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`, starting at `fcf175a`. All 116 catalog entries received an individual source, design and functionality review: 25 improved and 91 retained. `docs/component-pass-3-2026-11-01.md` is the ordered checklist. Detailed evidence is under `.artifacts/component-pass-3-2026-11-01/`, including 232 fresh baseline captures, final states and host probes, seven subsystem ledgers, and the combined `all-review.json`. Independent review confirmed exact coverage and no remaining code or visual findings.
+
+Twelve implementation commits:
+
+- `4ab19aa`: Avatar preserves Unicode graphemes and scales its square with enlarged initials.
+- `587400c`: theme swatches and icon-reference columns scale with their text.
+- `6eb5462`: denied or stale invitation results block native form resubmission.
+- `3a4c798`: unread count caps retain numeric order in RTL.
+- `94f1268`: ColumnSettings reflects DataTable's fallback visibility after host column changes.
+- `f28ca56`: choice controls respect canceled and external form resets, controlled ownership and later user actions. The shared internal hook preserves initial reset defaults and reconciles native form values once per accepted reset.
+- `dad0db5`: required/optional label cues retain their token spacing in RTL text.
+- `da9ec91`: ContactForm and NewsletterForm submit current native values, preserving autofill-equivalent drafts through validation and failure.
+- `71b4b95`: native website images and videos preserve their aspect ratios without overriding kit-managed Image sizing.
+- `8e501c0`: AdminShell restores owned focus when a controlled navigation group collapses.
+- `04594e4`: Navbar reuses SkipLink's native activation rules.
+- `401ac13`: StepIndicator retains its width inside a non-stretching flex container.
+
+Verification passed: full production build, final UI/catalog/admin rebuilds, workspace TypeScript and ESLint, 51 unit tests, 34 registry tests and committed-source bundle validation, 116 copied examples and 104 priority mappings. All 335 catalog Chromium journeys passed. After the last StepIndicator CSS change, its flex-host regression and the Navbar skip-link check passed on the rebuilt catalog in Chromium and WebKit. All 42 admin journeys passed across Chromium/WebKit; 14 selected WebKit catalog regressions also passed. Each browser run used an isolated output directory. The ledgers record additional source-based tests, fresh host interactions and accurately labeled text enlargement, CSS zoom and device-scale checks.
+
+A broader website-only WebKit run had 18 failures in three classes reproduced on the untouched baseline: pointer focus assumptions, native ArrowRight code scrolling, and ResizeObserver-loop events during theme resizing. The new native-form regression passes in WebKit. No assertions or native browser semantics were weakened. Firefox, physical touch/IME/autofill devices and screen-reader speech were not exercised.
+
+No required implementation work remains. Existing `apps/catalog/index.html`, `apps/catalog/vite.config.ts`, and both `apps/catalog/llms/` files remain byte-identical to the original checksums and outside these commits. No push or deployment occurred. All owned preview servers were stopped.
+
+Resume with `git status --short`, `git log -13 --oneline`, and `tail -5 .artifacts/component-pass-3-2026-11-01/catalog.log`. Rebuild after source changes with `npm run build`. For catalog verification, use an isolated output directory: `KIT_CATALOG_PORT=5892 npx playwright test --workers=2 --output=.artifacts/catalog-verification-results`. The checklist is committed; detailed artifacts are ignored by Git. Historical handoffs follow.
+
+---
+
 # Second complete catalog improvement pass: 1 November 2026
 
 Status: DONE. Completed the user-requested second additional goal in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`. The ordered checklist `docs/component-pass-2-2026-11-01.md` accounts for all 116 current entries: 29 improved and 87 retained after fresh source, visual and behavior review. The earlier pass at `4ba2f6c` was the baseline. Evidence is in `.artifacts/component-pass-2-2026-11-01/`, including 232 baseline captures, final state captures, seven subsystem ledgers and `all-review.json`. Independent review confirmed exact coverage, valid evidence and no remaining actionable findings.
