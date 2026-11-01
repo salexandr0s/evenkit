@@ -1,6 +1,6 @@
 import { useId, useRef, useState, type CSSProperties } from "react";
 import { contrastChecks, contrastRatio, cssVariables, themes, type ColorMode, type ThemeName } from "@evenkit/tokens";
-import { Badge, Button, CheckIcon, CopyIcon, EmptyState, FilterXIcon, IconButton, Label, SearchField, Select, TextField, Tooltip, TooltipContent, TooltipTrigger } from "@evenkit/ui";
+import { Badge, Button, CheckIcon, CopyAction, EmptyState, FilterXIcon, IconButton, Label, SearchField, Select, TextField } from "@evenkit/ui";
 import "./token-preview.css";
 
 const categories = [
@@ -69,11 +69,11 @@ function TokenSample({ name, value }: { name: string; value: string }) {
 export function TokenPreview({ theme, mode }: { theme: ThemeName; mode: ColorMode }) {
   const id = useId();
   const searchRef = useRef<HTMLInputElement>(null);
-  const copyRequest = useRef(0);
+  const workspaceRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category>("color");
-  const [copyNotice, setCopyNotice] = useState("");
   const [created, setCreated] = useState(false);
+  const [workspaceError, setWorkspaceError] = useState("");
   const variables = Object.entries(cssVariables(theme, mode));
   const search = query.trim().toLowerCase();
   const visible = variables.filter(([name, value]) => (
@@ -92,18 +92,6 @@ export function TokenPreview({ theme, mode }: { theme: ThemeName; mode: ColorMod
     setQuery("");
     setCategory("all");
     searchRef.current?.focus();
-  }
-
-  async function copy(name: string) {
-    const request = ++copyRequest.current;
-    const usage = `var(${name})`;
-    setCopyNotice("");
-    try {
-      await navigator.clipboard.writeText(usage);
-      if (request === copyRequest.current) setCopyNotice(`Copied ${usage}.`);
-    } catch {
-      if (request === copyRequest.current) setCopyNotice(`Copy is unavailable. Select ${usage} in the token list to copy it.`);
-    }
   }
 
   return (
@@ -130,7 +118,6 @@ export function TokenPreview({ theme, mode }: { theme: ThemeName; mode: ColorMod
           <p id={`${id}-results`} role="status">{visible.length} of {variables.length} tokens · {themes[theme].name} / {mode}</p>
           {visible.length > 0 && (query || category !== "all") && <IconButton label="Reset filters" onClick={resetFilters}><FilterXIcon size="sm" /></IconButton>}
         </div>
-        <p className="token-copy-notice" role="status" aria-live="polite">{copyNotice}</p>
         {visible.length > 0 ? (
           <ul className="token-grid" role="list" aria-label="Resolved tokens">
             {visible.map(([name, value]) => (
@@ -142,7 +129,7 @@ export function TokenPreview({ theme, mode }: { theme: ThemeName; mode: ColorMod
                 <code className="token-value">{value}</code>
                 <div className="token-card-footer">
                   <code className="token-usage">var({name})</code>
-                  <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Copy ${name}`} onClick={() => void copy(name)}><CopyIcon size="sm" /></Button></TooltipTrigger><TooltipContent>{`Copy ${name}`}</TooltipContent></Tooltip>
+                  <CopyAction size="xs" variant="ghost" shape="icon" aria-label={`Copy ${name}`} text={`var(${name})`} copiedMessage={`Copied var(${name}).`} errorMessage={`Copy is unavailable. Select var(${name}) above to copy it.`} />
                 </div>
               </li>
             ))}
@@ -179,8 +166,18 @@ export function TokenPreview({ theme, mode }: { theme: ThemeName; mode: ColorMod
           <small>Metadata and supporting details</small>
           <code>font.family.mono</code>
         </div>
-        <form className="token-controls-example" onSubmit={(event) => { event.preventDefault(); setCreated(true); }}>
-          <TextField label="Workspace name" name="workspace" defaultValue="Demo workspace" required onChange={() => setCreated(false)} />
+        <form className="token-controls-example" onSubmit={(event) => {
+          event.preventDefault();
+          if (!workspaceRef.current?.value.trim()) {
+            setWorkspaceError("Enter a workspace name.");
+            setCreated(false);
+            workspaceRef.current?.focus();
+            return;
+          }
+          setWorkspaceError("");
+          setCreated(true);
+        }}>
+          <TextField ref={workspaceRef} label="Workspace name" name="workspace" defaultValue="Demo workspace" required error={workspaceError} onChange={() => { setCreated(false); setWorkspaceError(""); }} />
           <div className="catalog-demo-actions"><Button type="submit">Create workspace</Button><Badge tone="success">{created ? <><CheckIcon size="sm" /> Created</> : "Ready"}</Badge></div>
           <p className="token-guidance" role="status">{created ? "Workspace created in this preview." : "Try the controls, then switch theme or appearance."}</p>
         </form>

@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { foundation } from "@evenkit/tokens";
-import { ActionMessage, Badge, BellIcon, Button, CheckIcon, CopyIcon, EmptyState, FilterXIcon, IconButton, IconProvider, Label, PlusIcon, SearchField, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconAnimation, type IconSize } from "@evenkit/ui";
+import { ActionMessage, Badge, BellIcon, Button, CopyAction, EmptyState, FilterXIcon, IconButton, IconProvider, Label, PlusIcon, SearchField, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconAnimation, type IconSize } from "@evenkit/ui";
 import { iconCategories, icons, type IconCategory } from "./icon-data";
 import "./icon-preview.css";
 
@@ -18,13 +18,10 @@ const animations: readonly { value: IconAnimation; label: string }[] = [
 export function IconPreview() {
   const id = useId();
   const searchRef = useRef<HTMLInputElement>(null);
-  const copyRequest = useRef(0);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<IconCategory>("all");
   const [size, setSize] = useState<IconSize>("md");
   const [animation, setAnimation] = useState<IconAnimation>("hover");
-  const [notice, setNotice] = useState("");
-  const [copied, setCopied] = useState<string>();
   const [activated, setActivated] = useState<"text" | "icon">();
   const search = query.trim().toLowerCase();
   const visible = icons.filter((icon) => (
@@ -37,21 +34,6 @@ export function IconPreview() {
     setQuery("");
     setCategory("all");
     searchRef.current?.focus();
-  }
-
-  async function copyImport(name: string) {
-    const request = ++copyRequest.current;
-    setNotice("");
-    setCopied(undefined);
-    try {
-      await navigator.clipboard.writeText(`import { ${name} } from "@evenkit/ui";`);
-      if (request === copyRequest.current) {
-        setCopied(name);
-        setNotice(`Copied the ${name} import.`);
-      }
-    } catch {
-      if (request === copyRequest.current) setNotice(`Copy is unavailable. Select the import below ${name} to copy it.`);
-    }
   }
 
   return (
@@ -104,7 +86,6 @@ export function IconPreview() {
             <span><code>--pk-icon-size-{size}</code> · {foundation.icon.size[size]}</span>
             {visible.length > 0 && filtered && <IconButton label="Reset icon filters" onClick={resetFilters}><FilterXIcon size="sm" /></IconButton>}
           </div>
-          <p className="icon-copy-notice" role="status">{notice}</p>
           {visible.length > 0 ? (
             <ul className="icon-gallery" role="list" aria-label="Available icons">
               {visible.map(({ name, label, category: iconCategory, Icon }) => (
@@ -119,7 +100,7 @@ export function IconPreview() {
                       <code>{`import { ${name} } from "@evenkit/ui";`}</code>
                       <code>{`<${name} size="${size}" animation="${animation}" />`}</code>
                     </div>
-                    <Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label={`Copy import for ${name}`} onClick={() => void copyImport(name)}>{copied === name ? <CheckIcon size="sm" /> : <CopyIcon size="sm" />}</Button></TooltipTrigger><TooltipContent>{copied === name ? "Copied" : `Copy import for ${name}`}</TooltipContent></Tooltip>
+                    <CopyAction size="xs" variant="ghost" shape="icon" aria-label={`Copy import for ${name}`} text={`import { ${name} } from "@evenkit/ui";`} copiedMessage={`Copied the ${name} import.`} errorMessage={`Copy is unavailable. Select the ${name} import above to copy it.`} />
                   </div>
                 </li>
               ))}

@@ -48,7 +48,7 @@ test("token reference keeps search, copying and contrast tied to the selected th
     });
   });
   await accent.getByRole("button", { name: "Copy --pk-color-accent", exact: true }).click();
-  await expect(reference.getByRole("status").filter({ hasText: /unavailable|could not|unable/i })).toBeVisible();
+  await expect(accent.getByRole("status")).toContainText("Copy is unavailable.");
   await expect(accent).toContainText("var(--pk-color-accent)");
 
   await search.fill("no-such-token");
@@ -68,4 +68,15 @@ test("token reference keeps search, copying and contrast tied to the selected th
     await expect(list.locator('[data-token="--pk-font-family-sans"]')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   }
+
+  const sample = page.getByRole("region", { name: "Theme sample", exact: true });
+  const workspace = sample.getByRole("textbox", { name: "Workspace name", exact: true });
+  await workspace.fill("   ");
+  await sample.getByRole("button", { name: "Create workspace", exact: true }).press("Enter");
+  await expect(workspace).toHaveAttribute("aria-invalid", "true");
+  await expect(workspace).toBeFocused();
+  await expect(sample.getByRole("status")).not.toHaveText("Workspace created in this preview.");
+  await workspace.fill("Research workspace");
+  await workspace.press("Enter");
+  await expect(sample.getByRole("status")).toHaveText("Workspace created in this preview.");
 });

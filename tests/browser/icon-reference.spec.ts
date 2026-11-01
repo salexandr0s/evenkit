@@ -40,7 +40,7 @@ test("icon reference combines aliases and categories, copies imports, and preser
     });
   });
   await copy.press("Enter");
-  await expect(reference.getByRole("status").filter({ hasText: /unavailable|could not|unable/i })).toBeVisible();
+  await expect(trash.getByRole("status")).toContainText("Copy is unavailable.");
   await expect(trash).toContainText(namedImport);
 
   await choose(page, "Icon category", "Appearance");
