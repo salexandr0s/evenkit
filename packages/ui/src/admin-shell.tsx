@@ -81,7 +81,9 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const activeGroupExpanded = groups.find(group => group.items.some(item => item.id === activeItemId))?.expanded;
   const navigate: MouseEventHandler<HTMLAnchorElement> = (event) => {
-    if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) onNavigate?.();
+    const link = event.currentTarget;
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.hasAttribute("download") || (link.target && link.target !== "_self")) return;
+    onNavigate?.();
   };
 
   useEffect(() => {
