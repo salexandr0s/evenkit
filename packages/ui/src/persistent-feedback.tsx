@@ -158,5 +158,5 @@ export interface UnreadIndicatorProps {
 }
 export function UnreadIndicator({ count, label, className }: UnreadIndicatorProps) {
   const safeCount = Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0;
-  return <span className={classes("pk-unread-indicator", className)}><Badge tone={safeCount ? "accent" : "neutral"} aria-hidden="true">{safeCount > 99 ? "99+" : safeCount}</Badge><span className="pk-visually-hidden">{label ?? `${safeCount} unread ${safeCount === 1 ? "notification" : "notifications"}`}</span></span>;
+  return <span className={classes("pk-unread-indicator", className)}><Badge dir="ltr" tone={safeCount ? "accent" : "neutral"} aria-hidden="true">{safeCount > 99 ? "99+" : safeCount}</Badge><span className="pk-visually-hidden">{label ?? `${safeCount} unread ${safeCount === 1 ? "notification" : "notifications"}`}</span></span>;
 }
