@@ -115,3 +115,80 @@ test("disabling a focused token input preserves its uncommitted draft", async ({
   await expect(input).toHaveValue("");
   expect(await values()).toEqual(["Planning", "Uncommitted"]);
 });
+
+async function editChoices(page: import("@playwright/test").Page) {
+  for (const name of ["Reset select", "Controlled reset select"]) {
+    await page.getByRole("combobox", { name, exact: true }).click();
+    await page.getByRole("option", { name: "Beta", exact: true }).click();
+  }
+  await page.getByRole("checkbox", { name: "Reset checkbox", exact: true }).uncheck();
+  await page.getByRole("checkbox", { name: "Controlled reset checkbox", exact: true }).uncheck();
+  await page.getByRole("switch", { name: "Reset switch" }).uncheck();
+  for (const name of ["Reset radio", "Reset segment"]) await page.getByRole("radiogroup", { name }).getByRole("radio", { name: "Beta", exact: true }).click();
+  await page.clock.runFor(20);
+}
+
+test("canceled external resets preserve visible choices, form values and callbacks", async ({ page }) => {
+  await editChoices(page);
+  const values = () => page.locator("#choice-owner").evaluate(node => [...new FormData(node as HTMLFormElement).entries()]);
+  const before = await values();
+  const events = await page.getByTestId("choice-events").textContent();
+  for (const cancel of ["native", "react"]) {
+    if (cancel === "native") await page.locator("#choice-owner").evaluate(node => node.addEventListener("reset", event => event.preventDefault(), { once: true }));
+    else await page.getByRole("button", { name: "Toggle reset cancellation" }).click();
+    await page.getByRole("button", { name: "Reset choices", exact: true }).click();
+    await page.clock.runFor(20);
+    expect(await values()).toEqual(before);
+    await expect(page.getByTestId("choice-events")).toHaveText(events!);
+    await expect(page.getByRole("combobox", { name: "Reset select", exact: true })).toHaveText("Beta");
+    await expect(page.getByRole("checkbox", { name: "Reset checkbox", exact: true })).not.toBeChecked();
+    await expect(page.getByRole("switch", { name: "Reset switch" })).not.toBeChecked();
+    for (const name of ["Reset radio", "Reset segment"]) await expect(page.getByRole("radiogroup", { name }).getByRole("radio", { name: "Beta", exact: true })).toBeChecked();
+  }
+});
+
+test("accepted resets preserve initial defaults and controlled ownership after form reassociation", async ({ page }) => {
+  await editChoices(page);
+  await page.getByRole("button", { name: "Move form ownership and defaults" }).click();
+  await page.getByRole("button", { name: "Ignore reset callback" }).click();
+  await page.getByRole("button", { name: "Reset choices", exact: true }).click();
+  await page.clock.runFor(20);
+  await expect(page.getByRole("combobox", { name: "Reset select", exact: true })).toHaveText("Alpha");
+  await expect(page.getByRole("checkbox", { name: "Reset checkbox", exact: true })).toBeChecked();
+  await expect(page.getByRole("switch", { name: "Reset switch" })).toBeChecked();
+  for (const name of ["Reset radio", "Reset segment"]) await expect(page.getByRole("radiogroup", { name }).getByRole("radio", { name: "Alpha", exact: true })).toBeChecked();
+  await expect(page.getByRole("combobox", { name: "Controlled reset select", exact: true })).toHaveText("Beta");
+  await expect(page.getByRole("checkbox", { name: "Controlled reset checkbox", exact: true })).not.toBeChecked();
+  const values = () => page.locator("#other-owner").evaluate(node => Object.fromEntries(new FormData(node as HTMLFormElement)));
+  expect(await values()).toEqual({ select: "a", checkbox: "on", radio: "a", segment: "a", switch: "on", controlled: "b" });
+  expect(await page.locator("#choice-owner").evaluate(node => [...new FormData(node as HTMLFormElement)])).toEqual([]);
+  const callbacks = JSON.parse((await page.getByTestId("choice-events").textContent())!) as string[];
+  for (const event of ["select:a", "checkbox:true", "radio:a", "segment:a", "switch:true", "controlled:a", "controlled-checkbox:true"]) expect(callbacks.filter(value => value === event)).toHaveLength(1);
+  await page.getByRole("button", { name: "Override reset callback" }).click();
+  await page.getByRole("button", { name: "Reset choices", exact: true }).click();
+  await page.clock.runFor(20);
+  await expect(page.getByRole("combobox", { name: "Controlled reset select", exact: true })).toHaveText("Gamma");
+  expect((await values()).controlled).toBe("c");
+  await page.getByRole("button", { name: "Accept change callbacks" }).click();
+  const changes = JSON.parse((await page.getByTestId("choice-changes").textContent())!) as string[];
+  await page.getByRole("checkbox", { name: "Reset checkbox", exact: true }).uncheck();
+  await page.getByRole("switch", { name: "Reset switch" }).uncheck();
+  await page.getByRole("radiogroup", { name: "Reset radio", exact: true }).getByRole("radio", { name: "Beta", exact: true }).click();
+  await page.getByRole("checkbox", { name: "Controlled reset checkbox", exact: true }).check();
+  await page.clock.runFor(20);
+  const after = JSON.parse((await page.getByTestId("choice-changes").textContent())!) as string[];
+  const observed = after.slice(changes.length);
+  for (const name of ["checkbox", "switch", "controlled-checkbox"]) expect(observed.filter(value => value === name)).toHaveLength(1);
+  expect(observed).toContain("radio");
+});
+
+test("a synchronous choice after reset wins over its deferred default", async ({ page }) => {
+  await editChoices(page);
+  await page.getByRole("radiogroup", { name: "Reset radio", exact: true }).getByRole("radio", { name: "Gamma", exact: true }).evaluate(node => {
+    document.querySelector<HTMLFormElement>("#choice-owner")?.reset();
+    (node as HTMLButtonElement).click();
+  });
+  await page.clock.runFor(20);
+  await expect(page.getByRole("radiogroup", { name: "Reset radio", exact: true }).getByRole("radio", { name: "Gamma", exact: true })).toBeChecked();
+  expect(await page.locator("#choice-owner").evaluate(node => new FormData(node as HTMLFormElement).get("radio"))).toBe("c");
+});

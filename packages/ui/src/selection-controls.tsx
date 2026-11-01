@@ -11,6 +11,7 @@ import { useFieldDescription } from "./field-frame.js";
 import { Spinner } from "./feedback.js";
 import { CheckIcon, CircleAlertIcon, CopyIcon } from "./icons.js";
 import { IconButton } from "./icon-button.js";
+import { useChoiceState } from "./use-choice-state.js";
 
 export type CheckboxState = boolean | "indeterminate";
 
@@ -65,10 +66,11 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(function Ch
   { label, hint, error, controlSize = "sm", id, className, onCheckedChange, "aria-describedby": describedBy, "aria-invalid": invalid, ...props }, ref,
 ) {
   const validation = useChoiceValidation(error, props.form, "checkbox");
+  const [checked, changeChecked] = useChoiceState<CheckboxState>(props.checked, props.defaultChecked, false, next => { validation.clear(); onCheckedChange?.(next); }, validation.region, props.form, "checkbox");
   const description = useFieldDescription({ id, hint, error: validation.error, describedBy });
   return <div ref={validation.region} onInvalidCapture={validation.onInvalidCapture} className="pk-choice-field" data-size={controlSize} data-unlabelled={label == null || undefined}>
     <CheckboxPrimitive.Root {...props} ref={ref} id={description.controlId} className={classes("pk-check-control", className)} data-size={controlSize}
-      onCheckedChange={next => { validation.clear(); onCheckedChange?.(next); }}
+      checked={checked} onCheckedChange={changeChecked}
       aria-describedby={description.descriptionIds} aria-invalid={description.hasError ? true : invalid}>
       <span className="pk-check-box" aria-hidden="true"><CheckboxPrimitive.Indicator className="pk-check-mark">
         <CheckIcon size="sm" className="pk-check-tick" /><span className="pk-check-mixed" />
@@ -114,6 +116,7 @@ export interface RadioGroupProps extends Omit<ComponentPropsWithoutRef<typeof Ra
 
 function RadioGroupControl({ label, options, hint, error, controlSize = "md", id, className, orientation = "vertical", segmented = false, forwardedRef, onValueChange, onKeyDownCapture, onKeyUpCapture, onFocusCapture, onPointerDownCapture, "aria-describedby": describedBy, "aria-invalid": invalid, ...props }: RadioGroupProps & { segmented?: boolean; forwardedRef: React.ForwardedRef<HTMLDivElement> }) {
   const validation = useChoiceValidation(error, props.form, "radio");
+  const [value, changeValue] = useChoiceState(props.value, props.defaultValue, "", next => { validation.clear(); onValueChange?.(next); }, validation.region, props.form, "radio");
   const description = useFieldDescription({ id, hint, error: validation.error, describedBy });
   const navigationIntent = useRef<{ from: EventTarget } | null>(null);
   const labelId = `${description.controlId}-label`;
@@ -121,7 +124,7 @@ function RadioGroupControl({ label, options, hint, error, controlSize = "md", id
     <span className="pk-choice-legend" id={labelId}>{label}</span>
     <RadioPrimitive.Root {...props} ref={forwardedRef} id={description.controlId} className={classes(segmented ? "pk-segmented-control" : "pk-radio-group", className)} data-size={controlSize}
       orientation={orientation} aria-labelledby={labelId} aria-describedby={description.descriptionIds} aria-invalid={description.hasError ? true : invalid}
-      onValueChange={value => { validation.clear(); onValueChange?.(value); }}
+      value={value} onValueChange={changeValue}
       onKeyDownCapture={event => {
         onKeyDownCapture?.(event);
         const keys = orientation === "horizontal" ? ["ArrowLeft", "ArrowRight", "Home", "End"] : ["ArrowUp", "ArrowDown", "Home", "End"];
@@ -180,12 +183,13 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch
   { label, hint, error, pending = false, controlSize = "md", id, className, onClick, onCheckedChange, "aria-describedby": describedBy, "aria-invalid": invalid, "aria-disabled": ariaDisabled, "aria-busy": busy, ...props }, ref,
 ) {
   const validation = useChoiceValidation(error, props.form, "switch");
+  const [checked, changeChecked] = useChoiceState(props.checked, props.defaultChecked, false, next => { validation.clear(); onCheckedChange?.(next); }, validation.region, props.form, "checkbox");
   const description = useFieldDescription({ id, hint, error: validation.error, describedBy });
   return <div ref={validation.region} onInvalidCapture={validation.onInvalidCapture} className="pk-choice-field pk-switch-field" data-size={controlSize} data-unlabelled={label == null || undefined}>
     <SwitchPrimitive.Root {...props} ref={ref} id={description.controlId} className={classes("pk-switch-control", className)} data-size={controlSize}
       data-pending={pending || undefined} aria-busy={pending || busy} aria-disabled={pending || ariaDisabled}
       aria-describedby={description.descriptionIds} aria-invalid={description.hasError ? true : invalid}
-      onCheckedChange={next => { validation.clear(); onCheckedChange?.(next); }}
+      checked={checked} onCheckedChange={changeChecked}
       onClick={event => { onClick?.(event); if (pending) event.preventDefault(); }}>
       <span className="pk-switch-track" aria-hidden="true"><SwitchPrimitive.Thumb className="pk-switch-thumb">{pending ? <span className="pk-switch-pending" /> : null}</SwitchPrimitive.Thumb></span>
     </SwitchPrimitive.Root>

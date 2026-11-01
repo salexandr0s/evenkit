@@ -7,6 +7,7 @@ import { classes } from "./classes.js";
 import type { ControlSize } from "./button.js";
 import { FieldFrame, useFieldDescription, type FieldContentProps } from "./field-frame.js";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "./icons.js";
+import { useChoiceState } from "./use-choice-state.js";
 
 export interface SelectOption {
   value: string;
@@ -54,6 +55,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
 ) {
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
+  const [selection, changeSelection] = useChoiceState(value, defaultValue, "", onValueChange, trigger, form, "select");
   const setTrigger = useCallback((node: HTMLButtonElement | null) => {
     trigger.current = node;
     if (typeof ref === "function") return ref(node);
@@ -80,9 +82,8 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
   }
 
   const rootProps = {
-    ...(value !== undefined ? { value } : {}),
-    ...(defaultValue !== undefined ? { defaultValue } : {}),
-    ...(onValueChange !== undefined ? { onValueChange } : {}),
+    value: selection,
+    onValueChange: changeSelection,
     ...(name !== undefined ? { name } : {}),
     ...(form !== undefined ? { form } : {}),
     ...(dir !== undefined ? { dir } : {}),
