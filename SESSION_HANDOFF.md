@@ -1,3 +1,27 @@
+# Component interaction improvements: 1 November 2026
+
+Status: DONE_WITH_CONCERNS. Completed this component improvement pass in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`. Firefox validation remains unavailable because its browser runtime cannot create a usable profile. Five implementation commits are saved locally:
+
+- `96f1962`: Combobox and Autocomplete close disabled fieldset popups and reject late selection; native first-legend behavior remains supported. TokenInput pastes at the caret or replaces selected text while preserving surrounding text.
+- `98a582a`: ProfileSettings rejects duplicate submissions before React renders the pending state. Save completion preserves focus elsewhere and returns focus from the disappearing Cancel button when needed.
+- `3e1d08c`: AdminShell mobile navigation preserves its drawer for canceled clicks, downloads and new-window links. Ordinary navigation still closes it.
+- `c466049`: Chat clipboard feedback follows the latest attempt. Content changes and unmount invalidate pending completions.
+- `36d8681`: Navbar clears its mobile-menu tooltip state on desktop layouts. Returning to compact navigation no longer revives a hidden tooltip that intercepts Escape from the contact dialog.
+
+Key sources are `packages/ui/src/form-controls.tsx`, `multi-value.tsx`, `admin-shell.tsx`, `navigation.tsx`, `chat-messages.tsx`, and `registry/blocks/account-settings.tsx`. Existing browser specs cover the form, sidebar, navbar and chat regressions. The new `tests/browser/profile-settings-host.spec.ts` and `tests/fixtures/profile-settings-host.tsx` use deferred saves to verify duplicate requests and focus ownership. Each defect was reproduced before its fix; independent diff review found no further actionable issues.
+
+Verification passed: full production build, configured workspace TypeScript and ESLint, all 49 unit tests, 116 copied examples and 104 inventory mappings, and registry committed-source build/inspection. Eight affected admin journeys passed in Chromium and WebKit. All six new regression cases passed in WebKit across the initial run and two corrected test reruns.
+
+The full catalog run passed 304 of 305 Chromium journeys and exposed the navbar tooltip bug above. Its trace showed the stale mobile hint consuming Escape; the strengthened regression reproduced it before the fix. Afterward, all 11 navigation journeys and the focused WebKit resize regression passed. A final UI/catalog rebuild, admin production rebuild, test TypeScript, focused lint and all 18 navbar/sidebar/tooltip journeys also passed. The unrelated catalog journeys were not repeated after this one-line navbar fix. No known implementation failure remains.
+
+Firefox could not launch because its test profile folder was unavailable, matching the earlier environment failure. Two initial WebKit checks assumed pointer clicks focus links/buttons; isolated inspection confirmed native browser behavior, so those tests now establish keyboard focus and activate with Enter. Every drawer, clipboard-state and focus assertion remains. Both corrected tests pass in Chromium and WebKit. Physical touch hardware and screen-reader speech were not exercised.
+
+Evidence is in `.artifacts/component-improvements-2026-11-01/`, with focused reproductions/reruns under `.artifacts/forms-*`, `.artifacts/navigation-*`, `.artifacts/profile-settings-*` and `.artifacts/data-chat-*`. Existing catalog HTML, Vite configuration and `llms/` edits remain byte-identical and outside these commits. No push or deployment occurred.
+
+Resume with `git status --short`, `git log -6 --oneline` and `tail -10 .artifacts/component-improvements-2026-11-01/navbar-final.log`. For the changed behaviors, run `KIT_CATALOG_PORT=5671 npx playwright test tests/browser/form-controls.spec.ts tests/browser/value-fields.spec.ts tests/browser/admin-kit.spec.ts tests/browser/chat.spec.ts tests/browser/profile-settings-host.spec.ts tests/browser/records-settings.spec.ts tests/browser/navbar-header.spec.ts`. Rebuild with `npm run build` after source changes. Owned verification servers are stopped. Historical handoffs follow.
+
+---
+
 # Token production deployment: 26 October 2026
 
 Status: DONE. Pushed the two token improvements and their handoff through commit `4fa085146792c07fedbf1e82e90a02b32f7a1fda` to `origin/codex/component-improvements`, then deployed that exact committed snapshot to `blockconsult/evenkit` at the user's request. Deployment `dpl_FnBz7HNxKssaKn61BHjGyoPLgyF9` is READY and serves both `https://evenkit.dev` and `https://www.evenkit.dev`. Its immutable URL is `https://evenkit-19pvmgo1b-blockconsult.vercel.app`.
