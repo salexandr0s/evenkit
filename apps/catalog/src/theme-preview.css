@@ -1,7 +1,8 @@
 /* Hallmark · checked: 2026-10-25 · genre: modern-minimal · built: the project · redesign: polish · v2.0.0 */
 .theme-gallery { display: flex; flex-direction: column; gap: var(--pk-space-6); min-width: 0; }
 .theme-gallery-intro { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: flex-start; gap: var(--pk-space-4); }
-.theme-gallery-intro > div { flex: 1; min-width: min(100%, var(--pk-layout-sidebar)); }
+.theme-gallery-description { flex: 1; min-width: min(100%, var(--pk-layout-sidebar)); }
+.theme-gallery-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-2) var(--pk-space-4); }
 .theme-gallery-intro h3 { margin: 0 0 var(--pk-space-2); font-size: var(--pk-font-size-lg); font-weight: var(--pk-font-weight-semibold); }
 .theme-gallery-intro p, .theme-gallery-guidance { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
 .theme-gallery-current { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-1) var(--pk-space-2); padding-block: var(--pk-space-1); }

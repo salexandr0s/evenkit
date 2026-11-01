@@ -10,9 +10,6 @@
 .token-search, .token-category { display: grid; align-content: start; gap: var(--pk-space-2); min-width: 0; }
 .token-search { flex: 2 1 calc(var(--pk-space-16) * 4); }
 .token-category { flex: 1 1 calc(var(--pk-space-16) * 3); }
-.token-search-control { position: relative; }
-.token-search-control > .pk-icon { position: absolute; inset-inline-start: var(--pk-space-3); top: 50%; transform: translateY(-50%); color: var(--pk-color-fg-muted); pointer-events: none; }
-.token-search-control .pk-input { padding-inline-start: calc(var(--pk-space-3) + var(--pk-icon-size-sm) + var(--pk-space-2)); }
 .token-workbench .token-guidance { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); line-height: var(--pk-font-line-height-relaxed); }
 .token-filters + .token-guidance { margin-top: var(--pk-space-3); }
 .token-results-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--pk-space-2); min-height: var(--pk-control-height-md); margin: var(--pk-space-4) 0 var(--pk-space-2); }

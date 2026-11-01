@@ -17,9 +17,6 @@
 .icon-filters > div { display: grid; align-content: start; gap: var(--pk-space-2); min-width: 0; }
 .icon-search-field { flex: 2 1 calc(var(--pk-space-16) * 3); }
 .icon-category-field, .icon-size-field, .icon-animation-field { flex: 1 1 calc(var(--pk-space-16) * 2 + var(--pk-space-8)); }
-.icon-search-control { position: relative; }
-.icon-search-control > .pk-icon { position: absolute; inset-inline-start: var(--pk-space-3); top: 50%; transform: translateY(-50%); color: var(--pk-color-fg-muted); pointer-events: none; }
-.icon-search-control .pk-input { padding-inline-start: calc(var(--pk-space-3) + var(--pk-icon-size-sm) + var(--pk-space-2)); }
 .icon-results-header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-2) var(--pk-space-4); min-height: var(--pk-control-height-md); margin: var(--pk-space-4) 0 var(--pk-space-2); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); }
 .icon-results-header > span { margin-inline-start: auto; }
 .icon-workbench .icon-copy-notice { color: var(--pk-color-accent); font-size: var(--pk-font-size-xs); overflow-wrap: anywhere; }

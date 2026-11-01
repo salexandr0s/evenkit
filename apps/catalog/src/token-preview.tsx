@@ -1,6 +1,6 @@
 import { useId, useRef, useState, type CSSProperties } from "react";
 import { contrastChecks, contrastRatio, cssVariables, themes, type ColorMode, type ThemeName } from "@evenkit/tokens";
-import { Badge, Button, CheckIcon, CopyIcon, EmptyState, FilterXIcon, IconButton, Input, Label, SearchIcon, Select, TextField, Tooltip, TooltipContent, TooltipTrigger } from "@evenkit/ui";
+import { Badge, Button, CheckIcon, CopyIcon, EmptyState, FilterXIcon, IconButton, Label, SearchField, Select, TextField, Tooltip, TooltipContent, TooltipTrigger } from "@evenkit/ui";
 import "./token-preview.css";
 
 const categories = [
@@ -115,11 +115,7 @@ export function TokenPreview({ theme, mode }: { theme: ThemeName; mode: ColorMod
         </div>
         <div className="token-filters">
           <div className="token-search">
-            <Label htmlFor={`${id}-search`}>Search tokens</Label>
-            <div className="token-search-control">
-              <SearchIcon size="sm" />
-              <Input ref={searchRef} id={`${id}-search`} type="search" placeholder="Name or value, e.g. accent or 16px" value={query} onChange={(event) => setQuery(event.target.value)} aria-describedby={`${id}-results`} />
-            </div>
+            <SearchField ref={searchRef} id={`${id}-search`} label="Search tokens" clearLabel="Clear token search" placeholder="Name or value, e.g. accent or 16px" value={query} onValueChange={setQuery} aria-describedby={`${id}-results`} />
           </div>
           <div className="token-category">
             <Label htmlFor={`${id}-category`}>Token category</Label>

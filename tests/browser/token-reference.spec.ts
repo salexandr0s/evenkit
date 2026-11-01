@@ -17,6 +17,11 @@ test("token reference keeps search, copying and contrast tied to the selected th
   const accent = list.locator('[data-token="--pk-color-accent"]');
 
   await expect(category).toHaveText("Semantic colors");
+  await search.fill("spacing");
+  await reference.getByRole("button", { name: "Clear token search", exact: true }).press("Enter");
+  await expect(search).toHaveValue("");
+  await expect(search).toBeFocused();
+  await expect(category).toHaveText("Semantic colors");
   await search.fill("--pk-color-accent");
   await expect(accent).toContainText(themes.neutral.modes.light.accent);
   await accent.getByRole("button", { name: "Copy --pk-color-accent", exact: true }).click();

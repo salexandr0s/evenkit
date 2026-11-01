@@ -17,6 +17,11 @@ test("icon reference combines aliases and categories, copies imports, and preser
   const size = reference.getByRole("combobox", { name: "Icon size", exact: true });
 
   await choose(page, "Icon category", "Actions");
+  await search.fill("missing-icon");
+  await reference.getByRole("button", { name: "Clear icon search", exact: true }).press("Enter");
+  await expect(search).toHaveValue("");
+  await expect(search).toBeFocused();
+  await expect(reference.getByRole("combobox", { name: "Icon category", exact: true })).toHaveText("Actions");
   await search.fill("delete");
   await expect(gallery.locator("[data-icon]")).toHaveCount(1);
   const trash = gallery.locator('[data-icon="TrashIcon"]');

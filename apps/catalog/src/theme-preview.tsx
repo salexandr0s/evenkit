@@ -1,6 +1,6 @@
 import { useId, type CSSProperties } from "react";
 import { themeNames, themes, type ColorMode, type ThemeName } from "@evenkit/tokens";
-import { Button, CheckIcon } from "@evenkit/ui";
+import { ArrowRightIcon, Button, ButtonLink, CheckIcon } from "@evenkit/ui";
 import "./theme-preview.css";
 
 const swatches = [
@@ -23,11 +23,14 @@ export function ThemePreview({ theme, mode, onThemeChange }: ThemePreviewProps) 
   return (
     <div className="theme-gallery">
       <div className="theme-gallery-intro">
-        <div>
+        <div className="theme-gallery-description">
           <h3>Choose a palette</h3>
           <p>Compare accent colours on neutral surfaces. Use the sun or moon button above to switch between light and dark appearance.</p>
         </div>
-        <p className="theme-gallery-current" role="status">Using <strong>{themes[theme].name}</strong><span>{mode}</span></p>
+        <div className="theme-gallery-actions">
+          <p className="theme-gallery-current" role="status">Using <strong>{themes[theme].name}</strong><span>{mode}</span></p>
+          <ButtonLink href="#tokens" variant="link" size="sm" endIcon={<ArrowRightIcon size="sm" />}>Inspect tokens</ButtonLink>
+        </div>
       </div>
       <div className="theme-gallery-grid">
         {themeNames.map((name) => {

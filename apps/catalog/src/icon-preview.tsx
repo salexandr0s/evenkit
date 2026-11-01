@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { foundation } from "@evenkit/tokens";
-import { ActionMessage, Badge, BellIcon, Button, CheckIcon, CopyIcon, EmptyState, FilterXIcon, IconButton, IconProvider, Input, Label, PlusIcon, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconAnimation, type IconSize } from "@evenkit/ui";
+import { ActionMessage, Badge, BellIcon, Button, CheckIcon, CopyIcon, EmptyState, FilterXIcon, IconButton, IconProvider, Label, PlusIcon, SearchField, SearchIcon, Select, Tooltip, TooltipContent, TooltipTrigger, type IconAnimation, type IconSize } from "@evenkit/ui";
 import { iconCategories, icons, type IconCategory } from "./icon-data";
 import "./icon-preview.css";
 
@@ -75,8 +75,7 @@ export function IconPreview() {
           </section>
           <div className="icon-filters">
             <div className="icon-search-field">
-              <Label htmlFor={`${id}-search`}>Search icons</Label>
-              <div className="icon-search-control"><SearchIcon size="sm" /><Input ref={searchRef} id={`${id}-search`} type="search" placeholder="Try delete, directory, or arrow" value={query} onChange={(event) => setQuery(event.target.value)} aria-describedby={`${id}-results`} /></div>
+              <SearchField ref={searchRef} id={`${id}-search`} label="Search icons" clearLabel="Clear icon search" placeholder="Try delete, directory, or arrow" value={query} onValueChange={setQuery} aria-describedby={`${id}-results`} />
             </div>
             <div className="icon-category-field">
               <Label htmlFor={`${id}-category`}>Icon category</Label>
