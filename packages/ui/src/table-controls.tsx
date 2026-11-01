@@ -29,10 +29,12 @@ export function SortControl({ fields, value, onValueChange, label = "Sort record
       <Select ref={fieldRef} id={`${id}-field`} aria-label={`${label}: field`} controlSize="sm" disabled={disabled} value={value?.id ?? ""} placeholder="Default order"
         options={fields.map(field => ({ value: field.id, label: field.label, ...(field.disabled !== undefined ? { disabled: field.disabled } : {}) }))}
         onValueChange={field => onValueChange({ id: field, direction: value?.direction ?? "asc" })} />
-      <Select aria-label={`${label}: direction`} controlSize="sm" disabled={disabled || value === null} value={value?.direction ?? "asc"}
-        options={[{ value: "asc", label: "Ascending" }, { value: "desc", label: "Descending" }]}
-        onValueChange={direction => { if (value && (direction === "asc" || direction === "desc")) onValueChange({ ...value, direction }); }} />
-      {value ? <IconButton size="sm" label={`Clear ${label.toLowerCase()}`} disabled={disabled} onClick={() => { fieldRef.current?.focus(); onValueChange(null); }}><XIcon size="sm" /></IconButton> : null}
+      <div className="pk-sort-control-order">
+        <Select aria-label={`${label}: direction`} controlSize="sm" disabled={disabled || value === null} value={value?.direction ?? "asc"}
+          options={[{ value: "asc", label: "Ascending" }, { value: "desc", label: "Descending" }]}
+          onValueChange={direction => { if (value && (direction === "asc" || direction === "desc")) onValueChange({ ...value, direction }); }} />
+        {value ? <IconButton size="sm" label={`Clear ${label.toLowerCase()}`} disabled={disabled} onClick={() => { fieldRef.current?.focus(); onValueChange(null); }}><XIcon size="sm" /></IconButton> : null}
+      </div>
     </div>
   </div>;
 }
