@@ -8,4 +8,7 @@
 .pk-multi-remove:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
 .pk-multi-remove:disabled { opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
 .pk-multi-count { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-variant-numeric: tabular-nums; }
-@media (max-width: 639px), (pointer: coarse) { .pk-multi-remove { min-width: var(--pk-layout-touch); min-height: var(--pk-layout-touch); } }
+@media (max-width: 639px), (pointer: coarse) {
+  .pk-multi-token:has(.pk-multi-remove) { padding-block: var(--pk-space-0); }
+  .pk-multi-remove { min-width: var(--pk-layout-touch); min-height: var(--pk-layout-touch); }
+}

@@ -25,6 +25,9 @@
 .selection-preview-projects[data-mode="cards"] > li { flex-direction: column; align-items: flex-start; padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); }
 .selection-preview-reference { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: var(--pk-space-4); padding: var(--pk-space-4); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-surface); }
 .selection-preview-reference > code { box-sizing: border-box; display: flex; align-items: center; min-height: var(--pk-control-height-md); }
+.selection-preview-reference > .pk-copy-action { display: contents; }
+.selection-preview-reference > .pk-copy-action > .pk-button { grid-column: 2; grid-row: 1; }
+.selection-preview-reference .pk-copy-feedback[data-error] { grid-column: 1 / -1; }
 .selection-preview-progress-card { display: grid; gap: var(--pk-space-4); padding: var(--pk-space-5); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-lg); background: var(--pk-color-surface); }
 .selection-preview-progress-card > p, .selection-preview-storage-note { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
-@media (max-width: 639px) { .selection-preview-projects[data-mode="cards"], .selection-preview-reference { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 639px) { .selection-preview-projects[data-mode="cards"] { grid-template-columns: minmax(0, 1fr); } }

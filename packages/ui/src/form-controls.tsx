@@ -243,7 +243,7 @@ function ChoiceInput({ inputProps, inputRef, controlId, labelId, descriptionIds,
       <span className="pk-combobox-actions">
         <TooltipProvider>
           {clearable && !inputProps.readOnly ? <Tooltip><TooltipTrigger asChild><ComboboxPrimitive.Clear className="pk-combobox-action" aria-label={clearLabel}><XIcon size="sm" /></ComboboxPrimitive.Clear></TooltipTrigger><TooltipContent>{clearLabel}</TooltipContent></Tooltip> : null}
-          <Tooltip><TooltipTrigger asChild><Trigger className="pk-combobox-action pk-combobox-trigger" aria-label={openLabel}><ChevronDownIcon size="sm" /></Trigger></TooltipTrigger><TooltipContent>{openLabel}</TooltipContent></Tooltip>
+          {!inputProps.readOnly ? <Tooltip><TooltipTrigger asChild><Trigger className="pk-combobox-action pk-combobox-trigger" aria-label={openLabel}><ChevronDownIcon size="sm" /></Trigger></TooltipTrigger><TooltipContent>{openLabel}</TooltipContent></Tooltip> : null}
         </TooltipProvider>
       </span>
     </Group>
