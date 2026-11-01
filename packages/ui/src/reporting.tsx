@@ -3,7 +3,8 @@
 import { useCallback, useId, useRef, type ReactNode, type RefObject } from "react";
 import { Button, ButtonLink } from "./button.js";
 import { classes } from "./classes.js";
-import { CircleAlertIcon, CircleCheckIcon, DownloadIcon } from "./icons.js";
+import { IconButton } from "./icon-button.js";
+import { CircleAlertIcon, CircleCheckIcon, DownloadIcon, RotateCcwIcon, XIcon } from "./icons.js";
 import { Progress } from "./selection-controls.js";
 import { SelectField, type SelectOption } from "./select.js";
 
@@ -44,7 +45,7 @@ export function ReportingControls({ period, comparison, unit, filters, onApply, 
     </fieldset>
     {onApply || onReset ? <div className="pk-reporting-actions">
       {onApply ? <Button size="sm" aria-describedby={`${id}-status`} disabled={disabled} aria-disabled={pending || undefined} onClick={() => { if (!pending) onApply(); }}>Apply report</Button> : null}
-      {onReset ? <Button size="sm" variant="ghost" disabled={disabled} onClick={onReset}>Reset report</Button> : null}
+      {onReset ? <IconButton label="Reset report" size="sm" variant="ghost" disabled={disabled} onClick={onReset}><RotateCcwIcon size="sm" /></IconButton> : null}
     </div> : null}
     <p id={`${id}-status`} className={classes("pk-reporting-status", !pending && !(dirty && onApply) && !status && "pk-visually-hidden")} role="status">{pending ? "Updating report…" : dirty && onApply ? "Changes have not been applied." : status}</p>
   </div>;
@@ -87,10 +88,10 @@ export function ExportAction({ state, onPrepare, onCancel, onRetry, label = "Exp
   const message = state.status === "idle" ? "" : state.message ?? (state.status === "ready" ? "Your export is ready to download." : state.status === "progress" ? "Preparing your file…" : "Preparing export…");
   return <div className={classes("pk-export-action", className)} data-state={state.status} role="group" aria-label={label}>
     <div className="pk-export-buttons">
-      <Button ref={prepareRef} variant="outline" disabled={disabled} aria-disabled={pending || undefined} aria-describedby={`${id}-status`} startIcon={<DownloadIcon size="sm" />} onClick={() => { if (!pending) { if (state.status === "error") (onRetry ?? onPrepare)(); else onPrepare(); } }}>
-        {state.status === "error" ? "Retry export" : state.status === "ready" ? "Prepare another export" : label}
-      </Button>
-      {pending && onCancel ? <Button ref={cancelRef} variant="ghost" disabled={disabled} onClick={() => { prepareRef.current?.focus(); onCancel(); }}>Cancel export</Button> : null}
+      <IconButton ref={prepareRef} label={state.status === "error" ? "Retry export" : state.status === "ready" ? "Prepare another export" : label} variant="outline" disabled={disabled} aria-disabled={pending || undefined} aria-describedby={`${id}-status`} onClick={() => { if (!pending) { if (state.status === "error") (onRetry ?? onPrepare)(); else onPrepare(); } }}>
+        {state.status === "error" || state.status === "ready" ? <RotateCcwIcon size="sm" /> : <DownloadIcon size="sm" />}
+      </IconButton>
+      {pending && onCancel ? <IconButton ref={cancelRef} label="Cancel export" variant="ghost" disabled={disabled} onClick={() => { prepareRef.current?.focus(); onCancel(); }}><XIcon size="sm" /></IconButton> : null}
       {state.status === "ready" ? <ButtonLink ref={downloadRef} href={disabled ? undefined : state.href} download={state.fileName ?? true} aria-disabled={disabled || undefined} tabIndex={disabled ? -1 : undefined}>Download export</ButtonLink> : null}
     </div>
     <div className={classes("pk-export-feedback", !pending && !message && "pk-visually-hidden")}>

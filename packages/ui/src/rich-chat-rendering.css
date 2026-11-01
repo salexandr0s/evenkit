@@ -36,8 +36,7 @@
 .pk-code-block-header .pk-copy-action > .pk-button { grid-area: 1 / 2; align-self: center; color: var(--pk-color-fg-muted); }
 .pk-code-block-header .pk-copy-action > .pk-button:hover { color: var(--pk-color-fg); }
 .pk-code-block-header .pk-copy-action .pk-button-label { gap: 0; }
-.pk-code-block-header .pk-copy-action .pk-button-text { display: none; }
-.pk-code-block-header .pk-copy-feedback { grid-area: 1 / 1; align-items: center; min-block-size: 0; gap: var(--pk-space-1-5); font-size: var(--pk-font-size-xs); line-height: var(--pk-font-line-height-normal); }
+.pk-code-block-header .pk-copy-feedback { grid-area: 1 / 1; position: static; inline-size: auto; block-size: auto; margin: 0; overflow: visible; clip-path: none; white-space: normal; align-items: center; min-block-size: 0; gap: var(--pk-space-1-5); font-size: var(--pk-font-size-xs); line-height: var(--pk-font-line-height-normal); }
 .pk-code-block-header .pk-copy-feedback > .pk-icon { margin-block-start: 0; }
 .pk-code-block-header:has(.pk-copy-action:not([data-status="idle"])) .pk-code-block-language { visibility: hidden; }
 /* Measure translated feedback in the same cell to keep every copy state stable. */

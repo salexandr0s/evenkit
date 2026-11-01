@@ -1,7 +1,7 @@
 "use client";
 
-import { forwardRef, useRef, useState, type ComponentPropsWithoutRef, type ForwardedRef, type ReactNode } from "react";
-import { Button } from "./button.js";
+import { forwardRef, useCallback, useLayoutEffect, useRef, useState, type ComponentPropsWithoutRef, type ForwardedRef, type ReactNode } from "react";
+import { IconButton } from "./icon-button.js";
 import { classes } from "./classes.js";
 import { Spinner } from "./feedback.js";
 import { FileTextIcon, RotateCcwIcon } from "./icons.js";
@@ -25,6 +25,16 @@ function ImageFrame({ src, alt, aspectRatio = 4 / 3, fit = "cover", fallback = "
   const [source, setSource] = useState(src);
   const frame = useRef<HTMLDivElement>(null);
   const retry = useRef<HTMLButtonElement>(null);
+  const recoverFocus = useRef(false);
+  const setRetry = useCallback((node: HTMLButtonElement | null) => {
+    if (!node && retry.current === retry.current?.ownerDocument.activeElement) recoverFocus.current = true;
+    retry.current = node;
+  }, []);
+  useLayoutEffect(() => {
+    if (!recoverFocus.current) return;
+    recoverFocus.current = false;
+    frame.current?.focus({ preventScroll: true });
+  });
   // Reset before painting a replacement source while retaining the frame and
   // its focus target when a host replaces a failed URL during retry.
   if (source !== src) { setSource(src); setState("loading"); setAttempt(0); }
@@ -39,7 +49,7 @@ function ImageFrame({ src, alt, aspectRatio = 4 / 3, fit = "cover", fallback = "
     {state === "loading" ? <span className="pk-image-loading" aria-hidden="true"><Spinner size="sm" /></span> : null}
     {state === "error" || (attempt > 0 && state === "loading") ? <div className="pk-image-fallback">
       <span role={alt ? "img" : undefined} aria-label={alt || undefined} aria-hidden={!alt || undefined}><FileTextIcon aria-hidden="true" /><span>{fallback}</span></span>
-      {retryable ? <Button ref={retry} size="xs" variant="outline" aria-label={retryLabel} aria-disabled={state === "loading" || undefined} onClick={() => { if (state === "loading") return; frame.current?.focus(); setState("loading"); setAttempt(value => value + 1); onRetry?.(); }} startIcon={<RotateCcwIcon size="sm" />}>{retryLabel}</Button> : null}
+      {retryable ? <IconButton ref={setRetry} label={retryLabel} variant="outline" aria-disabled={state === "loading" || undefined} onClick={() => { if (state === "loading") return; frame.current?.focus(); setState("loading"); setAttempt(value => value + 1); onRetry?.(); }}><RotateCcwIcon size="sm" /></IconButton> : null}
     </div> : null}
   </div>;
 }

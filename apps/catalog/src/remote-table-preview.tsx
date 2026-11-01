@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { ActionMessage, Badge, BulkActionBar, Button, ColumnSettings, DataTable, SortControl, useRemoteTable, useTableSelection, type DataTableColumn, type DataTableQuery, type RemoteTableLoadContext, type TableSort } from "@evenkit/ui";
+import { ActionMessage, ArchiveIcon, Badge, BulkActionBar, Button, ColumnSettings, DataTable, IconButton, SortControl, useRemoteTable, useTableSelection, type DataTableColumn, type DataTableQuery, type RemoteTableLoadContext, type TableSort } from "@evenkit/ui";
 import "./remote-table-preview.css";
 
 interface Project { id: string; name: string; owner: string; budget: number; status: string }
@@ -61,13 +61,13 @@ function RemoteExample() {
     <DataTable data={result.data} columns={columns} getRowId={row => row.id} caption="Remote projects" searchLabel="Search remote projects"
       remote={{ query, total: result.total, onQueryChange: setQuery }} loading={result.loading} error={result.error} onRetry={result.retry}
       initialPageSize={5} pageSizeOptions={[5, 10]} hiddenColumnIds={hiddenIds} density={density}
-      selection={{ ...selection, getRowLabel: row => row.name, scopeLabel: "Records across pages of this search", actions: <Button size="sm" variant="outline" onClick={() => {
+      selection={{ ...selection, getRowLabel: row => row.name, scopeLabel: "Records across pages of this search", actions: <IconButton label="Archive selected" onClick={() => {
         const ids = selection.selectedIds;
         retryRef.current?.focus();
         setProjects(current => current.filter(row => !ids.includes(row.id)));
         selection.onSelectionChange([]);
         setMessage(`${ids.length} selected ${ids.length === 1 ? "project" : "projects"} archived.`);
-      }}>Archive selected</Button> }}
+      }}><ArchiveIcon size="sm" /></IconButton> }}
       toolbar={<><SortControl fields={sortFields} value={query.sort} onValueChange={sort => setQuery(current => ({ ...current, sort, pageIndex: 0 }))} /><ColumnSettings columns={settings} hiddenIds={hiddenIds} onHiddenIdsChange={setHiddenIds} density={density} onDensityChange={setDensity} /></>} />
     <p role="status" aria-label="Bulk action result" className="remote-table-preview-note">{message}</p>
     <section className="remote-table-preview-options"><h3>Preview options</h3><div><Button ref={retryRef} variant="outline" size="sm" onClick={() => { failNext.current = true; result.retry(); }}>Fail next request</Button><Button variant="ghost" size="sm" onClick={() => { failNext.current = false; setProjects(initialProjects); setQuery(initialQuery); selection.onSelectionChange([]); setMessage(""); result.retry(); }}>Reset directory</Button></div><p>Selection survives pagination and sorting. Changing the search clears it. Requests stay local to this preview.</p></section>

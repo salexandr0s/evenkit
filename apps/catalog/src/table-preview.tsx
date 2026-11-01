@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, DataTable, Label, Select, type DataTableColumn } from "@evenkit/ui";
+import { ArchiveIcon, Button, DataTable, EyeIcon, IconButton, Label, Select, XIcon, type DataTableColumn } from "@evenkit/ui";
 import { getProjectId, projectColumns, projects, type PreviewProject } from "./project-data";
 import "./table-preview.css";
 
@@ -97,7 +97,7 @@ export function TablePreview() {
   const columns: readonly DataTableColumn<TableProject>[] = [
     ...previewProjectColumns,
     { id: "summary", header: "Summary", accessor: (row) => row.summary, overflow: cellText },
-    { id: "review", header: "Review", accessor: () => "", sortable: false, searchable: false, cell: (row) => <Button size="sm" variant="outline" aria-label={`Review ${row.name}`} onClick={() => openReview(row)}>Review</Button> },
+    { id: "review", header: "Review", accessor: () => "", sortable: false, searchable: false, cell: (row) => <IconButton label="Review" aria-label={`Review ${row.name}`} onClick={() => openReview(row)}><EyeIcon size="sm" /></IconButton> },
   ];
 
   return (
@@ -126,7 +126,7 @@ export function TablePreview() {
         emptyDescription="Restore the fictional projects to explore search, selection, and row actions."
         emptyAction={<Button size="sm" variant="outline" onClick={restoreProjects}>Restore preview projects</Button>}
         toolbar={<span className="catalog-caption">Local data</span>}
-        selection={{ selectedIds, onSelectionChange: setSelectedIds, getRowLabel: (row) => row.name, actions: <Button size="sm" variant="outline" disabled={unavailable || selectedIds.length === 0} onClick={archiveSelected}>Archive selected</Button> }}
+        selection={{ selectedIds, onSelectionChange: setSelectedIds, getRowLabel: (row) => row.name, actions: <IconButton label="Archive selected" disabled={unavailable || selectedIds.length === 0} onClick={archiveSelected}><ArchiveIcon size="sm" /></IconButton> }}
       />
       <p className="table-preview-result" role="status" aria-label="Archive result" aria-atomic="true">{archiveResult}</p>
       <section className="table-preview-review" aria-label="Project review">
@@ -134,7 +134,7 @@ export function TablePreview() {
         {reviewProject ? <>
           <p>{reviewProject.summary}</p>
           <dl><div><dt>Owner</dt><dd>{reviewProject.owner}</dd></div><div><dt>Members</dt><dd>{reviewProject.members}</dd></div><div><dt>Status</dt><dd>{reviewProject.status}</dd></div></dl>
-          <div><Button size="sm" variant="outline" onClick={closeReview}>Close project review</Button></div>
+          <div><IconButton label="Close project review" onClick={closeReview}><XIcon size="sm" /></IconButton></div>
         </> : <p>Choose Review beside a project to inspect its details here.</p>}
       </section>
     </section>

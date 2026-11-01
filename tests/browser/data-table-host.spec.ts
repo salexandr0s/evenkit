@@ -105,3 +105,89 @@ test("async loading recovers disabled or removed controls without taking host fo
   await expect(region).toHaveAttribute("aria-busy", "true");
   await expect(outside).toBeFocused();
 });
+
+test("host column removal recovers owned focus without reclaiming relinquished focus", async ({ page }) => {
+  const sort = page.getByRole("button", { name: "Sort by Project", exact: true });
+  const region = page.getByRole("region", { name: "Host projects table", exact: true });
+  const outside = page.getByRole("button", { name: "Outside control", exact: true });
+  for (const destination of ["column", "outside", "body"]) {
+    await page.getByRole("button", { name: "Schedule column removal", exact: true }).click();
+    await sort.focus();
+    if (destination === "outside") await outside.focus();
+    if (destination === "body") await sort.evaluate(button => { if (button instanceof HTMLElement) button.blur(); });
+    await page.clock.runFor(500);
+    await expect(sort).toHaveCount(0);
+    await expect(destination === "column" ? region : destination === "outside" ? outside : page.locator("body")).toBeFocused();
+    await page.getByRole("button", { name: "Restore records", exact: true }).click();
+  }
+});
+
+test("column settings follow the table fallback through persisted and changing columns", async ({ page }) => {
+  const settings = page.getByRole("button", { name: "Display settings", exact: true });
+  const project = page.getByRole("checkbox", { name: "Project", exact: true });
+  const actions = page.getByRole("checkbox", { name: "Actions", exact: true });
+  const hidden = page.getByLabel("Hidden column IDs", { exact: true });
+
+  await page.getByRole("button", { name: "Hide all columns", exact: true }).click();
+  await settings.click();
+  await expect(project).toBeChecked();
+  await expect(project).toBeDisabled();
+  await expect(actions).not.toBeChecked();
+  await expect(hidden).toHaveText("name,actions");
+  await actions.check();
+  await expect(actions).toBeDisabled();
+  await expect(project).not.toBeChecked();
+  await expect(hidden).toHaveText("name");
+  await expect(page.getByRole("button", { name: "Open Alpha", exact: true })).toBeVisible();
+  await expect(page.getByRole("columnheader", { name: "Project", exact: true })).toHaveCount(0);
+
+  await project.check();
+  await actions.uncheck();
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Remove project column", exact: true }).click();
+  await settings.click();
+  await expect(actions).toBeChecked();
+  await expect(actions).toBeDisabled();
+  await expect(hidden).toHaveText("actions");
+  await expect(page.getByRole("button", { name: "Open Alpha", exact: true })).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Hide all columns", exact: true }).click();
+  await page.getByRole("button", { name: "Restore required project column", exact: true }).click();
+  await settings.click();
+  await expect(project).toBeChecked();
+  await expect(project).toBeDisabled();
+  await expect(actions).not.toBeChecked();
+  await expect(hidden).toHaveText("name,actions");
+  await expect(page.getByRole("cell", { name: "Alpha", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Open Alpha", exact: true })).toHaveCount(0);
+
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Restore records", exact: true }).click();
+  await settings.click();
+  await expect(project).toBeChecked();
+  await expect(project).toBeEnabled();
+  await expect(actions).toBeChecked();
+  await expect(actions).toBeEnabled();
+  await expect(hidden).toHaveText("none");
+});
+
+for (const scoped of [false, true]) test(`${scoped ? "scoped" : "unscoped"} bulk actions stop during loading and errors and recover focus`, async ({ page }) => {
+  if (scoped) await page.getByRole("checkbox", { name: "Use selection scope", exact: true }).check();
+  await page.getByRole("checkbox", { name: "Select Alpha", exact: true }).check();
+  const action = page.getByRole("button", { name: "Archive selected", exact: true });
+  const region = page.getByRole("region", { name: "Host projects table", exact: true });
+  for (const state of ["loading", "error"]) {
+    await page.getByRole("button", { name: `Schedule ${state}`, exact: true }).click();
+    await action.focus();
+    await page.clock.runFor(500);
+    await expect(action).toBeDisabled();
+    await expect(region).toBeFocused();
+    await action.evaluate(button => { if (button instanceof HTMLButtonElement) button.click(); });
+    await expect(page.getByLabel("Bulk requests")).toHaveText("0");
+    await page.getByRole("button", { name: "Restore records", exact: true }).click();
+    await expect(action).toBeEnabled();
+  }
+  await action.click();
+  await expect(page.getByLabel("Bulk requests")).toHaveText("1");
+});

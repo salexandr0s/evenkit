@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import { themeNames } from "@evenkit/tokens";
-import { AppearancePreferences, Avatar, Button, FormSection, SaveStatus, TextField, type AppearancePreferencesProps, type AppearanceValue } from "@evenkit/ui";
+import { AppearancePreferences, Avatar, Button, FormSection, IconButton, RotateCcwIcon, SaveStatus, TextField, type AppearancePreferencesProps, type AppearanceValue } from "@evenkit/ui";
 
 export interface ProfileValue { id: string; name: string; email: string }
 export interface ProfileSettingsProps {
@@ -34,12 +34,12 @@ function ProfileForm({ profile, onSave, onSaved }: ProfileSettingsProps) {
   function reset() { request.current?.abort(); request.current = null; returnToName.current = pending; setPending(false); setDraft(saved); setAttempted(false); setError(""); setNote(""); if (!pending) name.current?.focus(); }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending) return;
+    if (request.current) return;
     setAttempted(true);
     if (!draft.name.trim()) { name.current?.focus(); return; }
     if (!draft.email.trim() || !email.current?.validity.valid) { email.current?.focus(); return; }
     const controller = new AbortController();
-    request.current?.abort(); request.current = controller; setPending(true); setError(""); setNote("");
+    request.current = controller; setPending(true); setError(""); setNote("");
     try {
       const result = await onSave({ ...draft, name: draft.name.trim(), email: draft.email.trim() }, { signal: controller.signal });
       if (controller.signal.aborted || request.current !== controller) return;
@@ -49,7 +49,7 @@ function ProfileForm({ profile, onSave, onSaved }: ProfileSettingsProps) {
       if (controller.signal.aborted || request.current !== controller) return;
       setError(failure instanceof Error ? failure.message : "Your profile could not be saved.");
     } finally {
-      if (request.current === controller) { request.current = null; returnToName.current = true; setPending(false); }
+      if (request.current === controller) { request.current = null; returnToName.current = cancel.current !== null && cancel.current.ownerDocument.activeElement === cancel.current; setPending(false); }
     }
   }
   return <form className="pk-profile-settings" aria-label="Profile settings" onSubmit={event => { void submit(event); }} onReset={event => { event.preventDefault(); reset(); }}>
@@ -59,7 +59,7 @@ function ProfileForm({ profile, onSave, onSaved }: ProfileSettingsProps) {
       <TextField ref={email} label="Email address" name="email" autoComplete="email" type="email" required disabled={pending} value={draft.email} onChange={event => update({ email: event.target.value })} onInvalid={() => setAttempted(true)} error={attempted && (!draft.email.trim() || email.current?.validity.typeMismatch) ? "Enter a valid email address." : undefined} />
     </FormSection>
     <SaveStatus state={error ? "error" : pending ? "saving" : note === "Profile saved." ? "saved" : dirty ? "dirty" : "idle"} role={error ? "alert" : "status"}>{error || (pending ? "Saving profile…" : note || (dirty ? "Unsaved changes" : "No unsaved changes"))}</SaveStatus>
-    <div className="pk-settings-actions"><Button type="submit" loading={pending} disabled={!dirty && !pending}>{error ? "Retry save" : "Save profile"}</Button><Button type="reset" variant="ghost" disabled={pending || !dirty}>Reset changes</Button>{pending ? <Button ref={cancel} variant="outline" onClick={cancelSave}>Cancel save</Button> : null}</div>
+    <div className="pk-settings-actions"><Button type="submit" loading={pending} disabled={!dirty && !pending}>{error ? "Retry save" : "Save profile"}</Button><IconButton type="reset" label="Reset changes" disabled={pending || !dirty}><RotateCcwIcon size="sm" /></IconButton>{pending ? <Button ref={cancel} variant="outline" onClick={cancelSave}>Cancel save</Button> : null}</div>
   </form>;
 }
 
@@ -98,17 +98,24 @@ function StoredAppearance({ storageKey, initialValue = defaultAppearance, onValu
   const initial = useRef(initialValue);
   const options = useRef(locales);
   options.current = locales;
+  const current = useRef<AppearanceValue | null>(null);
   const localeValues = JSON.stringify(locales.map(locale => locale.value));
   useEffect(() => {
     let restored = normalizePreferences(initial.current, options.current, initial.current);
     try { restored = readAppearance(localStorage.getItem(storageKey), options.current, initial.current) ?? restored; }
     catch { setStorageNote("Preferences are available for this visit. Browser storage is unavailable."); }
-    setValue(restored); callback.current?.(restored);
+    current.current = restored; setValue(restored); callback.current?.(restored);
     setReady(true);
-  }, [storageKey, localeValues]);
+  }, [storageKey]);
+  useEffect(() => {
+    if (!current.current) return;
+    const supported = normalizePreferences(current.current, options.current, initial.current);
+    if (supported.locale === current.current.locale) return;
+    current.current = supported; setValue(supported); callback.current?.(supported);
+  }, [localeValues]);
   function change(next: AppearanceValue) {
     const supported = normalizePreferences(next, options.current, initial.current);
-    setValue(supported); callback.current?.(supported);
+    current.current = supported; setValue(supported); callback.current?.(supported);
     try { localStorage.setItem(storageKey, JSON.stringify(supported)); setStorageNote("Preferences saved on this device."); }
     catch { setStorageNote("Preferences changed for this visit. Browser storage is unavailable."); }
   }

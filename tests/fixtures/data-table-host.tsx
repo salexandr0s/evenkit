@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Button, DataTable, type DataTableColumn } from "@evenkit/ui";
+import { Button, Checkbox, ColumnSettings, DataTable, type DataTableColumn } from "@evenkit/ui";
 import "@evenkit/tokens/css";
 import "@evenkit/ui/css";
 
@@ -27,6 +27,13 @@ const pageSizes = [2, 3] as const;
 
 function DataTableHost() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [scoped, setScoped] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<readonly string[]>([]);
+  const [actions, setActions] = useState(0);
+  const [hiddenIds, setHiddenIds] = useState<readonly string[]>([]);
+  const [availableColumns, setAvailableColumns] = useState(columns);
+  const [density, setDensity] = useState<"default" | "compact">("default");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function clearTimer() {
@@ -44,14 +51,34 @@ function DataTableHost() {
           clearTimer();
           timer.current = setTimeout(() => { timer.current = null; setLoading(true); }, 500);
         }}>Schedule loading</Button>
-        <Button onClick={() => { clearTimer(); setLoading(false); }}>Restore records</Button>
+        <Button onClick={() => {
+          clearTimer();
+          timer.current = setTimeout(() => { timer.current = null; setError("Records could not be refreshed."); }, 500);
+        }}>Schedule error</Button>
+        <Button onClick={() => {
+          clearTimer();
+          timer.current = setTimeout(() => { timer.current = null; setHiddenIds(["name"]); }, 500);
+        }}>Schedule column removal</Button>
+        <Button onClick={() => { clearTimer(); setLoading(false); setError(null); setHiddenIds([]); setAvailableColumns(columns); }}>Restore records</Button>
+        <Button onClick={() => setHiddenIds(columns.map(column => column.id))}>Hide all columns</Button>
+        <Button onClick={() => setAvailableColumns(columns.filter(column => column.id !== "name"))}>Remove project column</Button>
+        <Button onClick={() => setAvailableColumns(columns.map(column => column.id === "name" ? { ...column, hideable: false } : column))}>Restore required project column</Button>
+        <ColumnSettings columns={availableColumns.map(column => ({ id: column.id, label: column.id === "name" ? "Project" : "Actions", required: column.hideable === false }))}
+          hiddenIds={hiddenIds} onHiddenIdsChange={setHiddenIds} density={density} onDensityChange={setDensity} />
         <Button variant="outline">Outside control</Button>
+        <Checkbox label="Use selection scope" checked={scoped} onCheckedChange={value => setScoped(value === true)} />
       </div>
       <DataTable
-        data={projects} columns={columns} getRowId={getRowId}
+        data={projects} columns={availableColumns} getRowId={getRowId} hiddenColumnIds={hiddenIds} density={density}
         caption="Host projects" searchLabel="Search host projects"
-        initialPageSize={2} pageSizeOptions={pageSizes} loading={loading}
+        initialPageSize={2} pageSizeOptions={pageSizes} loading={loading} error={error}
+        selection={{ selectedIds, onSelectionChange: setSelectedIds, getRowLabel: project => project.name,
+          ...(scoped ? { scopeLabel: "Selected projects on all pages" } : {}),
+          actions: <Button onClick={() => setActions(value => value + 1)}>Archive selected</Button>,
+        }}
       />
+      <output aria-label="Bulk requests">{actions}</output>
+      <output aria-label="Hidden column IDs">{hiddenIds.join(",") || "none"}</output>
     </main>
   );
 }

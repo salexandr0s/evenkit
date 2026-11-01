@@ -1,10 +1,11 @@
 "use client";
 
 import { useLayoutEffect, useRef, type RefObject } from "react";
-import { Button, ButtonLink } from "./button.js";
+import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./dialog.js";
 import { EmptyState, Spinner } from "./feedback.js";
+import { IconButtonLink } from "./icon-button.js";
 import { DownloadIcon, ExternalLinkIcon, FileTextIcon, RotateCcwIcon } from "./icons.js";
 import { Image } from "./image.js";
 import { mediaHref, mediaPreviewKind } from "./media-preview-utils.js";
@@ -53,8 +54,8 @@ function FileActions({ file }: { file: MediaFile }) {
   const download = mediaHref(file.downloadHref);
   if (!open && !download) return null;
   return <div className="pk-file-preview-actions">
-    {open ? <ButtonLink href={open} target="_blank" rel="noopener noreferrer" size="sm" variant="ghost" startIcon={<ExternalLinkIcon />} aria-label={`Open ${file.name} in a new tab`}>Open file</ButtonLink> : null}
-    {download ? <ButtonLink href={download} download={file.name} size="sm" variant="outline" startIcon={<DownloadIcon />} aria-label={`Download ${file.name}`}>Download</ButtonLink> : null}
+    {open ? <IconButtonLink label="Open file in a new tab" href={open} target="_blank" rel="noopener noreferrer" size="sm" variant="ghost" aria-label={`Open ${file.name} in a new tab`}><ExternalLinkIcon size="sm" /></IconButtonLink> : null}
+    {download ? <IconButtonLink label="Download" href={download} download={file.name} size="sm" variant="ghost" aria-label={`Download ${file.name}`}><DownloadIcon size="sm" /></IconButtonLink> : null}
   </div>;
 }
 
@@ -84,7 +85,15 @@ export function FilePreview({ file, onRefresh, variant = "default", showActions 
         : "This preview is unavailable. The file may have moved or access may have changed.";
   function refresh() { frame.current?.focus({ preventScroll: true }); onRefresh?.(file); }
   return <section ref={frame} tabIndex={thumbnail ? undefined : -1} className={classes("pk-file-preview", className)} aria-label={`Preview of ${file.name}`} data-state={state} data-variant={variant}
-    onFocusCapture={event => { focused.current = event.target; }} onBlurCapture={event => { if (event.relatedTarget !== null) focused.current = null; }}>
+    onFocusCapture={event => { focused.current = event.target; }} onBlurCapture={event => {
+      if (event.relatedTarget !== null) focused.current = null;
+      else {
+        const previous = focused.current;
+        queueMicrotask(() => {
+          if (focused.current === previous && previous?.isConnected && previous.ownerDocument.activeElement !== previous) focused.current = null;
+        });
+      }
+    }}>
     {!thumbnail ? <div className="pk-file-preview-header"><span className="pk-file-preview-icon" aria-hidden="true"><FileTextIcon /></span><div><strong>{file.name}</strong><span>{typeLabel}</span></div></div> : null}
     <div className="pk-file-preview-stage" data-kind={kind}>
       {state === "loading" ? <div className="pk-file-preview-placeholder" role="status" tabIndex={thumbnail ? undefined : 0}><Spinner aria-hidden="true" /><span>{thumbnail ? "Loading preview…" : preview?.status === "loading" && preview.message ? preview.message : `Loading preview for ${file.name}…`}</span></div>

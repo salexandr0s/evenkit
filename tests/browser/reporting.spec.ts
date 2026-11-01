@@ -112,7 +112,7 @@ test("reporting controls invalidate prepared downloads and export transitions re
   await hostAction(page, "Fail export");
   await expect(exportGroup.getByRole("alert")).toBeVisible();
   await expect(prepare).toBeFocused();
-  await expect(prepare).toHaveText("Retry export");
+  await expect(prepare).toHaveAccessibleName("Retry export");
   await prepare.press("Enter");
   await expect(exportGroup).toHaveAttribute("data-state", "preparing");
   await exportGroup.getByRole("button", { name: "Cancel export", exact: true }).click();

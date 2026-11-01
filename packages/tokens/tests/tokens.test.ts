@@ -8,8 +8,10 @@ import {
   cssVariables,
   foundation,
   generateCss,
+  metadata,
   themeNames,
   themes,
+  tokenDocument,
 } from "../src/index.js";
 
 describe("theme trust boundary", () => {
@@ -89,6 +91,29 @@ describe("theme trust boundary", () => {
     expect(() => createBrandCss(input)).toThrow();
   });
 
+  it("rejects status colors that pass on tinted backgrounds but disappear on ordinary surfaces", () => {
+    for (const mode of colorModes) {
+      for (const [role, minimum] of [["success", 4.5], ["warning", 3]] as const) {
+        const input = structuredClone(themes.neutral);
+        const colors = input.modes[mode];
+        colors[role] = mode === "light" ? "#FFFFFF" : "#000000";
+        colors[`${role}-bg`] = mode === "light" ? "#000000" : "#FFFFFF";
+        expect(contrastRatio(colors[role], colors[`${role}-bg`])).toBe(21);
+
+        const result = brandSchema.safeParse(input);
+        expect(result.success).toBe(false);
+        if (!result.success) {
+          for (const background of ["bg", "bg-muted", "surface", "surface-elevated"] as const) {
+            expect(contrastRatio(colors[role], colors[background])).toBeLessThan(minimum);
+            expect(result.error.issues.some((issue) => issue.path.join(".") === `modes.${mode}.${role}`
+              && issue.message.includes(`against ${background} is`))).toBe(true);
+          }
+        }
+        expect(() => createBrandCss(input)).toThrow();
+      }
+    }
+  });
+
   it("requires safe chart colors and validates every series on plotting surfaces", () => {
     for (const role of ["chart-series-1", "chart-series-2", "chart-series-3", "chart-series-4", "chart-series-5", "chart-series-6"] as const) {
       const base = structuredClone(themes.neutral);
@@ -131,6 +156,31 @@ describe("theme trust boundary", () => {
 });
 
 describe("portable token output", () => {
+  it("prevents runtime mutations from diverging direct tokens, CSS, and JSON", () => {
+    const css = generateCss();
+    const json = JSON.stringify(tokenDocument);
+    const variables = cssVariables("neutral", "light");
+    const mutations = [
+      [foundation, "space", {}],
+      [foundation.space, "4", "999px"],
+      [foundation.palette.neutral, "0", "#000000"],
+      [metadata, "version", "changed"],
+      [metadata.source, "sha256", "changed"],
+      [themes.neutral.modes.light, "accent", "#FFFFFF"],
+    ] as const;
+    for (const [target, key, value] of mutations) {
+      const original = Reflect.get(target, key);
+      try {
+        expect(Reflect.set(target, key, value), key).toBe(false);
+      } finally {
+        Reflect.set(target, key, original);
+      }
+    }
+    expect(generateCss()).toBe(css);
+    expect(JSON.stringify(tokenDocument)).toBe(json);
+    expect(cssVariables("neutral", "light")).toEqual(variables);
+  });
+
   it("generates deterministic fully resolved CSS with document-only selectors", () => {
     const css = generateCss();
     expect(css).toBe(generateCss());

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { AppliedFilters, Badge, Button, CircleCheckIcon, DataTable, Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, FilterBar, FormSection, Inline, PageHeader, PlusIcon, SaveStatus, SearchField, SelectField, Stack, TextareaField, TextField, type DataTableColumn } from "@evenkit/ui";
+import { AppliedFilters, Badge, Button, CircleCheckIcon, DataTable, Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, FilterBar, FormSection, IconButton, Inline, PageHeader, PencilIcon, PlusIcon, RotateCcwIcon, SaveStatus, SearchField, SelectField, Stack, TextareaField, TextField, type DataTableColumn } from "@evenkit/ui";
 
 export interface WorkflowRecord { id: string; name: string; notes: string; status: "draft" | "active" }
 export interface WorkflowDraft { id?: string; name: string; notes: string; status: "draft" | "active" }
@@ -79,11 +79,11 @@ export function RecordWorkflow({ records, onSave, title = "Projects", descriptio
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!editor || pending) return;
+    if (!editor || request.current) return;
     setAttempted(true);
     if (!editor.draft.name.trim()) { nameInput.current?.focus(); return; }
     const controller = new AbortController();
-    request.current?.abort(); request.current = controller;
+    request.current = controller;
     cancelButton.current?.focus(); setPending(true); setSaveError(""); setSaveNote("");
     try {
       const saved = await onSave({ ...editor.draft, name: editor.draft.name.trim() }, { signal: controller.signal });
@@ -101,7 +101,7 @@ export function RecordWorkflow({ records, onSave, title = "Projects", descriptio
     { id: "name", header: "Project", accessor: record => record.name, overflow: "wrap", ...(onOpenRecord ? { cell: (record: WorkflowRecord) => <Button variant="link" size="sm" aria-label={`View ${record.name}`} onClick={() => onOpenRecord(record)}>{record.name}</Button> } : {}) },
     { id: "status", header: "Status", accessor: record => record.status === "active" ? "Active" : "Draft", cell: record => <Badge size="sm" tone={record.status === "active" ? "success" : "neutral"} dot>{record.status === "active" ? "Active" : "Draft"}</Badge> },
     { id: "notes", header: "Notes", accessor: record => record.notes || "No notes", overflow: "wrap", cell: record => <span style={{ display: "block", minWidth: "var(--pk-layout-sidebar)" }}>{record.notes || "No notes"}</span> },
-    { id: "actions", header: "Actions", accessor: () => "", sortable: false, searchable: false, cell: record => <Button variant="ghost" size="sm" aria-label={`Edit ${record.name}`} onClick={event => openEditor(record, event.currentTarget)}>Edit</Button> },
+    { id: "actions", header: "Actions", accessor: () => "", sortable: false, searchable: false, cell: record => <IconButton label="Edit" aria-label={`Edit ${record.name}`} onClick={event => openEditor(record, event.currentTarget)}><PencilIcon size="sm" /></IconButton> },
   ];
   return <section className="pk-record-workflow" aria-label={`${title} workflow`}>
     {!editorOnly ? <>
@@ -128,7 +128,7 @@ export function RecordWorkflow({ records, onSave, title = "Projects", descriptio
             <FormSection heading="Notes" headingAs="h3">
               <TextareaField label="Project notes" name="notes" optional value={editor?.draft.notes ?? ""} disabled={pending} onChange={event => patchDraft({ notes: event.target.value })} />
             </FormSection>
-            <Button type="button" className="pk-record-reset" size="sm" variant="ghost" disabled={pending || !dirty} onClick={resetDraft}>Reset changes</Button>
+            <IconButton className="pk-record-reset" label="Reset changes" disabled={pending || !dirty} onClick={resetDraft}><RotateCcwIcon size="sm" /></IconButton>
           </form></DialogBody>
           <DialogFooter className="pk-record-footer">
             <SaveStatus state={saveError ? "error" : pending ? "saving" : dirty ? "dirty" : "idle"} role={saveError ? "alert" : "status"} heading={saveError ? "Project was not saved" : undefined}>

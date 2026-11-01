@@ -1,4 +1,5 @@
 .command-wizard-preview { display: flex; flex-direction: column; gap: var(--pk-space-6); min-width: 0; }
+.onboarding-wizard-preview { width: 100%; max-width: var(--pk-layout-dialog-lg); }
 .command-wizard-preview h3 { margin: 0; font-size: var(--pk-font-size-lg); font-weight: var(--pk-font-weight-semibold); }
 .command-preview-intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--pk-space-4); padding-block: var(--pk-space-4); }
 .command-preview-intro p { margin: 0; max-width: var(--pk-layout-prose); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }

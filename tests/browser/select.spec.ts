@@ -57,6 +57,49 @@ test("grouped select keeps descriptions separate and recovers from required erro
   await expect(trigger).toBeFocused();
 });
 
+test("select portals close with disabled fieldsets and reject queued choices", async ({ page }) => {
+  await page.goto("/#select");
+  for (const choice of [
+    { name: "Project visibility", before: "Private", after: "Team" },
+    { name: "Long option labels", before: "Standard delivery", after: "Quarterly planning and cross-functional delivery coordination" },
+  ]) {
+    const id = await page.getByRole("combobox", { name: choice.name, exact: true }).getAttribute("id");
+    if (!id) throw new Error("Missing select ID.");
+    const trigger = page.locator(`[id=${JSON.stringify(id)}]`);
+    await trigger.evaluate(node => {
+      const field = node.closest(".pk-field");
+      if (!field) throw new Error("Missing select field.");
+      const fieldset = document.createElement("fieldset");
+      fieldset.dataset.selectTest = "";
+      field.before(fieldset); fieldset.append(field);
+    });
+    const fieldset = trigger.locator("xpath=ancestor::fieldset[1]");
+    await trigger.click();
+    await expect(page.getByRole("listbox")).toBeVisible();
+    await fieldset.evaluate(node => { (node as HTMLFieldSetElement).disabled = true; });
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(page.getByRole("listbox")).toHaveCount(0);
+    await fieldset.evaluate(node => { (node as HTMLFieldSetElement).disabled = false; });
+    for (const activation of ["pointerup", "click", "keydown"]) {
+      await trigger.click();
+      await page.getByRole("option", { name: choice.after, exact: true }).evaluate((node, type) => {
+        const fieldset = document.querySelector<HTMLFieldSetElement>("fieldset[data-select-test]");
+        if (!fieldset) throw new Error("Missing test fieldset.");
+        fieldset.disabled = true;
+        node.dispatchEvent(type === "keydown" ? new KeyboardEvent(type, { key: "Enter", bubbles: true, cancelable: true }) : new MouseEvent(type, { bubbles: true, cancelable: true }));
+      }, activation);
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+      await expect(page.getByRole("listbox")).toHaveCount(0);
+      await fieldset.evaluate(node => { (node as HTMLFieldSetElement).disabled = false; });
+      await expect(trigger).toHaveText(choice.before);
+    }
+    await trigger.click();
+    await page.getByRole("option", { name: choice.after, exact: true }).click();
+    await expect(trigger).toHaveText(choice.after);
+    await fieldset.evaluate(node => { delete (node as HTMLElement).dataset.selectTest; });
+  }
+});
+
 test("empty grouped options are focusable and recover when options arrive", async ({ page }) => {
   await page.goto("/#select");
   const trigger = page.getByRole("combobox", { name: "Available presets", exact: true });

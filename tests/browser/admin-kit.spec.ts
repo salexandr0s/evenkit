@@ -140,3 +140,33 @@ test("shell drawer closes on navigation, Escape, outside click, and container gr
   await expect(drawer).not.toBeVisible();
   await expect(trigger).toBeFocused();
 });
+
+test("shell drawer stays open for canceled, new-window, and download link activations", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/#admin-shell");
+  const shell = page.locator(".catalog-admin-preview .pk-admin-shell");
+  const trigger = shell.getByRole("button", { name: "Open navigation", exact: true });
+  await trigger.click();
+  const drawer = page.getByRole("dialog", { name: "Demo workspace navigation", exact: true });
+  const link = drawer.getByRole("link", { name: "Team", exact: true });
+
+  await link.focus();
+  await link.evaluate(element => {
+    element.addEventListener("click", event => event.preventDefault(), { once: true });
+  });
+  await link.press("Enter");
+  await expect(drawer).toHaveAttribute("data-state", "open");
+  await expect(link).toBeFocused();
+
+  for (const [attribute, value] of [["target", "_blank"], ["download", "team.html"]] as const) {
+    await link.evaluate((element, { name, content }) => element.setAttribute(name, content), { name: attribute, content: value });
+    await link.press("Enter");
+    await expect(drawer).toHaveAttribute("data-state", "open");
+    await expect(link).toBeFocused();
+    await link.evaluate((element, name) => element.removeAttribute(name), attribute);
+  }
+
+  await link.press("Enter");
+  await expect(drawer).toBeHidden();
+  await expect(trigger).toBeFocused();
+});

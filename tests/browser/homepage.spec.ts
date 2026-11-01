@@ -8,7 +8,9 @@ test("homepage opens the catalog and preserves navigation history and deep links
   await page.getByRole("link", { name: "Browse components", exact: true }).click();
   await expect(page).toHaveURL(/\/#buttons$/);
   await expect(page.getByRole("heading", { name: "Buttons", exact: true })).toBeVisible();
-  await page.getByRole("navigation", { name: "Components", exact: true }).getByRole("link", { name: "Design tokens", exact: true }).click();
+  const navigation = page.getByRole("navigation", { name: "Components", exact: true });
+  await navigation.getByRole("button", { name: "Foundations", exact: true }).click();
+  await navigation.getByRole("link", { name: "Design tokens", exact: true }).click();
   await expect(page).toHaveURL(/\/#tokens$/);
   await expect(page.getByRole("heading", { name: "Design tokens", exact: true })).toBeVisible();
   await page.getByRole("link", { name: "Evenkit home", exact: true }).click();

@@ -188,6 +188,7 @@ test("pending switches preserve focus, reject repeated activation, recover error
   await form.getByRole("button", { name: "Inspect digest" }).click();
   await expect(form.getByRole("status")).toHaveText("Weekly digest disabled.");
   await form.getByRole("button", { name: "Reset digest" }).click();
+  await page.clock.runFor(1);
   await expect(digest).toBeChecked();
   await page.setViewportSize({ width: 360, height: 900 });
   expect((await preference.boundingBox())?.height).toBeGreaterThanOrEqual(44);

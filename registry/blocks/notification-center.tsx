@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useLayoutEffect, useRef, useState } from "react";
-import { ActionMessage, Button, CheckIcon, Checkbox, EmptyState, InboxIcon, NotificationList, Pagination, Spinner, UnreadIndicator, type NotificationGroup, type NotificationOperation, type NotificationPage, type NotificationRequestContext } from "@evenkit/ui";
+import { ActionMessage, Button, CheckIcon, Checkbox, EmptyState, IconButton, InboxIcon, MailIcon, NotificationList, Pagination, Spinner, UnreadIndicator, type NotificationGroup, type NotificationOperation, type NotificationPage, type NotificationRequestContext } from "@evenkit/ui";
 
 export interface NotificationCenterProps extends NotificationPage {
   /** Change for account, workspace, filter, or other security/context boundaries. */
@@ -101,20 +101,28 @@ export function NotificationCenter({ groups, page, pageCount, contextKey, revisi
   function mark(ids: readonly string[], read: boolean) { void run({ type: "operation", operation: { type: "read", ids: [...ids], read } }); }
   const selectionState = selectedIds.length === 0 ? false : selectedIds.length === eligible.length ? true : "indeterminate";
 
-  return <section className="pk-notification-center" aria-labelledby={headingId} onFocusCapture={event => { if (event.target instanceof HTMLElement) focused.current = event.target; }}>
+  return <section className="pk-notification-center" aria-labelledby={headingId} onFocusCapture={event => { if (event.target instanceof HTMLElement) focused.current = event.target; }} onBlurCapture={event => {
+    if (event.relatedTarget !== null) focused.current = null;
+    else {
+      const previous = focused.current;
+      queueMicrotask(() => {
+        if (focused.current === previous && previous?.isConnected && previous.ownerDocument.activeElement !== previous) focused.current = null;
+      });
+    }
+  }}>
     <header className="pk-notification-header">
       <span className="pk-notification-header-icon" aria-hidden="true"><InboxIcon size="lg" /></span>
       <div className="pk-notification-header-content">
-        <div className="pk-notification-heading-row"><h2 id={headingId} ref={heading} tabIndex={-1} className="pk-notification-center-heading">{title}</h2><UnreadIndicator count={pageUnreadCount} label={`${pageUnreadCount} unread ${pageUnreadCount === 1 ? "notification" : "notifications"} on this page`} /><span className="pk-notification-unread-label" aria-hidden="true">unread</span></div>
+        <div className="pk-notification-heading-row"><h2 id={headingId} ref={heading} tabIndex={-1} className="pk-notification-center-heading">{title}</h2><span className="pk-notification-unread-summary"><UnreadIndicator count={pageUnreadCount} label={`${pageUnreadCount} unread ${pageUnreadCount === 1 ? "notification" : "notifications"} on this page`} /><span className="pk-notification-unread-label" aria-hidden="true">unread</span></span></div>
         <p className="pk-notification-context">{items.length} {items.length === 1 ? "notification" : "notifications"} on this page{pageCount > 0 ? ` · Page ${page} of ${pageCount}` : ""}</p>
       </div>
-      <Button className="pk-notification-mark-page" size="sm" variant="outline" startIcon={<CheckIcon size="sm" />} disabled={disabled || unreadIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(unreadIds, true); }}>Mark all on this page as read</Button>
+      <IconButton className="pk-notification-mark-page" label="Mark all on this page as read" variant="outline" disabled={disabled || unreadIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(unreadIds, true); }}><CheckIcon size="sm" /></IconButton>
     </header>
     <div className="pk-notification-toolbar" role="group" aria-label="Current page notification actions">
       <div className="pk-notification-selection"><Checkbox label="Select this page" checked={selectionState} disabled={disabled || eligible.length === 0} aria-disabled={busy || undefined} onCheckedChange={checked => { if (!busy) setSelected(checked === true ? eligible.map(item => item.id) : []); }} /></div>
       {selectedIds.length > 0 ? <div className="pk-notification-selection-actions">
-        <Button size="sm" variant="ghost" disabled={disabled || selectedIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(selectedIds, true); }}>Mark selected as read</Button>
-        <Button size="sm" variant="ghost" disabled={disabled || selectedIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(selectedIds, false); }}>Mark selected as unread</Button>
+        <IconButton label="Mark selected as read" disabled={disabled || selectedIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(selectedIds, true); }}><CheckIcon size="sm" /></IconButton>
+        <IconButton label="Mark selected as unread" disabled={disabled || selectedIds.length === 0} aria-disabled={busy || undefined} onClick={() => { if (!busy) mark(selectedIds, false); }}><MailIcon size="sm" /></IconButton>
       </div> : null}
       <p className="pk-notification-scope">{selectedIds.length} selected on this page. Bulk actions exclude other pages and unavailable items.</p>
     </div>

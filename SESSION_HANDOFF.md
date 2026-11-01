@@ -1,3 +1,196 @@
+# Component release: 1 November 2026
+
+The user authorized committing, pushing, merging into `main`, and deploying the reviewed component work. Release preparation uses the isolated checkout `/Users/nationalbank/.codex/worktrees/evenkit-release-2026-11-01/design-tokens`. Main's earlier sticky-sidebar change is reconciled with the current implementation: its historical notes are retained, and the newer Select/Navbar regression covers the same behavior using the current navigation scroller. Application code and tests remain identical to the reviewed `68b7232` snapshot. The separate unfinished catalog HTML, Vite and `llms/` changes remain in the original checkout.
+
+A fresh dependency installation and full production build passed in the clean release checkout. The preceding pass's complete verification is recorded below. Release logs and the final publication/deployment record are in `/Users/nationalbank/GitHub/design-tokens/.artifacts/release-2026-11-01/`; `publication.json` records the merged revision, production URL and live verification result. The established deployment target is Vercel project `prj_5K4UrqWVGwIWPIxGYAe8OkwfpxBW`, team `team_luOipoW354gDuRyyUaYVO2mg`, serving `https://evenkit.dev`. The Vercel connector lacks team access; the authenticated CLI can access this exact project and team. No project settings or default branch settings are changed.
+
+Resume with `git fetch origin`, `git log -3 origin/main --oneline`, and `vercel inspect https://evenkit.dev --scope team_luOipoW354gDuRyyUaYVO2mg`. Read the publication record for the release's final outcome. Historical implementation and verification handoffs follow.
+
+---
+
+# Third complete catalog improvement pass: 1 November 2026
+
+Status: DONE. Completed the additional improvement pass in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`, starting at `fcf175a`. All 116 catalog entries received an individual source, design and functionality review: 25 improved and 91 retained. `docs/component-pass-3-2026-11-01.md` is the ordered checklist. Detailed evidence is under `.artifacts/component-pass-3-2026-11-01/`, including 232 fresh baseline captures, final states and host probes, seven subsystem ledgers, and the combined `all-review.json`. Independent review confirmed exact coverage and no remaining code or visual findings.
+
+Twelve implementation commits:
+
+- `4ab19aa`: Avatar preserves Unicode graphemes and scales its square with enlarged initials.
+- `587400c`: theme swatches and icon-reference columns scale with their text.
+- `6eb5462`: denied or stale invitation results block native form resubmission.
+- `3a4c798`: unread count caps retain numeric order in RTL.
+- `94f1268`: ColumnSettings reflects DataTable's fallback visibility after host column changes.
+- `f28ca56`: choice controls respect canceled and external form resets, controlled ownership and later user actions. The shared internal hook preserves initial reset defaults and reconciles native form values once per accepted reset.
+- `dad0db5`: required/optional label cues retain their token spacing in RTL text.
+- `da9ec91`: ContactForm and NewsletterForm submit current native values, preserving autofill-equivalent drafts through validation and failure.
+- `71b4b95`: native website images and videos preserve their aspect ratios without overriding kit-managed Image sizing.
+- `8e501c0`: AdminShell restores owned focus when a controlled navigation group collapses.
+- `04594e4`: Navbar reuses SkipLink's native activation rules.
+- `401ac13`: StepIndicator retains its width inside a non-stretching flex container.
+
+Verification passed: full production build, final UI/catalog/admin rebuilds, workspace TypeScript and ESLint, 51 unit tests, 34 registry tests and committed-source bundle validation, 116 copied examples and 104 priority mappings. All 335 catalog Chromium journeys passed. After the last StepIndicator CSS change, its flex-host regression and the Navbar skip-link check passed on the rebuilt catalog in Chromium and WebKit. All 42 admin journeys passed across Chromium/WebKit; 14 selected WebKit catalog regressions also passed. Each browser run used an isolated output directory. The ledgers record additional source-based tests, fresh host interactions and accurately labeled text enlargement, CSS zoom and device-scale checks.
+
+A broader website-only WebKit run had 18 failures in three classes reproduced on the untouched baseline: pointer focus assumptions, native ArrowRight code scrolling, and ResizeObserver-loop events during theme resizing. The new native-form regression passes in WebKit. No assertions or native browser semantics were weakened. Firefox, physical touch/IME/autofill devices and screen-reader speech were not exercised.
+
+No required implementation work remains. Existing `apps/catalog/index.html`, `apps/catalog/vite.config.ts`, and both `apps/catalog/llms/` files remain byte-identical to the original checksums and outside these commits. No push or deployment occurred. All owned preview servers were stopped.
+
+Resume with `git status --short`, `git log -13 --oneline`, and `tail -5 .artifacts/component-pass-3-2026-11-01/catalog.log`. Rebuild after source changes with `npm run build`. For catalog verification, use an isolated output directory: `KIT_CATALOG_PORT=5892 npx playwright test --workers=2 --output=.artifacts/catalog-verification-results`. The checklist is committed; detailed artifacts are ignored by Git. Historical handoffs follow.
+
+---
+
+# Second complete catalog improvement pass: 1 November 2026
+
+Status: DONE. Completed the user-requested second additional goal in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`. The ordered checklist `docs/component-pass-2-2026-11-01.md` accounts for all 116 current entries: 29 improved and 87 retained after fresh source, visual and behavior review. The earlier pass at `4ba2f6c` was the baseline. Evidence is in `.artifacts/component-pass-2-2026-11-01/`, including 232 baseline captures, final state captures, seven subsystem ledgers and `all-review.json`. Independent review confirmed exact coverage, valid evidence and no remaining actionable findings.
+
+Seven implementation commits:
+
+- `cd8a982`: Grid reduces columns inside narrow desktop containers; SkipLink preserves native modified clicks. Sources: `packages/ui/src/foundations.{tsx,css}` plus catalog entry, contract and existing test.
+- `544a09d`: token/icon rows reuse CopyAction for local pending/success/error feedback; token workspace sample rejects whitespace. Redundant outer tooltips were removed because IconButton already supplies one.
+- `2f30bc5`: date and MultiSelect popups close during availability changes; TokenInput retains disabled drafts; password reveal retains selection direction; checkbox/radio/switch errors retain borders during interaction. Sources: date/form/multi-value controls and selection CSS.
+- `a04ca27`: breadcrumbs preserve native activation; workspace search respects IME/modified keys; step indicators adapt to container width.
+- `ea49b15`: AppearanceSettings retains visit-only preferences through supported-locale changes; DataTable restores owned focus when a host removes its column. Sources: `registry/blocks/account-settings.tsx` and `packages/ui/src/data-table.tsx`.
+- `54df876`: chart details support keyboard scrolling and correct focus recovery; tooltip values retain room and RTL numeric isolation. Sources: `packages/ui/src/chart-frame.tsx`, `chart.css`, reporting contract and host regression.
+- `dd9092d`: image, file-preview, document, audit, notification and banner lifecycles distinguish owned focus from deliberate blur. Focus recovery no longer steals the document's focus after host updates.
+
+Verification passed: full production build; workspace TypeScript and ESLint; 49 unit tests; 34 registry tests and committed registry build/validation; 116 copied examples and 104 priority mappings; all 329 catalog Chromium journeys across the full run and isolated reruns; all 42 admin journeys across Chromium/WebKit. The full catalog run passed 327 and had two trace-file ENOENT teardown failures caused by a concurrent focused run sharing `test-results`; both passed in isolated output. Final catalog rebuild and four focused journeys covered those two plus the final copy wrappers.
+
+The targeted WebKit run passed 22 tests. Its existing combined toolbar/SkipLink test failed before the new code because ordinary Tab skipped native buttons in this runner. The equivalent toolbar journey passed using Option-Tab; direct independent WebKit checks passed all four modified SkipLink clicks and ordinary activation. No product/test workaround was added. The 464 Grid geometry configurations and four last-row copy failure/retry probes passed across Chromium/WebKit. Subsystem ledgers retain additional fresh host/context and visual checks. Firefox, physical touch hardware and screen-reader speech were not exercised.
+
+No required implementation work remains. Existing `apps/catalog/index.html`, `apps/catalog/vite.config.ts` and `apps/catalog/llms/` files remain byte-identical to their original checksums and outside all commits. No push or deployment occurred. All owned verification previews were stopped.
+
+Resume with `git status --short`, `git log -8 --oneline`, and `tail -8 .artifacts/component-pass-2-2026-11-01/catalog-final.log`. Rebuild after source changes with `npm run build`. Run catalog checks with an isolated output, for example `KIT_CATALOG_PORT=5792 npx playwright test --workers=2 --output=.artifacts/catalog-verification-results`. The checklist is the committed record; detailed artifacts are ignored by Git. Historical handoffs follow.
+
+---
+
+# Complete catalog improvement pass: 1 November 2026
+
+Status: DONE. Completed the explicit goal to review every catalog item individually in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`. The ordered checklist in `docs/component-pass-2026-11-01.md` records all 116 entries: 41 improved, including shared component effects, and 75 retained after source, design, behavior and copyable-usage review. Evidence includes all 232 baseline desktop-light/mobile-dark captures, focused state captures and individual source records under `.artifacts/component-pass-2026-11-01/`. Independent review confirmed exact inventory coverage, valid evidence paths and no remaining actionable findings.
+
+Thirteen implementation commits are saved locally:
+
+- `d6612a2`: theme-to-token navigation and clearable token/icon search.
+- `bb56280`: Select respects inherited fieldset disablement, including queued portal events.
+- `164aebe`: invalid borders survive hover/focus/open states; read-only choice affordance, touch chips and copy alignment improved.
+- `cfb27bc`: Sheet notes reject whitespace, retain the draft and focus the error; copied usage matches.
+- `899341d`: cancellation releases held auth preview requests and unlocks outcome controls.
+- `53cb9ea`: CodeBlock copy icon and feedback are visible.
+- `e90ee96`: card review names include project context; mobile shortcut keys stay beside descriptions.
+- `c0e8dc4`: unavailable table data disables all native bulk controls; wrapped cells remain readable on mobile.
+- `be4e479`: sort direction and clear controls stay together; filter result wording handles one result.
+- `abd5e5a`: RecordWorkflow rejects duplicate saves before render; activity retry preserves focus on its stable region.
+- `22ce8c4`: profile forms use the form-width token; appearance panels align on desktop; onboarding preview has a bounded width.
+- `6ea93a4`: avatar saves, document restores and invitation acceptance preserve focus after users move elsewhere.
+- `36d9215`: overflowing image recovery starts at reachable content; notification counts stay with their unread label.
+
+Verification passed on the final implementation: full production build; configured workspace TypeScript and ESLint; 49 unit tests; all 314 catalog Chromium journeys; 34 affected admin journeys across Chromium/WebKit; 12 additional WebKit auth/Select/duplicate-save journeys; 116 copied examples and all 104 inventory mappings. Worker checks include paired visuals, four responsive widths where applicable, disabled/read-only/error/pending states, native semantics, keyboard recovery, RTL, long labels and reduced motion. Focused media checks also passed in WebKit.
+
+The registry suite passed 33 checks initially; its real-repository committed-source test correctly rejected the then-uncommitted avatar block. After committing all implementation changes, that focused test passed. The final committed-source registry build validated successfully. Logs are `browser.log`, `admin.log`, `webkit.log`, `build.log`, `typecheck.log`, `lint.log`, `unit.log`, `examples.log`, `registry-tests.log`, `registry-committed-retest.log` and `registry-build.log` under the pass evidence directory.
+
+No required implementation work remains. Firefox was not repeated after its previously recorded profile-launch failure. Physical touch hardware and screen-reader speech were not exercised. Existing `apps/catalog/index.html`, `apps/catalog/vite.config.ts` and `apps/catalog/llms/` edits remain byte-identical and outside these commits. No push or deployment occurred. All owned verification servers were stopped.
+
+Resume with `git status --short`, `git log -14 --oneline` and `tail -6 .artifacts/component-pass-2026-11-01/browser.log`. Rebuild after source changes with `npm run build`; rerun the catalog with `KIT_CATALOG_PORT=5698 npx playwright test --workers=2`. The complete checklist is the durable per-item record; the ignored artifact directory contains detailed source mappings, screenshots and probe logs. Historical handoffs follow.
+
+---
+
+# Component interaction improvements: 1 November 2026
+
+Status: DONE_WITH_CONCERNS. Completed this component improvement pass in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`. Firefox validation remains unavailable because its browser runtime cannot create a usable profile. Five implementation commits are saved locally:
+
+- `96f1962`: Combobox and Autocomplete close disabled fieldset popups and reject late selection; native first-legend behavior remains supported. TokenInput pastes at the caret or replaces selected text while preserving surrounding text.
+- `98a582a`: ProfileSettings rejects duplicate submissions before React renders the pending state. Save completion preserves focus elsewhere and returns focus from the disappearing Cancel button when needed.
+- `3e1d08c`: AdminShell mobile navigation preserves its drawer for canceled clicks, downloads and new-window links. Ordinary navigation still closes it.
+- `c466049`: Chat clipboard feedback follows the latest attempt. Content changes and unmount invalidate pending completions.
+- `36d8681`: Navbar clears its mobile-menu tooltip state on desktop layouts. Returning to compact navigation no longer revives a hidden tooltip that intercepts Escape from the contact dialog.
+
+Key sources are `packages/ui/src/form-controls.tsx`, `multi-value.tsx`, `admin-shell.tsx`, `navigation.tsx`, `chat-messages.tsx`, and `registry/blocks/account-settings.tsx`. Existing browser specs cover the form, sidebar, navbar and chat regressions. The new `tests/browser/profile-settings-host.spec.ts` and `tests/fixtures/profile-settings-host.tsx` use deferred saves to verify duplicate requests and focus ownership. Each defect was reproduced before its fix; independent diff review found no further actionable issues.
+
+Verification passed: full production build, configured workspace TypeScript and ESLint, all 49 unit tests, 116 copied examples and 104 inventory mappings, and registry committed-source build/inspection. Eight affected admin journeys passed in Chromium and WebKit. All six new regression cases passed in WebKit across the initial run and two corrected test reruns.
+
+The full catalog run passed 304 of 305 Chromium journeys and exposed the navbar tooltip bug above. Its trace showed the stale mobile hint consuming Escape; the strengthened regression reproduced it before the fix. Afterward, all 11 navigation journeys and the focused WebKit resize regression passed. A final UI/catalog rebuild, admin production rebuild, test TypeScript, focused lint and all 18 navbar/sidebar/tooltip journeys also passed. The unrelated catalog journeys were not repeated after this one-line navbar fix. No known implementation failure remains.
+
+Firefox could not launch because its test profile folder was unavailable, matching the earlier environment failure. Two initial WebKit checks assumed pointer clicks focus links/buttons; isolated inspection confirmed native browser behavior, so those tests now establish keyboard focus and activate with Enter. Every drawer, clipboard-state and focus assertion remains. Both corrected tests pass in Chromium and WebKit. Physical touch hardware and screen-reader speech were not exercised.
+
+Evidence is in `.artifacts/component-improvements-2026-11-01/`, with focused reproductions/reruns under `.artifacts/forms-*`, `.artifacts/navigation-*`, `.artifacts/profile-settings-*` and `.artifacts/data-chat-*`. Existing catalog HTML, Vite configuration and `llms/` edits remain byte-identical and outside these commits. No push or deployment occurred.
+
+Resume with `git status --short`, `git log -6 --oneline` and `tail -10 .artifacts/component-improvements-2026-11-01/navbar-final.log`. For the changed behaviors, run `KIT_CATALOG_PORT=5671 npx playwright test tests/browser/form-controls.spec.ts tests/browser/value-fields.spec.ts tests/browser/admin-kit.spec.ts tests/browser/chat.spec.ts tests/browser/profile-settings-host.spec.ts tests/browser/records-settings.spec.ts tests/browser/navbar-header.spec.ts`. Rebuild with `npm run build` after source changes. Owned verification servers are stopped. Historical handoffs follow.
+
+---
+
+# Token production deployment: 26 October 2026
+
+Status: DONE. Pushed the two token improvements and their handoff through commit `4fa085146792c07fedbf1e82e90a02b32f7a1fda` to `origin/codex/component-improvements`, then deployed that exact committed snapshot to `blockconsult/evenkit` at the user's request. Deployment `dpl_FnBz7HNxKssaKn61BHjGyoPLgyF9` is READY and serves both `https://evenkit.dev` and `https://www.evenkit.dev`. Its immutable URL is `https://evenkit-19pvmgo1b-blockconsult.vercel.app`.
+
+The Vercel connector lacked team access; the authenticated CLI deployed to the verified project and team. The clean Git archive excluded unfinished catalog HTML, Vite and `llms/` edits, which remain untouched locally. Vercel completed the configured production build. Both live Chromium journeys passed: token search/copy/contrast and theme switching/persistence/portals. A separate live check confirmed all eight new success/warning contrast pairs and no page errors. Browser results are in `.artifacts/token-deployment-browser-results/`.
+
+No required deployment work remains. Check deployment state with `vercel inspect https://evenkit.dev --scope team_luOipoW354gDuRyyUaYVO2mg --json`. Rerun the live journeys with `npx playwright test tests/browser/token-reference.spec.ts tests/browser/themes.spec.ts --config=.artifacts/sidebar-dropdown-live.config.ts --project=chromium --output=.artifacts/token-deployment-browser-results`. This follow-up used Chromium; the earlier implementation checks are recorded below.
+
+---
+
+# Two token improvement passes: 26 October 2026
+
+Status: DONE. Completed the requested two-pass goal in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`.
+
+Pass 1, commit `bdc7fa9`, adds missing contrast validation for success text (4.5:1) and warning icons (3:1) against ordinary document surfaces. Existing 4.5:1 checks against tinted status backgrounds remain. Both light and dark regressions prove that a readable badge pairing cannot conceal invisible status content elsewhere. All eight built-in themes pass without palette changes. Custom brands that fail these additional checks are now rejected.
+
+Pass 2, commit `9e8bd67`, freezes foundation values and metadata at runtime using the existing theme freeze implementation, extracted into `packages/tokens/src/deep-freeze.ts`. This prevents JavaScript mutations from making direct token values and JSON disagree with generated CSS. The public token types retain literal values. Custom brand configuration and returned CSS variable maps remain editable. `packages/tokens/README.md` documents both contracts; `packages/tokens/tests/tokens.test.ts` covers the regressions.
+
+Verification passed: token package build, configured workspace typecheck, focused token source/test ESLint, all 49 unit tests across 10 files, whitespace checks, and independent code review. Each pass also passed its focused token suite before proceeding. Generated `tokens.css` and `tokens.json` hashes are unchanged across pass 2. Browser tests were not rerun because generated styles and token values are unchanged.
+
+No required work remains for these two passes. Existing catalog HTML, Vite configuration and `llms/` edits remain outside the commits. No push or deployment occurred. Resume with `git status --short`, `git log -3 --oneline`, and `npm test -- packages/tokens/tests/tokens.test.ts`. Historical handoff entries follow.
+
+---
+
+# Production dropdown fix: 26 October 2026
+
+Status: DONE. Deployed committed fix `e43a8f56dbe955f78ecc257099bb1297cb433872` to the existing `blockconsult/evenkit` Vercel production project at the user's request. Deployment `dpl_Hij4NJqSsVwa8MApFjK3NxMobqFi` is READY and serves `https://evenkit.dev` and `https://www.evenkit.dev`. Its immutable URL is `https://evenkit-8g1jmg340-blockconsult.vercel.app`.
+
+The connected Vercel tool lacked team access; the authenticated local CLI had access to the exact linked project and team. Deployed a clean Git archive of the committed fix, excluding unfinished local catalog HTML, Vite and `llms/` edits. The CLI lost its build-log connection with a fetch error; inspection confirmed that the same deployment completed successfully, so no duplicate deployment was created.
+
+All 10 catalog sidebar journeys passed against `https://evenkit.dev` in Chromium and WebKit, including the audit select and navbar account menu scroll regressions, desktop sidebar controls and mobile drawer behavior. Evidence: `.artifacts/sidebar-dropdown-live.log`, `.artifacts/sidebar-dropdown-production-deployment.json`, and `.artifacts/sidebar-dropdown-live-results/`. Verify deployment state with `vercel inspect https://evenkit-8g1jmg340-blockconsult.vercel.app --scope team_luOipoW354gDuRyyUaYVO2mg`; rerun the live checks with `npx playwright test tests/browser/catalog-sidebar.spec.ts --config=.artifacts/sidebar-dropdown-live.config.ts`. No required deployment work remains. The earlier Firefox runtime gap is recorded below.
+
+---
+
+# Sidebar dropdown scroll fix: 26 October 2026
+
+Status: DONE_WITH_CONCERNS. Fixed the dropdown/sidebar shift on `codex/component-improvements`. Fresh remote inspection confirmed the earlier fix `5bfdc8e` was pushed to `origin/main` but was absent from this branch. Opening the navbar Workspace account menu reproduced the screenshot: at page scroll 531px, the outer sidebar and header moved from 0px to -531px.
+
+Restored body-only horizontal clipping in `apps/catalog/src/catalog.css`, allowing modal body scroll locks to apply to the viewport. Added two regressions in `tests/browser/catalog-sidebar.spec.ts` for the audit Actor select and navbar account menu, using the current grouped navigation scroll container. They cover sticky geometry, independent scroll positions, blocked background scrolling, selection, keyboard reopening, Escape and focus recovery. The fixed navbar probe keeps sidebar/header at 0px with page scroll unchanged.
+
+Verification passed: catalog production build, configured workspace TypeScript, full ESLint, all 27 affected Chromium journeys, and all five WebKit sidebar journeys. Independent diff review found no actionable issues. Firefox could not launch because its profile folder was unavailable; retrying with `/tmp` did not resolve the environment failure. Logs and before/after captures are `.artifacts/sidebar-dropdown-*`. Deployment status could not be read through the Vercel connector because it lacks access to the linked team; no deployment was requested. Existing catalog HTML, Vite and `llms/` edits were preserved outside this fix.
+
+Resume with `git status --short`, `git log -3 --oneline` and `npx playwright test tests/browser/catalog-sidebar.spec.ts tests/browser/navbar-header.spec.ts tests/browser/overlays.spec.ts tests/browser/select*.spec.ts`. The review preview is `http://127.0.0.1:5647/#navbar`; restart with `npm run preview --workspace @evenkit/catalog -- --port 5647 --strictPort` if needed. Firefox validation remains open until its runtime launches successfully. Historical entries below describe earlier work.
+
+---
+
+# Component icon actions: 26 October 2026
+
+Status: DONE. Completed the requested component audit and compact-action goal in `/Users/nationalbank/GitHub/design-tokens`, branch `codex/component-improvements`. Implementation commit: `0eb9ff6` (`feat(ui): compact secondary actions with accessible icons`). The component-by-component coverage and API guidance are in [compact actions](docs/compact-actions.md).
+
+Reviewed all implemented UI families, registry blocks and catalog examples. Added exported `IconButton`/`IconButtonLink` with required labels, contextual accessible names, hover/focus tooltips, native refs/events and button/link semantics. Converted familiar secondary actions throughout notifications, data/filter controls, documents/uploads/previews, teams/settings, reporting/audit, records/onboarding and chat/feedback. Tightened notification, document, audit, banner and history spacing; embedded the date-range calendar control. Updated related copied examples. Primary submissions, confirmations, choices, reasons and recovery instructions retain visible text.
+
+Key sources: `packages/ui/src/icon-button.tsx`, `notifications.tsx`/`.css`, `selection-controls.tsx`/`.css`, `navigation.tsx`/`.css`, and the affected UI modules, registry blocks and catalog previews listed by `git show --stat 0eb9ff6`. Existing tooltips already covered many controls. New icon-action tooltips unmount immediately on dismissal so retained layers cannot swallow the next Escape; the general Tooltip component keeps its motion contract. Navbar trigger tooltips unmount while the drawer is open. Grouped icons keep their fixed touch size when neighboring text grows.
+
+Verification passed: final full production build; configured TypeScript and ESLint; 47 unit tests; 116 copied examples/104 mappings; 297 catalog Chromium journeys; 63 admin journeys across Chromium/Firefox/WebKit; and independent packed Vite/Next builds, strict types, browser interaction and package boundaries. The full registry run passed 33 checks and rejected the intentionally uncommitted source; the remaining committed-source build/inspection check passed after `0eb9ff6`. The final one-line grouped-button CSS safeguard followed the full browser/packed runs, with a fresh production build, 8 passing selection journeys and direct long-label mobile LTR/RTL geometry checks (44px square, no overflow).
+
+Evidence: `.artifacts/compact-actions/` contains build/type/lint/unit/example logs, final catalog/admin/package logs, the registry run and committed-source rerun, focused reruns, notification screenshots and button-group geometry. Initial tooltip failures were fixed and the full catalog rerun passed. The first admin lazy check lacked `.artifacts/admin-integration/`; creating that expected report directory resolved it and the full admin rerun passed. No failing check or required implementation remains. Physical touch hardware and screen-reader speech were not exercised.
+
+Original catalog HTML, Vite/LLM plugin edits remain untouched and uncommitted. Concurrent sidebar work was committed separately by its owner during this session; it is outside the icon-action implementation commit. No push, publication, deployment or migration occurred. A preview started by this chat remains at `http://127.0.0.1:5636/#notification-center` for review.
+
+Resume with `git status --short`, `git log -5 --oneline`, and `cat docs/compact-actions.md`. Rebuild with `npm run build` after code changes. Start the review preview with `npm run preview --workspace @evenkit/catalog -- --port 5636 --strictPort` if it has stopped. Registered block source must match a committed revision before registry build/inspection.
+
+---
+
+# Completed worktree integration: 26 October 2026
+
+Target: `/Users/nationalbank/GitHub/design-tokens`, branch `codex/component-improvements`. Ten completed source worktree snapshots, including feature refinements, the admin starter, registry tooling and the shared design pass, are integrated through code merge `8187a1a`. Earlier main/auth history is retained. See [the merge review](docs/worktree-merge-review.md) for source cutoffs and conflict decisions.
+
+Verification passed: final production build in the integration and primary checkouts; configured TypeScript/ESLint; 47 unit tests; 34 registry tests; 116 copied examples/104 mappings; 296 catalog Chromium journeys; 63 admin journeys across Chromium, Firefox and WebKit; and 11 affected catalog plus 12 affected admin reruns after the final compatibility/recovery fixes. Independent packed Vite/Next consumers passed all 23 installed blocks, SSR/HTTP/CSS, auth, keyboard/form and package-boundary checks. Copied website consumers, registry viewer and deferred-bundle checks also passed. The packed fixture now gates its trigger on actual hydration and retains failure diagnostics without weakening interaction assertions.
+
+The original uncommitted catalog HTML and two LLM-source files are byte-identical. Vite retains the original LLM plugin with the merged manifest setting. Preservation hashes and verification evidence are in `.artifacts/worktree-integration/`, copied from the temporary integration checkout. Owned fixture servers/scratch were cleaned; other chats' worktrees and servers were preserved. New UI/sidebar edits started after the recorded design snapshot and remain uncommitted in the primary checkout, outside this merge. The recorded checks apply to the integrated cutoffs, not those ongoing edits. The app rejected archiving the integration checkout because it is this task's primary checkout; it is retained with a clean verified snapshot.
+
+No push, publication, deployment or existing-application migration occurred. Physical devices, screen-reader speech and live provider/storage behavior were not newly exercised. No required work remains for this merge. Resume with `git status --short`, `git log -5 --oneline` and `cat docs/worktree-merge-review.md`. Historical entries below retain their original snapshot context.
+
+---
+
 # Sidebar dropdown fix: 26 October 2026
 
 Status: DONE. Fixed catalog sidebar/header jumping upward when a main-content dropdown opens on a scrolled page. Horizontal clipping now applies only to the body, preserving viewport scroll locking and sticky positioning. Added a regression covering both scroll positions, selection, Escape, focus recovery and blocked background scrolling. Reproduced in all three browser engines; 17 Chromium journeys and six Firefox/WebKit sidebar journeys pass, as do catalog build, configured types and full lint. Before/after evidence and details are appended to `docs/design-pass-review.md`. Committed and merged into local `main`; no push or deployment.
@@ -826,3 +1019,19 @@ Physical phones/tablets, installed Safari, screen readers, forced-color modes, o
 ## Continue from here
 
 Use the isolated branch for review/adoption. The working tree is intended to be clean after the final documentation commit. Logs under `.artifacts/` are local ignored evidence; commands, tests, source handoffs and the integration record are tracked. Rebuild before independent consumer checks; registered source files must match committed blobs. There is no pending publication, deployment, migration or production verification step authorized by this task.
+
+## Catalog sidebar organization — 26 October 2026
+
+Completed the sidebar organization goal. The catalog's 116 entries now appear once each in 13 collapsible sections, with section icons/counts and more distinct table, chart, file, authentication and settings icons. Open sections persist locally; search exposes matching destinations across closed sections and clearing it restores the saved choices. Deep links and history reveal the selected section and scroll only the navigation region. Brand/footer stay visible in the desktop sidebar and mobile drawer. Existing AdminShell groups remain static unless the host supplies expansion state and a callback.
+
+Source: `apps/catalog/src/catalog-navigation.tsx`, `apps/catalog/src/catalog.tsx`, `packages/ui/src/admin-shell.tsx`, `packages/ui/src/admin-shell.css`. README documents the section API. Browser changes are in `catalog-sidebar.spec.ts`, `catalog.spec.ts`, `homepage.spec.ts` and `themes.spec.ts`.
+
+Verification: UI and catalog production builds, root `npm run typecheck`, focused ESLint and `git diff --check` passed. The five focused catalog spec files passed 34 journeys (33 in the initial run plus the new inventory/section journey after correcting its loading readiness); shared sidebar/admin shell specs passed 11 journeys. An independent browser review confirmed sidebar-only scrolling, Escape dismissal and focus preservation for compact group tooltips, and search-result activation. Desktop, rail and 360px mobile captures were inspected. Logs and captures are under `.artifacts/sidebar-*`; browser traces use `.artifacts/sidebar-browser*` and `.artifacts/sidebar-shell-browser`.
+
+Local preview: `http://127.0.0.1:5397/#buttons`, started with `npm run preview --workspace @evenkit/catalog -- --port 5397 --strictPort`. Rebuild packages before the catalog when package source changes. No sidebar work remains; deployment was not requested. Other concurrent working-tree changes were preserved and are outside this goal.
+
+### Sidebar motion follow-up: 26 October 2026
+
+Section expansion and collapse now animate their intrinsic height with the existing 160ms standard easing; chevrons use the same timing. Collapsing content becomes inert and hidden from accessibility immediately. Reduced motion removes the transition. Active-link reveal observes the animated region so route navigation still reaches its destination, and focus rings remain inside the clipping region. Static navigation groups retain unclipped content.
+
+Verification: UI/catalog builds, root typecheck, focused ESLint and whitespace checks passed. All 14 catalog-sidebar/shared-shell browser journeys passed. A frame-by-frame browser probe measured multiple intermediate heights in both directions, zero final closed height, correct reversal after rapid toggles, and an immediate full-height change with reduced motion. Final focus-ring CSS adjustments were rebuilt after those checks. Preview remains at `http://127.0.0.1:5397/#buttons`; reload to load the new assets.

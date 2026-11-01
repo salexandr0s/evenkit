@@ -5,7 +5,7 @@
 .pk-image[data-state="loading"] .pk-image-content { opacity: 0; }
 .pk-image[data-state="error"] .pk-image-content { display: none; }
 .pk-image-loading { display: grid; position: absolute; inset: 0; place-items: center; }
-.pk-image-fallback { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--pk-space-3); padding: var(--pk-space-3); box-sizing: border-box; font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); text-align: center; overflow: auto; }
+.pk-image-fallback { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: safe center; gap: var(--pk-space-3); padding: var(--pk-space-3); box-sizing: border-box; font-size: var(--pk-font-size-sm); line-height: var(--pk-font-line-height-normal); text-align: center; overflow: auto; }
 .pk-image-fallback > span { display: flex; flex-direction: column; align-items: center; gap: var(--pk-space-2); max-width: 100%; overflow-wrap: anywhere; }
 .pk-image-fallback .pk-button { max-width: 100%; }
 .pk-thumbnail { flex: none; }

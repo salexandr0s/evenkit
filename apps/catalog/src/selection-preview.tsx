@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, ButtonGroup, Checkbox, CheckboxGroup, CopyAction, Meter, Progress, RadioGroup, SegmentedControl, Switch, Toggle, ToggleGroup, ToggleGroupItem } from "@evenkit/ui";
+import { Button, ButtonGroup, Checkbox, CheckboxGroup, CopyAction, EyeIcon, IconButton, Meter, Progress, RadioGroup, SegmentedControl, Switch, Toggle, ToggleGroup, ToggleGroupItem } from "@evenkit/ui";
 import "./selection-preview.css";
 
 function CheckboxPreview() {
@@ -148,7 +148,7 @@ function GroupPreview() {
   const [message, setMessage] = useState("Choose an action to try the group.");
   return <section className="selection-preview" aria-label="Button group example">
     <header className="selection-preview-heading"><p className="selection-preview-context">Review notes</p><h3>Document actions</h3><p>Save your draft, check the preview, or request a review.</p></header>
-    <div className="selection-preview-stack"><p className="selection-preview-context">Draft controls</p><ButtonGroup label="Document actions" joined><Button variant="outline" onClick={() => setMessage("The sample document was saved.")}>Save document</Button><Button variant="outline" onClick={() => setMessage("The sample preview is open.")}>Preview</Button><Button variant="outline" disabled>Publish</Button></ButtonGroup></div>
+    <div className="selection-preview-stack"><p className="selection-preview-context">Draft controls</p><ButtonGroup label="Document actions" joined><Button variant="outline" onClick={() => setMessage("The sample document was saved.")}>Save document</Button><IconButton label="Preview" size="md" variant="outline" onClick={() => setMessage("The sample preview is open.")}><EyeIcon /></IconButton><Button variant="outline" disabled>Publish</Button></ButtonGroup></div>
     <div className="selection-preview-stack selection-preview-section"><p className="selection-preview-context">Review request</p><ButtonGroup label="Review actions" orientation="vertical"><Button variant="outline" onClick={() => setMessage("The regional review was requested.")}>Request a review from the regional operations team</Button><Button variant="ghost" onClick={() => setMessage("The review request was cancelled.")}>Cancel request</Button></ButtonGroup></div>
     <p role="status">{message}</p>
   </section>;
@@ -164,7 +164,7 @@ function CopyPreview() {
   }
   return <section className="selection-preview" aria-label="Clipboard recovery example">
     <header className="selection-preview-heading"><p className="selection-preview-context">Project reference</p><h3>Copy and share</h3><p>Keep a project reference ready for your next message.</p></header>
-    <div className="selection-preview-reference"><code>{sample}</code><CopyAction text={sample} writeText={writeText}>Copy project reference</CopyAction></div>
+    <div className="selection-preview-reference"><code>{sample}</code><CopyAction text={sample} shape="icon" size="sm" aria-label="Copy project reference" writeText={writeText}>Copy project reference</CopyAction></div>
     <div className="selection-preview-stack selection-preview-section"><Checkbox label="Simulate clipboard failure" checked={simulateFailure} onCheckedChange={next => setSimulateFailure(next === true)} hint="Turn this off to retry using your clipboard." /><Button variant="outline" onClick={() => setSample(value => value === "project:field-notes" ? "project:release-plan" : "project:field-notes")}>Change reference</Button></div>
   </section>;
 }

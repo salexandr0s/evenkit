@@ -43,7 +43,7 @@ function FiltersExample({ appliedInitially = false }: { appliedInitially?: boole
   function clear() { setDraft(""); setQuery(""); setDraftStatus("all"); setStatus("all"); }
   return <div className="workflows-preview">
     <div className="workflows-preview-toolbar"><div><h3>Project directory</h3><p className="workflows-preview-note">Find a project by name or status. Apply your changes to update the list.</p></div></div>
-    <FilterBar aria-label="Sample project filters" dirty={draft !== query || draftStatus !== status} onApply={() => { setQuery(draft.trim()); setDraft(draft.trim()); setStatus(draftStatus); }} onClear={() => commit(clear)} status={`${items.length} matching projects.`}>
+    <FilterBar aria-label="Sample project filters" dirty={draft !== query || draftStatus !== status} onApply={() => { setQuery(draft.trim()); setDraft(draft.trim()); setStatus(draftStatus); }} onClear={() => commit(clear)} status={`${items.length} matching ${items.length === 1 ? "project" : "projects"}.`}>
       <TextField label="Search project names" type="search" value={draft} onChange={event => setDraft(event.target.value)} />
       <SelectField label="Filter status" options={[{ value: "all", label: "All statuses" }, { value: "active", label: "Active" }, { value: "draft", label: "Draft" }]} value={draftStatus} onValueChange={setDraftStatus} />
     </FilterBar>

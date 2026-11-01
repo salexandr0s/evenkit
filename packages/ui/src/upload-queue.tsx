@@ -5,6 +5,8 @@ import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { FileInput, FileRow, type FileSelection } from "./data-workflows.js";
 import { Thumbnail } from "./image.js";
+import { IconButton } from "./icon-button.js";
+import { TrashIcon, XIcon } from "./icons.js";
 import { UploadQueueStore, type UploadAddResult, type UploadItem, type UploadQueueOptions, type UploadRejection } from "./upload-queue-utils.js";
 
 export type { UploadState, UploadResult, UploadItem, UploadContext, UploadTransport, UploadQueueOptions, UploadRejection, UploadAddResult } from "./upload-queue-utils.js";
@@ -89,8 +91,8 @@ export function UploadQueue({ queue, label, hint, accept, maxBytes, disabled = f
     {rejected.length ? <ul className="pk-file-errors" role="alert">{rejected.map((rejection, index) => <li key={index}>{rejection.message}</li>)}</ul> : null}
     <div className="pk-upload-summary"><p role="status" aria-atomic="true">{items.length ? summary : emptyMessage}</p><div className="pk-upload-actions">
       {queued ? <Button variant="outline" size="sm" onClick={() => { picker.current?.focus(); queue.start(); }}>Start queued files</Button> : null}
-      {active || queued ? <Button variant="ghost" size="sm" onClick={() => { picker.current?.focus(); queue.cancelAll(); }}>Cancel pending</Button> : null}
-      {complete ? <Button variant="ghost" size="sm" onClick={() => { picker.current?.focus(); queue.clearCompleted(); }}>Clear completed</Button> : null}
+      {active || queued ? <IconButton label="Cancel pending" variant="ghost" size="sm" onClick={() => { picker.current?.focus(); queue.cancelAll(); }}><XIcon size="sm" /></IconButton> : null}
+      {complete ? <IconButton label="Clear completed" variant="ghost" size="sm" onClick={() => { picker.current?.focus(); queue.clearCompleted(); }}><TrashIcon size="sm" /></IconButton> : null}
     </div></div>
     {items.length ? <ul className="pk-upload-list" aria-label="Upload queue">{items.map(item => <UploadQueueRow key={item.id} item={item} queue={rowQueue} showPreview={showPreviews} locale={locale} />)}</ul> : null}
   </fieldset>;

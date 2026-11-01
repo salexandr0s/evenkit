@@ -2,9 +2,10 @@
 
 import { useId, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { Button } from "./button.js";
+import { IconButton } from "./icon-button.js";
 import { classes } from "./classes.js";
 import { ActionMessage, Badge, Spinner, type ActionMessageTone } from "./feedback.js";
-import { ClockIcon, KeyRoundIcon, RotateCcwIcon } from "./icons.js";
+import { ClockIcon, KeyRoundIcon, RotateCcwIcon, XIcon } from "./icons.js";
 import { WifiIcon } from "./icons-technology.js";
 
 export interface FeedbackRequestContext { signal: AbortSignal; contextKey: string }
@@ -101,7 +102,15 @@ export function PersistentBanner({ contextKey, revision = 0, heading, children, 
     }
   }
 
-  return <div ref={region} role="region" tabIndex={-1} aria-labelledby={headingId} className={classes("pk-persistent-banner", className)} onFocusCapture={event => { focused.current = event.target; }} onBlurCapture={event => { if (event.relatedTarget instanceof HTMLElement && !event.currentTarget.contains(event.relatedTarget)) focused.current = null; }}>
+  return <div ref={region} role="region" tabIndex={-1} aria-labelledby={headingId} className={classes("pk-persistent-banner", className)} onFocusCapture={event => { focused.current = event.target; }} onBlurCapture={event => {
+    if (event.relatedTarget !== null) focused.current = null;
+    else {
+      const previous = focused.current;
+      queueMicrotask(() => {
+        if (focused.current === previous && previous?.isConnected && previous.ownerDocument.activeElement !== previous) focused.current = null;
+      });
+    }
+  }}>
     <ActionMessage role="group" tone={tone} icon={icon} heading={<span id={headingId}>{heading}</span>} actions={actions.length || dismissal ? <>
       {actions.map(action => <span key={action.id} className="pk-banner-action">
         <Button ref={node => { if (node) controls.current.set(`action:${action.id}`, node); else controls.current.delete(`action:${action.id}`); }} variant="outline" size="sm" aria-disabled={pending !== null || Boolean(action.unavailable)} aria-busy={pending === `action:${action.id}` || undefined} aria-describedby={action.unavailable ? `${headingId}-${action.id}` : undefined} onClick={() => { void run(`action:${action.id}`); }}>
@@ -109,7 +118,7 @@ export function PersistentBanner({ contextKey, revision = 0, heading, children, 
         </Button>
         {action.unavailable ? <span id={`${headingId}-${action.id}`} className="pk-banner-note">{action.unavailable}</span> : null}
       </span>)}
-      {dismissal ? <Button ref={node => { if (node) controls.current.set("dismiss", node); else controls.current.delete("dismiss"); }} variant="ghost" size="sm" aria-disabled={pending !== null} aria-busy={pending === "dismiss" || undefined} onClick={() => { void run("dismiss"); }}>{pending === "dismiss" ? <Spinner size="sm" aria-hidden="true" /> : null}{dismissal.label ?? "Dismiss notice"}</Button> : null}
+      {dismissal ? <IconButton ref={node => { if (node) controls.current.set("dismiss", node); else controls.current.delete("dismiss"); }} label={dismissal.label ?? "Dismiss notice"} variant="ghost" size="sm" aria-disabled={pending !== null} aria-busy={pending === "dismiss" || undefined} onClick={() => { void run("dismiss"); }}>{pending === "dismiss" ? <Spinner size="sm" aria-hidden="true" /> : <XIcon size="sm" />}</IconButton> : null}
     </> : undefined}>{children}</ActionMessage>
     {failure ? <ActionMessage role="group" tone="error" heading="Action could not be completed" actions={<Button ref={retry} variant="outline" size="sm" aria-disabled={pending !== null} aria-busy={pending === failure.id || undefined} onClick={() => { void run(failure.id); }}>Retry action</Button>}>{failure.message}</ActionMessage> : null}
     <span className="pk-visually-hidden" aria-live={urgency} aria-atomic="true">{announcement}{note ? ` ${note}` : ""}</span>
@@ -149,5 +158,5 @@ export interface UnreadIndicatorProps {
 }
 export function UnreadIndicator({ count, label, className }: UnreadIndicatorProps) {
   const safeCount = Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0;
-  return <span className={classes("pk-unread-indicator", className)}><Badge tone={safeCount ? "accent" : "neutral"} aria-hidden="true">{safeCount > 99 ? "99+" : safeCount}</Badge><span className="pk-visually-hidden">{label ?? `${safeCount} unread ${safeCount === 1 ? "notification" : "notifications"}`}</span></span>;
+  return <span className={classes("pk-unread-indicator", className)}><Badge dir="ltr" tone={safeCount ? "accent" : "neutral"} aria-hidden="true">{safeCount > 99 ? "99+" : safeCount}</Badge><span className="pk-visually-hidden">{label ?? `${safeCount} unread ${safeCount === 1 ? "notification" : "notifications"}`}</span></span>;
 }

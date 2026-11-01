@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import {
-  ActionGroup, Avatar, AvatarGroup, Badge, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader,
-  Container, DataList, DataListItem, Grid, Heading, Inline, Kbd, ListItem, LiveStatus,
+  ActionGroup, ArchiveIcon, Avatar, AvatarGroup, Badge, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader,
+  Container, DataList, DataListItem, EyeIcon, Grid, Heading, IconButton, Inline, Kbd, ListItem, LiveStatus,
   PageHeader, PlusIcon, Prose, SectionHeader, Separator, SkipLink, Stack, Tag, TagGroup,
   VisuallyHidden,
 } from "@evenkit/ui";
@@ -42,7 +42,7 @@ function CardPreview() {
     { variant: "outline", name: "Annual review", detail: "Bring the year's project outcomes together for the team review.", owner: "Sam Rivera", status: "Planned" },
     { variant: "ghost", name: "Workspace guide", detail: "Keep the team's decisions and working agreements easy to find.", owner: "Robin Chen", status: "Draft" },
   ] as const;
-  return <Stack gap="6"><Grid gap="6">{projects.map(project => <Card key={project.variant} variant={project.variant}><CardHeader><Inline justify="between" className="foundations-preview-card-label"><Badge tone={project.variant === "default" ? "accent" : "neutral"}>{project.status}</Badge><span className="pk-caption">{project.variant}</span></Inline><h3>{project.name}</h3></CardHeader><CardBody className="foundations-preview-card-body"><Stack gap="6"><p className="pk-text-muted">{project.detail}</p><Inline gap="2" className="foundations-preview-card-owner"><Avatar name={project.owner} size="sm" decorative /><div><strong className="foundations-preview-owner">{project.owner}</strong><p className="pk-caption">Project owner</p></div></Inline></Stack></CardBody><CardFooter className="foundations-preview-card-footer"><span className="pk-caption">Studio workspace</span><Button variant="outline" onClick={() => setMessage(`Review opened for the ${project.variant} example.`)}>Review project</Button></CardFooter></Card>)}</Grid><LiveStatus className="foundations-preview-status">{message}</LiveStatus></Stack>;
+  return <Stack gap="6"><Grid gap="6">{projects.map(project => <Card key={project.variant} variant={project.variant}><CardHeader><Inline justify="between" className="foundations-preview-card-label"><Badge tone={project.variant === "default" ? "accent" : "neutral"}>{project.status}</Badge><span className="pk-caption">{project.variant}</span></Inline><h3>{project.name}</h3></CardHeader><CardBody className="foundations-preview-card-body"><Stack gap="6"><p className="pk-text-muted">{project.detail}</p><Inline gap="2" className="foundations-preview-card-owner"><Avatar name={project.owner} size="sm" decorative /><div><strong className="foundations-preview-owner">{project.owner}</strong><p className="pk-caption">Project owner</p></div></Inline></Stack></CardBody><CardFooter className="foundations-preview-card-footer"><span className="pk-caption">Studio workspace</span><Button variant="outline" aria-label={`Review project: ${project.name}`} onClick={() => setMessage(`${project.name} is open for review.`)}>Review project</Button></CardFooter></Card>)}</Grid><LiveStatus className="foundations-preview-status">{message}</LiveStatus></Stack>;
 }
 
 function HeaderPreview() {
@@ -53,7 +53,7 @@ function HeaderPreview() {
 
 function ActionGroupPreview() {
   const [message, setMessage] = useState("The draft is ready for review.");
-  return <Stack gap="6"><Inline justify="between"><Stack gap="1"><Heading as="h3" size="4">Website refresh</Heading><p className="pk-text-muted">Project brief</p></Stack><Badge>Draft</Badge></Inline><div className="foundations-preview-action-bar"><ActionGroup label="Draft actions"><Button onClick={() => setMessage("Draft saved.")}>Save draft</Button><Button variant="outline" onClick={() => setMessage("Preview opened.")}>Preview</Button><Separator orientation="vertical" /><Button variant="ghost" onClick={() => setMessage("Draft archived.")}>Archive</Button><Button disabled variant="outline">Publish</Button></ActionGroup><LiveStatus className="foundations-preview-status">{message}</LiveStatus></div><p className="pk-caption">Save your changes before publishing. Use Tab to move through the available actions.</p></Stack>;
+  return <Stack gap="6"><Inline justify="between"><Stack gap="1"><Heading as="h3" size="4">Website refresh</Heading><p className="pk-text-muted">Project brief</p></Stack><Badge>Draft</Badge></Inline><div className="foundations-preview-action-bar"><ActionGroup label="Draft actions"><Button onClick={() => setMessage("Draft saved.")}>Save draft</Button><IconButton label="Preview" size="md" variant="outline" onClick={() => setMessage("Preview opened.")}><EyeIcon /></IconButton><Separator orientation="vertical" /><IconButton label="Archive" size="md" onClick={() => setMessage("Draft archived.")}><ArchiveIcon /></IconButton><Button disabled variant="outline">Publish</Button></ActionGroup><LiveStatus className="foundations-preview-status">{message}</LiveStatus></div><p className="pk-caption">Save your changes before publishing. Use Tab to move through the available actions.</p></Stack>;
 }
 
 function AccessibilityPreview() {

@@ -89,7 +89,7 @@ function AppearanceExample() {
   useEffect(() => { const media = window.matchMedia("(prefers-color-scheme: dark)"); const change = () => setSystemDark(media.matches); media.addEventListener("change", change); return () => media.removeEventListener("change", change); }, []);
   const mode = appearance.mode === "system" ? systemDark ? "dark" : "light" : appearance.mode;
   const sampleStyle: CSSProperties = { ...cssVariables(appearance.theme, mode), colorScheme: mode };
-  return <div className="account-record-preview">
+  return <div className="account-record-preview account-appearance-preview">
     <AppearanceSettings storageKey="evenkit.demo.appearance" locales={appearanceLocales} onValueChange={setAppearance} />
     <div className="account-appearance-sample" style={sampleStyle} data-kit-theme={appearance.theme} data-kit-mode={mode} data-density={appearance.density ?? "default"} data-locale={appearance.locale ?? "en-US"}>
       <div><span className="account-appearance-label">Preview</span><h3>Your workspace</h3><p>This sample uses your chosen appearance.</p></div>

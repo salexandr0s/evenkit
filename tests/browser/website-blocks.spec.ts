@@ -114,6 +114,38 @@ test("contact validation, pending and failure recovery retain the editable draft
   await expect(form.getByRole("checkbox")).not.toBeChecked();
 });
 
+test("website forms submit native filled values and retain them through validation and failure", async ({ page }) => {
+  await page.goto("/#website-forms");
+  for (const name of ["Contact the fictional studio", "Fictional field notes"]) {
+    const form = page.getByRole("form", { name, exact: true });
+    await form.getByRole("checkbox").check();
+    await page.getByRole("checkbox", { name: "Fail the next submission", exact: true }).check();
+    // Autofill and host integrations can populate native controls without React change events.
+    await form.evaluate(element => {
+      if (!(element instanceof HTMLFormElement)) throw new Error("Expected form");
+      for (const [field, value] of Object.entries({ name: "Native filled name", email: "invalid", organization: "Native group", message: "Native filled message" })) {
+        const input = element.elements.namedItem(field);
+        if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) input.value = value;
+      }
+      element.requestSubmit();
+    });
+    await expect(form.locator(".pk-form-summary")).toBeFocused();
+    await expect(form.locator(".pk-form-summary").getByRole("link")).toHaveCount(1);
+    const email = form.getByRole("textbox", { name: "Email", exact: true });
+    await expect(email).toHaveValue("invalid");
+    if (name === "Contact the fictional studio") {
+      await expect(form.getByRole("textbox", { name: "Name", exact: true })).toHaveValue("Native filled name");
+      await expect(form.getByRole("textbox", { name: "Message", exact: true })).toHaveValue("Native filled message");
+    }
+    await email.evaluate(element => { if (element instanceof HTMLInputElement) element.value = "native@example.test"; });
+    await form.evaluate(element => { if (element instanceof HTMLFormElement) element.requestSubmit(); });
+    await expect(form.getByRole("alert")).toBeFocused();
+    await expect(email).toHaveValue("native@example.test");
+    await form.getByRole("button", { name: "Try again", exact: true }).click();
+    await expect(form.locator('.pk-action-message[data-tone="success"]')).toBeFocused();
+  }
+});
+
 test("newsletter consent, retry and reset remain independent of the contact form", async ({ page }) => {
   await page.goto("/#website-forms");
   const form = page.getByRole("form", { name: "Fictional field notes", exact: true });

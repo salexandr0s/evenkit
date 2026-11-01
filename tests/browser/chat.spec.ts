@@ -195,3 +195,51 @@ test("streaming respects reading position and finished responses can be copied a
   const content = await chat.locator(".pk-chat-message-content").last().textContent();
   await expect(page.locator("html")).toHaveAttribute("data-copied-chat-text", content!);
 });
+
+test("chat copy feedback follows the latest clipboard attempt when writes finish out of order", async ({ page }) => {
+  await page.addInitScript(() => {
+    let attempt = 0;
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: {
+      writeText: () => new Promise<void>((resolve, reject) => {
+        const current = ++attempt;
+        document.documentElement.dataset.copyAttempt = String(current);
+        window.addEventListener(`settle-copy-${current}`, event => {
+          if ((event as CustomEvent<boolean>).detail) resolve();
+          else reject(new Error("Clipboard unavailable"));
+        }, { once: true });
+      }),
+    } });
+  });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/#chat");
+  const chat = page.locator(".chat-preview-panel");
+  await chat.getByRole("button", { name: "Theme setup", exact: true }).click();
+  const message = chat.locator('.pk-chat-message[data-role="assistant"]');
+  const copy = message.locator(".pk-chat-message-actions button");
+  async function settle(attempt: number, success: boolean) {
+    await page.evaluate(async ({ attempt, success }) => {
+      window.dispatchEvent(new CustomEvent(`settle-copy-${attempt}`, { detail: success }));
+      await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+    }, { attempt, success });
+  }
+
+  await copy.focus();
+  await copy.press("Enter");
+  await copy.press("Enter");
+  await expect(page.locator("html")).toHaveAttribute("data-copy-attempt", "2");
+  await settle(2, true);
+  await expect(copy).toHaveAccessibleName("Copied");
+  await settle(1, false);
+  await expect(copy).toHaveAccessibleName("Copied");
+  await expect(message.getByRole("status")).toHaveText("Copied");
+
+  await copy.press("Enter");
+  await copy.press("Enter");
+  await expect(page.locator("html")).toHaveAttribute("data-copy-attempt", "4");
+  await settle(4, false);
+  await expect(message.getByRole("status")).toContainText("Could not copy");
+  await settle(3, true);
+  await expect(message.getByRole("status")).toContainText("Could not copy");
+  await expect(copy).toHaveAccessibleName("Copy response");
+  await expect(copy).toBeFocused();
+});

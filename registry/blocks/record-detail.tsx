@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { ActivityTimeline, Badge, Button, DataList, DataListItem, PageHeader, Tabs, TabsContent, TabsList, TabsTrigger, type ActivityGroup } from "@evenkit/ui";
+import { ActivityTimeline, ArrowLeftIcon, Badge, DataList, DataListItem, IconButton, PageHeader, PencilIcon, Tabs, TabsContent, TabsList, TabsTrigger, type ActivityGroup } from "@evenkit/ui";
 import { RecordWorkflow, type WorkflowRecord, type RecordWorkflowProps } from "./record-workflow";
 
 export interface RecordMetadata { id: string; label: string; value: ReactNode }
@@ -31,8 +31,8 @@ export function RecordDetail({ record, metadata, activity, timeZone, locale = "e
   useLayoutEffect(() => { if (!editing && returning.current) { returning.current = false; editButton.current?.focus(); } }, [editing]);
   function closeEditor() { returning.current = true; setEditing(false); }
   return <section className="pk-record-detail" aria-label={`${record.name} details`}>
-    <Button variant="ghost" size="sm" onClick={onBack}>{backLabel}</Button>
-    <PageHeader ref={heading} tabIndex={-1} headingAs="h2" title={record.name} description={record.notes || "No description has been added."} metadata={<Badge dot tone={record.status === "active" ? "success" : "neutral"}>{record.status === "active" ? "Active" : "Draft"}</Badge>} actions={<><Button ref={editButton} variant="outline" onClick={() => { setResult(""); setEditing(true); }}>Edit project</Button>{actions}</>} />
+    <IconButton label={backLabel} onClick={onBack}><ArrowLeftIcon size="sm" /></IconButton>
+    <PageHeader ref={heading} tabIndex={-1} headingAs="h2" title={record.name} description={record.notes || "No description has been added."} metadata={<Badge dot tone={record.status === "active" ? "success" : "neutral"}>{record.status === "active" ? "Active" : "Draft"}</Badge>} actions={<><IconButton ref={editButton} label="Edit project" variant="outline" onClick={() => { setResult(""); setEditing(true); }}><PencilIcon size="sm" /></IconButton>{actions}</>} />
     <Tabs defaultValue="overview">
       <TabsList aria-label="Project detail sections"><TabsTrigger value="overview">Overview</TabsTrigger><TabsTrigger value="activity">Activity</TabsTrigger></TabsList>
       <TabsContent value="overview"><DataList>{metadata.map(item => <DataListItem key={item.id} term={item.label}>{item.value ?? "Not provided"}</DataListItem>)}</DataList></TabsContent>

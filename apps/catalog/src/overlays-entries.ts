@@ -105,23 +105,27 @@ export function DeleteProject({ remove }: { remove: () => Promise<void> }) {
     description: "Modal side panels with logical placement, scrolling bodies, persistent actions, and dialog focus recovery.",
     tags: ["sheet", "drawer", "side panel", "scroll", "start", "end", "F04"],
     source: "Existing kit Dialog with logical side-panel layout", sourceUrl: "https://www.radix-ui.com/primitives/docs/components/dialog",
-    usage: imports + `import { useId, useState } from "react";
+    usage: imports + `import { useId, useRef, useState } from "react";
 import { Button, TextareaField, Sheet, SheetTrigger, SheetContent, SheetHeader,
   SheetTitle, SheetDescription, SheetBody, SheetFooter, SheetClose } from "@evenkit/ui";
 
 export function ProjectNotes({ onSave }: { onSave: (notes: string) => void }) {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState("");
+  const notes = useRef<HTMLTextAreaElement>(null);
   const form = useId();
-  return <Sheet open={open} onOpenChange={setOpen}>
+  return <Sheet open={open} onOpenChange={next => { setOpen(next); if (next) setError(""); }}>
     <SheetTrigger asChild><Button>Edit notes</Button></SheetTrigger>
     <SheetContent side="end">
       <SheetHeader><SheetTitle>Project notes</SheetTitle>
         <SheetDescription>Update the review brief.</SheetDescription></SheetHeader>
-      <SheetBody><form id={form} onSubmit={event => {
+      <SheetBody><form id={form} noValidate onSubmit={event => {
         event.preventDefault();
-        onSave(String(new FormData(event.currentTarget).get("notes") ?? ""));
+        const value = String(new FormData(event.currentTarget).get("notes") ?? "").trim();
+        if (!value) { setError("Enter notes."); notes.current?.focus(); return; }
+        onSave(value);
         setOpen(false);
-      }}><TextareaField label="Notes" name="notes" required /></form></SheetBody>
+      }}><TextareaField ref={notes} label="Notes" name="notes" required error={error} onChange={() => setError("")} /></form></SheetBody>
       <SheetFooter><SheetClose asChild><Button variant="outline">Cancel</Button></SheetClose>
         <Button type="submit" form={form}>Save notes</Button></SheetFooter>
     </SheetContent>

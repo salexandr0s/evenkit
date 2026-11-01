@@ -1,6 +1,7 @@
 "use client";
 
 export { Button, ButtonLink, type ButtonProps, type ButtonLinkProps, type ButtonVariant, type ButtonShape, type ButtonSize, type ControlSize } from "./button.js";
+export { IconButton, IconButtonLink, type IconButtonProps, type IconButtonLinkProps } from "./icon-button.js";
 export { Input, Textarea, Label, TextField, TextareaField, type InputProps, type TextareaProps, type LabelProps, type TextFieldProps, type TextareaFieldProps } from "./field.js";
 export { Select, SelectField, type SelectProps, type SelectFieldProps, type SelectOption, type SelectOptionGroup } from "./select.js";
 export { Dialog, DialogTrigger, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter, type DialogContentProps, type DialogSize } from "./dialog.js";

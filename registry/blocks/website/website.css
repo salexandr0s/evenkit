@@ -65,6 +65,7 @@
 .pk-website-faq-layout > *,
 .pk-website-footer-main > * { min-inline-size: 0; max-inline-size: 100%; }
 .pk-website-media { min-inline-size: 0; }
+.pk-website-media :where(img, video):not(.pk-image-content) { block-size: auto; }
 .pk-website-media .pk-image {
   border: var(--pk-border-width-hairline) solid var(--pk-color-border);
   border-radius: var(--pk-radius-lg);

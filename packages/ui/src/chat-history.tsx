@@ -2,6 +2,7 @@
 
 import { useId, useState, type Ref } from "react";
 import { Button } from "./button.js";
+import { IconButton } from "./icon-button.js";
 import { Input } from "./field.js";
 import { MessageSquareIcon, PlusIcon, SearchIcon, TrashIcon } from "./icons.js";
 import type { ChatConversation, ChatLabels } from "./chat-types.js";
@@ -25,7 +26,7 @@ export function ChatHistory({ conversations, activeConversationId, labels, searc
   return <>
     <div className="pk-chat-history-heading">
       <h3>{labels.history}</h3>
-      {onNew && <Button variant="outline" fullWidth startIcon={<PlusIcon />} onClick={() => { setQuery(""); onNew(); }}>{labels.newChat}</Button>}
+      {onNew && <IconButton label={labels.newChat} size="sm" onClick={() => { setQuery(""); onNew(); }}><PlusIcon size="sm" /></IconButton>}
       <label htmlFor={searchId} className="pk-chat-visually-hidden">{labels.searchChats}</label>
       <Input id={searchId} ref={searchRef} type="search" placeholder={labels.searchChats} value={query} onChange={event => setQuery(event.target.value)} startAdornment={<SearchIcon size="sm" />} />
     </div>

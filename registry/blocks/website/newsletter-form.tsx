@@ -65,15 +65,19 @@ export function NewsletterForm({ heading, description, headingAs = "h2", onSubmi
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending || submission.status === "sent") return;
+    const data = new FormData(event.currentTarget);
+    const email = data.get("email");
+    const current: NewsletterFormValues = { email: typeof email === "string" ? email : "", consent: consent ? data.has("consent") : null };
+    setValues(current);
     const next: Errors = {};
-    if (!values.email.trim() || emailField.current?.validity.typeMismatch) next.email = copy.invalidEmail;
-    if (consent?.required && !values.consent) next.consent = consent.errorMessage;
+    if (!current.email.trim() || emailField.current?.validity.typeMismatch) next.email = copy.invalidEmail;
+    if (consent?.required && !current.consent) next.consent = consent.errorMessage;
     focusSummary.current = Object.keys(next).length > 0;
     setErrors(next);
     if (Object.keys(next).length) return;
     // Keep keyboard focus in the form before its fields become disabled.
     if (event.currentTarget.contains(document.activeElement)) submitButton.current?.focus();
-    void submission.send({ email: values.email.trim(), consent: consent ? values.consent === true : null });
+    void submission.send({ email: current.email.trim(), consent: current.consent });
   }
 
   function startAgain() {

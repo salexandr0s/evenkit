@@ -26,7 +26,7 @@
 .pk-avatar-upload-files .pk-file-row { padding: var(--pk-space-3); border: var(--pk-border-width-hairline) solid var(--pk-color-border); border-radius: var(--pk-radius-md); background: var(--pk-color-bg-muted); }
 .pk-avatar-upload-files .pk-file-row-icon { width: var(--pk-space-8); height: var(--pk-space-8); background: var(--pk-color-surface); }
 .pk-avatar-upload-files :is(.pk-file-metadata, .pk-file-message) { font-size: var(--pk-font-size-xs); }
-.pk-avatar-upload-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-1) var(--pk-space-2); margin-inline-start: calc(var(--pk-space-3) * -1); }
+.pk-avatar-upload-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pk-space-1); }
 .pk-avatar-upload-actions:empty { display: none; }
 .pk-avatar-upload-actions > .pk-button[data-variant="ghost"] { color: var(--pk-color-fg-muted); }
 .pk-avatar-upload-actions > .pk-button[data-variant="ghost"]:hover:not(:disabled) { color: var(--pk-color-fg); }

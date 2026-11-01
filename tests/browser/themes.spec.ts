@@ -53,9 +53,17 @@ test("theme gallery applies and remembers a palette across appearance changes an
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   }
 
+  await gallery.getByRole("link", { name: "Inspect tokens", exact: true }).press("Enter");
+  await expect(page.getByRole("heading", { name: "Design tokens", exact: true })).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "Theme", exact: true })).toHaveText("Ocean");
+  await page.goBack();
+  await expect(oceanApply).toHaveAttribute("aria-pressed", "true");
+
   await apply.click();
   await page.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
-  await page.getByRole("navigation", { name: "Components", exact: true }).getByRole("link", { name: "Dialog", exact: true }).click();
+  const navigation = page.getByRole("navigation", { name: "Components", exact: true });
+  await navigation.getByRole("button", { name: "Overlays", exact: true }).click();
+  await navigation.getByRole("link", { name: "Dialog", exact: true }).click();
   await page.getByRole("button", { name: "Edit project", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Edit project", exact: true });
   await expect(dialog).toHaveCSS("background-color", rgb(themes.neutral.modes.dark["surface-elevated"]));

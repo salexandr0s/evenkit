@@ -162,7 +162,7 @@ export function DataTable<T extends object>({
     const target = event.target;
     const popupId = pageSizeRef.current?.getAttribute("aria-controls");
     const inPageSizePopup = popupId ? document.getElementById(popupId)?.contains(target) === true : false;
-    const owned = inPageSizePopup || searchAreaRef.current?.contains(target) || scrollRef.current?.contains(target) || paginationRef.current?.contains(target) || target.dataset.tableControl === "clear-selection" || target.closest(".pk-bulk-action-bar") !== null;
+    const owned = inPageSizePopup || searchAreaRef.current?.contains(target) || scrollRef.current?.contains(target) || paginationRef.current?.contains(target) || target.closest(".pk-data-table-selection-actions, .pk-bulk-action-bar") !== null;
     focusedControlRef.current = owned ? target : null;
     focusedPageSizePopupRef.current = inPageSizePopup;
   }
@@ -176,9 +176,10 @@ export function DataTable<T extends object>({
     }
   }
 
+  // Host updates can remove a focused column without changing availability.
   useLayoutEffect(() => {
     const previous = focusedControlRef.current;
-    if (!controlsDisabled || !previous) return;
+    if (!previous) return;
     function recoverFocus() {
       if (focusedControlRef.current !== previous) return true;
       if (previous?.isConnected && !previous.matches(":disabled")) return false;
@@ -187,13 +188,13 @@ export function DataTable<T extends object>({
       focusedPageSizePopupRef.current = false;
       return true;
     }
-    if (recoverFocus() || !focusedPageSizePopupRef.current) return;
+    if (recoverFocus() || !controlsDisabled || !focusedPageSizePopupRef.current) return;
     // Select closes its portal after the disabled trigger commits. Watch only
     // that transition so a removed option cannot leave focus on the document.
     const observer = new MutationObserver(() => { if (recoverFocus()) observer.disconnect(); });
     observer.observe(previous.ownerDocument.body, { childList: true, subtree: true });
     return () => observer.disconnect();
-  }, [controlsDisabled, hasError, loading]);
+  });
 
   return (
     <TooltipProvider><div className={classes("pk-data-table", className)} data-density={density} data-remote={remote ? true : undefined} onFocusCapture={trackFocus} onBlurCapture={releaseFocus}>
@@ -203,7 +204,7 @@ export function DataTable<T extends object>({
           {toolbar ? <div className="pk-data-table-actions">{toolbar}</div> : null}
         </div>
       ) : null}
-      {selection && selectedCount > 0 ? selection.scopeLabel ? <BulkActionBar count={selectedCount} scopeLabel={selection.scopeLabel} disabled={controlsDisabled} onClear={() => { scrollRef.current?.focus(); selection.onSelectionChange([]); }}>{selection.actions}</BulkActionBar> : <div className="pk-data-table-selection-bar" role="group" aria-label="Selected records"><p>{selectedCount} selected</p><div className="pk-data-table-selection-actions">{selection.actions}<Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label="Clear selection" data-table-control="clear-selection" disabled={controlsDisabled} onClick={() => { scrollRef.current?.focus(); selection.onSelectionChange([]); }}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Clear selection</TooltipContent></Tooltip></div></div> : null}
+      {selection && selectedCount > 0 ? selection.scopeLabel ? <BulkActionBar count={selectedCount} scopeLabel={selection.scopeLabel} disabled={controlsDisabled} onClear={() => { scrollRef.current?.focus(); selection.onSelectionChange([]); }}>{selection.actions}</BulkActionBar> : <div className="pk-data-table-selection-bar" role="group" aria-label="Selected records"><p>{selectedCount} selected</p><fieldset className="pk-data-table-selection-actions" aria-label="Bulk actions" disabled={controlsDisabled}>{selection.actions}<Tooltip><TooltipTrigger asChild><Button size="xs" variant="ghost" shape="icon" aria-label="Clear selection" data-table-control="clear-selection" disabled={controlsDisabled} onClick={() => { scrollRef.current?.focus(); selection.onSelectionChange([]); }}><XIcon size="sm" /></Button></TooltipTrigger><TooltipContent>Clear selection</TooltipContent></Tooltip></fieldset></div> : null}
       <div ref={scrollRef} className="pk-data-table-scroll" tabIndex={0} role="region" aria-label={`${caption} table`} aria-busy={loading || undefined}>
         <table>
           <caption>{caption}</caption>

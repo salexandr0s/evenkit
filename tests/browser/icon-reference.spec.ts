@@ -17,6 +17,11 @@ test("icon reference combines aliases and categories, copies imports, and preser
   const size = reference.getByRole("combobox", { name: "Icon size", exact: true });
 
   await choose(page, "Icon category", "Actions");
+  await search.fill("missing-icon");
+  await reference.getByRole("button", { name: "Clear icon search", exact: true }).press("Enter");
+  await expect(search).toHaveValue("");
+  await expect(search).toBeFocused();
+  await expect(reference.getByRole("combobox", { name: "Icon category", exact: true })).toHaveText("Actions");
   await search.fill("delete");
   await expect(gallery.locator("[data-icon]")).toHaveCount(1);
   const trash = gallery.locator('[data-icon="TrashIcon"]');
@@ -35,7 +40,7 @@ test("icon reference combines aliases and categories, copies imports, and preser
     });
   });
   await copy.press("Enter");
-  await expect(reference.getByRole("status").filter({ hasText: /unavailable|could not|unable/i })).toBeVisible();
+  await expect(trash.getByRole("status")).toContainText("Copy is unavailable.");
   await expect(trash).toContainText(namedImport);
 
   await choose(page, "Icon category", "Appearance");

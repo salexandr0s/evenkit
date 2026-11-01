@@ -120,13 +120,15 @@ function SheetExample() {
   const [side, setSide] = useState<"start" | "end">("end");
   const [saved, setSaved] = useState("Prepare the launch review.");
   const [draft, setDraft] = useState(saved);
+  const [attempted, setAttempted] = useState(false);
+  const notes = useRef<HTMLTextAreaElement>(null);
   const formId = useId();
   const opener = useRef<HTMLButtonElement | null>(null);
-  return <div className="overlays-preview-stack"><div className="overlays-preview-record"><strong>Launch review</strong><p>Saved notes: {saved}</p></div><Sheet open={open} onOpenChange={next => { setOpen(next); if (next) setDraft(saved); }}>
-    <div className="overlays-preview-actions"><SheetTrigger asChild><Button onClick={event => { opener.current = event.currentTarget; setSide("end"); }}>Edit notes in sheet</Button></SheetTrigger><Button variant="outline" onClick={event => { opener.current = event.currentTarget; setSide("start"); setDraft(saved); setOpen(true); }}>Open start sheet</Button></div>
+  return <div className="overlays-preview-stack"><div className="overlays-preview-record"><strong>Launch review</strong><p>Saved notes: {saved}</p></div><Sheet open={open} onOpenChange={next => { setOpen(next); if (next) { setDraft(saved); setAttempted(false); } }}>
+    <div className="overlays-preview-actions"><SheetTrigger asChild><Button onClick={event => { opener.current = event.currentTarget; setSide("end"); }}>Edit notes in sheet</Button></SheetTrigger><Button variant="outline" onClick={event => { opener.current = event.currentTarget; setSide("start"); setDraft(saved); setAttempted(false); setOpen(true); }}>Open start sheet</Button></div>
     <SheetContent side={side} closeLabel="Close notes sheet" onCloseAutoFocus={event => { event.preventDefault(); opener.current?.focus(); }}><SheetHeader><SheetTitle>Project notes</SheetTitle><SheetDescription>Prepare the launch review. Keep decisions and next steps in the project brief.</SheetDescription></SheetHeader>
-      <SheetBody><form className="overlays-preview-stack overlays-preview-sheet-form" id={formId} onSubmit={event => { event.preventDefault(); setSaved(draft.trim()); setOpen(false); }}>
-        <TextareaField label="Launch notes" required value={draft} onChange={event => setDraft(event.target.value)} rows={5} />
+      <SheetBody><form className="overlays-preview-stack overlays-preview-sheet-form" id={formId} noValidate onSubmit={event => { event.preventDefault(); setAttempted(true); if (!draft.trim()) { notes.current?.focus(); return; } setSaved(draft.trim()); setOpen(false); }}>
+        <TextareaField ref={notes} label="Launch notes" required value={draft} error={attempted && !draft.trim() ? "Enter launch notes." : undefined} onChange={event => setDraft(event.target.value)} rows={5} />
         <section className="overlays-preview-review-section"><h3>Review owner</h3><p>Confirm who will lead the discussion and collect decisions. Add the people who need to approve the launch.</p></section>
         <section className="overlays-preview-review-section"><h3>Schedule</h3><p>Check the review date against delivery milestones. Leave time for changes before the team shares the final brief.</p></section>
         <section className="overlays-preview-review-section"><h3>Supporting material</h3><p>Gather the current design, access requirements, and open questions. Link each document from the brief so reviewers can prepare.</p></section>

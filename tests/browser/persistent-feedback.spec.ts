@@ -72,6 +72,18 @@ test("indicators expose presence text and the exact unread count", async ({ page
   const snapshot = await page.locator(".persistent-feedback-preview").ariaSnapshot();
   expect(snapshot).toContain("128 unread notifications");
   expect(snapshot).not.toContain("99+");
+  await page.evaluate(() => { document.documentElement.dir = "rtl"; });
+  const cap = page.locator(".pk-unread-indicator .pk-badge-label").filter({ hasText: "99+" });
+  const glyphs = await cap.evaluate(element => {
+    const text = element.firstChild!;
+    const digit = document.createRange();
+    digit.setStart(text, 0); digit.setEnd(text, 1);
+    const plus = document.createRange();
+    plus.setStart(text, 2); plus.setEnd(text, 3);
+    return { digit: digit.getBoundingClientRect().x, plus: plus.getBoundingClientRect().x };
+  });
+  expect(glyphs.plus).toBeGreaterThan(glyphs.digit);
+  await expect(page.getByRole("button", { name: "Open notifications 128 unread notifications", exact: true })).toBeVisible();
 });
 
 test("notification family preserves neutral surfaces, theme accents, RTL and responsive geometry", async ({ page }) => {

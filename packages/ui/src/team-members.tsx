@@ -8,7 +8,8 @@ import { ActionMessage, Badge } from "./feedback.js";
 import { TextField } from "./field.js";
 import { FormattedTimestamp } from "./formatting.js";
 import { Avatar } from "./foundations.js";
-import { MailIcon, UserPlusIcon } from "./icons.js";
+import { IconButton } from "./icon-button.js";
+import { MailIcon, RotateCcwIcon, TrashIcon, UserPlusIcon } from "./icons.js";
 import { useRemoteTable, type DataTableQuery, type RemoteTableResult } from "./remote-table.js";
 import { SelectField } from "./select.js";
 import type { TeamActionContext, TeamActionResult, TeamRoleDefinition } from "./team-admin-types.js";
@@ -135,7 +136,7 @@ export function TeamMembers({ contextKey, teamName, roles, memberStatuses = [], 
     setDialog({ kind, invitation: { ...invitation }, scope: JSON.stringify([contextKey, roleScope, denied ?? "", true, invitationKey(invitation)]) }); setOpen(true);
   }
   async function submit() {
-    if (!dialog || !open || stale || action.pending || unavailable || !availableCallback) return;
+    if (!dialog || !open || stale || blocked || action.pending || unavailable || !availableCallback) return;
     let operation: ((context: TeamActionContext) => Promise<TeamActionResult>) | undefined;
     if (dialog.kind === "invite" && onInvite) {
       const email = draft.email.trim();
@@ -172,7 +173,7 @@ export function TeamMembers({ contextKey, teamName, roles, memberStatuses = [], 
       const callback = kind === "resend" ? onResend : onRevoke;
       if (!callback || !["pending", "expired"].includes(invitation.status)) return null;
       const reason = invitationActionUnavailable?.(invitation, kind);
-      return <div className="pk-team-action-hint" key={kind}><Button size="sm" variant={kind === "revoke" ? "ghost" : "outline"} disabled={!!reason} aria-label={`${kind === "resend" ? "Resend" : "Revoke"} invitation for ${invitation.email}`} onClick={event => showInvitation(kind, invitation, event.currentTarget)}>{kind === "resend" ? "Resend" : "Revoke"}</Button>{reason ? <span>{reason}</span> : null}</div>;
+      return <div className="pk-team-action-hint" key={kind}><IconButton label={kind === "resend" ? "Resend invitation" : "Revoke invitation"} size="sm" variant="ghost" disabled={!!reason} aria-label={`${kind === "resend" ? "Resend" : "Revoke"} invitation for ${invitation.email}`} onClick={event => showInvitation(kind, invitation, event.currentTarget)}>{kind === "resend" ? <MailIcon size="sm" /> : <TrashIcon size="sm" />}</IconButton>{reason ? <span>{reason}</span> : null}</div>;
     })}</div> },
   ];
   const title = dialog?.kind === "invite" ? "Invite a member" : dialog?.kind === "resend" ? "Resend invitation" : "Revoke invitation";
@@ -182,7 +183,7 @@ export function TeamMembers({ contextKey, teamName, roles, memberStatuses = [], 
   return <section className="pk-team-members" aria-labelledby={headingId}>
     <div className="pk-team-header"><div><span className="pk-team-eyebrow">Team directory</span><h2 ref={heading} id={headingId} tabIndex={-1}>Members of {teamName}</h2><p>Find people, review their roles and manage invitations.</p></div>{onInvite ? <Button startIcon={<UserPlusIcon size="sm" />} disabled={!!inviteUnavailable} onClick={event => showInvite(event.currentTarget)}>Invite member</Button> : null}</div>
     {inviteUnavailable ? <ActionMessage tone="info">{inviteUnavailable}</ActionMessage> : null}
-    {notice ? <ActionMessage tone={notice.tone} actions={notice.refresh ? <Button variant="outline" size="sm" onClick={refresh}>Refresh team</Button> : undefined}>{notice.text}</ActionMessage> : null}
+    {notice ? <ActionMessage tone={notice.tone} actions={notice.refresh ? <IconButton label="Refresh team" variant="outline" size="sm" onClick={refresh}><RotateCcwIcon size="sm" /></IconButton> : undefined}>{notice.text}</ActionMessage> : null}
     <DataTable className="pk-team-directory" data={members.data} columns={memberColumns} getRowId={member => member.id} caption="Team members" searchLabel="Search members" remote={{ query, total: members.total, onQueryChange: setQuery }} loading={members.loading} error={members.error} onRetry={members.retry} emptyTitle="No members match" emptyDescription="Try another search or filter." toolbar={<div className="pk-team-filters">
       <SelectField label="Role" aria-label="Filter members by role" controlSize="sm" value={filters.roleId ? `role:${filters.roleId}` : "all"} options={[{ value: "all", label: "All roles" }, ...roles.map(role => ({ value: `role:${role.id}`, label: role.label }))]} onValueChange={value => changeFilter({ ...filters, roleId: value === "all" ? "" : value.slice(5) })} />
       {memberStatuses.length ? <SelectField label="Status" aria-label="Filter members by status" controlSize="sm" value={filters.status ? `status:${filters.status}` : "all"} options={[{ value: "all", label: "All statuses" }, ...memberStatuses.map(status => ({ value: `status:${status.id}`, label: status.label }))]} onValueChange={value => changeFilter({ ...filters, status: value === "all" ? "" : value.slice(7) })} /> : null}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { ActionMessage, Button, FormErrorSummary, StepIndicator, type StepIndicatorItem } from "@evenkit/ui";
+import { ActionMessage, ArrowLeftIcon, Button, FormErrorSummary, IconButton, SaveIcon, StepIndicator, type StepIndicatorItem } from "@evenkit/ui";
 
 export interface WizardValidationError { fieldId: string; message: string }
 export interface WizardStepContext<Data> {
@@ -187,7 +187,7 @@ export function OnboardingWizard<Data>({ initialData, steps, renderReview, onSub
     {complete ? <div>{successContent ?? <p>Your answers have been saved.</p>}</div> : <form className="pk-wizard-form" noValidate aria-labelledby={`${id}-heading`} onSubmit={event => { event.preventDefault(); void advance(); }}>
       <FormErrorSummary ref={summary} errors={errors} />
       <fieldset className="pk-wizard-fields" disabled={busy} aria-busy={pending !== null} aria-labelledby={`${id}-heading`}>{reviewing ? renderReview(data, editStep) : step?.render({ data, update, errors, disabled: busy })}</fieldset>
-      <div className="pk-wizard-actions"><div>{storage ? <Button type="button" variant="ghost" disabled={busy} onClick={() => { void saveDraft(); }}>Save draft</Button> : null}</div><div><Button type="button" variant="outline" disabled={busy || stepIndex === 0} onClick={() => changeStep(stepIndex - 1)}>Back</Button><Button type="submit" disabled={busy} loading={pending === "submitting"}>{reviewing ? submitError ? "Retry setup" : submitLabel : "Continue"}</Button></div></div>
+      <div className="pk-wizard-actions"><div>{storage ? <IconButton label="Save draft" disabled={busy} onClick={() => { void saveDraft(); }}><SaveIcon size="sm" /></IconButton> : null}</div><div><IconButton label="Back" variant="outline" disabled={busy || stepIndex === 0} onClick={() => changeStep(stepIndex - 1)}><ArrowLeftIcon size="sm" /></IconButton><Button type="submit" disabled={busy} loading={pending === "submitting"}>{reviewing ? submitError ? "Retry setup" : submitLabel : "Continue"}</Button></div></div>
     </form>}
     <p className="pk-wizard-status" role="status">{pending === "loading" ? "Looking for a saved draft…" : pending === "saving" ? "Saving draft…" : pending === "clearing" ? "Removing saved draft…" : pending === "submitting" ? "Completing setup…" : note}</p>
     {pending ? <div><Button ref={cancelControl} variant="outline" size="sm" onClick={cancel}>Cancel {pending === "submitting" ? "setup" : "operation"}</Button></div> : null}

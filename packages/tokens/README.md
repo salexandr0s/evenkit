@@ -20,6 +20,8 @@ const variables = cssVariables("grove", "dark");
 
 The `foundation` export contains inherited spacing, type, radii, shadows, palette, and control scales, plus documented kit layout/state additions. Semantic colors live in `themes[name].modes[mode]`. All emitted CSS custom properties use the `--pk-` prefix. The JSON export is available at `@evenkit/tokens/tokens.json`.
 
+`foundation`, `metadata`, and `themes` are frozen at runtime, including nested values. Copy values into a custom brand configuration to make changes. Each `cssVariables()` call returns a new mutable map for local style overrides.
+
 ## Built-in themes
 
 Compare the themes in the catalog at `/#themes`, then apply one to see it on forms, tables, navigation, dialogs, and chat. The gallery follows the selected appearance, and the catalog remembers your choice.
@@ -59,6 +61,8 @@ const css = createBrandCss({
 `brandSchema`, `themeSchema`, `validateBrand`, and `validateTheme` share this supported configuration shape. The typography and radius properties receive foundation defaults when omitted. The helpers emit every accepted visual property; unsupported properties are rejected.
 
 Validation includes secondary text (`fg-muted`, at least 4.5:1) and focus rings (`ring`, at least 3:1) against `accent-soft`, which the kit uses for selected and hovered surfaces. Custom brands accepted before these checks may need a darker or lighter `accent-soft` value. Built-in highlights meet these checks with the shared neutral text colours.
+
+Success text requires at least 4.5:1 contrast against `bg`, `bg-muted`, `surface`, and `surface-elevated`. Warning icons require at least 3:1 against those surfaces. Both status colours also require 4.5:1 against their matching tinted backgrounds for badge text. Custom brands must meet both sets of checks; a readable badge alone does not ensure readable status content elsewhere.
 
 ## Build and checks
 

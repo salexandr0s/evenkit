@@ -39,7 +39,7 @@ export function ProjectIntroduction() {
   },
   {
     id: "layout-groups", name: "Stack, inline and grid", group: "Foundations", inventoryIds: ["A03"],
-    description: "Token-spaced groups that wrap and collapse with the available viewport.",
+    description: "Token-spaced groups that wrap and reduce columns to fit their container and viewport.",
     tags: ["stack", "inline", "group", "grid", "columns", "spacing", "responsive", "A03"],
     source: "Original kit layout primitives", sourceUrl: "https://mantine.dev/core/stack/",
     usage: styles + `import { Badge, Grid, Heading, Inline, Stack } from "@evenkit/ui";
@@ -100,12 +100,15 @@ export function ProjectHeading({ onCreate }: { onCreate: () => void }) {
     description: "Related actions in a named group with normal Tab order and safe wrapping.",
     tags: ["toolbar", "action group", "buttons", "keyboard", "A07"],
     source: "Original kit action-group recipe · native Tab order", sourceUrl: "https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/",
-    usage: '"use client";\n\n' + styles + `import { ActionGroup, Button } from "@evenkit/ui";
+    usage: '"use client";\n\n' + styles + `import { ActionGroup, ArchiveIcon, Button, EyeIcon, IconButton, Separator } from "@evenkit/ui";
 
-export function DraftActions({ onSave, onPreview }: { onSave: () => void; onPreview: () => void }) {
+export function DraftActions({ onSave, onPreview, onArchive }: { onSave: () => void; onPreview: () => void; onArchive: () => void }) {
   return <ActionGroup label="Draft actions">
     <Button onClick={onSave}>Save draft</Button>
-    <Button variant="outline" onClick={onPreview}>Preview</Button>
+    <IconButton label="Preview" size="md" variant="outline" onClick={onPreview}><EyeIcon /></IconButton>
+    <Separator orientation="vertical" />
+    <IconButton label="Archive" size="md" onClick={onArchive}><ArchiveIcon /></IconButton>
+    <Button disabled variant="outline">Publish</Button>
   </ActionGroup>;
 }
 

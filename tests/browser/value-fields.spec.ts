@@ -52,8 +52,9 @@ test("TokenInput rejects duplicates, retains failed drafts, admits pasted values
   await input.press("Enter");
   await expect(input).toHaveValue("A label much longer than the permitted length");
   expect(await form.evaluate(node => (node as HTMLFormElement).checkValidity())).toBe(false);
-  await input.fill("");
+  await input.fill("Replace this draft");
   await input.evaluate(node => {
+    (node as HTMLInputElement).select();
     const transfer = new DataTransfer(); transfer.setData("text/plain", "Review,Release,Operations");
     node.dispatchEvent(new ClipboardEvent("paste", { bubbles: true, cancelable: true, clipboardData: transfer }));
   });
@@ -69,6 +70,27 @@ test("TokenInput rejects duplicates, retains failed drafts, admits pasted values
   await page.getByRole("button", { name: "Disable label fieldset", exact: true }).click();
   await expect(page.getByRole("textbox", { name: "Internal labels", exact: true })).toBeDisabled();
   await expect(page.getByRole("button", { name: "Remove Internal", exact: true })).toBeDisabled();
+});
+
+test("TokenInput preserves text around pasted selections and the insertion caret", async ({ page }) => {
+  await page.goto("/#token-input");
+  const input = page.getByRole("textbox", { name: "Project labels", exact: true });
+  const form = page.getByRole("form", { name: "Project labels form" });
+  for (const draft of [
+    { text: "Review obsolete Operations", start: 6, end: 16 },
+    { text: "ReviewOperations", start: 6, end: 6 },
+  ]) {
+    await input.fill(draft.text);
+    await input.evaluate((node, selection) => {
+      (node as HTMLInputElement).setSelectionRange(selection.start, selection.end);
+      const transfer = new DataTransfer(); transfer.setData("text/plain", ",Release,");
+      node.dispatchEvent(new ClipboardEvent("paste", { bubbles: true, cancelable: true, clipboardData: transfer }));
+    }, draft);
+    expect(await form.evaluate(node => new FormData(node as HTMLFormElement).getAll("labels"))).toEqual(["Planning", "Review", "Release", "Operations"]);
+    await expect(input).toHaveValue("");
+    await form.getByRole("button", { name: "Reset labels", exact: true }).click();
+    await expect.poll(() => form.evaluate(node => new FormData(node as HTMLFormElement).getAll("labels"))).toEqual(["Planning"]);
+  }
 });
 
 test("NumberField preserves incomplete drafts, validates locale steps, submits canonical values and resets", async ({ page }) => {

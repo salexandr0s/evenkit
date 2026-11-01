@@ -28,6 +28,13 @@ test("workspace switching searches, retries and cancels without changing context
   await expect(popup.getByRole("button", { name: /Cedar Archive/ })).toBeDisabled();
   const search = popup.getByRole("searchbox", { name: "Find a workspace", exact: true });
   await search.fill("Aster");
+  const compositionWasPrevented = await search.evaluate(element => {
+    const event = new KeyboardEvent("keydown", { key: "ArrowDown", isComposing: true, bubbles: true, cancelable: true });
+    element.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(compositionWasPrevented).toBe(false);
+  await expect(search).toBeFocused();
   await search.press("ArrowDown");
   await expect(popup.getByRole("button", { name: /Aster Research/ })).toBeFocused();
   await page.keyboard.press("Enter");
@@ -144,4 +151,21 @@ test("appearance remains usable when preference storage is unavailable", async (
   await page.getByRole("radio", { name: "Dark", exact: true }).check();
   await expect(page.locator(".account-appearance-sample")).toHaveAttribute("data-kit-mode", "dark");
   await expect(page.getByText("Preferences changed for this visit. Browser storage is unavailable.", { exact: true })).toBeVisible();
+});
+
+test("activity retries retain keyboard focus when failure controls disappear", async ({ page }) => {
+  await page.goto("/#activity-timeline");
+  const timeline = page.getByRole("region", { name: "Activity", exact: true });
+  const retryEvent = timeline.getByRole("button", { name: "Retry action by You", exact: true });
+  await retryEvent.focus();
+  await page.keyboard.press("Enter");
+  await expect(retryEvent).toHaveCount(0);
+  await expect(timeline.locator(".pk-activity-event").first()).toBeFocused();
+  await page.getByRole("button", { name: "Simulate loading failure", exact: true }).click();
+  const retryActivity = timeline.getByRole("button", { name: "Retry activity", exact: true });
+  await retryActivity.focus();
+  await page.keyboard.press("Enter");
+  await expect(retryActivity).toHaveCount(0);
+  await expect(timeline).toBeFocused();
+  await expect(timeline).toHaveCSS("outline-style", "solid");
 });

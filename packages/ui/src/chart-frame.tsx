@@ -30,7 +30,7 @@ export function ChartTooltip({ datum, series, unit, id, formatValue = defaultCha
   return <div id={id} className="pk-chart-tooltip" role="tooltip" aria-live={announce ? "polite" : "off"} aria-atomic="true">
     <strong>{datum.label}</strong><dl>{series.map((item, index) => {
       const value = chartValue(datum.values[item.id]);
-      return <div key={item.id}><dt><span className="pk-chart-tooltip-mark" aria-hidden="true" style={{ background: chartColor(item, index) }} />{item.label}</dt><dd>{value === null ? missingLabel : <>{formatValue(value)} <span>{unit}</span></>}</dd></div>;
+      return <div key={item.id}><dt><span className="pk-chart-tooltip-mark" aria-hidden="true" style={{ background: chartColor(item, index) }} />{item.label}</dt><dd>{value === null ? missingLabel : <><bdi dir="auto">{formatValue(value)}</bdi> <span><bdi dir="auto">{unit}</bdi></span></>}</dd></div>;
     })}</dl>
   </div>;
 }
@@ -49,7 +49,7 @@ export function ChartDataTable({ title, unit, categoryLabel = "Category", data, 
     <TableHeader><TableRow><TableHead>{categoryLabel}</TableHead>{series.map(item => <TableHead key={item.id} align="end">{item.label} ({unit})</TableHead>)}</TableRow></TableHeader>
     <TableBody>{data.map(row => <TableRow key={row.id}><TableHead scope="row">{row.label}</TableHead>{series.map(item => {
       const value = chartValue(row.values[item.id]);
-      return <TableCell key={item.id} align="end">{value === null ? missingLabel : formatValue(value)}</TableCell>;
+      return <TableCell key={item.id} align="end">{value === null ? missingLabel : <bdi dir="auto">{formatValue(value)}</bdi>}</TableCell>;
     })}</TableRow>)}</TableBody>
   </SemanticTable></TableScrollRegion>;
 }
@@ -93,10 +93,11 @@ export function ChartFrame({ title, description, unit, categoryLabel = "Category
       </div>
     </figcaption>
     {hasData ? <p className="pk-chart-instructions pk-visually-hidden" id={`${id}-instructions`}>{text.instructions}</p> : null}
-    <div className="pk-chart-inspectable" onPointerLeave={event => { if (!focused && event.pointerType !== "touch") select(null); }}>
+    <div className="pk-chart-inspectable" onPointerLeave={event => { if (!focused && event.pointerType !== "touch") select(null); }}
+      onFocusCapture={() => setFocused(true)}
+      onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) { setFocused(false); select(null); } }}>
       <div ref={interaction} className="pk-chart-interaction" role="group" tabIndex={hasData ? 0 : -1} aria-label={`${title}: chart`} aria-describedby={hasData ? `${id}-instructions${active ? ` ${id}-tooltip` : ""}` : `${id}-status`}
-        onFocus={() => { setFocused(true); if (activeId === null && hasData) select(0); }}
-        onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) { setFocused(false); select(null); } }}
+        onFocus={() => { if (activeId === null && hasData) select(0); }}
         onKeyDown={event => {
           if (!hasData) return;
           let next: number | null;
@@ -115,7 +116,14 @@ export function ChartFrame({ title, description, unit, categoryLabel = "Category
         </div>
         {hasData ? typeof children === "function" ? children({ activeIndex, onActiveIndexChange: select, patternId: id.replace(/:/g, "") }) : children : null}
       </div>
-      <div className="pk-chart-inspector" data-side={activeIndex !== null && activeIndex >= data.length / 2 ? "left" : "right"}>{active ? <ChartTooltip id={`${id}-tooltip`} datum={active} series={series} unit={unit} formatValue={formatValue} missingLabel={text.missing} announce={focused} /> : null}</div>
+      {active ? <div ref={recoverFocus} className="pk-chart-inspector" role="group" aria-labelledby={`${id}-title`} tabIndex={0}
+        data-side={activeIndex !== null && activeIndex >= data.length / 2 ? "left" : "right"}
+        onKeyDown={event => {
+          if (event.key !== "Escape") return;
+          event.preventDefault(); event.stopPropagation();
+          interaction.current?.focus({ preventScroll: true });
+          select(null);
+        }}><ChartTooltip id={`${id}-tooltip`} datum={active} series={series} unit={unit} formatValue={formatValue} missingLabel={text.missing} announce={focused} /></div> : null}
     </div>
     {ready && data.length > 0 && series.length > 0 ? <details ref={recoverFocus} className="pk-chart-data"><summary><span className="pk-chart-data-label"><Table2Icon size="sm" animation="static" />{text.showTable}</span><span className="pk-chart-data-tools">{hasData ? <span className="pk-chart-key-hint" aria-hidden="true" title={text.instructions}><kbd>←</kbd><kbd>→</kbd></span> : null}<ChevronDownIcon size="sm" animation="static" className="pk-chart-disclosure-icon" /></span></summary>
       <ChartDataTable title={title} unit={unit} categoryLabel={categoryLabel} data={data} series={series} formatValue={formatValue} missingLabel={text.missing} />

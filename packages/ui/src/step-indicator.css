@@ -1,4 +1,4 @@
-.pk-step-indicator { box-sizing: border-box; min-width: 0; color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); }
+.pk-step-indicator { box-sizing: border-box; inline-size: 100%; min-width: 0; container-type: inline-size; color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); }
 .pk-step-indicator ol { display: flex; flex-wrap: wrap; gap: var(--pk-space-4); margin: 0; padding: 0; list-style: none; }
 .pk-step-indicator li { flex: 1; min-width: 0; padding-block-start: var(--pk-space-3); border-block-start: var(--pk-border-width-thick) solid var(--pk-color-border); }
 .pk-step-indicator li[data-state="current"], .pk-step-indicator li[data-state="complete"] { border-color: var(--pk-color-accent); }
@@ -27,14 +27,16 @@ button.pk-step-content:disabled { opacity: var(--pk-opacity-disabled); cursor: n
 .pk-wizard-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pk-space-3); padding-block-start: var(--pk-space-4); border-block-start: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .pk-wizard-actions > div { display: flex; flex-wrap: wrap; gap: var(--pk-space-2); }
 .pk-wizard-status { margin: 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
-@media (max-width: 639px) {
+@container (max-width: 639px) {
   .pk-step-indicator ol { flex-direction: column; gap: var(--pk-space-2); }
   .pk-step-indicator li { flex: none; padding-block-start: 0; padding-inline-start: var(--pk-space-2); border-block-start: 0; border-inline-start: var(--pk-border-width-thick) solid var(--pk-color-border); }
   .pk-step-indicator .pk-step-content { min-height: var(--pk-layout-touch); align-items: center; padding-block: var(--pk-space-1); }
   .pk-step-marker { flex-basis: var(--pk-space-6); min-height: var(--pk-space-6); font-size: var(--pk-font-size-xs); }
   .pk-step-copy { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: var(--pk-space-1) var(--pk-space-2); }
   .pk-step-description { flex-basis: 100%; }
+}
+@media (max-width: 639px) {
   .pk-wizard-actions > div:last-child { flex: 1 1 100%; }
-  .pk-wizard-actions > div:last-child > .pk-button { flex: 1; }
+  .pk-wizard-actions > div:last-child > .pk-button:not([data-shape="icon"]) { flex: 1; }
 }
 @media (pointer: coarse) { button.pk-step-content { min-height: var(--pk-layout-touch); } }
