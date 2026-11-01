@@ -2,6 +2,8 @@
 
 Reusable tokens, React controls, layouts, forms, navigation, feedback, data and file controls, editable page blocks, and AI chat. Browse the component catalog at [evenkit.dev](https://evenkit.dev). Version 0.1.0 is a pilot for evaluation in new projects.
 
+For coding agents, [llms.txt](https://evenkit.dev/llms.txt) covers setup and indexes every catalog entry and editable block. [llms-full.txt](https://evenkit.dev/llms-full.txt) includes the guide and all usage examples. The authored instructions live in [apps/catalog/llms/guide.md](apps/catalog/llms/guide.md).
+
 ## Start the catalog
 
 Requires Node.js 22.12 or later and npm. From this repository:
@@ -308,7 +310,7 @@ npm run verify
 npm run verify:packages
 ```
 
-`verify` builds, type-checks, lints, runs token validation tests, and exercises the catalog and a focused table host fixture in Chromium. Install the test browser with `npx playwright install chromium` if it is not available. The browser journeys cover token and icon search/copying, theme persistence, form recovery, feedback and loading announcements, empty-state actions, dialog and tooltip behavior, narrow and RTL layouts, reduced motion, table selection/focus, sidebar resizing, and chat drafts, streaming, retry, and copying.
+`verify` builds, type-checks, lints, runs unit and registry tests, exercises the catalog and a focused table host fixture in Chromium, and runs admin journeys in Chromium, Firefox and WebKit. Install the test browsers with `npx playwright install chromium firefox webkit` if they are not available. The browser journeys cover token and icon search/copying, theme persistence, form recovery, feedback and loading announcements, empty-state actions, dialog and tooltip behavior, narrow and RTL layouts, reduced motion, table selection/focus, sidebar resizing, and chat drafts, streaming, retry, and copying.
 
 `verify:packages` checks the currently built package artifacts. It packs them, creates independent temporary Vite and Next.js consumers, builds them without Tailwind, serves each production build on an allocated loopback port, and verifies token, control, icon, tooltip, shell, table, and chat CSS delivery. The Vite fixture builds a ChatWidget; the Next.js fixture builds a ChatPanel and checks its server-rendered title alongside the shell and table. Interactive chat behavior is checked in the catalog browser journeys. The script removes its own temporary directories and servers and saves its result to `.artifacts/package-verification.json`. Run `build:packages` before this check after package edits.
 
