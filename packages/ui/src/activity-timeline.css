@@ -1,4 +1,5 @@
 .pk-activity-timeline { min-width: 0; color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); font-size: var(--pk-font-size-sm); }
+.pk-activity-timeline:focus-visible, .pk-activity-event:focus-visible { outline: var(--pk-border-width-thick) solid var(--pk-color-ring); outline-offset: var(--pk-space-0-5); }
 .pk-activity-group + .pk-activity-group { margin-block-start: var(--pk-space-6); }
 .pk-activity-group-heading { margin: 0 0 var(--pk-space-4); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-medium); }
 .pk-activity-list { list-style: none; padding: 0; margin: 0; }

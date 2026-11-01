@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type ComponentPropsWithoutRef, type ReactNode } from "react";
+import { useId, useRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { ActionMessage, Spinner } from "./feedback.js";
@@ -33,10 +33,11 @@ export interface ActivityTimelineProps extends Omit<ComponentPropsWithoutRef<"se
 }
 
 /** Events remain in the host's order; grouping and pagination are application-owned. */
-export function ActivityTimeline({ groups, timeZone, locale = "en", label = "Activity", loading = false, error, onRetry, emptyMessage = "No activity yet.", className, ...props }: ActivityTimelineProps) {
+export function ActivityTimeline({ groups, timeZone, locale = "en", label = "Activity", loading = false, error, onRetry, emptyMessage = "No activity yet.", className, tabIndex = -1, ...props }: ActivityTimelineProps) {
   const id = useId();
+  const timeline = useRef<HTMLElement>(null);
   const hasEvents = groups.some(group => group.events.length > 0);
-  return <section {...props} className={classes("pk-activity-timeline", className)} aria-label={label}>
+  return <section {...props} ref={timeline} tabIndex={tabIndex} className={classes("pk-activity-timeline", className)} aria-label={label}>
     <div aria-busy={loading}>
       {groups.filter(group => group.events.length).map((group, index) => <section className="pk-activity-group" key={group.id} aria-labelledby={`${id}-${index}`}>
         <h3 id={`${id}-${index}`} className="pk-activity-group-heading">{group.label}</h3>
@@ -52,7 +53,7 @@ export function ActivityTimeline({ groups, timeZone, locale = "en", label = "Act
       </section>)}
       {!hasEvents && !loading && !error ? <p className="pk-activity-empty">{emptyMessage}</p> : null}
     </div>
-    {error ? <ActionMessage tone="error" heading="Activity could not be loaded" {...(onRetry ? { actions: <Button variant="outline" size="sm" onClick={onRetry}>Retry activity</Button> } : {})}>{error}</ActionMessage> : null}
+    {error ? <ActionMessage tone="error" heading="Activity could not be loaded" {...(onRetry ? { actions: <Button variant="outline" size="sm" onClick={() => { timeline.current?.focus({ preventScroll: true }); onRetry(); }}>Retry activity</Button> } : {})}>{error}</ActionMessage> : null}
     <div className="pk-activity-loading" role="status">{loading ? <><Spinner size="sm" aria-hidden="true" />Loading activity…</> : null}</div>
   </section>;
 }

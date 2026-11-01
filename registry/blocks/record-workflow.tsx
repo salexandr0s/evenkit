@@ -79,11 +79,11 @@ export function RecordWorkflow({ records, onSave, title = "Projects", descriptio
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!editor || pending) return;
+    if (!editor || request.current) return;
     setAttempted(true);
     if (!editor.draft.name.trim()) { nameInput.current?.focus(); return; }
     const controller = new AbortController();
-    request.current?.abort(); request.current = controller;
+    request.current = controller;
     cancelButton.current?.focus(); setPending(true); setSaveError(""); setSaveNote("");
     try {
       const saved = await onSave({ ...editor.draft, name: editor.draft.name.trim() }, { signal: controller.signal });
