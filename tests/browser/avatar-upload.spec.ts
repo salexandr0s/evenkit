@@ -32,6 +32,27 @@ test("avatar removal is staged, undoable and recoverable after a failed save", a
   await expect(form.getByRole("list", { name: "Selected image", exact: true })).toContainText("unsaved.png");
 });
 
+test("avatar save recovery preserves focus after the user moves outside the form", async ({ page }) => {
+  await page.goto("/#avatar-upload");
+  await page.clock.install();
+  const form = page.getByRole("form", { name: "Meridian workspace logo settings", exact: true });
+  const outside = page.getByRole("checkbox", { name: "Simulate a late save response", exact: true });
+  await page.getByRole("checkbox", { name: "Fail the next save", exact: true }).check();
+  await form.getByRole("button", { name: "Remove logo", exact: true }).click();
+  await form.getByRole("button", { name: "Save logo", exact: true }).click();
+  await expect(form.getByRole("button", { name: "Cancel save", exact: true })).toBeFocused();
+  await outside.focus();
+  await page.clock.fastForward(1000);
+  await expect(form.getByRole("alert")).toContainText("Your changes are still here.");
+  await expect(outside).toBeFocused();
+  await form.getByRole("button", { name: "Retry save", exact: true }).click();
+  await expect(form.getByRole("button", { name: "Cancel save", exact: true })).toBeFocused();
+  await outside.focus();
+  await page.clock.fastForward(1000);
+  await expect(page.getByText("Completed saves: 1. Saved image: None.", { exact: true })).toBeVisible();
+  await expect(outside).toBeFocused();
+});
+
 test("avatar replacement keeps long filenames and releases selection URLs on reset, save and unmount", async ({ page }) => {
   await page.addInitScript(() => {
     const create = URL.createObjectURL.bind(URL);

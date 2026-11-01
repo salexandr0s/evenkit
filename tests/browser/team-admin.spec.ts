@@ -57,6 +57,27 @@ test("invitation block connects account recovery and failure retry to the host",
   await expect(page.locator(".team-admin-demo-status")).toContainText("workspace here");
 });
 
+for (const focusDestination of ["outside control", "page body"] as const) test(`acceptance completion preserves focus when the user moves to the ${focusDestination}`, async ({ page }) => {
+  await page.goto("/#invitation-acceptance");
+  await select(page, "Simulated response", "Failure then retry");
+  await page.clock.install();
+  const outside = page.getByRole("combobox", { name: "Simulated response", exact: true });
+  await page.getByRole("button", { name: "Accept invitation", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Stop waiting", exact: true })).toBeFocused();
+  if (focusDestination === "outside control") await outside.focus();
+  else await page.getByRole("button", { name: "Stop waiting", exact: true }).blur();
+  await page.clock.fastForward(1000);
+  await expect(page.getByRole("alert")).toContainText("fictional request failed");
+  await expect(focusDestination === "outside control" ? outside : page.locator("body")).toBeFocused();
+  await page.getByRole("button", { name: "Retry acceptance", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Stop waiting", exact: true })).toBeFocused();
+  if (focusDestination === "outside control") await outside.focus();
+  else await page.getByRole("button", { name: "Stop waiting", exact: true }).blur();
+  await page.clock.fastForward(1000);
+  await expect(page.getByRole("heading", { name: "Invitation accepted", exact: true })).toBeVisible();
+  await expect(focusDestination === "outside control" ? outside : page.locator("body")).toBeFocused();
+});
+
 test("role block preserves unknown grants through a confirmed host save", async ({ page }) => {
   await page.goto("/#role-capability-editor");
   const editor = page.locator(".pk-role-editor");

@@ -128,7 +128,11 @@ function AvatarUploadForm({ ownerId, name, value, kind = "avatar", maxBytes = 5 
       if (controller.signal.aborted || request.current !== controller) return;
       setError(failure instanceof Error ? failure.message : "The image could not be saved. Your changes are still here.");
     } finally {
-      if (request.current === controller) { request.current = null; setPending(false); focusAfterChange.current = "picker"; }
+      if (request.current === controller) {
+        request.current = null;
+        if (cancel.current === document.activeElement) focusAfterChange.current = "picker";
+        setPending(false);
+      }
     }
     if (completed) onSaved?.(completed.value);
   }

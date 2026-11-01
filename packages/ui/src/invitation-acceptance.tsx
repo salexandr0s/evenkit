@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useId, useLayoutEffect, useRef, useState } from "react";
 import { Button } from "./button.js";
 import { ActionMessage, Badge } from "./feedback.js";
 import { FormattedTimestamp } from "./formatting.js";
@@ -58,6 +58,11 @@ function AcceptancePanel({ invitation, contextKey, currentAccountLabel, timeZone
   const heading = useRef<HTMLHeadingElement>(null);
   const accept = useRef<HTMLButtonElement>(null);
   const cancel = useRef<HTMLButtonElement>(null);
+  const cancelHasFocus = useRef(false);
+  const setCancel = useCallback((node: HTMLButtonElement | null) => {
+    if (!node) cancelHasFocus.current = Boolean(cancel.current && cancel.current === cancel.current.ownerDocument.activeElement);
+    cancel.current = node;
+  }, []);
   const action = useTeamAction(scope);
   const [uncertain, setUncertain] = useState(false);
   const [note, setNote] = useState(contextChanged ? "Invitation details changed. Review them before continuing." : "");
@@ -71,7 +76,8 @@ function AcceptancePanel({ invitation, contextKey, currentAccountLabel, timeZone
   useLayoutEffect(() => { if (contextChanged) heading.current?.focus(); }, [contextChanged]);
   useLayoutEffect(() => {
     if (action.pending) cancel.current?.focus();
-    else if (previousPending.current) {
+    else if (previousPending.current && cancelHasFocus.current) {
+      cancelHasFocus.current = false;
       if (canAccept) accept.current?.focus(); else heading.current?.focus();
     }
     previousPending.current = action.pending;
@@ -106,7 +112,7 @@ function AcceptancePanel({ invitation, contextKey, currentAccountLabel, timeZone
     {note ? <ActionMessage tone={uncertain ? "warning" : "info"}>{note}</ActionMessage> : null}
     <footer className="pk-invitation-footer"><div className="pk-invitation-actions">
       {canAccept ? <Button ref={accept} loading={action.pending} onClick={() => { void join(); }}>{action.result?.status === "error" ? "Retry acceptance" : "Accept invitation"}</Button> : null}
-      {action.pending ? <Button ref={cancel} variant="outline" onClick={stopWaiting}>Stop waiting</Button> : null}
+      {action.pending ? <Button ref={setCancel} variant="outline" onClick={stopWaiting}>Stop waiting</Button> : null}
       {invitation.status === "signed-out" && onSignIn ? <Button onClick={onSignIn}>Sign in</Button> : null}
       {invitation.status === "account-mismatch" && onSwitchAccount ? <Button onClick={onSwitchAccount}>Switch account</Button> : null}
       {(invitation.status === "expired" || invitation.status === "revoked") && onRequestReplacement ? <Button variant="outline" onClick={onRequestReplacement}>Request new invitation</Button> : null}

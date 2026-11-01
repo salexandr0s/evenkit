@@ -79,6 +79,28 @@ test("document queries reject stale results and recover load and removal failure
   await expect(library.getByRole("checkbox", { name: "Select Project brief.pdf", exact: true })).toBeVisible();
 });
 
+test("restoring documents preserves focus after the user resumes browsing", async ({ page }) => {
+  await page.goto("/#document-library");
+  const library = page.getByRole("region", { name: "Document library", exact: true });
+  await library.getByRole("checkbox", { name: "Select Project brief.pdf", exact: true }).check();
+  await library.getByRole("button", { name: "Remove selected", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "Remove selected items?", exact: true });
+  await dialog.getByRole("button", { name: "Remove items", exact: true }).click();
+  await expect(dialog).toBeHidden();
+  await expect(library.getByRole("status")).toContainText("of 7 records");
+  await page.clock.install();
+  await page.getByRole("button", { name: "Undo removal", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Cancel restore", exact: true })).toBeVisible();
+  const search = library.getByRole("searchbox", { name: "Search documents", exact: true });
+  await search.focus();
+  await page.clock.fastForward(1000);
+  await expect(page.getByText("Removed items restored.", { exact: true })).toBeVisible();
+  await expect(search).toBeFocused();
+  await page.clock.runFor(150);
+  await expect(library.getByRole("checkbox", { name: "Select Project brief.pdf", exact: true })).toBeVisible();
+  await expect(search).toBeFocused();
+});
+
 test("refreshing an expired preview keeps the lightbox open through the reload", async ({ page }) => {
   await page.goto("/#document-library");
   await page.getByRole("button", { name: "Preview Expired preview.png", exact: true }).click();
