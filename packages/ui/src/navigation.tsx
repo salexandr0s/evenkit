@@ -8,6 +8,7 @@ import { forwardRef, useLayoutEffect, useRef, useState, type AnchorHTMLAttribute
 import { Button } from "./button.js";
 import { classes } from "./classes.js";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./dialog.js";
+import { SkipLink } from "./foundations.js";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, MenuIcon } from "./icons.js";
 import { NavbarAccountControl, NavbarActionControl, ordinaryNavbarActivation as ordinaryActivation, type NavbarAccount, type NavbarAction } from "./navbar-parts.js";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./overlays.js";
@@ -293,7 +294,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar(
     if (typeof forwardedRef === "function") return forwardedRef(node);
     if (forwardedRef) forwardedRef.current = node;
   }}>
-    {contentId ? <a className="pk-navbar-skip" href={`#${contentId}`} onClick={() => document.getElementById(contentId)?.focus({ preventScroll: false })}>{skipLabel}</a> : null}
+    {contentId ? <SkipLink className="pk-navbar-skip" href={`#${contentId}`}>{skipLabel}</SkipLink> : null}
     <div ref={innerRef} className="pk-navbar-inner">
       <div ref={brandRef} className="pk-navbar-brand">{brand}</div>
       <nav ref={desktopRef} className="pk-navbar-desktop" aria-label={navLabel} aria-hidden={compact || undefined} inert={compact || undefined} onFocusCapture={event => { desktopFocus.current = event.target; }} onBlurCapture={desktopBlur}>{renderItems(false)}</nav>
