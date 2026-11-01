@@ -82,6 +82,51 @@ test("choice fields keep IDs separate from text and reset through native forms",
   await expect(readOnly).toBeFocused();
 });
 
+test("choice popups stop accepting values when their native fieldset becomes disabled", async ({ page }) => {
+  await page.goto("/#combobox");
+  const form = page.getByRole("form", { name: "Team choice form" });
+  await form.evaluate(node => {
+    const fieldset = document.createElement("fieldset");
+    fieldset.dataset.choiceTest = "";
+    fieldset.append(...Array.from(node.childNodes));
+    node.append(fieldset);
+  });
+  for (const choice of [
+    { label: "Project team", query: "Oper", option: "Operations", name: "team", expected: "planning" },
+    { label: "Project topic", query: "Road", option: "Roadmap", name: "topic", expected: "Road" },
+  ]) {
+    const input = page.getByRole("combobox", { name: choice.label, exact: true });
+    await input.fill(choice.query);
+    const option = page.getByRole("option", { name: choice.option, exact: true });
+    await expect(option).toBeVisible();
+    await form.locator("fieldset").evaluate(node => { (node as HTMLFieldSetElement).disabled = true; });
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await expect(page.getByRole("listbox")).toHaveCount(0);
+    await form.locator("fieldset").evaluate(node => { (node as HTMLFieldSetElement).disabled = false; });
+    await input.fill(choice.query);
+    await input.press("ArrowDown");
+    await expect(option).toBeVisible();
+    await option.evaluate(node => {
+      const fieldset = document.querySelector<HTMLFieldSetElement>("fieldset[data-choice-test]");
+      if (!fieldset) throw new Error("Missing choice fieldset.");
+      fieldset.disabled = true;
+      // Cover activation before the mutation observer has closed the portal.
+      (node as HTMLElement).click();
+    });
+    await expect(input).toBeDisabled();
+    await expect(input).toHaveAttribute("aria-expanded", "false");
+    await expect(page.getByRole("listbox")).toHaveCount(0);
+    expect(await form.evaluate((node, name) => new FormData(node as HTMLFormElement).has(name), choice.name)).toBe(false);
+    await form.locator("fieldset").evaluate(node => { (node as HTMLFieldSetElement).disabled = false; });
+    await expect(input).toBeEnabled();
+    expect(await form.evaluate((node, name) => new FormData(node as HTMLFormElement).get(name), choice.name)).toBe(choice.expected);
+    await input.fill(choice.query);
+    await input.press("ArrowDown");
+    await page.getByRole("option", { name: choice.option, exact: true }).click();
+    await expect(input).toHaveValue(choice.option);
+  }
+});
+
 test("search clear and password visibility preserve native input identity and focus", async ({ page }) => {
   await page.goto("/#search-field");
   const search = page.getByRole("searchbox", { name: "Search documents", exact: true });

@@ -185,7 +185,12 @@ export const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(function
           onPaste?.(event);
           if (event.defaultPrevented || disabled || readOnly) return;
           const text = event.clipboardData.getData("text");
-          if (separators.some(separator => separator && text.includes(separator))) { event.preventDefault(); add(draft + text); }
+          if (separators.some(separator => separator && text.includes(separator))) {
+            event.preventDefault();
+            const start = event.currentTarget.selectionStart ?? draft.length;
+            const end = event.currentTarget.selectionEnd ?? start;
+            add(draft.slice(0, start) + text + draft.slice(end));
+          }
         }} />
       {state.selected.length && !readOnly ? <button type="button" disabled={disabled} className="pk-combobox-action" aria-label={clearLabel} onClick={() => { state.change([]); setIssue(""); state.input.current?.focus(); }}><XIcon size="sm" /></button> : null}
     </div>

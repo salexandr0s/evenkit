@@ -44,6 +44,19 @@ function useNativeReset(input: RefObject<HTMLInputElement | null>, formId: strin
   }, [input, formId]);
 }
 
+function useChoiceFieldset(input: RefObject<HTMLInputElement | null>, open: boolean, setOpen: (open: boolean) => void) {
+  useEffect(() => {
+    if (!open) return;
+    const observer = new MutationObserver(() => { if (input.current?.matches(":disabled")) setOpen(false); });
+    let ancestor = input.current?.parentElement;
+    while (ancestor) {
+      if (ancestor instanceof HTMLFieldSetElement) observer.observe(ancestor, { attributes: true, attributeFilter: ["disabled"] });
+      ancestor = ancestor.parentElement;
+    }
+    return () => observer.disconnect();
+  }, [input, open, setOpen]);
+}
+
 export interface FieldsetProps extends ComponentPropsWithoutRef<"fieldset"> {
   legend: ReactNode;
   hint?: ReactNode;
@@ -275,16 +288,21 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
   const labelId = `${description.controlId}-label`;
   const items = useMemo(() => ComboboxPrimitive.createItems(options, { getValue: option => option.value, getLabel: option => option.label }), [options]);
   const actions = useRef<ComboboxPrimitive.Root.Actions>(null);
-  useEffect(() => { if (disabled) setOpen(false); }, [disabled]);
+  useEffect(() => { if (disabled || readOnly) setOpen(false); }, [disabled, readOnly]);
+  useChoiceFieldset(input, open, setOpen);
   useNativeReset(input, form, () => {
     setOpen(false);
     actions.current?.close();
     if (value === undefined) setLocalValue(defaultValue);
   });
-  return <ComboboxPrimitive.Root items={items} value={selected} onValueChange={next => { if (value === undefined) setLocalValue(next); onValueChange?.(next); }}
+  return <ComboboxPrimitive.Root items={items} value={selected} onValueChange={(next, details) => {
+      if (disabled || readOnly || input.current?.matches(":disabled")) { details.cancel(); return; }
+      if (value === undefined) setLocalValue(next);
+      onValueChange?.(next);
+    }}
     // Let the primitive own its display query so external IDs and refreshed labels synchronize.
     onInputValueChange={next => onInputValueChange?.(next)}
-    open={open && !disabled} onOpenChange={next => setOpen(!disabled && next)} actionsRef={actions}
+    open={open && !disabled && !readOnly} onOpenChange={next => setOpen(next && !disabled && !readOnly && !input.current?.matches(":disabled"))} actionsRef={actions}
     name={name} form={form} required={required} disabled={disabled} readOnly={readOnly} autoComplete={inputProps.autoComplete}>
     <FieldFrame label={<span id={labelId}>{label}</span>} hint={hint} error={error} optional={optional ?? false} fieldClassName={fieldClassName} description={description} required={required}>
       <ChoiceInput inputProps={{ ...inputProps, disabled, readOnly, form, "aria-busy": loading || inputProps["aria-busy"] }} inputRef={setInput} controlId={description.controlId} labelId={labelId} descriptionIds={description.descriptionIds} invalid={description.hasError ? true : invalid} controlSize={controlSize} clearable={clearable} clearLabel={clearLabel} openLabel={openLabel} />
@@ -304,10 +322,15 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(func
   const description = useFieldDescription({ id, hint, error, describedBy });
   const labelId = `${description.controlId}-label`;
   const actions = useRef<AutocompletePrimitive.Root.Actions>(null);
-  useEffect(() => { if (disabled) setOpen(false); }, [disabled]);
+  useEffect(() => { if (disabled || readOnly) setOpen(false); }, [disabled, readOnly]);
+  useChoiceFieldset(input, open, setOpen);
   useNativeReset(input, form, () => { setOpen(false); if (value === undefined) setLocalValue(defaultValue); });
-  return <AutocompletePrimitive.Root items={options} value={text} onValueChange={next => { if (value === undefined) setLocalValue(next); onValueChange?.(next); }} itemToStringValue={option => option.label}
-    open={open && !disabled} onOpenChange={next => setOpen(!disabled && next)} actionsRef={actions} name={name} form={form} required={required} disabled={disabled} readOnly={readOnly}>
+  return <AutocompletePrimitive.Root items={options} value={text} onValueChange={(next, details) => {
+      if (disabled || readOnly || input.current?.matches(":disabled")) { details.cancel(); return; }
+      if (value === undefined) setLocalValue(next);
+      onValueChange?.(next);
+    }} itemToStringValue={option => option.label}
+    open={open && !disabled && !readOnly} onOpenChange={next => setOpen(next && !disabled && !readOnly && !input.current?.matches(":disabled"))} actionsRef={actions} name={name} form={form} required={required} disabled={disabled} readOnly={readOnly}>
     <FieldFrame label={<span id={labelId}>{label}</span>} hint={hint} error={error} optional={optional ?? false} fieldClassName={fieldClassName} description={description} required={required}>
       <ChoiceInput autocomplete inputProps={{ ...inputProps, disabled, readOnly, form, "aria-busy": loading || inputProps["aria-busy"] }} inputRef={setInput} controlId={description.controlId} labelId={labelId} descriptionIds={description.descriptionIds} invalid={description.hasError ? true : invalid} controlSize={controlSize} clearable={clearable} clearLabel={clearLabel} openLabel={openLabel} />
     </FieldFrame>
