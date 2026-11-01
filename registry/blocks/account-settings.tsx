@@ -34,12 +34,12 @@ function ProfileForm({ profile, onSave, onSaved }: ProfileSettingsProps) {
   function reset() { request.current?.abort(); request.current = null; returnToName.current = pending; setPending(false); setDraft(saved); setAttempted(false); setError(""); setNote(""); if (!pending) name.current?.focus(); }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending) return;
+    if (request.current) return;
     setAttempted(true);
     if (!draft.name.trim()) { name.current?.focus(); return; }
     if (!draft.email.trim() || !email.current?.validity.valid) { email.current?.focus(); return; }
     const controller = new AbortController();
-    request.current?.abort(); request.current = controller; setPending(true); setError(""); setNote("");
+    request.current = controller; setPending(true); setError(""); setNote("");
     try {
       const result = await onSave({ ...draft, name: draft.name.trim(), email: draft.email.trim() }, { signal: controller.signal });
       if (controller.signal.aborted || request.current !== controller) return;
@@ -49,7 +49,7 @@ function ProfileForm({ profile, onSave, onSaved }: ProfileSettingsProps) {
       if (controller.signal.aborted || request.current !== controller) return;
       setError(failure instanceof Error ? failure.message : "Your profile could not be saved.");
     } finally {
-      if (request.current === controller) { request.current = null; returnToName.current = true; setPending(false); }
+      if (request.current === controller) { request.current = null; returnToName.current = cancel.current !== null && cancel.current.ownerDocument.activeElement === cancel.current; setPending(false); }
     }
   }
   return <form className="pk-profile-settings" aria-label="Profile settings" onSubmit={event => { void submit(event); }} onReset={event => { event.preventDefault(); reset(); }}>
