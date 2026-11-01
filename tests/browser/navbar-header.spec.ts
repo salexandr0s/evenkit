@@ -120,6 +120,8 @@ test("resizing while a group or contact owns focus recovers to visible navigatio
   const trigger = website.getByRole("button", { name: "Open studio navigation", exact: true });
   await expect(websites).toBeHidden();
   await expect(trigger).toBeFocused();
+  const menuTooltip = page.getByRole("tooltip", { name: "Open studio navigation", exact: true });
+  await expect(menuTooltip).toBeVisible();
   await page.setViewportSize({ width: 1920, height: 1080 });
   await expect(trigger).toBeHidden();
   await expect(website.getByRole("navigation", { name: "Studio navigation", exact: true }).getByRole("link", { name: "Studio", exact: true })).toBeFocused();
@@ -129,6 +131,7 @@ test("resizing while a group or contact owns focus recovers to visible navigatio
   await expect(trigger).toBeVisible();
   await expect(contact).toBeVisible();
   await expect(contact).toBeFocused();
+  await expect(menuTooltip).toBeHidden();
   await contact.press("Enter");
   const enquiry = page.getByRole("dialog", { name: "Contact Northstar", exact: true });
   await expect(enquiry.getByRole("textbox", { name: "Your name", exact: true })).toBeFocused();

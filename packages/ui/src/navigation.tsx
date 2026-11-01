@@ -232,6 +232,7 @@ export const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar(
       root.dataset.contactVisible = String(nextContactVisible);
       setCompact(nextCompact);
       setContactVisible(nextContactVisible);
+      if (!nextCompact) setMenuTooltipOpen(false);
       if (nextCompact && openGroupRef.current) {
         groupResizeClose.current = true;
         setOpenGroup(null);
