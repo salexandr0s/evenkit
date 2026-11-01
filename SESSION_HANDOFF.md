@@ -1,3 +1,33 @@
+# Complete catalog improvement pass: 1 November 2026
+
+Status: DONE. Completed the explicit goal to review every catalog item individually in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`. The ordered checklist in `docs/component-pass-2026-11-01.md` records all 116 entries: 41 improved, including shared component effects, and 75 retained after source, design, behavior and copyable-usage review. Evidence includes all 232 baseline desktop-light/mobile-dark captures, focused state captures and individual source records under `.artifacts/component-pass-2026-11-01/`. Independent review confirmed exact inventory coverage, valid evidence paths and no remaining actionable findings.
+
+Thirteen implementation commits are saved locally:
+
+- `d6612a2`: theme-to-token navigation and clearable token/icon search.
+- `bb56280`: Select respects inherited fieldset disablement, including queued portal events.
+- `164aebe`: invalid borders survive hover/focus/open states; read-only choice affordance, touch chips and copy alignment improved.
+- `cfb27bc`: Sheet notes reject whitespace, retain the draft and focus the error; copied usage matches.
+- `899341d`: cancellation releases held auth preview requests and unlocks outcome controls.
+- `53cb9ea`: CodeBlock copy icon and feedback are visible.
+- `e90ee96`: card review names include project context; mobile shortcut keys stay beside descriptions.
+- `c0e8dc4`: unavailable table data disables all native bulk controls; wrapped cells remain readable on mobile.
+- `be4e479`: sort direction and clear controls stay together; filter result wording handles one result.
+- `abd5e5a`: RecordWorkflow rejects duplicate saves before render; activity retry preserves focus on its stable region.
+- `22ce8c4`: profile forms use the form-width token; appearance panels align on desktop; onboarding preview has a bounded width.
+- `6ea93a4`: avatar saves, document restores and invitation acceptance preserve focus after users move elsewhere.
+- `36d9215`: overflowing image recovery starts at reachable content; notification counts stay with their unread label.
+
+Verification passed on the final implementation: full production build; configured workspace TypeScript and ESLint; 49 unit tests; all 314 catalog Chromium journeys; 34 affected admin journeys across Chromium/WebKit; 12 additional WebKit auth/Select/duplicate-save journeys; 116 copied examples and all 104 inventory mappings. Worker checks include paired visuals, four responsive widths where applicable, disabled/read-only/error/pending states, native semantics, keyboard recovery, RTL, long labels and reduced motion. Focused media checks also passed in WebKit.
+
+The registry suite passed 33 checks initially; its real-repository committed-source test correctly rejected the then-uncommitted avatar block. After committing all implementation changes, that focused test passed. The final committed-source registry build validated successfully. Logs are `browser.log`, `admin.log`, `webkit.log`, `build.log`, `typecheck.log`, `lint.log`, `unit.log`, `examples.log`, `registry-tests.log`, `registry-committed-retest.log` and `registry-build.log` under the pass evidence directory.
+
+No required implementation work remains. Firefox was not repeated after its previously recorded profile-launch failure. Physical touch hardware and screen-reader speech were not exercised. Existing `apps/catalog/index.html`, `apps/catalog/vite.config.ts` and `apps/catalog/llms/` edits remain byte-identical and outside these commits. No push or deployment occurred. All owned verification servers were stopped.
+
+Resume with `git status --short`, `git log -14 --oneline` and `tail -6 .artifacts/component-pass-2026-11-01/browser.log`. Rebuild after source changes with `npm run build`; rerun the catalog with `KIT_CATALOG_PORT=5698 npx playwright test --workers=2`. The complete checklist is the durable per-item record; the ignored artifact directory contains detailed source mappings, screenshots and probe logs. Historical handoffs follow.
+
+---
+
 # Component interaction improvements: 1 November 2026
 
 Status: DONE_WITH_CONCERNS. Completed this component improvement pass in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`. Firefox validation remains unavailable because its browser runtime cannot create a usable profile. Five implementation commits are saved locally:
