@@ -1,3 +1,27 @@
+# Second complete catalog improvement pass: 1 November 2026
+
+Status: DONE. Completed the user-requested second additional goal in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`. The ordered checklist `docs/component-pass-2-2026-11-01.md` accounts for all 116 current entries: 29 improved and 87 retained after fresh source, visual and behavior review. The earlier pass at `4ba2f6c` was the baseline. Evidence is in `.artifacts/component-pass-2-2026-11-01/`, including 232 baseline captures, final state captures, seven subsystem ledgers and `all-review.json`. Independent review confirmed exact coverage, valid evidence and no remaining actionable findings.
+
+Seven implementation commits:
+
+- `cd8a982`: Grid reduces columns inside narrow desktop containers; SkipLink preserves native modified clicks. Sources: `packages/ui/src/foundations.{tsx,css}` plus catalog entry, contract and existing test.
+- `544a09d`: token/icon rows reuse CopyAction for local pending/success/error feedback; token workspace sample rejects whitespace. Redundant outer tooltips were removed because IconButton already supplies one.
+- `2f30bc5`: date and MultiSelect popups close during availability changes; TokenInput retains disabled drafts; password reveal retains selection direction; checkbox/radio/switch errors retain borders during interaction. Sources: date/form/multi-value controls and selection CSS.
+- `a04ca27`: breadcrumbs preserve native activation; workspace search respects IME/modified keys; step indicators adapt to container width.
+- `ea49b15`: AppearanceSettings retains visit-only preferences through supported-locale changes; DataTable restores owned focus when a host removes its column. Sources: `registry/blocks/account-settings.tsx` and `packages/ui/src/data-table.tsx`.
+- `54df876`: chart details support keyboard scrolling and correct focus recovery; tooltip values retain room and RTL numeric isolation. Sources: `packages/ui/src/chart-frame.tsx`, `chart.css`, reporting contract and host regression.
+- `dd9092d`: image, file-preview, document, audit, notification and banner lifecycles distinguish owned focus from deliberate blur. Focus recovery no longer steals the document's focus after host updates.
+
+Verification passed: full production build; workspace TypeScript and ESLint; 49 unit tests; 34 registry tests and committed registry build/validation; 116 copied examples and 104 priority mappings; all 329 catalog Chromium journeys across the full run and isolated reruns; all 42 admin journeys across Chromium/WebKit. The full catalog run passed 327 and had two trace-file ENOENT teardown failures caused by a concurrent focused run sharing `test-results`; both passed in isolated output. Final catalog rebuild and four focused journeys covered those two plus the final copy wrappers.
+
+The targeted WebKit run passed 22 tests. Its existing combined toolbar/SkipLink test failed before the new code because ordinary Tab skipped native buttons in this runner. The equivalent toolbar journey passed using Option-Tab; direct independent WebKit checks passed all four modified SkipLink clicks and ordinary activation. No product/test workaround was added. The 464 Grid geometry configurations and four last-row copy failure/retry probes passed across Chromium/WebKit. Subsystem ledgers retain additional fresh host/context and visual checks. Firefox, physical touch hardware and screen-reader speech were not exercised.
+
+No required implementation work remains. Existing `apps/catalog/index.html`, `apps/catalog/vite.config.ts` and `apps/catalog/llms/` files remain byte-identical to their original checksums and outside all commits. No push or deployment occurred. All owned verification previews were stopped.
+
+Resume with `git status --short`, `git log -8 --oneline`, and `tail -8 .artifacts/component-pass-2-2026-11-01/catalog-final.log`. Rebuild after source changes with `npm run build`. Run catalog checks with an isolated output, for example `KIT_CATALOG_PORT=5792 npx playwright test --workers=2 --output=.artifacts/catalog-verification-results`. The checklist is the committed record; detailed artifacts are ignored by Git. Historical handoffs follow.
+
+---
+
 # Complete catalog improvement pass: 1 November 2026
 
 Status: DONE. Completed the explicit goal to review every catalog item individually in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`. The ordered checklist in `docs/component-pass-2026-11-01.md` records all 116 entries: 41 improved, including shared component effects, and 75 retained after source, design, behavior and copyable-usage review. Evidence includes all 232 baseline desktop-light/mobile-dark captures, focused state captures and individual source records under `.artifacts/component-pass-2026-11-01/`. Independent review confirmed exact inventory coverage, valid evidence paths and no remaining actionable findings.
