@@ -98,17 +98,24 @@ function StoredAppearance({ storageKey, initialValue = defaultAppearance, onValu
   const initial = useRef(initialValue);
   const options = useRef(locales);
   options.current = locales;
+  const current = useRef<AppearanceValue | null>(null);
   const localeValues = JSON.stringify(locales.map(locale => locale.value));
   useEffect(() => {
     let restored = normalizePreferences(initial.current, options.current, initial.current);
     try { restored = readAppearance(localStorage.getItem(storageKey), options.current, initial.current) ?? restored; }
     catch { setStorageNote("Preferences are available for this visit. Browser storage is unavailable."); }
-    setValue(restored); callback.current?.(restored);
+    current.current = restored; setValue(restored); callback.current?.(restored);
     setReady(true);
-  }, [storageKey, localeValues]);
+  }, [storageKey]);
+  useEffect(() => {
+    if (!current.current) return;
+    const supported = normalizePreferences(current.current, options.current, initial.current);
+    if (supported.locale === current.current.locale) return;
+    current.current = supported; setValue(supported); callback.current?.(supported);
+  }, [localeValues]);
   function change(next: AppearanceValue) {
     const supported = normalizePreferences(next, options.current, initial.current);
-    setValue(supported); callback.current?.(supported);
+    current.current = supported; setValue(supported); callback.current?.(supported);
     try { localStorage.setItem(storageKey, JSON.stringify(supported)); setStorageNote("Preferences saved on this device."); }
     catch { setStorageNote("Preferences changed for this visit. Browser storage is unavailable."); }
   }

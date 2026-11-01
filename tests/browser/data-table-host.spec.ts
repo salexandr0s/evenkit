@@ -106,6 +106,22 @@ test("async loading recovers disabled or removed controls without taking host fo
   await expect(outside).toBeFocused();
 });
 
+test("host column removal recovers owned focus without reclaiming relinquished focus", async ({ page }) => {
+  const sort = page.getByRole("button", { name: "Sort by Project", exact: true });
+  const region = page.getByRole("region", { name: "Host projects table", exact: true });
+  const outside = page.getByRole("button", { name: "Outside control", exact: true });
+  for (const destination of ["column", "outside", "body"]) {
+    await page.getByRole("button", { name: "Schedule column removal", exact: true }).click();
+    await sort.focus();
+    if (destination === "outside") await outside.focus();
+    if (destination === "body") await sort.evaluate(button => { if (button instanceof HTMLElement) button.blur(); });
+    await page.clock.runFor(500);
+    await expect(sort).toHaveCount(0);
+    await expect(destination === "column" ? region : destination === "outside" ? outside : page.locator("body")).toBeFocused();
+    await page.getByRole("button", { name: "Restore records", exact: true }).click();
+  }
+});
+
 for (const scoped of [false, true]) test(`${scoped ? "scoped" : "unscoped"} bulk actions stop during loading and errors and recover focus`, async ({ page }) => {
   if (scoped) await page.getByRole("checkbox", { name: "Use selection scope", exact: true }).check();
   await page.getByRole("checkbox", { name: "Select Alpha", exact: true }).check();

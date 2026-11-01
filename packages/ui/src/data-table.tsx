@@ -176,9 +176,10 @@ export function DataTable<T extends object>({
     }
   }
 
+  // Host updates can remove a focused column without changing availability.
   useLayoutEffect(() => {
     const previous = focusedControlRef.current;
-    if (!controlsDisabled || !previous) return;
+    if (!previous) return;
     function recoverFocus() {
       if (focusedControlRef.current !== previous) return true;
       if (previous?.isConnected && !previous.matches(":disabled")) return false;
@@ -187,13 +188,13 @@ export function DataTable<T extends object>({
       focusedPageSizePopupRef.current = false;
       return true;
     }
-    if (recoverFocus() || !focusedPageSizePopupRef.current) return;
+    if (recoverFocus() || !controlsDisabled || !focusedPageSizePopupRef.current) return;
     // Select closes its portal after the disabled trigger commits. Watch only
     // that transition so a removed option cannot leave focus on the document.
     const observer = new MutationObserver(() => { if (recoverFocus()) observer.disconnect(); });
     observer.observe(previous.ownerDocument.body, { childList: true, subtree: true });
     return () => observer.disconnect();
-  }, [controlsDisabled, hasError, loading]);
+  });
 
   return (
     <TooltipProvider><div className={classes("pk-data-table", className)} data-density={density} data-remote={remote ? true : undefined} onFocusCapture={trackFocus} onBlurCapture={releaseFocus}>

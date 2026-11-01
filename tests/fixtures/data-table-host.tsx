@@ -31,6 +31,7 @@ function DataTableHost() {
   const [scoped, setScoped] = useState(false);
   const [selectedIds, setSelectedIds] = useState<readonly string[]>([]);
   const [actions, setActions] = useState(0);
+  const [hiddenIds, setHiddenIds] = useState<readonly string[]>([]);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function clearTimer() {
@@ -52,12 +53,16 @@ function DataTableHost() {
           clearTimer();
           timer.current = setTimeout(() => { timer.current = null; setError("Records could not be refreshed."); }, 500);
         }}>Schedule error</Button>
-        <Button onClick={() => { clearTimer(); setLoading(false); setError(null); }}>Restore records</Button>
+        <Button onClick={() => {
+          clearTimer();
+          timer.current = setTimeout(() => { timer.current = null; setHiddenIds(["name"]); }, 500);
+        }}>Schedule column removal</Button>
+        <Button onClick={() => { clearTimer(); setLoading(false); setError(null); setHiddenIds([]); }}>Restore records</Button>
         <Button variant="outline">Outside control</Button>
         <Checkbox label="Use selection scope" checked={scoped} onCheckedChange={value => setScoped(value === true)} />
       </div>
       <DataTable
-        data={projects} columns={columns} getRowId={getRowId}
+        data={projects} columns={columns} getRowId={getRowId} hiddenColumnIds={hiddenIds}
         caption="Host projects" searchLabel="Search host projects"
         initialPageSize={2} pageSizeOptions={pageSizes} loading={loading} error={error}
         selection={{ selectedIds, onSelectionChange: setSelectedIds, getRowLabel: project => project.name,
