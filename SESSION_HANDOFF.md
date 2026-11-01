@@ -1,3 +1,13 @@
+# Component release: 1 November 2026
+
+The user authorized committing, pushing, merging into `main`, and deploying the reviewed component work. Release preparation uses the isolated checkout `/Users/nationalbank/.codex/worktrees/evenkit-release-2026-11-01/design-tokens`. Main's earlier sticky-sidebar change is reconciled with the current implementation: its historical notes are retained, and the newer Select/Navbar regression covers the same behavior using the current navigation scroller. Application code and tests remain identical to the reviewed `68b7232` snapshot. The separate unfinished catalog HTML, Vite and `llms/` changes remain in the original checkout.
+
+A fresh dependency installation and full production build passed in the clean release checkout. The preceding pass's complete verification is recorded below. Release logs and the final publication/deployment record are in `/Users/nationalbank/GitHub/design-tokens/.artifacts/release-2026-11-01/`; `publication.json` records the merged revision, production URL and live verification result. The established deployment target is Vercel project `prj_5K4UrqWVGwIWPIxGYAe8OkwfpxBW`, team `team_luOipoW354gDuRyyUaYVO2mg`, serving `https://evenkit.dev`. The Vercel connector lacks team access; the authenticated CLI can access this exact project and team. No project settings or default branch settings are changed.
+
+Resume with `git fetch origin`, `git log -3 origin/main --oneline`, and `vercel inspect https://evenkit.dev --scope team_luOipoW354gDuRyyUaYVO2mg`. Read the publication record for the release's final outcome. Historical implementation and verification handoffs follow.
+
+---
+
 # Third complete catalog improvement pass: 1 November 2026
 
 Status: DONE. Completed the additional improvement pass in `/Users/nationalbank/GitHub/design-tokens` on `codex/component-improvements`, starting at `fcf175a`. All 116 catalog entries received an individual source, design and functionality review: 25 improved and 91 retained. `docs/component-pass-3-2026-11-01.md` is the ordered checklist. Detailed evidence is under `.artifacts/component-pass-3-2026-11-01/`, including 232 fresh baseline captures, final states and host probes, seven subsystem ledgers, and the combined `all-review.json`. Independent review confirmed exact coverage and no remaining code or visual findings.
@@ -178,6 +188,12 @@ Verification passed: final production build in the integration and primary check
 The original uncommitted catalog HTML and two LLM-source files are byte-identical. Vite retains the original LLM plugin with the merged manifest setting. Preservation hashes and verification evidence are in `.artifacts/worktree-integration/`, copied from the temporary integration checkout. Owned fixture servers/scratch were cleaned; other chats' worktrees and servers were preserved. New UI/sidebar edits started after the recorded design snapshot and remain uncommitted in the primary checkout, outside this merge. The recorded checks apply to the integrated cutoffs, not those ongoing edits. The app rejected archiving the integration checkout because it is this task's primary checkout; it is retained with a clean verified snapshot.
 
 No push, publication, deployment or existing-application migration occurred. Physical devices, screen-reader speech and live provider/storage behavior were not newly exercised. No required work remains for this merge. Resume with `git status --short`, `git log -5 --oneline` and `cat docs/worktree-merge-review.md`. Historical entries below retain their original snapshot context.
+
+---
+
+# Sidebar dropdown fix: 26 October 2026
+
+Status: DONE. Fixed catalog sidebar/header jumping upward when a main-content dropdown opens on a scrolled page. Horizontal clipping now applies only to the body, preserving viewport scroll locking and sticky positioning. Added a regression covering both scroll positions, selection, Escape, focus recovery and blocked background scrolling. Reproduced in all three browser engines; 17 Chromium journeys and six Firefox/WebKit sidebar journeys pass, as do catalog build, configured types and full lint. Before/after evidence and details are appended to `docs/design-pass-review.md`. Committed and merged into local `main`; no push or deployment.
 
 ---
 
