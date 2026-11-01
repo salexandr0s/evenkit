@@ -1,4 +1,4 @@
-.pk-step-indicator { box-sizing: border-box; min-width: 0; container-type: inline-size; color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); }
+.pk-step-indicator { box-sizing: border-box; inline-size: 100%; min-width: 0; container-type: inline-size; color: var(--pk-color-fg); font-family: var(--pk-font-family-sans); }
 .pk-step-indicator ol { display: flex; flex-wrap: wrap; gap: var(--pk-space-4); margin: 0; padding: 0; list-style: none; }
 .pk-step-indicator li { flex: 1; min-width: 0; padding-block-start: var(--pk-space-3); border-block-start: var(--pk-border-width-thick) solid var(--pk-color-border); }
 .pk-step-indicator li[data-state="current"], .pk-step-indicator li[data-state="complete"] { border-color: var(--pk-color-accent); }

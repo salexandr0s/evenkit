@@ -59,6 +59,21 @@ test("remote command search retries, clears empty results, and discards an older
   await expect(dialog.locator("[data-command-item]")).toHaveCount(5);
 });
 
+test("step progress retains its available width in a non-stretching flex host", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/#step-indicator");
+  const host = page.locator(".command-wizard-preview");
+  await host.evaluate(element => Object.assign(element.style, { display: "flex", flexDirection: "column", alignItems: "flex-start" }));
+  const progress = page.getByRole("navigation", { name: "Workspace setup steps", exact: true });
+  expect((await progress.boundingBox())?.width).toBeCloseTo((await host.boundingBox())!.width, 0);
+  await expect(progress.locator("ol")).toHaveCSS("flex-direction", "row");
+  await progress.getByRole("button", { name: /Workspace Complete/ }).press("Enter");
+  await expect(progress.locator('[aria-current="step"]')).toContainText("Workspace");
+  await page.setViewportSize({ width: 360, height: 780 });
+  await expect(progress.locator("ol")).toHaveCSS("flex-direction", "column");
+  expect(await progress.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+});
+
 test("wizard validates, preserves answers through back navigation, and restores a saved draft", async ({ page }) => {
   await page.goto("/#onboarding-wizard");
   const wizard = page.getByRole("region", { name: "Workspace setup", exact: true });
