@@ -77,6 +77,7 @@ const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(function NavLink({ r
 function Navigation({ groups, activeItemId, label, renderLink, onNavigate, collapsed = false, tooltipsEnabled = true, suppressTooltips = false }: NavigationProps) {
   const navigationId = useId();
   const navigationRef = useRef<HTMLElement>(null);
+  const disclosureFocus = useRef<HTMLElement | null>(null);
   const [tooltipSide, setTooltipSide] = useState<"left" | "right">("right");
   const [openItemId, setOpenItemId] = useState<string | null>(null);
   const activeGroupExpanded = groups.find(group => group.items.some(item => item.id === activeItemId))?.expanded;
@@ -113,6 +114,17 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
     return () => observer.disconnect();
   }, [activeItemId, activeGroupExpanded, collapsed]);
 
+  useLayoutEffect(() => {
+    const focused = disclosureFocus.current;
+    const navigation = navigationRef.current;
+    if (!focused?.isConnected || !navigation?.contains(focused)) return;
+    const disclosure = focused.closest<HTMLElement>(".pk-admin-nav-disclosure[inert]");
+    if (!disclosure || (document.activeElement !== focused && document.activeElement !== document.body)) return;
+    const trigger = disclosure.parentElement?.querySelector<HTMLButtonElement>(".pk-admin-nav-group-trigger");
+    if (trigger && !trigger.closest("[inert]") && trigger.getClientRects().length > 0) trigger.focus({ preventScroll: true });
+    disclosureFocus.current = null;
+  }, [groups]);
+
   function changeTooltipOpen(itemId: string, open: boolean) {
     if (suppressTooltips || !collapsed || (open && navigationRef.current?.getClientRects().length === 0)) return;
     if (open && navigationRef.current) setTooltipSide(window.getComputedStyle(navigationRef.current).direction === "rtl" ? "left" : "right");
@@ -120,7 +132,11 @@ function Navigation({ groups, activeItemId, label, renderLink, onNavigate, colla
   }
 
   return (
-    <nav ref={navigationRef} className="pk-admin-navigation" data-grouped={groups.some(group => group.expanded !== undefined && group.onExpandedChange) || undefined} aria-label={label}>
+    <nav ref={navigationRef} className="pk-admin-navigation" data-grouped={groups.some(group => group.expanded !== undefined && group.onExpandedChange) || undefined} aria-label={label}
+      onFocusCapture={event => { disclosureFocus.current = event.target; }}
+      onBlurCapture={event => {
+        if (event.relatedTarget !== null || !event.target.closest(".pk-admin-nav-disclosure[inert]")) disclosureFocus.current = null;
+      }}>
       {groups.map((group, index) => {
         const disclosure = !!group.label && group.expanded !== undefined && !!group.onExpandedChange;
         const groupId = group.id ?? String(index);
