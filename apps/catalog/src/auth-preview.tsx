@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   Badge, Button, ButtonLink, Label, LayoutDashboardIcon,
   LoginPage, NewPasswordPage, PasswordField, PasswordResetPage, Select, SignupPage,
-  type AuthResult
+  type AuthResult, type AuthSubmissionContext
 } from "@evenkit/ui";
 import type { AuthPreviewKind } from "./auth-data";
 import "./auth-preview.css";
@@ -70,7 +70,7 @@ function PreviewSession({ kind, onRestart }: { kind: AuthPreviewKind; onRestart:
     request?.resolve(cancelledResult);
   }, []);
 
-  async function submit(): Promise<PreviewResult> {
+  async function submit(_values: unknown, { signal }: AuthSubmissionContext): Promise<PreviewResult> {
     setRequests((count) => count + 1);
     if (outcome === "rejected") {
       throw new Error("DEMO_AUTH_TRANSPORT_FAILURE: internal status 503; preview-only diagnostic.");
@@ -85,7 +85,20 @@ function PreviewSession({ kind, onRestart }: { kind: AuthPreviewKind; onRestart:
       // superseded request as well, so the preview cannot leave an orphan promise.
       pending.current?.resolve(cancelledResult);
       setHeld(true);
-      return new Promise<PreviewResult>((resolve) => { pending.current = { resolve }; });
+      return new Promise<PreviewResult>((resolve) => {
+        function settle(result: PreviewResult) {
+          signal.removeEventListener("abort", abort);
+          if (pending.current?.resolve === settle) {
+            pending.current = null;
+            setHeld(false);
+          }
+          resolve(result);
+        }
+        function abort() { settle(cancelledResult); }
+        pending.current = { resolve: settle };
+        if (signal.aborted) abort();
+        else signal.addEventListener("abort", abort, { once: true });
+      });
     }
     return successResult(kind);
   }

@@ -40,7 +40,7 @@ test("login validates, reveals passwords, and recovers from structured and rejec
   await expect(page.getByText("Preview requests: 3", { exact: true })).toBeVisible();
 });
 
-test("pending login locks a request immediately and resets without retaining credentials", async ({ page }) => {
+test("pending login guards duplicate requests, recovers after cancellation and clears credentials on restart", async ({ page }) => {
   await page.goto("/#login");
   await choose(page, "Submission outcome", "Pending");
   const form = page.getByRole("form", { name: "Sign in", exact: true });
@@ -56,6 +56,15 @@ test("pending login locks a request immediately and resets without retaining cre
   await expect(form.getByRole("button", { name: "Sign in", exact: true })).toBeDisabled();
   await expect(form.getByRole("button", { name: "Sign in", exact: true })).toHaveAttribute("aria-busy", "true");
   await expect(form.locator('input[name="password"]')).toHaveAttribute("readonly");
+  await form.getByRole("button", { name: "Cancel request", exact: true }).click();
+  await expect(form.getByRole("alert")).toBeFocused();
+  await expect(form.getByRole("alert")).toContainText("Request canceled. You can try again.");
+  await expect(page.getByRole("combobox", { name: "Submission outcome", exact: true })).toBeEnabled();
+  await expect(page.getByRole("button", { name: "Complete preview request", exact: true })).toHaveCount(0);
+  await expect(form.locator('input[name="password"]')).toHaveValue("sample password");
+  await expect(form.locator('input[name="password"]')).not.toHaveAttribute("readonly");
+  await form.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page.getByText("Preview requests: 2", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Complete preview request", exact: true }).click();
   await expect(form).not.toBeVisible();
   await page.getByRole("button", { name: "Restart preview", exact: true }).click();
