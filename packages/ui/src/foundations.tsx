@@ -36,7 +36,10 @@ export interface InlineProps extends StackProps { align?: "start" | "center" | "
 export const Inline = forwardRef<HTMLDivElement, InlineProps>(function Inline({ gap = "3", align = "center", justify = "start", wrap = true, className, ...props }, ref) {
   return <div {...props} ref={ref} className={classes("pk-layout pk-inline", className)} data-gap={gap} data-align={align} data-justify={justify} data-wrap={wrap} />;
 });
-export interface GridProps extends StackProps { columns?: 1 | 2 | 3 | 4 }
+export interface GridProps extends StackProps {
+  /** Maximum columns; narrower containers and viewports reduce the count. */
+  columns?: 1 | 2 | 3 | 4;
+}
 export const Grid = forwardRef<HTMLDivElement, GridProps>(function Grid({ gap = "4", columns = 2, className, ...props }, ref) {
   return <div {...props} ref={ref} className={classes("pk-layout pk-grid", className)} data-gap={gap} data-columns={columns} />;
 });
@@ -87,7 +90,8 @@ export const VisuallyHidden = forwardRef<HTMLSpanElement, ComponentPropsWithoutR
 export const SkipLink = forwardRef<HTMLAnchorElement, ComponentPropsWithoutRef<"a">>(function SkipLink({ className, onClick, ...props }, ref) {
   return <a {...props} ref={ref} className={classes("pk-skip-link", className)} onClick={event => {
     onClick?.(event);
-    if (event.defaultPrevented || !props.href?.startsWith("#")) return;
+    const targetName = event.currentTarget.target.toLowerCase();
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || (targetName && targetName !== "_self") || event.currentTarget.hasAttribute("download") || !props.href?.startsWith("#")) return;
     const target = document.getElementById(props.href.slice(1));
     target?.focus();
   }} />;

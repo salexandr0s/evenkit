@@ -78,6 +78,15 @@ test("action groups retain normal Tab order and skip links focus the destination
   const skip = page.getByRole("link", { name: "Skip to example content", exact: true });
   await skip.focus();
   await expect(skip).toBeInViewport();
+  for (const modifier of ["ctrlKey", "metaKey", "shiftKey", "altKey"]) {
+    await skip.evaluate((element, key) => {
+      // Suppress the synthetic event's native fragment navigation after React
+      // handles it, so this check isolates the component's focus behavior.
+      document.addEventListener("click", event => event.preventDefault(), { once: true });
+      element.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, button: 0, [key]: true }));
+    }, modifier);
+    await expect(skip).toBeFocused();
+  }
   await skip.press("Enter");
   await expect(page.getByRole("region", { name: "Example content", exact: true })).toBeFocused();
   await page.locator(".foundations-preview").getByRole("button", { name: "Add project", exact: true }).click();

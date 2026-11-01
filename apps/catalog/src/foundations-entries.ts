@@ -39,7 +39,7 @@ export function ProjectIntroduction() {
   },
   {
     id: "layout-groups", name: "Stack, inline and grid", group: "Foundations", inventoryIds: ["A03"],
-    description: "Token-spaced groups that wrap and collapse with the available viewport.",
+    description: "Token-spaced groups that wrap and reduce columns to fit their container and viewport.",
     tags: ["stack", "inline", "group", "grid", "columns", "spacing", "responsive", "A03"],
     source: "Original kit layout primitives", sourceUrl: "https://mantine.dev/core/stack/",
     usage: styles + `import { Badge, Grid, Heading, Inline, Stack } from "@evenkit/ui";
