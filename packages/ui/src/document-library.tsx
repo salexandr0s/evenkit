@@ -133,7 +133,15 @@ export function DocumentLibrary({ entries, total, query, onQueryChange, path, on
       selection={{ ...selection, getRowLabel: entry => entry.name, scopeLabel: "Selected items in this folder and filter, across pages", actions: removeAction }}
       pageSizeOptions={[6, 12, 24]} emptyTitle={emptyTitle} emptyDescription={emptyDescription}
       emptyAction={filtered ? <Button variant="outline" onClick={resetFilters}>Clear filters</Button> : null} />
-      : <div ref={grid} className="pk-document-grid-region" onFocusCapture={event => { gridFocus.current = event.target; }} onBlurCapture={event => { if (event.relatedTarget !== null) gridFocus.current = null; }}>
+      : <div ref={grid} className="pk-document-grid-region" onFocusCapture={event => { gridFocus.current = event.target; }} onBlurCapture={event => {
+        if (event.relatedTarget !== null) gridFocus.current = null;
+        else {
+          const previous = gridFocus.current;
+          queueMicrotask(() => {
+            if (gridFocus.current === previous && previous?.isConnected && previous.ownerDocument.activeElement !== previous) gridFocus.current = null;
+          });
+        }
+      }}>
         <BulkActionBar count={selection.selectedIds.length} scopeLabel="Selected items in this folder and filter, across pages" disabled={unavailable} onClear={() => { gridStatus.current?.focus(); selection.onSelectionChange([]); }}>{removeAction}</BulkActionBar>
         <p ref={gridStatus} tabIndex={-1} className="pk-document-status" role="status">{status}</p>
         {unavailable || resetPending ? <div className="pk-document-state">{error ? <div role="alert"><EmptyState title="Documents could not be loaded" description={error} action={onRetry ? <Button variant="outline" onClick={onRetry}>Try again</Button> : null} /></div> : <Spinner label="Loading documents" />}</div>

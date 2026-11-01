@@ -102,7 +102,15 @@ export function PersistentBanner({ contextKey, revision = 0, heading, children, 
     }
   }
 
-  return <div ref={region} role="region" tabIndex={-1} aria-labelledby={headingId} className={classes("pk-persistent-banner", className)} onFocusCapture={event => { focused.current = event.target; }} onBlurCapture={event => { if (event.relatedTarget instanceof HTMLElement && !event.currentTarget.contains(event.relatedTarget)) focused.current = null; }}>
+  return <div ref={region} role="region" tabIndex={-1} aria-labelledby={headingId} className={classes("pk-persistent-banner", className)} onFocusCapture={event => { focused.current = event.target; }} onBlurCapture={event => {
+    if (event.relatedTarget !== null) focused.current = null;
+    else {
+      const previous = focused.current;
+      queueMicrotask(() => {
+        if (focused.current === previous && previous?.isConnected && previous.ownerDocument.activeElement !== previous) focused.current = null;
+      });
+    }
+  }}>
     <ActionMessage role="group" tone={tone} icon={icon} heading={<span id={headingId}>{heading}</span>} actions={actions.length || dismissal ? <>
       {actions.map(action => <span key={action.id} className="pk-banner-action">
         <Button ref={node => { if (node) controls.current.set(`action:${action.id}`, node); else controls.current.delete(`action:${action.id}`); }} variant="outline" size="sm" aria-disabled={pending !== null || Boolean(action.unavailable)} aria-busy={pending === `action:${action.id}` || undefined} aria-describedby={action.unavailable ? `${headingId}-${action.id}` : undefined} onClick={() => { void run(`action:${action.id}`); }}>

@@ -85,7 +85,15 @@ export function FilePreview({ file, onRefresh, variant = "default", showActions 
         : "This preview is unavailable. The file may have moved or access may have changed.";
   function refresh() { frame.current?.focus({ preventScroll: true }); onRefresh?.(file); }
   return <section ref={frame} tabIndex={thumbnail ? undefined : -1} className={classes("pk-file-preview", className)} aria-label={`Preview of ${file.name}`} data-state={state} data-variant={variant}
-    onFocusCapture={event => { focused.current = event.target; }} onBlurCapture={event => { if (event.relatedTarget !== null) focused.current = null; }}>
+    onFocusCapture={event => { focused.current = event.target; }} onBlurCapture={event => {
+      if (event.relatedTarget !== null) focused.current = null;
+      else {
+        const previous = focused.current;
+        queueMicrotask(() => {
+          if (focused.current === previous && previous?.isConnected && previous.ownerDocument.activeElement !== previous) focused.current = null;
+        });
+      }
+    }}>
     {!thumbnail ? <div className="pk-file-preview-header"><span className="pk-file-preview-icon" aria-hidden="true"><FileTextIcon /></span><div><strong>{file.name}</strong><span>{typeLabel}</span></div></div> : null}
     <div className="pk-file-preview-stage" data-kind={kind}>
       {state === "loading" ? <div className="pk-file-preview-placeholder" role="status" tabIndex={thumbnail ? undefined : 0}><Spinner aria-hidden="true" /><span>{thumbnail ? "Loading preview…" : preview?.status === "loading" && preview.message ? preview.message : `Loading preview for ${file.name}…`}</span></div>

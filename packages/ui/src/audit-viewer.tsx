@@ -75,6 +75,10 @@ export function AuditViewer({
   const exportButton = useRef<HTMLButtonElement>(null);
   const cancelButton = useRef<HTMLButtonElement>(null);
   const exportHasFocus = useRef(false);
+  const setCancelButton = useCallback((node: HTMLButtonElement | null) => {
+    if (!node) exportHasFocus.current = Boolean(cancelButton.current && cancelButton.current === cancelButton.current.ownerDocument.activeElement);
+    cancelButton.current = node;
+  }, []);
   const exportStarted = useRef(false);
   const focusedControl = useRef<HTMLElement | null>(null);
   const [notice, setNotice] = useState<{ key: string; text: string } | null>(null);
@@ -162,7 +166,16 @@ export function AuditViewer({
   const exportDenied = action.result?.status === "denied";
   return <section {...props} ref={root} className={classes("pk-audit-viewer", className)} aria-labelledby={props["aria-label"] ? undefined : id}
     onFocusCapture={event => { if (event.target instanceof HTMLElement) focusedControl.current = event.target; props.onFocusCapture?.(event); }}
-    onBlurCapture={event => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) focusedControl.current = null; props.onBlurCapture?.(event); }}>
+    onBlurCapture={event => {
+      if (event.relatedTarget !== null) focusedControl.current = null;
+      else {
+        const previous = focusedControl.current;
+        queueMicrotask(() => {
+          if (focusedControl.current === previous && previous?.isConnected && previous.ownerDocument.activeElement !== previous) focusedControl.current = null;
+        });
+      }
+      props.onBlurCapture?.(event);
+    }}>
     <header className="pk-audit-header"><div className="pk-audit-heading"><div className="pk-audit-heading-meta"><span className="pk-audit-eyebrow">Team administration</span><Badge size="sm" variant="outline">Read only</Badge></div><h2 ref={heading} tabIndex={-1} id={id}>{label}</h2><p>Recorded activity, with the actor and outcome of each event.</p></div>
       {onExport ? <IconButton ref={exportButton} label="Export matching events" variant="outline" disabled={cannotExport} onClick={() => { void exportEvents(); }} aria-describedby={exportDisabledReason ? `${id}-export-reason` : undefined}><DownloadIcon size="sm" /></IconButton> : null}
     </header>
@@ -176,7 +189,7 @@ export function AuditViewer({
       </div>
       {hasFilters && !denied ? <IconButton label="Clear audit filters" className="pk-audit-reset" variant="ghost" size="sm" onClick={resetFilters}><FilterXIcon size="sm" /></IconButton> : null}
     </div>
-    {action.pending ? <div className="pk-audit-export-pending"><p role="status"><Spinner size="sm" aria-hidden="true" />Preparing export…</p><IconButton ref={cancelButton} label="Cancel export" variant="outline" size="sm" onFocus={() => { exportHasFocus.current = true; }} onBlur={event => { if (event.relatedTarget) exportHasFocus.current = false; }} onClick={cancelExport}><XIcon size="sm" /></IconButton></div> : null}
+    {action.pending ? <div className="pk-audit-export-pending"><p role="status"><Spinner size="sm" aria-hidden="true" />Preparing export…</p><IconButton ref={setCancelButton} label="Cancel export" variant="outline" size="sm" onClick={cancelExport}><XIcon size="sm" /></IconButton></div> : null}
     {action.result ? <ActionMessage tone={action.result.status === "success" ? "success" : stale || exportDenied ? "warning" : "error"} heading={action.result.status === "success" ? "Export ready" : stale ? "Activity or access changed" : exportDenied ? "Export unavailable" : "Export failed"}
       actions={action.result.status === "error" ? <IconButton label="Retry export" variant="outline" size="sm" onClick={() => { void exportEvents(); }}><RotateCcwIcon size="sm" /></IconButton> : stale || exportDenied ? <IconButton label="Refresh activity" variant="outline" size="sm" onClick={refresh}><RotateCcwIcon size="sm" /></IconButton> : undefined}>
       {action.result.message ?? "The requested export is ready."}

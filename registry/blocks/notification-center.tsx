@@ -101,7 +101,15 @@ export function NotificationCenter({ groups, page, pageCount, contextKey, revisi
   function mark(ids: readonly string[], read: boolean) { void run({ type: "operation", operation: { type: "read", ids: [...ids], read } }); }
   const selectionState = selectedIds.length === 0 ? false : selectedIds.length === eligible.length ? true : "indeterminate";
 
-  return <section className="pk-notification-center" aria-labelledby={headingId} onFocusCapture={event => { if (event.target instanceof HTMLElement) focused.current = event.target; }}>
+  return <section className="pk-notification-center" aria-labelledby={headingId} onFocusCapture={event => { if (event.target instanceof HTMLElement) focused.current = event.target; }} onBlurCapture={event => {
+    if (event.relatedTarget !== null) focused.current = null;
+    else {
+      const previous = focused.current;
+      queueMicrotask(() => {
+        if (focused.current === previous && previous?.isConnected && previous.ownerDocument.activeElement !== previous) focused.current = null;
+      });
+    }
+  }}>
     <header className="pk-notification-header">
       <span className="pk-notification-header-icon" aria-hidden="true"><InboxIcon size="lg" /></span>
       <div className="pk-notification-header-content">
