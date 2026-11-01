@@ -122,6 +122,56 @@ test("host column removal recovers owned focus without reclaiming relinquished f
   }
 });
 
+test("column settings follow the table fallback through persisted and changing columns", async ({ page }) => {
+  const settings = page.getByRole("button", { name: "Display settings", exact: true });
+  const project = page.getByRole("checkbox", { name: "Project", exact: true });
+  const actions = page.getByRole("checkbox", { name: "Actions", exact: true });
+  const hidden = page.getByLabel("Hidden column IDs", { exact: true });
+
+  await page.getByRole("button", { name: "Hide all columns", exact: true }).click();
+  await settings.click();
+  await expect(project).toBeChecked();
+  await expect(project).toBeDisabled();
+  await expect(actions).not.toBeChecked();
+  await expect(hidden).toHaveText("name,actions");
+  await actions.check();
+  await expect(actions).toBeDisabled();
+  await expect(project).not.toBeChecked();
+  await expect(hidden).toHaveText("name");
+  await expect(page.getByRole("button", { name: "Open Alpha", exact: true })).toBeVisible();
+  await expect(page.getByRole("columnheader", { name: "Project", exact: true })).toHaveCount(0);
+
+  await project.check();
+  await actions.uncheck();
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Remove project column", exact: true }).click();
+  await settings.click();
+  await expect(actions).toBeChecked();
+  await expect(actions).toBeDisabled();
+  await expect(hidden).toHaveText("actions");
+  await expect(page.getByRole("button", { name: "Open Alpha", exact: true })).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Hide all columns", exact: true }).click();
+  await page.getByRole("button", { name: "Restore required project column", exact: true }).click();
+  await settings.click();
+  await expect(project).toBeChecked();
+  await expect(project).toBeDisabled();
+  await expect(actions).not.toBeChecked();
+  await expect(hidden).toHaveText("name,actions");
+  await expect(page.getByRole("cell", { name: "Alpha", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Open Alpha", exact: true })).toHaveCount(0);
+
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Restore records", exact: true }).click();
+  await settings.click();
+  await expect(project).toBeChecked();
+  await expect(project).toBeEnabled();
+  await expect(actions).toBeChecked();
+  await expect(actions).toBeEnabled();
+  await expect(hidden).toHaveText("none");
+});
+
 for (const scoped of [false, true]) test(`${scoped ? "scoped" : "unscoped"} bulk actions stop during loading and errors and recover focus`, async ({ page }) => {
   if (scoped) await page.getByRole("checkbox", { name: "Use selection scope", exact: true }).check();
   await page.getByRole("checkbox", { name: "Select Alpha", exact: true }).check();

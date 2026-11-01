@@ -71,11 +71,12 @@ export interface ColumnSettingsProps {
 /** The host persists these values. Required columns and the final visible column cannot be hidden. */
 export function ColumnSettings({ columns, hiddenIds, onHiddenIdsChange, density, onDensityChange, disabled = false, label = "Display settings" }: ColumnSettingsProps) {
   const densityId = useId();
-  const visible = columns.filter(column => column.required || !hiddenIds.includes(column.id));
+  const requestedVisible = columns.filter(column => column.required || !hiddenIds.includes(column.id));
+  const visible = requestedVisible.length > 0 ? requestedVisible : columns.slice(0, 1);
   return <Popover><PopoverTrigger asChild><IconButton size="sm" variant="outline" disabled={disabled} label={label}><Columns3Icon size="sm" /></IconButton></PopoverTrigger>
     <PopoverContent className="pk-column-settings" align="end"><PopoverTitle>Display settings</PopoverTitle><PopoverDescription>Choose columns and row spacing.</PopoverDescription>
       <fieldset className="pk-column-settings-list" disabled={disabled}><legend>Visible columns</legend>{columns.map(column => {
-        const checked = column.required || !hiddenIds.includes(column.id);
+        const checked = visible.some(item => item.id === column.id);
         return <Checkbox key={column.id} label={column.label} checked={checked} disabled={column.required || (checked && visible.length === 1)}
           onCheckedChange={next => onHiddenIdsChange(next === true ? hiddenIds.filter(id => id !== column.id) : [...new Set([...hiddenIds, column.id])])} />;
       })}</fieldset>
