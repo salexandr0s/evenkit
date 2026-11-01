@@ -28,9 +28,9 @@
 .theme-card-heading h4 { margin: 0; font-size: var(--pk-font-size-base); font-weight: var(--pk-font-weight-semibold); }
 .theme-card-selected { display: inline-flex; align-items: center; gap: var(--pk-space-1); color: var(--pk-color-accent); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-medium); }
 .theme-card-description { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); }
-.theme-card-swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(calc(var(--pk-space-16) - var(--pk-space-2)), 1fr)); gap: var(--pk-space-2); margin: auto 0 0; padding-top: var(--pk-space-2); }
+.theme-card-swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, max(calc(var(--pk-space-16) - var(--pk-space-2)), 8ch)), 1fr)); gap: var(--pk-space-2); margin: auto 0 0; padding-top: var(--pk-space-2); font-size: var(--pk-font-size-xs); }
 .theme-card-swatches > div { min-width: 0; }
-.theme-card-swatches dt { display: flex; flex-direction: column; gap: var(--pk-space-1-5); font-size: var(--pk-font-size-xs); }
+.theme-card-swatches dt { display: flex; flex-direction: column; gap: var(--pk-space-1-5); font-size: var(--pk-font-size-xs); overflow-wrap: anywhere; }
 .theme-card-swatches dt > span { display: block; height: var(--pk-space-6); border: var(--pk-border-width-hairline) solid var(--pk-color-border-strong); border-radius: var(--pk-radius-sm); }
 .theme-card-swatches dd { margin: var(--pk-space-1) 0 0; color: var(--pk-color-fg-muted); font-family: var(--pk-font-family-mono); font-size: var(--pk-font-size-xs); overflow-wrap: anywhere; }
 .theme-card .pk-button { min-height: var(--pk-layout-touch); }
