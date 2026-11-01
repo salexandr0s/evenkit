@@ -131,6 +131,13 @@ test("sheets save through an external footer form and restore the actual invokin
   const trigger = page.getByRole("button", { name: "Edit notes in sheet" });
   await trigger.click();
   const sheet = page.getByRole("dialog", { name: "Project notes", exact: true });
+  const notes = sheet.getByRole("textbox", { name: "Launch notes" });
+  await notes.fill("   ");
+  await sheet.getByRole("button", { name: "Save notes", exact: true }).click();
+  await expect(sheet).toBeVisible();
+  await expect(notes).toBeFocused();
+  await expect(notes).toHaveAttribute("aria-invalid", "true");
+  await expect(notes).toHaveAccessibleDescription("Enter launch notes.");
   await sheet.getByRole("textbox", { name: "Launch notes" }).fill("Review the final schedule.");
   await sheet.getByRole("button", { name: "Save notes", exact: true }).click();
   await expect(sheet).toHaveCount(0);
