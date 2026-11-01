@@ -124,7 +124,20 @@ test("navbar drawer dismisses, closes on expansion, and recovers focus across co
 
 test("navigation wraps long paths and preserves narrow and RTL geometry", async ({ page }) => {
   await page.goto("/#breadcrumbs");
-  await page.getByRole("navigation", { name: "Breadcrumb", exact: true }).getByRole("link", { name: "Projects", exact: true }).click();
+  const projects = page.getByRole("navigation", { name: "Breadcrumb", exact: true }).getByRole("link", { name: "Projects", exact: true });
+  const modifiedWasPrevented = await projects.evaluate(element => {
+    let prevented = false;
+    document.addEventListener("click", event => {
+      prevented = event.defaultPrevented;
+      // Observe React's decision, then keep this test on the catalog page.
+      event.preventDefault();
+    }, { once: true });
+    element.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, ctrlKey: true }));
+    return prevented;
+  });
+  expect(modifiedWasPrevented).toBe(false);
+  await expect(page.getByText("Preview destination: Launch checklist", { exact: true })).toBeVisible();
+  await projects.press("Enter");
   await expect(page.getByText("Preview destination: Projects", { exact: true })).toBeVisible();
   for (const width of [360, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });

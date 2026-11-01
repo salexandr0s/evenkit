@@ -69,7 +69,7 @@ export function WorkspaceSwitcher({ workspaces, value, onValueChange, onSwitch, 
     }
   }
   function move(event: KeyboardEvent<HTMLElement>) {
-    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+    if (event.nativeEvent.isComposing || event.altKey || event.ctrlKey || event.metaKey || !["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
     const options = Array.from(list.current?.querySelectorAll<HTMLButtonElement>("button:not(:disabled)") ?? []);
     if (!options.length) return;
     event.preventDefault();

@@ -51,7 +51,13 @@ function CollapsiblePreview() {
 function BreadcrumbsPreview() {
   const [destination, setDestination] = useState("Launch checklist");
   function renderLink(props: NavigationLinkProps) {
-    return <a {...props} onClick={event => { props.onClick?.(event); if (!event.defaultPrevented) { event.preventDefault(); setDestination(String(props.children)); } }} />;
+    return <a {...props} onClick={event => {
+      props.onClick?.(event);
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey
+        || event.currentTarget.hasAttribute("download") || (event.currentTarget.target && event.currentTarget.target !== "_self")) return;
+      event.preventDefault();
+      setDestination(String(props.children));
+    }} />;
   }
   const items = [{ id: "workspace", label: "Workspace", href: "/workspace" }, { id: "projects", label: "Projects", href: "/projects" }, { id: "launch", label: "Launch checklist" }];
   return <div className="navigation-preview"><Stack gap="3"><Breadcrumbs items={items} renderLink={renderLink} /><Heading as="h3" size="3">Launch checklist</Heading><p className="pk-text-muted">The release plan, decisions and next steps for the Studio team.</p><p role="status" className="navigation-preview-status">Preview destination: {destination}</p></Stack>

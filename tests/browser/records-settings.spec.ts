@@ -28,6 +28,13 @@ test("workspace switching searches, retries and cancels without changing context
   await expect(popup.getByRole("button", { name: /Cedar Archive/ })).toBeDisabled();
   const search = popup.getByRole("searchbox", { name: "Find a workspace", exact: true });
   await search.fill("Aster");
+  const compositionWasPrevented = await search.evaluate(element => {
+    const event = new KeyboardEvent("keydown", { key: "ArrowDown", isComposing: true, bubbles: true, cancelable: true });
+    element.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(compositionWasPrevented).toBe(false);
+  await expect(search).toBeFocused();
   await search.press("ArrowDown");
   await expect(popup.getByRole("button", { name: /Aster Research/ })).toBeFocused();
   await page.keyboard.press("Enter");
