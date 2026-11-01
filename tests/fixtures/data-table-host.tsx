@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Button, DataTable, type DataTableColumn } from "@evenkit/ui";
+import { Button, Checkbox, DataTable, type DataTableColumn } from "@evenkit/ui";
 import "@evenkit/tokens/css";
 import "@evenkit/ui/css";
 
@@ -27,6 +27,10 @@ const pageSizes = [2, 3] as const;
 
 function DataTableHost() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [scoped, setScoped] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<readonly string[]>([]);
+  const [actions, setActions] = useState(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function clearTimer() {
@@ -44,14 +48,24 @@ function DataTableHost() {
           clearTimer();
           timer.current = setTimeout(() => { timer.current = null; setLoading(true); }, 500);
         }}>Schedule loading</Button>
-        <Button onClick={() => { clearTimer(); setLoading(false); }}>Restore records</Button>
+        <Button onClick={() => {
+          clearTimer();
+          timer.current = setTimeout(() => { timer.current = null; setError("Records could not be refreshed."); }, 500);
+        }}>Schedule error</Button>
+        <Button onClick={() => { clearTimer(); setLoading(false); setError(null); }}>Restore records</Button>
         <Button variant="outline">Outside control</Button>
+        <Checkbox label="Use selection scope" checked={scoped} onCheckedChange={value => setScoped(value === true)} />
       </div>
       <DataTable
         data={projects} columns={columns} getRowId={getRowId}
         caption="Host projects" searchLabel="Search host projects"
-        initialPageSize={2} pageSizeOptions={pageSizes} loading={loading}
+        initialPageSize={2} pageSizeOptions={pageSizes} loading={loading} error={error}
+        selection={{ selectedIds, onSelectionChange: setSelectedIds, getRowLabel: project => project.name,
+          ...(scoped ? { scopeLabel: "Selected projects on all pages" } : {}),
+          actions: <Button onClick={() => setActions(value => value + 1)}>Archive selected</Button>,
+        }}
       />
+      <output aria-label="Bulk requests">{actions}</output>
     </main>
   );
 }

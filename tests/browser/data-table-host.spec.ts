@@ -105,3 +105,23 @@ test("async loading recovers disabled or removed controls without taking host fo
   await expect(region).toHaveAttribute("aria-busy", "true");
   await expect(outside).toBeFocused();
 });
+
+for (const scoped of [false, true]) test(`${scoped ? "scoped" : "unscoped"} bulk actions stop during loading and errors and recover focus`, async ({ page }) => {
+  if (scoped) await page.getByRole("checkbox", { name: "Use selection scope", exact: true }).check();
+  await page.getByRole("checkbox", { name: "Select Alpha", exact: true }).check();
+  const action = page.getByRole("button", { name: "Archive selected", exact: true });
+  const region = page.getByRole("region", { name: "Host projects table", exact: true });
+  for (const state of ["loading", "error"]) {
+    await page.getByRole("button", { name: `Schedule ${state}`, exact: true }).click();
+    await action.focus();
+    await page.clock.runFor(500);
+    await expect(action).toBeDisabled();
+    await expect(region).toBeFocused();
+    await action.evaluate(button => { if (button instanceof HTMLButtonElement) button.click(); });
+    await expect(page.getByLabel("Bulk requests")).toHaveText("0");
+    await page.getByRole("button", { name: "Restore records", exact: true }).click();
+    await expect(action).toBeEnabled();
+  }
+  await action.click();
+  await expect(page.getByLabel("Bulk requests")).toHaveText("1");
+});
