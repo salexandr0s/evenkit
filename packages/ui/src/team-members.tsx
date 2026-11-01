@@ -136,7 +136,7 @@ export function TeamMembers({ contextKey, teamName, roles, memberStatuses = [], 
     setDialog({ kind, invitation: { ...invitation }, scope: JSON.stringify([contextKey, roleScope, denied ?? "", true, invitationKey(invitation)]) }); setOpen(true);
   }
   async function submit() {
-    if (!dialog || !open || stale || action.pending || unavailable || !availableCallback) return;
+    if (!dialog || !open || stale || blocked || action.pending || unavailable || !availableCallback) return;
     let operation: ((context: TeamActionContext) => Promise<TeamActionResult>) | undefined;
     if (dialog.kind === "invite" && onInvite) {
       const email = draft.email.trim();

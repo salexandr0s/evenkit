@@ -6,7 +6,9 @@ import { build } from "vite";
 let script = "";
 let styles = "";
 test.beforeAll(async () => {
-  const result = await build({ configFile: false, logLevel: "error", plugins: [react()], define: { "process.env.NODE_ENV": '"production"' }, build: { write: false, lib: { entry: fileURLToPath(new URL("../fixtures/team-admin-host.tsx", import.meta.url)), formats: ["iife"], name: "TeamAdminHost" } } });
+  const result = await build({ configFile: false, logLevel: "error", plugins: [react()], define: { "process.env.NODE_ENV": '"production"' },
+    resolve: { alias: [{ find: /^@evenkit\/ui$/, replacement: fileURLToPath(new URL("../../packages/ui/src/index.ts", import.meta.url)) }] },
+    build: { write: false, lib: { entry: fileURLToPath(new URL("../fixtures/team-admin-host.tsx", import.meta.url)), formats: ["iife"], name: "TeamAdminHost" } } });
   const scripts: string[] = [];
   const sheets: string[] = [];
   for (const bundle of Array.isArray(result) ? result : [result]) {
@@ -29,6 +31,26 @@ async function open(page: Page, surface: "acceptance" | "role" | "audit" | "memb
   await expect(page.getByRole("heading", { name: "Team administration host", exact: true })).toBeVisible();
   await page.waitForFunction(() => Boolean(window.teamTestHost));
 }
+
+test("native invitation submission respects blocked outcomes while allowing failure retry", async ({ page }) => {
+  for (const status of ["denied", "stale", "error"] as const) {
+    await open(page, "members");
+    await page.getByRole("button", { name: "Invite member", exact: true }).click();
+    const dialog = page.getByRole("dialog", { name: "Invite a member", exact: true });
+    await dialog.getByRole("textbox", { name: "Email address", exact: true }).fill("new@example.test");
+    await dialog.getByRole("combobox", { name: "Invitation role", exact: true }).click();
+    await page.getByRole("option", { name: "Archive reviewers", exact: true }).click();
+    await dialog.getByRole("button", { name: "Send invitation", exact: true }).click();
+    await page.evaluate(result => window.teamTestHost.resolve(result), { status, message: "Review current access." });
+    await expect(dialog.getByText("Review current access.", { exact: true })).toBeVisible();
+    const email = dialog.getByRole("textbox", { name: "Email address", exact: true });
+    if (status === "error") await expect(email).toBeEnabled();
+    else await expect(email).toBeDisabled();
+    await dialog.getByRole("form", { name: "Invite a member", exact: true }).evaluate(form => (form as HTMLFormElement).requestSubmit());
+    await expect(page.getByLabel("Host requests")).toHaveText(status === "error" ? "2" : "1");
+    if (status !== "error") await expect(dialog.getByText("Review current access.", { exact: true })).toBeVisible();
+  }
+});
 
 // A host may finish after cancellation, or while the account and record are replaced.
 test("acceptance suppresses duplicate requests and ignores late cancelled or stale replies", async ({ page }) => {
