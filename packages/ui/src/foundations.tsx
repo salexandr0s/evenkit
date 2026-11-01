@@ -108,9 +108,10 @@ export interface AvatarProps extends Omit<ComponentPropsWithoutRef<"span">, "chi
   decorative?: boolean;
   imageProps?: Omit<ComponentPropsWithoutRef<"img">, "src" | "alt" | "children">;
 }
+const initialSegments = new Intl.Segmenter(undefined, { granularity: "grapheme" });
 function initials(name: string) {
-  const parts = name.trim().split(/\s+/u).filter(Boolean);
-  return [parts[0], parts.length > 1 ? parts[parts.length - 1] : undefined].filter((part): part is string => Boolean(part)).map(part => Array.from(part)[0]).join("").toLocaleUpperCase() || "?";
+  const parts = name.normalize("NFC").trim().split(/\s+/u).filter(Boolean);
+  return [parts[0], parts.length > 1 ? parts[parts.length - 1] : undefined].filter((part): part is string => Boolean(part)).map(part => initialSegments.segment(part)[Symbol.iterator]().next().value?.segment).join("").toLocaleUpperCase() || "?";
 }
 function AvatarImage({ src, imageProps }: { src: string; imageProps: AvatarProps["imageProps"] }) {
   const [state, setState] = useState<"loading" | "loaded" | "failed">("loading");
