@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
+import { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState, type ComponentPropsWithoutRef, type ReactNode, type RefObject } from "react";
 import { Button } from "./button.js";
 import { Input } from "./field.js";
 import { FieldFrame, useFieldDescription, type FieldContentProps } from "./field-frame.js";
@@ -41,6 +41,22 @@ function useFormReset(control: { current: HTMLInputElement | HTMLButtonElement |
     owner?.addEventListener("reset", handle);
     return () => { owner?.removeEventListener("reset", handle); timers.forEach(clearTimeout); };
   }, [control, form]);
+}
+
+function useDatePopupAvailability(control: RefObject<HTMLInputElement | HTMLButtonElement | null>, open: boolean, setOpen: (open: boolean) => void, disabled: boolean | undefined, readOnly: boolean | undefined) {
+  useEffect(() => {
+    if (disabled || readOnly) { setOpen(false); return; }
+    if (!open) return;
+    const closeIfDisabled = () => { if (control.current?.matches(":disabled")) setOpen(false); };
+    closeIfDisabled();
+    const observer = new MutationObserver(closeIfDisabled);
+    let ancestor = control.current?.parentElement;
+    while (ancestor) {
+      if (ancestor instanceof HTMLFieldSetElement) observer.observe(ancestor, { attributes: true, attributeFilter: ["disabled"] });
+      ancestor = ancestor.parentElement;
+    }
+    return () => observer.disconnect();
+  }, [control, open, setOpen, disabled, readOnly]);
 }
 
 const CanonicalField = forwardRef<HTMLInputElement, CanonicalFieldProps>(function CanonicalField({ value, defaultValue = null, onValueChange, parse, display, validate, formatHint, invalidMessage, label, hint, error, optional, fieldClassName, id, name, form, disabled, readOnly, required, onBlur, onInvalid, endAdornment, "aria-describedby": describedBy, ...props }, forwardedRef) {
@@ -95,6 +111,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(function
   const current = value !== undefined ? value : local;
   const change = (next: string | null) => { if (value === undefined) setLocal(next); onValueChange?.(next); };
   useFormReset(trigger, props.form, () => { if (value === undefined) setLocal(defaultValue); setOpen(false); });
+  useDatePopupAvailability(trigger, open, setOpen, props.disabled, props.readOnly);
   return <Popover open={open && !props.disabled && !props.readOnly} onOpenChange={next => setOpen(next && !trigger.current?.matches(":disabled"))}>
     <DateField {...props} ref={ref} value={current} onValueChange={change} endAdornment={<TooltipProvider><Tooltip><TooltipTrigger asChild><PopoverTrigger asChild><Button ref={trigger} form={props.form} className="pk-date-trigger" variant="ghost" size="sm" shape="icon" aria-label={`${calendarLabel}${current ? `, ${formatDateOnly(current, { locale })}` : ""}`} disabled={props.disabled || props.readOnly}><CalendarDaysIcon /></Button></PopoverTrigger></TooltipTrigger><TooltipContent container={container}>{calendarLabel}</TooltipContent></Tooltip></TooltipProvider>} />
     <PopoverContent ref={popup} container={container} className="pk-date-popup" aria-label={calendarLabel} onOpenAutoFocus={event => { event.preventDefault(); requestAnimationFrame(() => popup.current?.querySelector<HTMLButtonElement>('[tabindex="0"]')?.focus()); }}>
@@ -147,6 +164,7 @@ export function DateRangePicker({ label, value, defaultValue = emptyRange, onVal
   const rangeError = range.start && range.end ? dateRangeValidationMessage(range, constraints) : null;
   const change = (next: DateRange) => { if (value === undefined) setLocal(next); setAttemptError(null); onValueChange?.(next); };
   useFormReset(input, form, () => { if (value === undefined) setLocal(defaultValue); setAttemptError(null); setOpen(false); });
+  useDatePopupAvailability(input, open, setOpen, disabled, readOnly);
   const select = (date: string) => {
     if (input.current?.matches(":disabled") || input.current?.readOnly) { setOpen(false); return; }
     if (!range.start || range.end || date < range.start) { change({ start: date, end: null }); return; }

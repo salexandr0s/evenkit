@@ -88,6 +88,7 @@ export const MultiSelect = forwardRef<HTMLInputElement, MultiSelectProps>(functi
   const distinctOptions = useMemo(() => options.filter((option, index) => options.findIndex(item => item.value === option.value) === index), [options]);
   const items = useMemo(() => Primitive.createItems(distinctOptions, { getValue: item => item.value, getLabel: item => item.label }), [distinctOptions]);
   const labelFor = (item: string) => options.find(option => option.value === item)?.label ?? item;
+  useEffect(() => { if (disabled || readOnly) setOpen(false); }, [disabled, readOnly]);
   useEffect(() => {
     if (!open) return;
     const observer = new MutationObserver(() => { if (state.input.current?.matches(":disabled")) setOpen(false); });
@@ -174,7 +175,7 @@ export const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(function
       <input {...inputProps} ref={state.setInput} id={description.controlId} form={form} className={classes("pk-input pk-combobox-input", className)} data-size={controlSize}
         value={draft} disabled={disabled} readOnly={readOnly} required={required && state.selected.length === 0} aria-required={required} aria-describedby={description.descriptionIds} aria-invalid={description.hasError ? true : invalid}
         onChange={event => { setDraft(event.currentTarget.value); setIssue(""); }}
-        onBlur={event => { onBlur?.(event); if (!event.defaultPrevented && !readOnly && draft.trim()) add(draft); }}
+        onBlur={event => { onBlur?.(event); if (!event.defaultPrevented && !disabled && !readOnly && !event.currentTarget.matches(":disabled") && draft.trim()) add(draft); }}
         onKeyDown={event => {
           onKeyDown?.(event);
           if (event.defaultPrevented || event.nativeEvent.isComposing || disabled || readOnly) return;

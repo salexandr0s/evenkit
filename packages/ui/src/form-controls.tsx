@@ -183,8 +183,9 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(fu
       onMouseDown={event => event.preventDefault()} onClick={() => {
         const start = input.current?.selectionStart ?? null;
         const end = input.current?.selectionEnd ?? null;
+        const direction = input.current?.selectionDirection ?? undefined;
         setVisible(current => !current);
-        queueMicrotask(() => { if (start !== null && end !== null) input.current?.setSelectionRange(start, end); });
+        queueMicrotask(() => { if (start !== null && end !== null) input.current?.setSelectionRange(start, end, direction); });
       }}>{captioned ? visibleText : visible ? <EyeOffIcon size="sm" /> : <EyeIcon size="sm" />}</Button></TooltipTrigger><TooltipContent>{accessibleLabel}</TooltipContent></Tooltip></TooltipProvider>} />;
 });
 

@@ -161,13 +161,15 @@ test("search clear and password visibility preserve native input identity and fo
   const passwordNode = await password.elementHandle();
   if (!passwordNode) throw new Error("Missing password input.");
   await password.fill("sample-secret");
-  await password.evaluate(node => (node as HTMLInputElement).setSelectionRange(2, 5));
+  await password.evaluate(node => (node as HTMLInputElement).setSelectionRange(2, 5, "backward"));
   await page.getByRole("button", { name: "Show password", exact: true }).first().click();
   await expect(password).toHaveAttribute("type", "text");
   await expect(password).toHaveAttribute("autocomplete", "current-password");
   await expect(password).toBeFocused();
   expect(await password.evaluate((node, original) => node === original, passwordNode)).toBe(true);
-  expect(await password.evaluate(node => [(node as HTMLInputElement).selectionStart, (node as HTMLInputElement).selectionEnd])).toEqual([2, 5]);
+  expect(await password.evaluate(node => [(node as HTMLInputElement).selectionStart, (node as HTMLInputElement).selectionEnd, (node as HTMLInputElement).selectionDirection])).toEqual([2, 5, "backward"]);
+  await password.press("Shift+ArrowRight");
+  expect(await password.evaluate(node => [(node as HTMLInputElement).selectionStart, (node as HTMLInputElement).selectionEnd])).toEqual([3, 5]);
   await password.press("Tab");
   const hide = page.getByRole("button", { name: "Hide password", exact: true }).first();
   await expect(hide).toBeFocused();
