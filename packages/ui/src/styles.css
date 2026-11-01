@@ -162,7 +162,7 @@
 .pk-select-scroll { display: flex; align-items: center; justify-content: center; height: var(--pk-space-6); color: var(--pk-color-fg-muted); background: var(--pk-color-surface-elevated); }
 .pk-select-scroll svg { width: var(--pk-layout-icon); height: var(--pk-layout-icon); }
 .pk-label { display: block; color: var(--pk-color-fg); font-weight: var(--pk-font-weight-medium); overflow-wrap: anywhere; }
-.pk-label-cue { margin-inline-start: var(--pk-space-2); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-regular); }
+.pk-label-cue { display: inline-block; unicode-bidi: isolate; margin-inline-start: var(--pk-space-2); color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-regular); }
 .pk-field { display: grid; gap: var(--pk-space-2); min-width: 0; }
 .pk-field-hint, .pk-field-error { margin: 0; font-size: var(--pk-font-size-sm); overflow-wrap: anywhere; }
 .pk-field-hint { color: var(--pk-color-fg-muted); }
