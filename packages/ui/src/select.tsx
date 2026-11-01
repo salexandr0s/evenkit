@@ -2,7 +2,7 @@
 
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { foundation } from "@evenkit/tokens";
-import { forwardRef, useEffect, useId, useState, type ComponentPropsWithoutRef } from "react";
+import { forwardRef, useCallback, useEffect, useId, useRef, useState, type ComponentPropsWithoutRef, type SyntheticEvent } from "react";
 import { classes } from "./classes.js";
 import type { ControlSize } from "./button.js";
 import { FieldFrame, useFieldDescription, type FieldContentProps } from "./field-frame.js";
@@ -53,10 +53,31 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
   ref,
 ) {
   const [open, setOpen] = useState(false);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const setTrigger = useCallback((node: HTMLButtonElement | null) => {
+    trigger.current = node;
+    if (typeof ref === "function") return ref(node);
+    if (ref) ref.current = node;
+  }, [ref]);
 
   useEffect(() => {
     if (disabled) setOpen(false);
   }, [disabled]);
+
+  useEffect(() => {
+    if (!open) return;
+    const observer = new MutationObserver(() => { if (trigger.current?.matches(":disabled")) setOpen(false); });
+    let ancestor = trigger.current?.parentElement;
+    while (ancestor) {
+      if (ancestor instanceof HTMLFieldSetElement) observer.observe(ancestor, { attributes: true, attributeFilter: ["disabled"] });
+      ancestor = ancestor.parentElement;
+    }
+    return () => observer.disconnect();
+  }, [open]);
+
+  function guardSelection(event: SyntheticEvent) {
+    if (!open || disabled || trigger.current?.matches(":disabled")) { event.preventDefault(); event.stopPropagation(); }
+  }
 
   const rootProps = {
     ...(value !== undefined ? { value } : {}),
@@ -71,8 +92,8 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
   const hasOptions = options.some((option) => !("options" in option) || option.options.length > 0);
 
   return (
-    <SelectPrimitive.Root {...rootProps} open={open && !disabled} onOpenChange={(nextOpen) => setOpen(!disabled && nextOpen)}>
-      <SelectPrimitive.Trigger {...props} ref={ref} type="button" className={classes("pk-select", className)} data-size={controlSize}>
+    <SelectPrimitive.Root {...rootProps} open={open && !disabled} onOpenChange={(nextOpen) => setOpen(nextOpen && !disabled && !trigger.current?.matches(":disabled"))}>
+      <SelectPrimitive.Trigger {...props} ref={setTrigger} type="button" className={classes("pk-select", className)} data-size={controlSize}>
         <span className="pk-select-value"><SelectPrimitive.Value placeholder={placeholder} /></span>
         <SelectPrimitive.Icon className="pk-select-chevron" aria-hidden="true"><ChevronDownIcon /></SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
@@ -85,10 +106,10 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
           align="start"
           sideOffset={Number.parseFloat(foundation.space["1_5"])}
           collisionPadding={Number.parseFloat(foundation.space["3"])}
-          onKeyDownCapture={(event) => {
-            // Exit content stays mounted for motion but must not select again.
-            if (!open || disabled) { event.preventDefault(); event.stopPropagation(); }
-          }}
+          onKeyDownCapture={guardSelection}
+          onPointerDownCapture={guardSelection}
+          onPointerUpCapture={guardSelection}
+          onClickCapture={guardSelection}
         >
           <SelectPrimitive.ScrollUpButton className="pk-select-scroll" aria-hidden="true"><ChevronUpIcon /></SelectPrimitive.ScrollUpButton>
           <SelectPrimitive.Viewport className="pk-select-viewport">
