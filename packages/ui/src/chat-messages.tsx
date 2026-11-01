@@ -25,15 +25,24 @@ interface ChatMessagesProps {
 }
 
 function Message({ message, labels, copyable, streaming, renderMessage, dir }: { message: ChatMessage; labels: ChatLabels; copyable: boolean; streaming: boolean; renderMessage?: ChatMessagesProps["renderMessage"]; dir?: string | undefined }) {
-  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
-  const [copiedContent, setCopiedContent] = useState("");
-  const copied = copyState === "copied" && copiedContent === message.content;
+  const [copyResult, setCopyResult] = useState<{ content: string; status: "copied" | "error" } | null>(null);
+  const copyAttempt = useRef(0);
+  const copyState = copyResult?.content === message.content ? copyResult.status : "idle";
+  const copied = copyState === "copied";
+  useLayoutEffect(() => {
+    setCopyResult(null);
+    return () => { copyAttempt.current += 1; };
+  }, [message.content]);
   async function copy() {
+    const current = ++copyAttempt.current;
+    const content = message.content;
+    setCopyResult(null);
     try {
-      await navigator.clipboard.writeText(message.content);
-      setCopiedContent(message.content);
-      setCopyState("copied");
-    } catch { setCopyState("error"); }
+      await navigator.clipboard.writeText(content);
+      if (current === copyAttempt.current) setCopyResult({ content, status: "copied" });
+    } catch {
+      if (current === copyAttempt.current) setCopyResult({ content, status: "error" });
+    }
   }
   return <article className="pk-chat-message" data-role={message.role} data-has-attachments={Boolean(message.attachments?.length) || undefined}>
     <div className="pk-chat-message-author">{message.role === "assistant" && <MessageSquareIcon size="sm" />}<span>{message.role === "user" ? labels.user : labels.assistant}</span></div>
