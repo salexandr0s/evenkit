@@ -21,6 +21,7 @@
 .pk-settings-navigation-item small { color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-xs); font-weight: var(--pk-font-weight-regular); }
 .pk-settings-content { min-width: 0; }
 .pk-profile-settings, .pk-appearance-preferences, .pk-record-detail { display: grid; gap: var(--pk-space-6); }
+.pk-profile-settings { width: 100%; max-width: var(--pk-layout-form); }
 .pk-record-detail > .pk-button { justify-self: start; }
 .pk-profile-summary { display: flex; align-items: center; gap: var(--pk-space-4); padding-block-end: var(--pk-space-5); border-block-end: var(--pk-border-width-hairline) solid var(--pk-color-border); }
 .pk-profile-summary p { margin: var(--pk-space-1) 0 0; color: var(--pk-color-fg-muted); font-size: var(--pk-font-size-sm); overflow-wrap: anywhere; }

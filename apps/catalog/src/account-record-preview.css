@@ -1,4 +1,5 @@
 .account-record-preview { display: grid; gap: var(--pk-space-6); min-width: 0; }
+.account-appearance-preview { grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--pk-layout-sidebar) + var(--pk-space-16))), 1fr)); align-items: start; }
 .account-record-preview > .pk-button { justify-self: start; }
 .account-record-heading { display: grid; gap: var(--pk-space-2); }
 .account-record-heading h3 { margin: 0; font-size: var(--pk-font-size-xl); font-weight: var(--pk-font-weight-semibold); }
