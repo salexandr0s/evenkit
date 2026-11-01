@@ -1,3 +1,17 @@
+# LLM guide release: 1 November 2026
+
+The previously unfinished LLM guide is complete on `codex/llm-guide`, based on `main` at `b6ab916`. The user authorized finishing, committing, pushing, merging and deploying these changes. `apps/catalog/llms/guide.md` now documents the current package installation, CLI output and upgrade flow, catalog-to-block mapping, component APIs, authentication boundaries, browser checks and licensing. README and catalog HTML expose the guide URLs.
+
+`apps/catalog/llms/llms-plugin.ts` generates `/llms.txt` and `/llms-full.txt` from one fresh catalog, guide and registry snapshot. Vite's module runner reloads transitive source imports. Explicit watches cover guide changes and registry additions/removals, including recovery after invalid initial metadata. Development requests support GET/HEAD, reject other methods and return failures through Vite's error handler. Four focused integration tests in `tests/llms.test.ts` run in the configured Vitest suite.
+
+Verification passed: full production build, workspace TypeScript, ESLint and all 55 unit/integration tests. Isolated watch/HTTP fixtures cover freshness, nested code fences, invalid metadata and recovery. Real development and production-preview checks confirmed both generated files match the authored guide, all 116 catalog entries and usage examples, and all 23 registry blocks. The guide's shell examples, API imports, npm scripts and actual CLI build/list/inspect commands also passed focused checks. Existing component browser coverage is recorded in the historical handoffs below; these documentation and build-plugin changes did not rerun the full browser matrix.
+
+Evidence and final publication status are in `.artifacts/llm-guide-2026-11-01/`. Its `publication.json` records the PR, merged revision, deployment and live checks once publication completes. The production target remains Vercel project `prj_5K4UrqWVGwIWPIxGYAe8OkwfpxBW`, team `team_luOipoW354gDuRyyUaYVO2mg`, at `https://evenkit.dev`. Use the authenticated Vercel CLI because the connector lacks access to this team. No implementation work remains; check that publication record for merge/deployment status.
+
+Resume with `git status --short`, `git log -3 --oneline`, `cat .artifacts/llm-guide-2026-11-01/publication.json`, and `vercel inspect https://evenkit.dev --scope team_luOipoW354gDuRyyUaYVO2mg`. The source uses the exported experimental `runnerImport` API from pinned Vite 8.3.5; retain its integration tests when upgrading Vite. Historical handoffs follow.
+
+---
+
 # Component release: 1 November 2026
 
 The user authorized committing, pushing, merging into `main`, and deploying the reviewed component work. Release preparation uses the isolated checkout `/Users/nationalbank/.codex/worktrees/evenkit-release-2026-11-01/design-tokens`. Main's earlier sticky-sidebar change is reconciled with the current implementation: its historical notes are retained, and the newer Select/Navbar regression covers the same behavior using the current navigation scroller. Application code and tests remain identical to the reviewed `68b7232` snapshot. The separate unfinished catalog HTML, Vite and `llms/` changes remain in the original checkout.
