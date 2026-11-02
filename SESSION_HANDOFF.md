@@ -1,3 +1,23 @@
+# Actual component motion pass: 2 November 2026
+
+Status: DONE_WITH_CONCERNS. The user's follow-up explicitly required actual reusable component and animation improvements. The new goal covers the library and editable blocks, with an individual underlying-source review for all 116 catalog entries. This pass changes library code and component regressions; catalog prompts and framing receive no improvement credit.
+
+Actual changes: Button loading crossfades within a stable footprint and retains pending contrast; native Progress/Meter fills and selection foreground/borders transition; Combobox/Autocomplete retain an inert visual exit while a separate Radix ref releases dismissal registration; Accordion/Collapsible use measured geometry that retargets without discontinuity; chat history opens space continuously; Image/Thumbnail reveal loaded content without resizing. Existing motion tokens and reduced-motion behavior are preserved. No dependency or public API was added.
+
+The disclosure helper preserves default-open/SSR geometry, custom IDs and owned focus, React 19 cleanup-returning refs, asChild mounting, caller ARIA/inert and direct/slotted style intent, including padding/margin shorthand zeroes. Independent Chromium/WebKit review reproduced and resolved those contract issues. Both engines measured zero height/padding discontinuity at three retarget points. Normal-motion videos and rAF/geometry records cover the changed exports.
+
+The checklist is `docs/stageshow-components-2026-11-02.md`: 23 entry-specific improvements and 93 retained primary compositions, plus shared Button effects where composed. `packages/ui/src/REHEARSAL.md` records scope and motion evidence. Detailed ledgers, videos, source checksums and verification logs are in `.artifacts/stageshow-components-2026-11-02/`.
+
+Verification passed: full production build, workspace TypeScript, ESLint, all 55 unit/integration tests, all 337 distinct Chromium catalog checks across the full run and focused notification rerun, and all 42 admin journeys across Chromium/WebKit. The catalog full run passed 336; the notification assertion was updated to select the visible spinner in the busy control after Button began retaining its hidden decorative spinner. All five notification journeys then passed, with busy state, exactly one visible indicator and reduced motion still asserted. Final affected-test TypeScript and lint passed.
+
+Concern: Firefox could not launch its browser profile. Its HTTP-only boundary check passed; 20 browser journeys remain unverified. The same `Could not find profile folder` launch error occurred with a different temporary directory and a fresh browser installation isolated inside this task's ignored artifacts directory. No shared browser installation was changed. Existing baseline WebKit password-Tab/pointer-save focus assertions, SVG variable-size warnings, and a subframe parent Escape-listener restoration gap are documented; these were not introduced by the component changes.
+
+No implementation work remains. Menu/popover/toast exit experiments were restored after they exposed interaction-layer regressions; their production files remain unchanged. Changes are saved locally; no push or deployment occurred. All owned preview servers are stopped at session completion. Physical devices and screen-reader speech were not exercised. Historical handoffs follow.
+
+Resume with `git status --short`, `git log -4 --oneline`, `cat .artifacts/stageshow-components-2026-11-02/verification.json` and `npm run dev`. After source edits, run `npm run build` before browser checks. Use isolated ports and output directories, for example `KIT_CATALOG_PORT=5944 npm run test:browser -- --workers=2 --output=.artifacts/component-browser-results`. Firefox's profile-launch failure needs an environment fix before claiming that engine's application coverage.
+
+---
+
 # Stageshow catalog pass: 2 November 2026
 
 Status: DONE. Installed `benjitaylor/skills`'s `stageshow` for Codex in `.agents/skills/stageshow`, recorded in `skills-lock.json` and saved in local commit `6caf317`. The installed third-party skill stays outside the application's lint scope. Its reference playground was installed separately, without changing workspace dependencies.
