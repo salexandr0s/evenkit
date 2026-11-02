@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChatPanel, ChatWidget, SelectField, type ChatConversation, type ChatMessage, type ChatPanelProps, type ChatStatus } from "@evenkit/ui";
+import { ChatPanel, ChatWidget, SelectField, Tabs, TabsContent, TabsList, TabsTrigger, type ChatConversation, type ChatMessage, type ChatPanelProps, type ChatStatus } from "@evenkit/ui";
 import "./chat-preview.css";
 
 interface DemoConversation extends ChatConversation {
@@ -147,12 +147,15 @@ export function ChatPreview() {
   return (
     <div className="chat-workbench">
       <div className="chat-preview-intro">
-        <div><h3>Embedded and floating chat</h3><p>Try the panel below, or open the floating assistant. Expand it to browse conversations alongside your messages.</p></div>
+        <div><h3>Embedded and floating chat</h3><p>Try either presentation with the same conversation and draft. Expand the floating assistant to browse conversations alongside your messages.</p></div>
         <SelectField label="Response preview" options={responseOptions} value={response} onValueChange={setResponse} disabled={status === "submitted" || status === "streaming"} />
       </div>
-      <ChatPanel {...chat} className="chat-preview-panel" />
+      <Tabs defaultValue="embedded" onValueChange={() => setOpen(false)} className="chat-preview-presentations">
+        <TabsList aria-label="Chat presentation"><TabsTrigger value="embedded">Embedded</TabsTrigger><TabsTrigger value="floating">Floating</TabsTrigger></TabsList>
+        <TabsContent value="embedded"><ChatPanel {...chat} className="chat-preview-panel" /></TabsContent>
+        <TabsContent value="floating"><p className="chat-preview-floating-note">Open the assistant from the corner of the page. Your conversation and draft carry between both presentations.</p><ChatWidget {...chat} open={open} onOpenChange={setOpen} launcherLabel="Open assistant" /></TabsContent>
+      </Tabs>
       <p className="catalog-caption">This demo uses sample replies. Your project connects the assistant to its AI service and decides where conversations are saved.</p>
-      <ChatWidget {...chat} open={open} onOpenChange={setOpen} launcherLabel="Open assistant" />
     </div>
   );
 }

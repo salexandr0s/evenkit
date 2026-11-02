@@ -17,6 +17,7 @@ import { roadmapEntries } from "./roadmap-entries";
 import { authEntries } from "./auth-data";
 import { websiteEntries } from "./website-entries";
 import { CodeExample } from "./code-example";
+import { previewTasks } from "./preview-tasks";
 import { FieldPreview } from "./field-preview";
 import { EmptyPreview } from "./empty-preview";
 import { LoadingPreview } from "./loading-preview";
@@ -213,8 +214,10 @@ export function Catalog({ theme, mode, onThemeChange: setTheme, onToggleAppearan
                 <div className="catalog-title-row"><h1>{active.name}</h1></div>
                 <p className="catalog-description">{active.description}</p>
               </div>
-              <section className="catalog-preview" aria-label={`${active.name} live preview`}>
-                <div className="catalog-preview-header"><h2>Live preview</h2><span>{themes[theme].name}<span className="catalog-preview-mode">{mode}</span></span></div>
+              <section className="catalog-preview" aria-label={`${active.name} live preview`} aria-describedby={previewTasks[active.id] ? "catalog-preview-task" : undefined}>
+                <div className="catalog-preview-header"><h2>Live preview</h2><span>{themes[theme].name}<span className="catalog-preview-mode">{mode}</span></span>
+                  {previewTasks[active.id] && <p className="catalog-preview-task" id="catalog-preview-task">{previewTasks[active.id]}</p>}
+                </div>
                 <div className="catalog-preview-content"><Suspense fallback={<Spinner label="Loading component preview" />}><Preview id={active.id} theme={theme} mode={mode} onThemeChange={setTheme} /></Suspense></div>
               </section>
               <CodeExample code={active.usage} />

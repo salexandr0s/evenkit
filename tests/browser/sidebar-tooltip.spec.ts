@@ -361,6 +361,7 @@ test("modal and chat tooltips dismiss before their parent surfaces", async ({ pa
   await expect(edit).toBeFocused();
 
   await page.goto("/#chat");
+  await page.getByRole("tab", { name: "Floating", exact: true }).click();
   await page.getByRole("button", { name: "Open assistant", exact: true }).click();
   const chat = page.getByRole("dialog", { name: "Project assistant", exact: true });
   const maximize = chat.getByRole("button", { name: "Maximize chat", exact: true });

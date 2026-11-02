@@ -8,3 +8,4 @@
 .chat-preview-intro p { margin: 0; color: var(--pk-color-fg-muted); line-height: var(--pk-font-line-height-relaxed); }
 .chat-preview-intro > .pk-field { width: var(--pk-layout-sidebar); max-width: 100%; }
 .chat-preview-panel { height: var(--pk-layout-reading); max-height: 85dvh; min-height: var(--pk-layout-dialog-sm); }
+.chat-preview-floating-note { margin: 0; max-width: var(--pk-layout-reading); color: var(--pk-color-fg-muted); line-height: var(--pk-font-line-height-relaxed); }

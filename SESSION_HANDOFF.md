@@ -1,3 +1,21 @@
+# Stageshow catalog pass: 2 November 2026
+
+Status: DONE. Installed `benjitaylor/skills`'s `stageshow` for Codex in `.agents/skills/stageshow`, recorded in `skills-lock.json` and saved in local commit `6caf317`. The installed third-party skill stays outside the application's lint scope. Its reference playground was installed separately, without changing workspace dependencies.
+
+All 116 current catalog entries received an individual source review, paired desktop-light/mobile-dark visual review and a focused interaction or static presentation check. Every entry now has a specific task and result beneath Live preview, associated with its section through `aria-describedby`. `apps/catalog/src/preview-tasks.ts` contains the exact 116-ID map, grouped by the existing 13 navigation sections. `docs/stageshow-pass-2026-11-02.md` records every entry, its checked result, source and final frames.
+
+The homepage uses its page as the ground, gives the project form priority, and presents the checklist as a quieter supporting surface. Compact widths remove the desktop stagger. The chat example now offers Embedded and Floating tabs; only the selected presentation mounts while conversation, draft and streaming state remain shared. This removes the launcher that covered the embedded composer on mobile. Existing chat and tooltip journeys cover the new presentation selection without weakening their assertions.
+
+Verification passed: full production build, final catalog rebuild, workspace TypeScript, ESLint and all 55 unit/integration tests. All 336 distinct Chromium catalog journeys have passing evidence: the full run passed 335, then all eight tooltip journeys passed after its chat setup selected Floating. The existing 11 focused chat/rich-chat journeys also passed. The initial unit run hit a guide-watcher timing assertion during concurrent builds; its complete rerun passed. No checks or timeouts were weakened.
+
+Evidence is in `.artifacts/stageshow-2026-11-02/`: `all-review.json` reconciles all 116 entries, 111 interaction checks, five static checks and 232 current final captures. Ten homepage stills cover five widths in both appearances. Independent review found no remaining source or visual findings. The final production-preview smoke checked the current task text, chat draft continuity, an unobstructed embedded composer and homepage creation. `apps/catalog/src/REHEARSAL.md` records the Stageshow reference comparisons, capture method and intentional live-control exceptions.
+
+No implementation work remains. Changes are local; no push or deployment was performed. Per-item checks use Chromium and viewport/media emulation; physical touch, screen-reader speech, Firefox and a full WebKit pass were not exercised. Historical handoffs follow.
+
+Resume with `git status --short`, `git log -3 --oneline`, `cat .artifacts/stageshow-2026-11-02/release-smoke.json` and `npm run dev`. For new source edits, rebuild the catalog before browser tests. Use a separate output directory and port, for example `KIT_CATALOG_PORT=5940 npm run test:browser -- --workers=2 --output=.artifacts/stageshow-browser-results`.
+
+---
+
 # LLM guide release: 1 November 2026
 
 The previously unfinished LLM guide is complete on `codex/llm-guide`, based on `main` at `b6ab916`. The user authorized finishing, committing, pushing, merging and deploying these changes. `apps/catalog/llms/guide.md` now documents the current package installation, CLI output and upgrade flow, catalog-to-block mapping, component APIs, authentication boundaries, browser checks and licensing. README and catalog HTML expose the guide URLs.

@@ -1,6 +1,7 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 async function openChat(page: Page) {
+  await page.getByRole("tab", { name: "Floating", exact: true }).click();
   await page.getByRole("button", { name: "Open assistant", exact: true }).click();
   const chat = page.getByRole("dialog", { name: "Project assistant", exact: true });
   await expect(chat).toBeVisible();
@@ -28,14 +29,22 @@ async function expectWithinViewport(locator: Locator, page: Page) {
 test("chat preserves drafts across opening, maximizing, and conversation changes", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/#chat");
+  const embedded = page.locator(".chat-preview-panel");
+  await expect(embedded).toBeVisible();
+  await expect(page.getByRole("button", { name: "Open assistant", exact: true })).toHaveCount(0);
+  await embedded.getByRole("textbox", { name: "Message", exact: true }).fill("Keep this project draft");
   const launcher = page.getByRole("button", { name: "Open assistant", exact: true });
   const chat = await openChat(page);
   const input = chat.getByRole("textbox", { name: "Message", exact: true });
   await expect(input).toBeFocused();
+  await expect(input).toHaveValue("Keep this project draft");
+  await expect(embedded).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Conversation", exact: true })).toHaveCount(1);
-  await input.fill("Keep this project draft");
   await chat.getByRole("button", { name: "Close chat", exact: true }).click();
   await expect(launcher).toBeFocused();
+  await page.getByRole("tab", { name: "Embedded", exact: true }).click();
+  await expect(embedded.getByRole("textbox", { name: "Message", exact: true })).toHaveValue("Keep this project draft");
+  await expect(launcher).toHaveCount(0);
   await openChat(page);
   await expect(input).toHaveValue("Keep this project draft");
 

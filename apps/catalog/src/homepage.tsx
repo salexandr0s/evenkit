@@ -53,8 +53,7 @@ function ProjectSpecimen() {
     <div className="home-specimen-caption"><span><span className="home-live-dot" />Live components</span><span>Try them out</span></div>
     <div className="home-specimen-canvas">
       <div className="home-project-card">
-        <div className="home-project-heading"><span className="home-project-icon"><PlusIcon /></span><Badge variant="outline" size="sm">Preview</Badge></div>
-        <h2>New project</h2>
+        <div className="home-project-heading"><div className="home-project-title"><span className="home-project-icon"><PlusIcon /></span><h2>New project</h2></div><Badge variant="outline" size="sm">Preview</Badge></div>
         <p>Name the project and choose who can see it.</p>
         <form onSubmit={event => {
           event.preventDefault();
@@ -72,7 +71,7 @@ function ProjectSpecimen() {
             options={[{ value: "team", label: "Everyone on the team" }, { value: "private", label: "Only me" }]} />
           <Button type="submit" fullWidth endIcon={<ArrowRightIcon size="sm" />}>Create project</Button>
         </form>
-        <p className="home-project-status" role="status">{createdName ? <><CheckIcon size="sm" />{createdName} created in this preview.</> : "A local preview. Your data stays in this page."}</p>
+        <p className="home-project-status" data-created={createdName ? "true" : undefined} role="status">{createdName ? <><CheckIcon size="sm" />{createdName} created in this preview.</> : "A local preview. Your data stays in this page."}</p>
       </div>
       <div className="home-checklist-card">
         <div className="home-checklist-heading"><h3>Launch checklist</h3><span>{complete} of 3</span></div>
