@@ -55,7 +55,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       aria-busy={loading ? true : busy}
     >
       <ButtonContent shape={shape} startIcon={startIcon} endIcon={endIcon}>{children}</ButtonContent>
-      {loading ? <span className="pk-button-spinner"><Spinner aria-hidden="true" /></span> : null}
+      <span className="pk-button-spinner" hidden={!loading} aria-hidden="true"><Spinner aria-hidden="true" /></span>
     </button>
   );
 });

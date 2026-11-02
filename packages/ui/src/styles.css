@@ -42,7 +42,7 @@
   transition: background-color var(--pk-motion-duration-base) var(--pk-motion-easing-standard), color var(--pk-motion-duration-base) var(--pk-motion-easing-standard), border-color var(--pk-motion-duration-base) var(--pk-motion-easing-standard), box-shadow var(--pk-motion-duration-base) var(--pk-motion-easing-standard);
 }
 
-.pk-button-label { display: inline-flex; align-items: center; justify-content: center; gap: var(--pk-space-2); min-width: 0; max-width: 100%; }
+.pk-button-label { display: inline-flex; align-items: center; justify-content: center; gap: var(--pk-space-2); min-width: 0; max-width: 100%; transition: opacity var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
 .pk-button-text { display: inline-flex; align-items: center; justify-content: center; gap: var(--pk-space-2); min-width: 0; overflow-wrap: anywhere; }
 .pk-button-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; }
 .pk-button[data-size="xs"] { --pk-button-height: var(--pk-space-6); padding: var(--pk-space-0-5) var(--pk-space-2); border-radius: var(--pk-radius-sm); font-size: var(--pk-font-size-xs); }
@@ -62,10 +62,13 @@
 .pk-button[data-variant="link"] { background: transparent; color: var(--pk-color-accent); text-underline-offset: var(--pk-space-1); }
 .pk-button[data-variant="link"]:hover { text-decoration: underline; }
 .pk-button:active:not(:disabled), .pk-button[aria-pressed="true"] { box-shadow: inset 0 0 0 var(--pk-border-width-thick) currentColor; }
-.pk-button:disabled { cursor: not-allowed; opacity: var(--pk-opacity-disabled); }
+.pk-button:disabled { cursor: not-allowed; }
+.pk-button:disabled:not([data-loading]) { opacity: var(--pk-opacity-disabled); }
 .pk-button[data-loading] { cursor: wait; }
 .pk-button[data-loading] .pk-button-label { opacity: 0; }
-.pk-button-spinner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.pk-button-spinner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 1; pointer-events: none; transition: opacity var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), display var(--pk-motion-duration-fast); transition-behavior: allow-discrete; }
+.pk-button-spinner[hidden] { display: none; opacity: 0; }
+@starting-style { .pk-button-spinner:not([hidden]) { opacity: 0; } }
 .pk-button-spinner .pk-spinner { color: inherit; }
 
 .pk-button:focus-visible,
@@ -279,7 +282,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pk-button, .pk-input-container[data-adorned], .pk-input, .pk-textarea, .pk-select, .pk-select-chevron, .pk-dialog-close { transition: none; }
+  .pk-button, .pk-button-label, .pk-button-spinner, .pk-input-container[data-adorned], .pk-input, .pk-textarea, .pk-select, .pk-select-chevron, .pk-dialog-close { transition: none; }
   .pk-spinner, .pk-select-content[data-state] { animation: none; }
   /* Keep the name so Presence can finish an exit if this preference changes mid-animation. */
   .pk-dialog-overlay[data-state], .pk-dialog-content[data-state] { animation-duration: 0s; }

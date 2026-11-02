@@ -11,11 +11,15 @@ test("buttons preserve names and geometry while busy and expose pressed state", 
   await page.goto("/#buttons");
   await page.clock.pauseAt(new Date("2026-10-25T09:00:00Z"));
   const save = page.getByRole("button", { name: "Save changes", exact: true });
+  const spinner = save.locator(".pk-button-spinner");
+  await expect(spinner).toHaveCSS("display", "none");
   const before = await save.boundingBox();
   await save.press("Enter");
   await expect(save).toBeDisabled();
   await expect(save).toHaveAttribute("aria-busy", "true");
   await expect(save).toHaveAccessibleName("Save changes");
+  await expect(save).toHaveCSS("opacity", "1");
+  await expect(spinner).toBeVisible();
   const during = await save.boundingBox();
   expect(during?.width).toBe(before?.width);
   expect(during?.height).toBe(before?.height);
@@ -23,6 +27,7 @@ test("buttons preserve names and geometry while busy and expose pressed state", 
   await page.clock.runFor(1200);
   await expect(save).toBeEnabled();
   await expect(save).not.toHaveAttribute("aria-busy", "true");
+  await expect(spinner).toHaveCSS("display", "none");
   await expect(page.getByText("Preview saved 1 time.", { exact: true })).toBeVisible();
 
   const toggle = page.getByRole("button", { name: "Email notifications", exact: true });

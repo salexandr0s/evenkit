@@ -252,3 +252,50 @@ test("chat copy feedback follows the latest clipboard attempt when writes finish
   await expect(copy).toHaveAccessibleName("Copy response");
   await expect(copy).toBeFocused();
 });
+
+test("chat history makes room continuously and reverses without exposing hidden controls", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/#chat");
+  const chat = page.locator(".chat-preview-panel");
+  await chat.getByRole("button", { name: "Hide chat history", exact: true }).click();
+  await chat.locator(".pk-chat-body").evaluate(async element => {
+    await Promise.all(element.getAnimations().map(animation => animation.finished));
+  });
+  const movement = await chat.evaluate(async element => {
+    const main = element.querySelector<HTMLElement>(".pk-chat-main")!;
+    const body = element.querySelector<HTMLElement>(".pk-chat-body")!;
+    const history = element.querySelector<HTMLElement>(".pk-chat-history")!;
+    const offset = () => Math.abs(main.getBoundingClientRect().left - body.getBoundingClientRect().left);
+    const frame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+    element.querySelector<HTMLButtonElement>('button[aria-label="Show chat history"]')!.click();
+    await frame(); await frame();
+    for (const animation of body.getAnimations()) {
+      animation.pause();
+      animation.currentTime = Number(animation.effect?.getTiming().duration) / 2;
+    }
+    const opening = offset();
+    const width = history.getBoundingClientRect().width;
+    element.querySelector<HTMLButtonElement>('button[aria-label="Hide chat history"]')!.click();
+    await frame(); await frame();
+    for (const animation of body.getAnimations()) {
+      animation.pause();
+      animation.currentTime = Number(animation.effect?.getTiming().duration) / 2;
+    }
+    const closing = offset();
+    const hidden = history.hidden && getComputedStyle(history).display === "none";
+    for (const animation of body.getAnimations()) animation.finish();
+    return { opening, closing, width, hidden, closed: offset() };
+  });
+  expect(movement.opening).toBeGreaterThan(0);
+  expect(movement.opening).toBeLessThan(movement.width);
+  expect(movement.closing).toBeGreaterThan(0);
+  expect(movement.closing).toBeLessThan(movement.opening);
+  expect(movement.hidden).toBe(true);
+  expect(movement.closed).toBeLessThanOrEqual(1);
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await chat.getByRole("button", { name: "Show chat history", exact: true }).click();
+  expect(await chat.locator(".pk-chat-body").evaluate(element => element.getAnimations().length)).toBe(0);
+  await expect(chat.getByRole("searchbox", { name: "Search chats", exact: true })).toBeVisible();
+});

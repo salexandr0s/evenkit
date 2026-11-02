@@ -135,6 +135,10 @@ test("notification family preserves neutral surfaces, theme accents, RTL and res
   await page.goto("/#persistent-banner");
   await page.getByText("Example controls", { exact: true }).click();
   await page.getByRole("checkbox", { name: "Use a slow response" }).check();
-  await page.getByRole("button", { name: "Dismiss notice", exact: true }).click();
-  await expect(page.locator(".pk-persistent-banner .pk-spinner")).toHaveCSS("animation-name", "none");
+  const dismiss = page.getByRole("button", { name: "Dismiss notice", exact: true });
+  await dismiss.click();
+  await expect(dismiss).toHaveAttribute("aria-busy", "true");
+  const activeSpinner = dismiss.locator(".pk-spinner:visible");
+  await expect(activeSpinner).toHaveCount(1);
+  await expect(activeSpinner).toHaveCSS("animation-name", "none");
 });

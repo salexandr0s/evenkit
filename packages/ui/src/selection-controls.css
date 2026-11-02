@@ -74,9 +74,9 @@
 .pk-segmented-control[aria-invalid="true"] { border-color: var(--pk-color-danger); }
 .pk-toggle-item, .pk-segmented-item { box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: var(--pk-selection-height); min-width: 0; max-width: 100%; padding: var(--pk-space-1) var(--pk-space-3); border: var(--pk-border-width-hairline) solid transparent; border-radius: var(--pk-radius-sm); background: transparent; color: var(--pk-color-fg-muted); font: inherit; text-align: center; overflow-wrap: anywhere; cursor: pointer; }
 .pk-toggle-item:hover:not(:disabled):not([data-state="on"]), .pk-segmented-item:hover:not(:disabled):not([data-state="checked"]) { background: var(--pk-color-surface-elevated); color: var(--pk-color-fg); }
-.pk-segmented-item { flex: 1 1 0; font-weight: var(--pk-font-weight-medium); transition: background-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), box-shadow var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
+.pk-segmented-item { flex: 1 1 0; font-weight: var(--pk-font-weight-medium); transition: background-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), border-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), box-shadow var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
 .pk-segmented-item[data-state="checked"] { background: var(--pk-color-accent-soft); color: var(--pk-color-accent); border-color: var(--pk-color-accent); box-shadow: var(--pk-shadow-sm); }
-.pk-toggle-item { border-color: var(--pk-color-border); border-radius: var(--pk-radius-md); font-weight: var(--pk-font-weight-medium); transition: background-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), border-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
+.pk-toggle-item { border-color: var(--pk-color-border); border-radius: var(--pk-radius-md); font-weight: var(--pk-font-weight-medium); transition: background-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), border-color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard), color var(--pk-motion-duration-fast) var(--pk-motion-easing-standard); }
 .pk-toggle-item[data-state="on"] { background: var(--pk-color-accent-soft); color: var(--pk-color-accent); border-color: var(--pk-color-accent); }
 .pk-toggle-item:active:not(:disabled):not([data-state="on"]), .pk-segmented-item:active:not(:disabled):not([data-state="checked"]) { border-color: var(--pk-color-border-strong); }
 .pk-toggle-item:disabled, .pk-segmented-item:disabled { opacity: var(--pk-opacity-disabled); cursor: not-allowed; }
@@ -109,11 +109,11 @@
 .pk-progress-track { position: relative; overflow: hidden; border-radius: var(--pk-radius-full); background: var(--pk-color-border); }
 .pk-progress, .pk-meter { display: block; width: 100%; height: var(--pk-space-2); border: 0; border-radius: var(--pk-radius-full); overflow: hidden; background: var(--pk-color-border); color: var(--pk-color-accent); accent-color: var(--pk-color-accent); appearance: none; }
 .pk-progress::-webkit-progress-bar { background: var(--pk-color-border); border-radius: var(--pk-radius-full); }
-.pk-progress::-webkit-progress-value { background: var(--pk-color-accent); border-radius: var(--pk-radius-full); }
-.pk-progress::-moz-progress-bar { background: var(--pk-color-accent); border-radius: var(--pk-radius-full); }
+.pk-progress::-webkit-progress-value { background: var(--pk-color-accent); border-radius: var(--pk-radius-full); transition: width var(--pk-motion-duration-base) var(--pk-motion-easing-standard); }
+.pk-progress::-moz-progress-bar { background: var(--pk-color-accent); border-radius: var(--pk-radius-full); transition: width var(--pk-motion-duration-base) var(--pk-motion-easing-standard); }
 .pk-meter::-webkit-meter-bar { height: var(--pk-space-2); border: 0; border-radius: var(--pk-radius-full); background: var(--pk-color-border); }
-.pk-meter::-webkit-meter-optimum-value, .pk-meter::-webkit-meter-suboptimum-value, .pk-meter::-webkit-meter-even-less-good-value { background: var(--pk-color-accent); }
-.pk-meter::-moz-meter-bar { background: var(--pk-color-accent); }
+.pk-meter::-webkit-meter-optimum-value, .pk-meter::-webkit-meter-suboptimum-value, .pk-meter::-webkit-meter-even-less-good-value { background: var(--pk-color-accent); transition: width var(--pk-motion-duration-base) var(--pk-motion-easing-standard); }
+.pk-meter::-moz-meter-bar { background: var(--pk-color-accent); transition: width var(--pk-motion-duration-base) var(--pk-motion-easing-standard); }
 .pk-progress:not([value]) { opacity: 0; }
 .pk-progress-indeterminate { position: absolute; inset-block: 0; inset-inline-start: 0; width: calc(100% / 3); border-radius: var(--pk-radius-full); background: var(--pk-color-accent); pointer-events: none; animation: pk-progress-travel var(--pk-motion-duration-spinner) var(--pk-motion-easing-standard) infinite alternate; }
 @keyframes pk-progress-travel { from { transform: translateX(0); } to { transform: translateX(calc(var(--_pk-progress-direction, 1) * 200%)); } }
@@ -131,4 +131,11 @@
   .pk-toggle-group[data-size], .pk-segmented-control[data-size] { --pk-selection-height: var(--pk-layout-touch); }
   .pk-toggle-group[data-size="lg"], .pk-segmented-control[data-size="lg"] { --pk-selection-height: var(--pk-control-height-lg); }
 }
-@media (prefers-reduced-motion: reduce) { .pk-check-box, .pk-radio-circle, .pk-radio-group > .pk-choice-field, .pk-switch-track, .pk-switch-thumb, .pk-toggle-item, .pk-segmented-item { transition: none; } .pk-switch-pending { animation: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .pk-check-box, .pk-radio-circle, .pk-radio-group > .pk-choice-field, .pk-switch-track, .pk-switch-thumb, .pk-toggle-item, .pk-segmented-item { transition: none; }
+  .pk-progress::-webkit-progress-value { transition: none; }
+  .pk-progress::-moz-progress-bar { transition: none; }
+  .pk-meter::-webkit-meter-optimum-value, .pk-meter::-webkit-meter-suboptimum-value, .pk-meter::-webkit-meter-even-less-good-value { transition: none; }
+  .pk-meter::-moz-meter-bar { transition: none; }
+  .pk-switch-pending { animation: none; }
+}
