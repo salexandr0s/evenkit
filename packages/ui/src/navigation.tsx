@@ -13,6 +13,7 @@ import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, MenuIcon } from "./
 import { NavbarAccountControl, NavbarActionControl, ordinaryNavbarActivation as ordinaryActivation, type NavbarAccount, type NavbarAction } from "./navbar-parts.js";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./overlays.js";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip.js";
+import { useDisclosureMotion } from "./use-disclosure-motion.js";
 
 export { NavbarBrand, type NavbarBrandProps, type NavbarAction, type NavbarAccount, type NavbarAccountItem } from "./navbar-parts.js";
 
@@ -58,7 +59,8 @@ export const AccordionTrigger = forwardRef<ComponentRef<typeof AccordionPrimitiv
 });
 export type AccordionContentProps = ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>;
 export const AccordionContent = forwardRef<ComponentRef<typeof AccordionPrimitive.Content>, AccordionContentProps>(function AccordionContent({ className, ...props }, ref) {
-  return <AccordionPrimitive.Content {...props} ref={ref} className={classes("pk-accordion-content", className)} />;
+  const motionRef = useDisclosureMotion(ref, { enabled: !props.forceMount, style: props.style, inert: props.inert, ariaHidden: props["aria-hidden"], asChild: props.asChild, children: props.children });
+  return <AccordionPrimitive.Content {...props} ref={motionRef} className={classes("pk-accordion-content", className)} />;
 });
 
 export type CollapsibleProps = ComponentPropsWithoutRef<typeof CollapsiblePrimitive.Root>;
@@ -71,7 +73,8 @@ export const CollapsibleTrigger = forwardRef<ComponentRef<typeof CollapsiblePrim
 });
 export type CollapsibleContentProps = ComponentPropsWithoutRef<typeof CollapsiblePrimitive.Content>;
 export const CollapsibleContent = forwardRef<ComponentRef<typeof CollapsiblePrimitive.Content>, CollapsibleContentProps>(function CollapsibleContent({ className, ...props }, ref) {
-  return <CollapsiblePrimitive.Content {...props} ref={ref} className={classes("pk-collapsible-content", className)} />;
+  const motionRef = useDisclosureMotion(ref, { enabled: !props.forceMount, style: props.style, inert: props.inert, ariaHidden: props["aria-hidden"], asChild: props.asChild, children: props.children });
+  return <CollapsiblePrimitive.Content {...props} ref={motionRef} className={classes("pk-collapsible-content", className)} />;
 });
 
 export interface NavigationLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {

@@ -52,7 +52,18 @@ test("accordion and disclosure expose working expansion with keyboard recovery",
   const hide = page.getByRole("button", { name: "Hide project details" });
   await expect(hide).toHaveAttribute("aria-expanded", "true");
   await expect(page.getByText("PROJECT-204", { exact: true })).toBeVisible();
-  await hide.press("Space");
+  await page.locator(".pk-collapsible-content").first().evaluate(element => {
+    // A host may supply its own content ID and close while a child owns focus.
+    element.id = "consumer-project-details";
+    const action = element.ownerDocument.createElement("button");
+    action.textContent = "Review project details";
+    element.append(action);
+    action.focus();
+  });
+  await hide.evaluate(element => {
+    if (!(element instanceof HTMLElement)) throw new Error("Expected an HTML disclosure trigger.");
+    element.click();
+  });
   await expect(page.getByRole("button", { name: "Show project details" })).toBeFocused();
   await expect(page.getByText("PROJECT-204", { exact: true })).toBeHidden();
 });

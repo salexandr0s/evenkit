@@ -10,6 +10,7 @@ import {
 } from "react";
 import { Button, type ControlSize } from "./button.js";
 import { classes } from "./classes.js";
+import { ChoicePopupSurface } from "./choice-popup-surface.js";
 import { ActionMessage, Spinner, type ActionMessageProps } from "./feedback.js";
 import { FieldFrame, useFieldDescription, type FieldContentProps } from "./field-frame.js";
 import { TextField, type TextFieldProps } from "./field.js";
@@ -266,13 +267,15 @@ function ChoicePopup({ container, emptyMessage, loading, loadingMessage, renderO
 }) {
   return <ComboboxPrimitive.Portal container={container}>
     <ComboboxPrimitive.Positioner className="pk-combobox-positioner" sideOffset={Number.parseFloat(foundation.space["1_5"])} collisionPadding={Number.parseFloat(foundation.space["3"])} align="start">
-      <DismissableLayer asChild onEscapeKeyDown={event => { event.preventDefault(); onDismiss(); }}>
-        <ComboboxPrimitive.Popup className="pk-combobox-popup" dir={dir}>
-          <ComboboxPrimitive.Status>{loading ? <div className="pk-combobox-notice">{loadingMessage}</div> : null}</ComboboxPrimitive.Status>
-          <ComboboxPrimitive.Empty>{!loading ? <div className="pk-combobox-notice">{emptyMessage}</div> : null}</ComboboxPrimitive.Empty>
-          <ComboboxPrimitive.List className="pk-combobox-list">{(option: ComboboxOption) => <ChoiceOption key={option.value} option={option} autocomplete={autocomplete} renderOption={renderOption} />}</ComboboxPrimitive.List>
-        </ComboboxPrimitive.Popup>
-      </DismissableLayer>
+      <ComboboxPrimitive.Popup className="pk-combobox-popup" dir={dir} render={({ ref: popupRef, ...props }, state) => (
+        <DismissableLayer asChild onEscapeKeyDown={event => { event.preventDefault(); onDismiss(); }}>
+          <ChoicePopupSurface {...props} popupRef={popupRef} active={state.open} />
+        </DismissableLayer>
+      )}>
+        <ComboboxPrimitive.Status>{loading ? <div className="pk-combobox-notice">{loadingMessage}</div> : null}</ComboboxPrimitive.Status>
+        <ComboboxPrimitive.Empty>{!loading ? <div className="pk-combobox-notice">{emptyMessage}</div> : null}</ComboboxPrimitive.Empty>
+        <ComboboxPrimitive.List className="pk-combobox-list">{(option: ComboboxOption) => <ChoiceOption key={option.value} option={option} autocomplete={autocomplete} renderOption={renderOption} />}</ComboboxPrimitive.List>
+      </ComboboxPrimitive.Popup>
     </ComboboxPrimitive.Positioner>
   </ComboboxPrimitive.Portal>;
 }

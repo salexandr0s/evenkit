@@ -265,6 +265,7 @@ test("dirty form actions support discard, cancellation, failed save and retry wi
 });
 
 test("a dialog-contained combobox keeps modal focus and RTL popups fit touch layouts", async ({ page, browser }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/#combobox");
   await page.getByRole("button", { name: "Choose a team in a dialog", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Project team dialog", exact: true });
@@ -278,11 +279,35 @@ test("a dialog-contained combobox keeps modal focus and RTL popups fit touch lay
   await dialog.getByRole("button", { name: "Show dialog teams", exact: true }).click();
   await expect(input).toHaveAttribute("aria-expanded", "true");
   await expect(dialog.getByRole("listbox")).toBeVisible();
+  const popup = page.locator(".pk-combobox-popup");
+  await popup.evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)));
+  const exit = await popup.evaluateHandle(element => {
+    const result = { connected: false, paused: false };
+    const observer = new MutationObserver(() => {
+      if (!element.hasAttribute("data-ending-style")) return;
+      const animations = element.getAnimations();
+      for (const animation of animations) animation.pause();
+      result.connected = element.isConnected;
+      result.paused = animations.length > 0 && animations.every(animation => animation.playState === "paused");
+      observer.disconnect();
+    });
+    observer.observe(element, { attributes: true, attributeFilter: ["data-ending-style"] });
+    return result;
+  });
   await input.press("Escape");
   await expect(input).toHaveAttribute("aria-expanded", "false");
+  await expect.poll(() => exit.jsonValue()).toEqual({ connected: true, paused: true });
+  await expect(popup).toHaveCount(1);
+  await expect(popup).toHaveAttribute("inert", "");
+  await popup.locator('[aria-label="Planning"]').evaluate((element: HTMLElement) => element.click());
+  await expect(input).toHaveValue("Operations");
   await expect(dialog.getByRole("listbox")).toHaveCount(0);
   await expect(dialog).toHaveAttribute("data-state", "open");
-  await dialog.getByRole("button", { name: "Done choosing team", exact: true }).click();
+  // The retained popup must release Escape ownership during its visible exit.
+  await page.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
+  await expect(popup).toHaveCount(0);
+  await exit.dispose();
   await expect(page.getByRole("button", { name: "Choose a team in a dialog", exact: true })).toBeFocused();
 
   const touch = await browser.newContext({ hasTouch: true, viewport: { width: 360, height: 900 } });
