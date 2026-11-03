@@ -1,3 +1,19 @@
+# Public README and repository presentation: 3 November 2026
+
+The public README has a centered introduction, direct catalog/setup/documentation links, source-checked counts, a dashboard screenshot that follows light/dark appearance, a short setup path, a component example, theme configuration, package and guide indexes, and development commands. Detailed API notes remain in `docs/component-guide.md`, with repository-relative links rebased and installation examples using the cloned `evenkit` directory. The original licensing status is preserved; no npm publication is claimed.
+
+`docs/images/catalog-light.png` and `catalog-dark.png` are direct Chromium captures of `https://evenkit.dev/#dashboard` using Grove, a 1440 × 1120 viewport and 1.5 device scale. The page is scrolled to keep the report heading, controls, statistics and full chart visible. Images are about 260 KB each. Application markup and styles were not changed for these captures.
+
+Verification: local links and guide anchors resolve; GitHub's Markdown API renders the README; preview checks at 1280px and 390px load the expected light/dark image without page overflow. The two shell examples pass `sh -n`, the TSX example passes a TypeScript syntax check, and both stylesheet exports resolve. Vite's source loader confirms 116 catalog entries, eight themes and 23 registered blocks. No application source changed, so the earlier successful application checks were reused. Final public-render results and publication status are recorded in `.artifacts/readme-2026-11-03/publication.json`.
+
+The preceding component work through `c7b2aca` was pushed to `main` and deployed to `https://evenkit.dev` as Vercel deployment `dpl_F9Gf2T7SPvAcVeDcvbYozufQML9D`; the provider build and ten live Chromium/WebKit journeys passed. Publication evidence is in `.artifacts/stageshow-publication-2026-11-03/publication.json`. The user then requested public visibility, which was applied to `salexandr0s/evenkit` and verified through an anonymous HTTP 200 response.
+
+GitHub's previous default, `codex/component-improvements`, is fully included in `main` and was eight commits behind before this documentation commit. There were no open pull requests. This pass publishes the README on `main` and uses it as the public default so repository/profile visitors see the current work. No production rebuild is needed for the documentation files. Historical implementation and verification records follow.
+
+Resume with `git status --short --branch`, `gh repo view salexandr0s/evenkit --json defaultBranchRef,visibility,url`, and `cat .artifacts/readme-2026-11-03/publication.json`.
+
+---
+
 # Actual component motion pass: 2 November 2026
 
 Status: DONE_WITH_CONCERNS. The user's follow-up explicitly required actual reusable component and animation improvements. The new goal covers the library and editable blocks, with an individual underlying-source review for all 116 catalog entries. This pass changes library code and component regressions; catalog prompts and framing receive no improvement credit.
