@@ -1,3 +1,19 @@
+# Chart design pass: 3 November 2026
+
+Status: DONE. Shared line, area, grouped bar and signed stacked bar charts have updated headings, period labels, legends, gridlines, bar spacing, selection highlights and table disclosures. Area fills use a vertical gradient. The changes apply to catalog and dashboard consumers through the shared components.
+
+Numeric axes use rounded bounds and aligned labels. Default labels use compact notation from 10,000 and scientific notation below 0.001; inspector and table values retain the full default format. Custom formatters remain supported. Narrow frames put the scrollable inspector below the plot. Missing measurements, measured zeroes, signed stacks and keyboard focus recovery retain their existing behavior.
+
+Changed files: `packages/ui/src/chart-frame.tsx`, `chart-model.ts`, `chart-plots.tsx`, `chart.css`, `packages/ui/tests/chart-model.test.ts` and `docs/chart-dependency.md`. No dependency or public prop was added.
+
+Verification passed: UI/catalog production builds, full workspace typecheck, ESLint for changed TypeScript files, six chart-model tests and all nine reporting/reporting-matrix/chart-host browser tests. After the final CSS correction for narrow horizontal endpoint labels, UI/catalog builds and all four reporting-matrix/chart-host tests passed again. At 390px, every visible horizontal axis label fit without truncation. Desktop line/area charts, all four bar variants, dashboard, dark appearance and mobile inspector screenshots were inspected. Independent review found and confirmed the fix for overlapping long numeric labels.
+
+No implementation work remains. This pass has not been deployed. The development preview is running at `http://127.0.0.1:5173`; use `/#line-chart`, `/#bar-chart` or `/#dashboard`. Changes were prepared on `main`; unrelated README work was preserved.
+
+Resume with `git status --short --branch` and `git log -3 --oneline`. If the preview is stopped, run `npm run dev`. Rebuild packages and the catalog before running browser tests against production assets.
+
+---
+
 # Public README and repository presentation: 3 November 2026
 
 The public README has a centered introduction, direct catalog/setup/documentation links, source-checked counts, a dashboard screenshot that follows light/dark appearance, a short setup path, a component example, theme configuration, package and guide indexes, and development commands. Detailed API notes remain in `docs/component-guide.md`, with repository-relative links rebased and installation examples using the cloned `evenkit` directory. The original licensing status is preserved; no npm publication is claimed.
