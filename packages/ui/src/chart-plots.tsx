@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import type { ChartFrameRenderProps } from "./chart-frame.js";
-import { categoryPosition, chartColor, chartDomain, chartPaths, chartScale, chartSegments, chartValue, defaultChartFormat, plotHeight, plotInset, plotWidth, seriesDashes, seriesPatterns } from "./chart-model.js";
+import { categoryPosition, chartAxis, chartColor, chartDomain, chartPaths, chartScale, chartSegments, chartValue, defaultChartAxisFormat, plotHeight, plotInset, plotWidth, seriesDashes, seriesPatterns } from "./chart-model.js";
 import type { ChartDatum, ChartSeries } from "./chart-types.js";
 
 interface PlotProps extends ChartFrameRenderProps {
@@ -11,18 +11,24 @@ interface PlotProps extends ChartFrameRenderProps {
   formatValue?: ((value: number) => string) | undefined;
   categoryLabel?: string | undefined;
 }
-function Grid({ domain, horizontal = false }: { domain: readonly [number, number]; horizontal?: boolean }) {
-  const ticks = [domain[0], domain[0] + (domain[1] - domain[0]) / 2, domain[1]];
-  return <g className="pk-chart-grid">{ticks.map((value, index) => horizontal
+interface AxisProps {
+  domain: readonly [number, number];
+  ticks: readonly number[];
+  horizontal?: boolean;
+}
+function Grid({ domain, ticks, horizontal = false }: AxisProps) {
+  return <g className="pk-chart-grid">{ticks.filter(value => value !== 0).map((value, index) => horizontal
     ? <line key={index} x1={chartScale(value, domain, true)} x2={chartScale(value, domain, true)} y1={plotInset} y2={plotHeight - plotInset} />
     : <line key={index} x1={plotInset} x2={plotWidth - plotInset} y1={chartScale(value, domain)} y2={chartScale(value, domain)} />)}
     {horizontal ? <line className="pk-chart-zero" x1={chartScale(0, domain, true)} x2={chartScale(0, domain, true)} y1={plotInset} y2={plotHeight - plotInset} />
       : <line className="pk-chart-zero" x1={plotInset} x2={plotWidth - plotInset} y1={chartScale(0, domain)} y2={chartScale(0, domain)} />}
   </g>;
 }
-function Axis({ domain, formatValue = defaultChartFormat, horizontal = false }: { domain: readonly [number, number]; formatValue?: ((value: number) => string) | undefined; horizontal?: boolean }) {
-  const values = horizontal ? [domain[0], domain[0] + (domain[1] - domain[0]) / 2, domain[1]] : [domain[1], domain[0] + (domain[1] - domain[0]) / 2, domain[0]];
-  return <div className="pk-chart-axis" data-horizontal={horizontal || undefined} aria-hidden="true">{values.map((value, index) => <span key={index}>{formatValue(value)}</span>)}</div>;
+function Axis({ domain, ticks, formatValue = defaultChartAxisFormat, horizontal = false }: AxisProps & { formatValue?: ((value: number) => string) | undefined }) {
+  const tracks = Math.max(1, (ticks.length - 1) * 2);
+  return <div className="pk-chart-axis" data-horizontal={horizontal || undefined} style={{ "--pk-chart-ticks": tracks } as CSSProperties} aria-hidden="true">{ticks.map((value, index) => <span key={index} title={formatValue(value)} data-zero={value === 0 || undefined} style={horizontal
+    ? { gridColumn: index === 0 ? "1" : index === ticks.length - 1 ? String(tracks) : `${index * 2} / span 2` }
+    : { top: `${chartScale(value, domain) / plotHeight * 100}%` }}>{formatValue(value)}</span>)}</div>;
 }
 function Categories({ data, activeIndex, grouped = false }: { data: readonly ChartDatum[]; activeIndex: number | null; grouped?: boolean }) {
   const tracks = grouped ? data.length : Math.max(1, (data.length - 1) * 2);
@@ -30,22 +36,24 @@ function Categories({ data, activeIndex, grouped = false }: { data: readonly Cha
     {data.map((row, index) => <span key={row.id} dir="auto" style={grouped ? undefined : { gridColumn: index === 0 ? "1" : index === data.length - 1 ? String(tracks) : `${index * 2} / span 2` }} data-active={activeIndex === index || undefined}>{row.label}</span>)}
   </div>;
 }
-function Points({ data, series, domain }: { data: readonly ChartDatum[]; series: readonly ChartSeries[]; domain: readonly [number, number] }) {
+function Points({ data, series, domain, activeIndex }: { data: readonly ChartDatum[]; series: readonly ChartSeries[]; domain: readonly [number, number]; activeIndex: number | null }) {
   return <div className="pk-chart-marker-layer" aria-hidden="true">{series.map((item, index) => data.map((row, rowIndex) => {
     const value = chartValue(row.values[item.id]);
-    return value === null ? null : <span key={`${item.id}-${row.id}`} className="pk-chart-point" data-series={item.id} data-category={row.id} data-shape={index % 3 === 1 ? "square" : index % 3 === 2 ? "diamond" : "circle"} style={{ left: `${categoryPosition(rowIndex, data.length) / plotWidth * 100}%`, top: `${chartScale(value, domain) / plotHeight * 100}%`, color: chartColor(item, index) }} />;
+    return value === null ? null : <span key={`${item.id}-${row.id}`} className="pk-chart-point" data-series={item.id} data-category={row.id} data-active={activeIndex === rowIndex || undefined} data-shape={index % 3 === 1 ? "square" : index % 3 === 2 ? "diamond" : "circle"} style={{ left: `${categoryPosition(rowIndex, data.length) / plotWidth * 100}%`, top: `${chartScale(value, domain) / plotHeight * 100}%`, color: chartColor(item, index) }} />;
   }))}</div>;
 }
-export function LinePlot({ data, series, activeIndex, onActiveIndexChange, formatValue, categoryLabel, area = false }: PlotProps & { area?: boolean }) {
-  const domain = chartDomain(data, series);
+export function LinePlot({ data, series, activeIndex, onActiveIndexChange, patternId, formatValue, categoryLabel, area = false }: PlotProps & { area?: boolean }) {
+  const { domain, ticks } = chartAxis(chartDomain(data, series));
   return <div className="pk-chart-plot" data-kind={area ? "area" : "line"}>
-    <div className="pk-chart-vertical-layout"><Axis domain={domain} formatValue={formatValue} />
+    <div className="pk-chart-vertical-layout"><Axis domain={domain} ticks={ticks} formatValue={formatValue} />
       <div className="pk-chart-svg-wrap"><svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} preserveAspectRatio="none" className="pk-chart-svg" aria-hidden="true">
-        <Grid domain={domain} />
+        <Grid domain={domain} ticks={ticks} />
         {series.map((item, index) => {
           const paths = chartPaths(data, item, domain);
           return <g key={item.id} style={{ color: chartColor(item, index) }}>
-            {area ? <path className="pk-chart-area" data-series={item.id} d={paths.area} /> : null}
+            {area ? <><defs><linearGradient id={`${patternId}-area-${index}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="currentColor" /><stop offset="1" stopColor="currentColor" className="pk-chart-area-fade" />
+            </linearGradient></defs><path className="pk-chart-area" data-series={item.id} d={paths.area} fill={`url(#${patternId}-area-${index})`} /></> : null}
             <path className="pk-chart-line" data-series={item.id} d={paths.line} strokeDasharray={seriesDashes[index]} />
           </g>;
         })}
@@ -58,7 +66,7 @@ export function LinePlot({ data, series, activeIndex, onActiveIndexChange, forma
           const end = index === data.length - 1 ? plotWidth : (x + next) / 2;
           return <rect key={row.id} className="pk-chart-hit" data-category={row.id} x={start} y={0} width={end - start} height={plotHeight} onPointerEnter={() => onActiveIndexChange(index)} onPointerDown={() => onActiveIndexChange(index)} />;
         })}
-      </svg><Points data={data} series={series} domain={domain} /></div>
+      </svg><Points data={data} series={series} domain={domain} activeIndex={activeIndex} /></div>
     </div>
     <Categories data={data} activeIndex={activeIndex} />
     {categoryLabel ? <p className="pk-chart-category-title">{categoryLabel}</p> : null}
@@ -72,17 +80,18 @@ function Patterns({ series, patternId }: { series: readonly ChartSeries[]; patte
   </pattern>)}</defs>;
 }
 export function BarPlot({ data, series, activeIndex, onActiveIndexChange, patternId, formatValue, categoryLabel, horizontal = false, stacked = false }: PlotProps & { horizontal?: boolean; stacked?: boolean }) {
-  const domain = chartDomain(data, series, stacked);
+  const { domain, ticks } = chartAxis(chartDomain(data, series, stacked));
   const segments = chartSegments(data, series, stacked);
   const band = (horizontal ? plotHeight - 2 * plotInset : plotWidth - 2 * plotInset) / data.length;
-  const groupSize = band * 0.7;
+  const groupSize = Math.min(band * 0.64, horizontal ? (stacked ? 28 : series.length * 16) : (stacked ? 56 : series.length * 32));
   const size = stacked ? groupSize : groupSize / series.length;
+  const gap = stacked ? 0 : Math.min(size * 0.16, 3);
   return <div className="pk-chart-plot" data-kind="bar" data-orientation={horizontal ? "horizontal" : "vertical"} data-stacked={stacked || undefined}>
-    {horizontal ? <Axis domain={domain} formatValue={formatValue} horizontal /> : null}
     <div className={horizontal ? "pk-chart-horizontal-layout" : "pk-chart-vertical-layout"} style={{ "--pk-chart-count": data.length } as CSSProperties}>
-      {horizontal ? <div className="pk-chart-row-labels" aria-hidden="true">{data.map((row, index) => <span key={row.id} dir="auto" data-active={activeIndex === index || undefined}>{row.label}</span>)}</div> : <Axis domain={domain} formatValue={formatValue} />}
+      {horizontal ? <div className="pk-chart-row-labels" aria-hidden="true">{data.map((row, index) => <span key={row.id} dir="auto" data-active={activeIndex === index || undefined}>{row.label}</span>)}</div> : <Axis domain={domain} ticks={ticks} formatValue={formatValue} />}
       <div className="pk-chart-svg-wrap"><svg viewBox={`0 0 ${plotWidth} ${plotHeight}`} preserveAspectRatio="none" className="pk-chart-svg" aria-hidden="true">
-        <Patterns series={series} patternId={patternId} /><Grid domain={domain} horizontal={horizontal} />
+        <Patterns series={series} patternId={patternId} /><Grid domain={domain} ticks={ticks} horizontal={horizontal} />
+        {activeIndex === null ? null : <rect className="pk-chart-selection" x={horizontal ? 0 : plotInset + activeIndex * band} y={horizontal ? plotInset + activeIndex * band : 0} width={horizontal ? plotWidth : band} height={horizontal ? band : plotHeight} />}
         {segments.map((row, rowIndex) => row.map((segment, seriesIndex) => {
           if (segment.value === null) return null;
           const item = series[seriesIndex];
@@ -90,10 +99,10 @@ export function BarPlot({ data, series, activeIndex, onActiveIndexChange, patter
           if (!item || !datum) return null;
           const start = chartScale(segment.start, domain, horizontal);
           const end = chartScale(segment.end, domain, horizontal);
-          const category = plotInset + rowIndex * band + (band - groupSize) / 2 + (stacked ? 0 : seriesIndex * size);
-          return <rect key={`${datum.id}-${item.id}`} className="pk-chart-bar" data-series={item.id} data-category={datum.id} data-zero={segment.value === 0 || undefined}
+          const category = plotInset + rowIndex * band + (band - groupSize) / 2 + (stacked ? 0 : seriesIndex * size) + gap / 2;
+          return <rect key={`${datum.id}-${item.id}`} className="pk-chart-bar" data-series={item.id} data-category={datum.id} data-active={activeIndex === rowIndex || undefined} data-zero={segment.value === 0 || undefined}
             x={horizontal ? Math.min(start, end) : category} y={horizontal ? category : Math.min(start, end)}
-            width={horizontal ? Math.abs(end - start) : size} height={horizontal ? size : Math.abs(end - start)}
+            width={horizontal ? Math.abs(end - start) : size - gap} height={horizontal ? size - gap : Math.abs(end - start)}
             fill={`url(#${patternId}-${seriesIndex})`} style={{ color: chartColor(item, seriesIndex) }} />;
         }))}
         {data.map((row, index) => <rect key={row.id} className="pk-chart-hit" data-category={row.id} data-active={activeIndex === index || undefined}
@@ -102,7 +111,7 @@ export function BarPlot({ data, series, activeIndex, onActiveIndexChange, patter
           onPointerEnter={() => onActiveIndexChange(index)} onPointerDown={() => onActiveIndexChange(index)} />)}
       </svg></div>
     </div>
-    {!horizontal ? <Categories data={data} activeIndex={activeIndex} grouped /> : null}
+    {horizontal ? <div className="pk-chart-horizontal-axis"><Axis domain={domain} ticks={ticks} formatValue={formatValue} horizontal /></div> : <Categories data={data} activeIndex={activeIndex} grouped />}
     {categoryLabel ? <p className="pk-chart-category-title">{categoryLabel}</p> : null}
   </div>;
 }
