@@ -2,6 +2,11 @@
 
 Audit date: 2026-11-17. Local baseline: `bf1ca9f5afea1abc90a688ef4f1cfb025cab77d6`.
 
+Follow-up: the separate [Next.js security update](./security-update.md) patches
+16.4.3 to 16.4.6 and passes all 490 tests in one full `npm run verify` invocation
+at `2da89dd` (325.606s wall / 1266.544s process CPU). The historical audit and
+failed-run evidence below are retained. Hosted behavior remains unverified.
+
 ## Findings and priorities
 
 There were no tracked GitHub Actions workflows and the repository's Actions API
@@ -200,7 +205,7 @@ stale reports and cancellation, including a child that exits zero on SIGTERM.
 
 ### Final correctness and scope
 
-The final full `npm run verify` attempt (`2ad8bd2`) passed builds, lint, all type
+The final full `npm run verify` attempt during the CI-only changes (`2ad8bd2`) passed builds, lint, all type
 checks, 56 unit tests and 34 registry tests, then reported 336/337 catalog cases
 passing. It failed on a pre-existing 250ms timing race in the remaining catalog
 test, before reaching admin. That failed invocation took 621.731s wall /

@@ -2,12 +2,14 @@
 
 Integrated admin-starter verification, 26 October 2026. These packages remain local pilots. [The integration record](./admin-integration.md) lists accepted source revisions, exact commands, bundle evidence and limits; [the session handoff](../SESSION_HANDOFF.md) records the final result.
 
+The [17 November security refresh](./security-update.md) updates Next to 16.4.6 and passes all six verification commands listed below, including the full 490-test suite. The real-Supabase-provider evidence remains from 26 October; that disposable integration was not rerun.
+
 | Area | Environment exercised | Evidence |
 | --- | --- | --- |
-| Tooling | Node 26.12.1, npm 11.20.0, TypeScript 6.0.3 strict | Clean lockfile installation; combined builds, configured types and lint |
+| Tooling | Node 24.22.3/npm 11.19.1 in the security refresh; Node 26.12.1/npm 11.20.0 originally; TypeScript 6.0.3 strict | Clean lockfile installation; combined builds, configured types and lint |
 | React | React/React DOM 19.3.1 | Catalog, assembled admin and independently packed consumers |
 | Generic Vite | Vite 8.3.5 | 116 copied catalog examples, packed Next/Vite consumers and independently installed/copied blocks |
-| Next | Next 16.4.3 App Router and proxy | Runnable admin, packed server rendering, explicit server-only rejection and route journeys |
+| Next | Next 16.4.6 App Router and proxy | Runnable admin, packed server rendering, explicit server-only rejection and route journeys |
 | Browser automation | Playwright 1.64.1; Chromium catalog/consumers; Chromium, Firefox and WebKit admin | Interaction, cancellation, retry, context isolation, focus, mobile drawer and downloaded content checks |
 | Themes and widths | Eight themes, light/dark; assembled admin at 360/1440px | 576 admin route/theme/mode/width/engine combinations; catalog has additional RTL/intermediate-width matrices |
 | Reporting | d3-shape 3.2.0/d3-path 3.1.0 | Keyboard chart inspection, semantic data tables, period filtering, cancellable downloads and series/surface contrast |
@@ -15,7 +17,7 @@ Integrated admin-starter verification, 26 October 2026. These packages remain lo
 | Supabase | SSR 0.12.7/SDK 2.118.0; disposable local GoTrue v2.194.0 | Nine real provider/Next groups including cookies, eligibility, recovery email/PKCE/password update, sign-out and Chromium expiry cleanup |
 | Block distribution | Local registry with 23 items/34 files | Schema/import closure, dry run/install/repeat, owned edits/upgrade recovery and independent consumer builds |
 
-The declared Node minimum is 22.12.0; only Node 26.12.1 was exercised. TypeScript 6.0.3 matches the installed lint parser's supported range. The reconciled lockfile and [dependency record](./dependency-reconciliation.md) retain exact dependencies and licenses.
+The declared Node minimum is 22.12.0; Node 24.22.3 and 26.12.1 were exercised in the runs above, but the minimum was not. TypeScript 6.0.3 matches the installed lint parser's supported range. The reconciled lockfile and [dependency record](./dependency-reconciliation.md) retain exact dependencies and licenses.
 
 ## Adoption boundaries
 

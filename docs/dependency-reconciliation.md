@@ -1,5 +1,7 @@
 # Dependency reconciliation
 
+The [17 November security refresh](./security-update.md) updates Next and its `@next/env`/SWC packages from 16.4.3 to 16.4.6, with an auth adapter peer minimum of `^16.4.6`. It adds or removes no lockfile package entries. The detailed inventory below preserves the original 26 October snapshot; consult the current lockfile for resolved versions.
+
 Compared with component-improvements `b588b1b`, the lockfile adds 162 third-party package entries plus two internal workspace links. Platform-specific optional packages count separately. `npm ls --all` passes. The registry tools select Ajv 8.20.0 (MIT), semver 7.8.5 (ISC) and the existing Zod 4.6.7 (MIT); ESLint retains its own nested Ajv 6 dependency.
 
 ## Runtime boundaries and notices
@@ -9,7 +11,7 @@ Compared with component-improvements `b588b1b`, the lockfile adds 162 third-part
 | Generic UI reporting | d3-shape 3.2.0; d3-path 3.1.0 transitively | ISC; package notices in `packages/ui/licenses/d3-*.txt`; @types/d3-shape 3.2.0 is development-only MIT |
 | Generic UI rich chat | react-markdown 10.1.0, remark-gfm 4.0.1 | MIT/ISC dependency notices retained in `packages/ui/licenses/rich-chat-dependencies.txt` |
 | Optional auth adapter | @supabase/ssr 0.12.7, @supabase/supabase-js 2.118.0, server-only 0.0.1, Zod 4.6.7 | MIT; notices retained in `packages/auth-next/licenses/` |
-| Next starter / adapter peer | Next 16.4.3 | MIT; Next retains notices with its installed package. Next's optional Sharp 0.35.5 uses Apache-2.0, with platform libvips bundles declaring LGPL-3.0-or-later and combined licenses listed below. They are outside the generic UI tarball. |
+| Next starter / adapter peer | Next 16.4.6 (security refresh) | MIT; Next retains notices with its installed package. Next's optional Sharp 0.35.5 uses Apache-2.0, with platform libvips bundles declaring LGPL-3.0-or-later and combined licenses listed below. They are outside the generic UI tarball. |
 
 New installed metadata also includes Apache-2.0 (@swc/helpers and browser mapping), CC-BY-4.0 (caniuse-lite), and BSD-3-Clause (fast-uri). Those dependency packages retain their own installed notices. No third-party notices are relicensed. Evenkit's original private source remains unlicensed for public distribution. Nothing was published or deployed in this task.
 
@@ -17,7 +19,7 @@ The UI manifest contains no Next, Supabase or server-only dependency. The auth a
 
 ## Resolved added lock entries
 
-This table records declared package metadata, rather than a legal assessment or a claim that every optional platform binary was downloaded on macOS. Reproduce by comparing `package-lock.json` package keys with `git show b588b1b:package-lock.json`; local JSON is `.artifacts/admin-integration/dependency-additions.json`. All versions below come from the reconciled lockfile.
+This table records declared package metadata, rather than a legal assessment or a claim that every optional platform binary was downloaded on macOS. Reproduce the added keys by comparing `package-lock.json` package keys with `git show b588b1b:package-lock.json`; local JSON is `.artifacts/admin-integration/dependency-additions.json`. All versions below come from the original 26 October reconciled lockfile, before the security refresh described above.
 
 | Package | Version | Declared license | Optional / dev |
 | --- | --- | --- | --- |

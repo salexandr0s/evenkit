@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-17",
+  "next": {
+    "previous": "16.4.3",
+    "updated": "16.4.6",
+    "peerRange": "^16.4.6",
+    "advisory": "https://github.com/advisories/GHSA-mfr8-8qww-v76h"
+  },
+  "environment": {
+    "node": "24.22.3",
+    "npm": "11.19.1",
+    "platform": "macOS 27.2 arm64",
+    "CI": "1",
+    "authMode": "demo",
+    "firefoxAppData": "task-owned CFFIXED_USER_HOME",
+    "cacheState": "warm downloads/build caches; clean npm ci before verification"
+  },
+  "audit": {
+    "production": {
+      "command": [
+        "npm",
+        "audit",
+        "--omit=dev",
+        "--json"
+      ],
+      "exitCode": 0,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    "allDependencies": {
+      "command": [
+        "npm",
+        "audit",
+        "--json"
+      ],
+      "exitCode": 1,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 9,
+        "high": 0,
+        "critical": 0,
+        "total": 9
+      },
+      "remainingPackages": [
+        "@eslint/config-array",
+        "@typescript-eslint/eslint-plugin",
+        "@typescript-eslint/parser",
+        "@typescript-eslint/type-utils",
+        "@typescript-eslint/typescript-estree",
+        "@typescript-eslint/utils",
+        "eslint",
+        "minimatch",
+        "typescript-eslint"
+      ]
+    }
+  },
+  "verificationCounts": {
+    "unit": 56,
+    "registry": 34,
+    "catalogBrowser": 337,
+    "adminBrowser": 63,
+    "totalTests": 490,
+    "copiedExamples": 116,
+    "priorityMappings": 104,
+    "registryItemsPerConsumer": 23,
+    "registryFilesPerConsumer": 34
+  },
+  "measurements": [
+    {
+      "schemaVersion": 1,
+      "command": [
+        "npm",
+        "run",
+        "verify"
+      ],
+      "revision": "2da89dd8e4c70ccd72c13ab652f81834ce2f9bf2",
+      "dirty": false,
+      "startedAt": "2026-11-17T13:37:23.655102+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        12.98291015625,
+        6.24072265625,
+        6.10546875
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 325.606,
+      "loadAverageEnd": [
+        17.54443359375,
+        17.9345703125,
+        11.98486328125
+      ],
+      "cpuSeconds": 1266.544
+    },
+    {
+      "schemaVersion": 1,
+      "command": [
+        "npm",
+        "run",
+        "verify:examples"
+      ],
+      "revision": "2da89dd8e4c70ccd72c13ab652f81834ce2f9bf2",
+      "dirty": false,
+      "startedAt": "2026-11-17T13:42:49.353357+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        17.54443359375,
+        17.9345703125,
+        11.98486328125
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 1.629,
+      "loadAverageEnd": [
+        17.54443359375,
+        17.9345703125,
+        11.98486328125
+      ],
+      "cpuSeconds": 3.899
+    },
+    {
+      "schemaVersion": 1,
+      "command": [
+        "npm",
+        "run",
+        "verify:packages"
+      ],
+      "revision": "2da89dd8e4c70ccd72c13ab652f81834ce2f9bf2",
+      "dirty": false,
+      "startedAt": "2026-11-17T13:42:51.053966+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        17.54443359375,
+        17.9345703125,
+        11.98486328125
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 39.067,
+      "loadAverageEnd": [
+        16.294921875,
+        17.453125,
+        12.0732421875
+      ],
+      "cpuSeconds": 74.432
+    },
+    {
+      "schemaVersion": 1,
+      "command": [
+        "node",
+        "scripts/verify-packages.mjs",
+        "--registry"
+      ],
+      "revision": "2da89dd8e4c70ccd72c13ab652f81834ce2f9bf2",
+      "dirty": false,
+      "startedAt": "2026-11-17T13:43:30.230173+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        16.294921875,
+        17.453125,
+        12.0732421875
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 66.873,
+      "loadAverageEnd": [
+        18.876953125,
+        18.41796875,
+        12.8583984375
+      ],
+      "cpuSeconds": 113.338
+    },
+    {
+      "schemaVersion": 1,
+      "command": [
+        "node",
+        "scripts/verify-website-blocks.mjs"
+      ],
+      "revision": "2da89dd8e4c70ccd72c13ab652f81834ce2f9bf2",
+      "dirty": false,
+      "startedAt": "2026-11-17T13:44:37.227071+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        18.876953125,
+        18.41796875,
+        12.8583984375
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 21.173,
+      "loadAverageEnd": [
+        15.78857421875,
+        17.72607421875,
+        12.7685546875
+      ],
+      "cpuSeconds": 47.051
+    },
+    {
+      "schemaVersion": 1,
+      "command": [
+        "npm",
+        "run",
+        "verify:bundle"
+      ],
+      "revision": "2da89dd8e4c70ccd72c13ab652f81834ce2f9bf2",
+      "dirty": false,
+      "startedAt": "2026-11-17T13:44:58.520504+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        15.78857421875,
+        17.72607421875,
+        12.7685546875
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 0.543,
+      "loadAverageEnd": [
+        15.78857421875,
+        17.72607421875,
+        12.7685546875
+      ],
+      "cpuSeconds": 0.555
+    }
+  ],
+  "limits": [
+    "Local execution only; no hosted workflow or deployment.",
+    "CPU seconds measure waited child process CPU, not allocated runner-minutes.",
+    "Shared workstation load and different successful work prevent controlled comparison with the failed CI baseline.",
+    "Real Supabase provider integration was not rerun."
+  ]
+}
