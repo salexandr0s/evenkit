@@ -1,0 +1,453 @@
+{
+  "auditDate": "2026-11-17",
+  "baseline": {
+    "revision": "bf1ca9f5afea1abc90a688ef4f1cfb025cab77d6",
+    "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+    "node": "v24.22.3",
+    "cache": "existing node_modules and build caches; no install included",
+    "steps": [
+      {
+        "name": "build",
+        "command": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "exitCode": 1,
+        "wallSeconds": 20.724,
+        "cpuSeconds": 35.758
+      },
+      {
+        "name": "typecheck",
+        "command": [
+          "npm",
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "wallSeconds": 48.244,
+        "cpuSeconds": 35.313
+      },
+      {
+        "name": "lint",
+        "command": [
+          "npm",
+          "run",
+          "lint"
+        ],
+        "exitCode": 0,
+        "wallSeconds": 9.875,
+        "cpuSeconds": 10.097
+      },
+      {
+        "name": "unit",
+        "command": [
+          "npm",
+          "test"
+        ],
+        "exitCode": 0,
+        "wallSeconds": 3.802,
+        "cpuSeconds": 7.243
+      },
+      {
+        "name": "registry",
+        "command": [
+          "npm",
+          "run",
+          "test:registry"
+        ],
+        "exitCode": 0,
+        "wallSeconds": 70.943,
+        "cpuSeconds": 46.601
+      },
+      {
+        "name": "catalog-browser",
+        "command": [
+          "npm",
+          "run",
+          "test:browser"
+        ],
+        "exitCode": 0,
+        "wallSeconds": 292.296,
+        "cpuSeconds": 935.013
+      },
+      {
+        "name": "admin-browser",
+        "command": [
+          "npm",
+          "run",
+          "test:admin"
+        ],
+        "exitCode": 1,
+        "wallSeconds": 105.934,
+        "cpuSeconds": 151.346
+      }
+    ],
+    "wallSeconds": 551.824
+  },
+  "registryCompileCacheExperiment": [
+    {
+      "schemaVersion": 1,
+      "command": [
+        "node",
+        "--test",
+        "scripts/registry/cli.test.mjs",
+        "scripts/registry/presentation.test.mjs",
+        "scripts/registry/registry.test.mjs",
+        "scripts/registry/viewer.test.mjs"
+      ],
+      "revision": "b7c9d13cfff82f304f304ce940faa69c88e178f0",
+      "startedAt": "2026-11-17T12:23:34.731741+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 56.601,
+      "cpuSeconds": 40.681
+    },
+    {
+      "schemaVersion": 1,
+      "command": [
+        "node",
+        "--test",
+        "scripts/registry/cli.test.mjs",
+        "scripts/registry/presentation.test.mjs",
+        "scripts/registry/registry.test.mjs",
+        "scripts/registry/viewer.test.mjs"
+      ],
+      "revision": "b7c9d13cfff82f304f304ce940faa69c88e178f0",
+      "startedAt": "2026-11-17T12:24:31.468783+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 49.813,
+      "cpuSeconds": 40.977
+    },
+    {
+      "schemaVersion": 1,
+      "command": [
+        "node",
+        "--test",
+        "scripts/registry/cli.test.mjs",
+        "scripts/registry/presentation.test.mjs",
+        "scripts/registry/registry.test.mjs",
+        "scripts/registry/viewer.test.mjs"
+      ],
+      "revision": "b7c9d13cfff82f304f304ce940faa69c88e178f0",
+      "startedAt": "2026-11-17T12:25:21.506547+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 91.358,
+      "cpuSeconds": 43.719
+    },
+    {
+      "schemaVersion": 1,
+      "command": [
+        "node",
+        "--test",
+        "scripts/registry/cli.test.mjs",
+        "scripts/registry/presentation.test.mjs",
+        "scripts/registry/registry.test.mjs",
+        "scripts/registry/viewer.test.mjs"
+      ],
+      "revision": "b7c9d13cfff82f304f304ce940faa69c88e178f0",
+      "startedAt": "2026-11-17T12:26:53.073601+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 73.833,
+      "cpuSeconds": 53.191
+    }
+  ],
+  "buildRetry": {
+    "schemaVersion": 1,
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "revision": "b7c9d13cfff82f304f304ce940faa69c88e178f0",
+    "startedAt": "2026-11-17T12:22:50.966808+00:00",
+    "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+    "status": "passed",
+    "exitCode": 0,
+    "wallSeconds": 20.484,
+    "cpuSeconds": 29.781
+  },
+  "validation": {
+    "singleGreenVerifyRunAfterFinalEdit": false,
+    "existingCasesWithPassingEvidence": 490,
+    "fullAttempt": {
+      "schemaVersion": 1,
+      "command": [
+        "npm",
+        "run",
+        "verify"
+      ],
+      "revision": "2ad8bd2505d33999be8203ba9665f062f6edf1c7",
+      "dirty": false,
+      "startedAt": "2026-11-17T12:33:37.849027+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        23.12353515625,
+        37.287109375,
+        41.06298828125
+      ],
+      "status": "failed",
+      "exitCode": 1,
+      "wallSeconds": 621.731,
+      "loadAverageEnd": [
+        50.1982421875,
+        68.8671875,
+        57.7265625
+      ],
+      "cpuSeconds": 1159.442
+    },
+    "focusedCatalogRerun": {
+      "schemaVersion": 1,
+      "command": [
+        "npm",
+        "run",
+        "test:browser",
+        "--",
+        "tests/browser/notification-preferences.spec.ts",
+        "--repeat-each=3",
+        "--workers=1"
+      ],
+      "revision": "2ad8bd2505d33999be8203ba9665f062f6edf1c7",
+      "dirty": true,
+      "startedAt": "2026-11-17T12:44:47.565569+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        37.24169921875,
+        61.92724609375,
+        55.7587890625
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 54.761,
+      "loadAverageEnd": [
+        32.0771484375,
+        57.10546875,
+        54.34716796875
+      ],
+      "cpuSeconds": 41.634
+    },
+    "lintAndTypesAfterFinalEdit": {
+      "schemaVersion": 1,
+      "command": [
+        "sh",
+        "-c",
+        "npm run lint && npm run typecheck"
+      ],
+      "revision": "2ad8bd2505d33999be8203ba9665f062f6edf1c7",
+      "dirty": true,
+      "startedAt": "2026-11-17T12:45:42.474962+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        32.0771484375,
+        57.10546875,
+        54.34716796875
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 16.011,
+      "loadAverageEnd": [
+        25.01513671875,
+        53.87548828125,
+        53.251953125
+      ],
+      "cpuSeconds": 30.943
+    },
+    "allAdminBrowsers": {
+      "schemaVersion": 1,
+      "command": [
+        "npm",
+        "run",
+        "test:admin"
+      ],
+      "revision": "47cde35c21274df7a9f3ca8b401b97cbc5120b91",
+      "dirty": false,
+      "startedAt": "2026-11-17T12:45:58.613772+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        25.01513671875,
+        53.87548828125,
+        53.251953125
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 88.831,
+      "loadAverageEnd": [
+        23.7900390625,
+        47.09521484375,
+        50.75439453125
+      ],
+      "cpuSeconds": 251.114
+    },
+    "lintFailureProbe": {
+      "schemaVersion": 1,
+      "command": [
+        "npm",
+        "run",
+        "verify"
+      ],
+      "revision": "5c33d7d4cdcca56442a68fba01b63871a4f21408",
+      "dirty": true,
+      "startedAt": "2026-11-17T12:28:14.467739+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        40.31640625,
+        56.01806640625,
+        46.73388671875
+      ],
+      "status": "failed",
+      "exitCode": 1,
+      "wallSeconds": 4.627,
+      "loadAverageEnd": [
+        38.44921875,
+        55.3701171875,
+        46.5595703125
+      ],
+      "cpuSeconds": 7.864
+    },
+    "cleanDependencyInstall": {
+      "schemaVersion": 1,
+      "command": [
+        "npm",
+        "ci",
+        "--prefer-offline"
+      ],
+      "revision": "5c33d7d4cdcca56442a68fba01b63871a4f21408",
+      "dirty": false,
+      "startedAt": "2026-11-17T12:28:21.865533+00:00",
+      "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+      "loadAverageStart": [
+        38.44921875,
+        55.3701171875,
+        46.5595703125
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "wallSeconds": 7.594,
+      "loadAverageEnd": [
+        34.36328125,
+        53.94091796875,
+        46.1552734375
+      ],
+      "cpuSeconds": 14.232
+    },
+    "priorFailedAttempts": [
+      {
+        "schemaVersion": 1,
+        "command": [
+          "npm",
+          "run",
+          "verify"
+        ],
+        "revision": "5c33d7d4cdcca56442a68fba01b63871a4f21408",
+        "dirty": false,
+        "startedAt": "2026-11-17T12:28:32.649420+00:00",
+        "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+        "loadAverageStart": [
+          32.97265625,
+          53.32763671875,
+          45.984375
+        ],
+        "status": "failed",
+        "exitCode": 1,
+        "wallSeconds": 27.28,
+        "loadAverageEnd": [
+          33.39111328125,
+          51.70166015625,
+          45.60498046875
+        ],
+        "cpuSeconds": 45.379
+      },
+      {
+        "schemaVersion": 1,
+        "command": [
+          "npm",
+          "run",
+          "verify"
+        ],
+        "revision": "5c33d7d4cdcca56442a68fba01b63871a4f21408",
+        "dirty": false,
+        "startedAt": "2026-11-17T12:29:00.104885+00:00",
+        "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+        "loadAverageStart": [
+          33.39111328125,
+          51.70166015625,
+          45.60498046875
+        ],
+        "status": "failed",
+        "exitCode": 2,
+        "wallSeconds": 44.128,
+        "loadAverageEnd": [
+          36.2841796875,
+          49.787109375,
+          45.2041015625
+        ],
+        "cpuSeconds": 58.88
+      },
+      {
+        "schemaVersion": 1,
+        "command": [
+          "npm",
+          "run",
+          "verify"
+        ],
+        "revision": "df8562c1de95996e35603797cdc33d3c973019af",
+        "dirty": false,
+        "startedAt": "2026-11-17T12:30:41.730743+00:00",
+        "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+        "loadAverageStart": [
+          42.20849609375,
+          48.955078125,
+          45.1630859375
+        ],
+        "status": "failed",
+        "exitCode": 1,
+        "wallSeconds": 51.605,
+        "loadAverageEnd": [
+          42.6337890625,
+          47.7255859375,
+          44.92919921875
+        ],
+        "cpuSeconds": 53.826
+      },
+      {
+        "schemaVersion": 1,
+        "command": [
+          "npm",
+          "run",
+          "verify"
+        ],
+        "revision": "df8562c1de95996e35603797cdc33d3c973019af",
+        "dirty": false,
+        "startedAt": "2026-11-17T12:31:33.542062+00:00",
+        "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+        "loadAverageStart": [
+          42.6337890625,
+          47.7255859375,
+          44.92919921875
+        ],
+        "status": "failed",
+        "exitCode": 1,
+        "wallSeconds": 19.991,
+        "loadAverageEnd": [
+          33.05322265625,
+          45.2021484375,
+          44.08740234375
+        ],
+        "cpuSeconds": 33.422
+      }
+    ],
+    "notes": [
+      "Hosted CI has not run.",
+      "Local load varied substantially; these are not controlled latency or cost savings.",
+      "The full attempt failed on one catalog timing race; the fixed test file passed all five cases three times.",
+      "Admin used CFFIXED_USER_HOME pointing at empty task-owned app data to avoid the macOS 27 Firefox launch problem."
+    ]
+  }
+}

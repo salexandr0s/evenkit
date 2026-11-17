@@ -84,7 +84,11 @@ unchanged retry passed and retained the vulnerability warning. The reminder's
 retry window expires after five minutes; a later attempt stopped again before
 its immediate retry passed. No dependency version, security check or framework
 configuration was changed to suppress this. The dependency needs a separate
-security upgrade; a successful retry does not resolve the advisory.
+security upgrade; a successful retry does not resolve the advisory. npm audit
+identified [GHSA-mfr8-8qww-v76h](https://github.com/advisories/GHSA-mfr8-8qww-v76h)
+(16.4.3 is in the affected range; the advisory lists 16.4.5 as patched).
+The current npm resolver offered 16.4.6. No dependency upgrade was bundled into
+this CI change.
 
 The initial admin run passed 43 cases but failed 20 Firefox browser launches
 before application assertions (`Could not find profile folder`). Redownloading
@@ -139,3 +143,101 @@ is the sum of all job durations, including failures, cancellations and retries.
 Compare cold and warm runs of the same SHA before reporting medians or tails.
 If billing changes, apply the then-current per-job rounded minute rates, not a
 rate borrowed from OpenClaw or this workstation.
+
+## Measurements
+
+The baseline was a diagnostic sweep of the original `verify` stages, in their
+original order. It continued after failures to measure all stages; the actual
+original `&&` command would have stopped at the first failed build.
+
+| Original stage | Wall seconds | Process CPU seconds | Result |
+| --- | ---: | ---: | --- |
+| build | 20.724 | 35.758 | Security upgrade reminder; exit 1 |
+| typecheck | 48.244 | 35.313 | Passed |
+| lint | 9.875 | 10.097 | Passed |
+| unit | 3.802 | 7.243 | 56 passed |
+| registry | 70.943 | 46.601 | 34 passed |
+| catalog-browser | 292.296 | 935.013 | 337 passed |
+| admin-browser | 105.934 | 151.346 | 43 passed; 20 Firefox launch failures |
+
+Total diagnostic wall time: **551.824s**; summed process CPU:
+**1221.371s**. This is a failed baseline, not a
+green run to use in a percentage-saving claim. The unchanged successful build
+retry took 20.484s wall / 29.781s CPU.
+
+The same 34 registry tests, unchanged source and Node version, were run in this
+order using `node --test scripts/registry/*.test.mjs`. Uncached arms used
+`NODE_DISABLE_COMPILE_CACHE=1`; cached arms used the same initially empty
+`NODE_COMPILE_CACHE` directory. All four arms passed all 34 tests.
+
+| Registry cache experiment | Wall seconds | Process CPU seconds |
+| --- | ---: | ---: |
+| uncached-1 | 56.601 | 40.681 |
+| cache-cold | 49.813 | 40.977 |
+| cache-warm | 91.358 | 43.719 |
+| uncached-2 | 73.833 | 53.191 |
+
+The fresh-cache arm did not improve process CPU against the first uncached
+arm; later runs varied substantially as workstation load increased. One
+observed load average was 47 on 10 logical CPUs. This does not establish
+same-run cache savings or a general cache regression. The cache is omitted.
+
+An injected undefined-variable lint error stopped the new `npm run verify`
+in **4.627s** (7.864s process CPU), before package builds. The original measured
+order placed 68.968s of build/typecheck work ahead of lint. That is a sequencing
+comparison, not a controlled 94% speedup claim. Both browser configurations
+rejected a temporary `test.only` probe. All probes were removed.
+
+A detached, clean worktree completed `npm ci --prefer-offline` in **7.594s**
+(14.232s CPU), using the existing npm download cache. This is a warm download
+cache and fresh dependency tree, not a cold-network installation benchmark.
+
+Reports are summarized in [ci-measurements.json](ci-measurements.json); local
+command logs and traces are under `.artifacts/ci-audit/`. Instrumentation
+regression tests cover command arguments, nonzero exits, missing executables,
+stale reports and cancellation, including a child that exits zero on SIGTERM.
+
+
+### Final correctness and scope
+
+The final full `npm run verify` attempt (`2ad8bd2`) passed builds, lint, all type
+checks, 56 unit tests and 34 registry tests, then reported 336/337 catalog cases
+passing. It failed on a pre-existing 250ms timing race in the remaining catalog
+test, before reaching admin. That failed invocation took 621.731s wall /
+1159.442s process CPU and remains marked failed in the evidence.
+
+Two narrow test repairs emerged from verification:
+
+- The catalog metadata watcher may report an invalid input twice. Require an
+  initial error and successful regenerated output after repair, without requiring
+  exactly one watcher notification. All four tests in that file passed five
+  consecutive runs. Removing initial watch registration as a temporary mutation
+  made the retained recovery assertion fail; the mutation was restored.
+- The preference-save test's pending-focus assertion raced the sample response:
+  on a loaded machine the button had already become “Retry save”. Use Playwright's
+  clock to hold the response pending, inspect focus, then advance the response.
+  All existing focus, error, draft, policy, retry and completion assertions remain.
+  All five tests in that file passed three repetitions (15 executions), in
+  54.761s wall / 41.634s CPU. This was a known test-only scope, not graph-based
+  affected-test selection.
+
+After that last test edit, full lint and type checks passed again (16.011s wall /
+30.943s CPU), and the full admin suite passed **63/63** across Chromium, Firefox
+and WebKit (88.831s wall / 251.114s CPU), using isolated macOS Firefox app data.
+Thus all **490 existing cases** have passing evidence across full-suite runs and
+focused reruns. There was **not a single green end-to-end `npm run verify` after
+the last test edit**; the failed full attempt is not relabeled as successful.
+The final test-only edit did not change application code or any suite's selection.
+
+`actionlint` and `git diff --check` passed. All three timing-wrapper regression
+tests passed; both browser configurations rejected focused-test probes. No
+required check was removed, no assertion was removed from the browser test,
+and no CI retry or success exception was introduced.
+
+The branch remains local and unpushed. No hosted workflow has been executed, so
+Ubuntu behavior, cache hit rates, queue latency, allocated runner-minutes and
+hosted p50/p95 are unverified. The first hosted run should validate the complete
+`verify` job before making it required. Do not claim a full-pipeline speedup or
+financial saving from the failed/noisy local comparisons. The verified benefits
+are earlier lint/unit ordering, one fewer token build per complete verification,
+retained coverage, and repair of two observed sources of wasted reruns.
