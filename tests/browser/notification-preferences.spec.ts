@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("preference saves preserve keyboard focus and failed drafts while enforcing channel policy", async ({ page }) => {
+  await page.clock.install({ time: new Date("2026-01-01T00:00:00Z") });
   await page.goto("/#notification-preferences");
   const form = page.getByRole("form", { name: "Notification preferences", exact: true });
   const email = form.getByRole("switch", { name: "Mentions and replies: Email", exact: true });
@@ -16,13 +17,17 @@ test("preference saves preserve keyboard focus and failed drafts while enforcing
   await email.focus(); await page.keyboard.press("Space");
   await expect(email).toBeChecked();
   const save = form.getByRole("button", { name: "Save preferences", exact: true });
+  // Keep the sample's 250ms response pending until its focus is inspected.
+  await page.clock.pauseAt(new Date("2026-01-01T01:00:00Z"));
   await save.focus(); await page.keyboard.press("Enter");
   await expect(save).toBeFocused();
+  await page.clock.runFor(300);
   await expect(form.getByRole("alert")).toContainText("The sample save failed.");
   const retry = form.getByRole("button", { name: "Retry save", exact: true });
   await expect(retry).toBeFocused();
   await expect(email).toBeChecked();
   await page.keyboard.press("Enter");
+  await page.clock.runFor(300);
   await expect(form.getByText("Notification preferences saved.", { exact: true })).toBeVisible();
   await expect(form.getByRole("button", { name: "Save preferences", exact: true })).toBeFocused();
   await expect(page.getByRole("status", { name: "Completed preference saves" })).toHaveText("1");
