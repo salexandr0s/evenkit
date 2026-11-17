@@ -246,3 +246,37 @@ hosted p50/p95 are unverified. The first hosted run should validate the complete
 financial saving from the failed/noisy local comparisons. The verified benefits
 are earlier lint/unit ordering, one fewer token build per complete verification,
 retained coverage, and repair of two observed sources of wasted reruns.
+
+## First hosted run
+
+PR [#3](https://github.com/salexandr0s/evenkit/pull/3) ran the new Ubuntu job at
+head `6946556` (GitHub's test merge `05cb2c6`).
+[Run 44097290438](https://github.com/salexandr0s/evenkit/actions/runs/44097290438)
+passed installation, timing-wrapper checks, lint, builds, types, unit and
+registry tests, then failed one catalog assertion (336/337 passed). Admin
+correctly did not run after that failure.
+
+| Stage | Wall seconds | Process CPU seconds |
+| --- | ---: | ---: |
+| Dependency installation | 57.503 | 63.545 |
+| Lint, package builds and unit tests | 18.074 | 35.856 |
+| App builds and type checks | 37.773 | 91.985 |
+| Registry tests | 29.779 | 39.461 |
+| Browser installation | 47.804 | 45.928 |
+| Catalog browser tests (failed) | 432.710 | 285.563 |
+
+The attachment-width test assumed the user message would occupy more than 75%
+of a 720px column. The message also has an intentional `65ch` prose cap: with
+Linux's font metrics that cap is about 506px, below the asserted 540px. Selecting
+Arial locally reproduces the exact failure. The assertion now measures the
+font-relative prose cap and requires the message to fill its intended width,
+`min(90% of the column, prose cap)`, within one pixel. The overflow, upload,
+focus, download and image assertions remain. No application CSS changed, no
+threshold was simply lowered, and no CI retry was added.
+
+The repaired assertion passed the local Arial reproduction and both complete
+rich-chat repetitions (12 cases). An isolated test-only CSS override removing
+attachment `inline-size: 100%` made the new sizing assertion fail by 226.6px,
+confirming the original shrinkage regression remains detected. Lint and all
+type checks passed. Logs and the original hosted failure artifact are retained
+under `.artifacts/security-release/`; a new full hosted run follows the repair.
