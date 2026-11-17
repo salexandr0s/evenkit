@@ -51,7 +51,7 @@ class MeasureTest(unittest.TestCase):
             process = subprocess.Popen([
                 sys.executable, str(MEASURE), "--output", str(report), "--",
                 sys.executable, "-c",
-                "import os,pathlib,sys,time; pathlib.Path(sys.argv[1]).write_text(str(os.getpid())); time.sleep(60)",
+                "import os,pathlib,signal,sys,time; signal.signal(signal.SIGTERM, lambda *_: sys.exit(0)); pathlib.Path(sys.argv[1]).write_text(str(os.getpid())); time.sleep(60)",
                 str(ready),
             ], stdout=subprocess.DEVNULL)
             try:

@@ -28,8 +28,12 @@ def main():
         "revision": os.environ.get("GITHUB_SHA") or subprocess.check_output(
             ["git", "rev-parse", "HEAD"], text=True
         ).strip(),
+        "dirty": bool(subprocess.check_output(
+            ["git", "status", "--porcelain"], text=True
+        ).strip()),
         "startedAt": datetime.now(timezone.utc).isoformat(),
         "platform": platform.platform(),
+        "loadAverageStart": list(os.getloadavg()),
         "status": "running",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -44,8 +48,11 @@ def main():
     start = time.monotonic()
     before = resource.getrusage(resource.RUSAGE_CHILDREN)
     child = None
+    interrupted = None
 
     def forward(signum, _frame):
+        nonlocal interrupted
+        interrupted = signum
         if child is not None:
             try:
                 os.killpg(child.pid, signum)
@@ -56,8 +63,12 @@ def main():
     signal.signal(signal.SIGINT, forward)
     try:
         child = subprocess.Popen(command, start_new_session=True)
+        if interrupted is not None:
+            forward(interrupted, None)
         result = child.wait()
-        exit_code = result if result >= 0 else 128 - result
+        exit_code = 128 + interrupted if interrupted is not None else (
+            result if result >= 0 else 128 - result
+        )
     except OSError as error:
         report["error"] = str(error)
         exit_code = 127
@@ -66,6 +77,7 @@ def main():
         "status": "passed" if exit_code == 0 else "failed",
         "exitCode": exit_code,
         "wallSeconds": round(time.monotonic() - start, 3),
+        "loadAverageEnd": list(os.getloadavg()),
         "cpuSeconds": round(
             after.ru_utime + after.ru_stime - before.ru_utime - before.ru_stime, 3
         ),

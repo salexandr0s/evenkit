@@ -76,6 +76,53 @@ so an interrupted command cannot retain stale success. CPU seconds sum user and
 system time for waited child processes; they are not allocated runner-minutes.
 The wrapper requires Python 3 on Linux/macOS; ordinary npm commands do not.
 
+### Environment findings
+
+The first build completed compilation but exited with Next.js's
+`SecurityFatalError` upgrade reminder for installed Next 16.4.3. An immediate
+unchanged retry passed and retained the vulnerability warning. The reminder's
+retry window expires after five minutes; a later attempt stopped again before
+its immediate retry passed. No dependency version, security check or framework
+configuration was changed to suppress this. The dependency needs a separate
+security upgrade; a successful retry does not resolve the advisory.
+
+The initial admin run passed 43 cases but failed 20 Firefox browser launches
+before application assertions (`Could not find profile folder`). Redownloading
+the pinned Firefox 157 binary did not help. A launch with a fresh
+`CFFIXED_USER_HOME` succeeded, matching
+[Playwright's macOS 27 app-data issue](https://github.com/microsoft/playwright/issues/42768).
+For subsequent local validation only, point that environment variable at an
+empty directory under `.artifacts/ci-audit/`. This keeps test app data separate
+from the user's real browser data. It is not part of the Ubuntu workflow, and
+the initial failures remain in the baseline evidence.
+
+## Workflow contract
+
+The `CI` workflow has one job/check named `verify`. It runs on pull requests,
+pushes to `main`, merge groups and manual dispatch, with no changed-path or draft
+exclusions. Keep that check name stable if branch protection is later enabled.
+All verification stages must pass; there is no `continue-on-error`, conditional
+test skip, test-result reuse, or aggregate gate that accepts skipped work.
+Only obsolete revisions of the same PR cancel one another. Main/manual runs
+use unique concurrency groups.
+
+One Ubuntu 24.04 runner uses pinned Node 24.22.3 and `npm ci --prefer-offline`.
+The npm cache stores downloads keyed by the lockfile; installation still runs.
+No Node compilation cache, dependency-tree cache, build cache or passing-test
+cache is enabled. A local experiment did not establish a reliable benefit for
+a fresh compilation cache; see the measurements below. A future experiment must
+also account for
+[Node's coverage caveat](https://nodejs.org/docs/latest-v24.x/api/module.html#module-compile-cache).
+
+All three Playwright engines are installed after the earlier checks succeed.
+Browser binaries are not cached, following
+[Playwright's CI guidance](https://playwright.dev/docs/ci).
+Playwright's existing worker defaults, test inventory, assertions and retries
+are unchanged. CI rejects focused `test.only` cases and bounds catalog/admin
+execution to 15/10 minutes; the overall job has a 30-minute limit. Failing or
+timed-out tests stay failures. Reports and failure traces are retained for
+seven days, including hidden `.artifacts` paths explicitly listed in the upload.
+
 ## Compute cost
 
 This repository is public. Standard hosted runner compute is

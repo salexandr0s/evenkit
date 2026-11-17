@@ -140,8 +140,8 @@ Use [llms.txt](https://evenkit.dev/llms.txt) for setup instructions and an index
 
 Install browser dependencies with `npx playwright install chromium firefox webkit`. Run `npm run verify` for the combined build, type, lint, unit, registry, and browser checks.
 
-Verification runs lint and package/unit/registry checks first, then app builds and
-type checks, followed by all browser tests. `npm run test:registry` still builds
+Verification runs lint and package/unit checks first, then app builds and type
+checks, registry tests, and all browser tests. `npm run test:registry` still builds
 tokens when used alone; `test:registry:built` requires freshly built packages.
 See the [CI audit](docs/ci-audit.md) for measurements, check coverage and rollout.
 
