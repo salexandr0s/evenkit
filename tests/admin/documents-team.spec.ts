@@ -22,7 +22,7 @@ async function invitation(page: Page, email: string) {
 }
 const sampleFile = (name: string) => ({ name, mimeType: "text/plain", buffer: Buffer.from("Fictional workshop notes. No customer data.") });
 
-test("uploaded documents survive navigation, preview and download, and removal retries can be undone", async ({ page }) => {
+test("uploaded documents survive navigation, preview and download, and removal retries can be undone", async ({ page, browserName }) => {
   await page.goto("/documents");
   const library = page.getByRole("region", { name: "Document library", exact: true });
   await expect(library.getByRole("button", { name: "Preview Community brief.txt", exact: true })).toBeVisible();
@@ -43,10 +43,14 @@ test("uploaded documents survive navigation, preview and download, and removal r
   await page.keyboard.press("Enter");
   const lightbox = page.getByRole("dialog", { name: "Workshop notes.txt", exact: true });
   await expect(lightbox.getByRole("region", { name: "Text content of Workshop notes.txt", exact: true })).toHaveText("Fictional workshop notes. No customer data.");
+  const downloadLink = lightbox.getByRole("link", { name: "Download Workshop notes.txt", exact: true });
+  await expect(downloadLink).toHaveAttribute("download", "Workshop notes.txt");
   const downloading = page.waitForEvent("download");
-  await lightbox.getByRole("link", { name: "Download Workshop notes.txt", exact: true }).click();
+  await downloadLink.click();
   const download = await downloading;
-  expect(download.suggestedFilename()).toBe("Workshop notes.txt");
+  // Linux WebKit normalizes spaces in its browser-generated suggested filename.
+  const suggestedName = browserName === "webkit" && process.platform === "linux" ? "Workshop_notes.txt" : "Workshop notes.txt";
+  expect(download.suggestedFilename()).toBe(suggestedName);
   const downloadPath = await download.path();
   if (!downloadPath) throw new Error("The local document download did not produce a file.");
   expect(await readFile(downloadPath, "utf8")).toBe("Fictional workshop notes. No customer data.");

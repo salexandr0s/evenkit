@@ -7,6 +7,8 @@ if (!Number.isInteger(port) || port < 1024 || port > 65535) {
 
 export default defineConfig({
   testDir: "./tests/browser",
+  forbidOnly: !!process.env.CI,
+  globalTimeout: process.env.CI ? 15 * 60_000 : 0,
   fullyParallel: false,
   timeout: 30_000,
   use: { baseURL: `http://127.0.0.1:${port}`, trace: "retain-on-failure" },

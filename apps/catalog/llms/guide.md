@@ -29,7 +29,7 @@ From the consuming project, install both tarballs in one command so npm does not
 npm install ../evenkit/.artifacts/evenkit-tokens-0.1.0.tgz ../evenkit/.artifacts/evenkit-ui-0.1.0.tgz
 ```
 
-Adjust the path to wherever the checkout lives. For the Supabase adapter, also pack `@evenkit/auth-next` with the same command's `--workspace` option and install the resulting `evenkit-auth-next-0.1.0.tgz` in the consumer. It requires Next.js `^16.4.3`; generic UI apps need only tokens and UI.
+Adjust the path to wherever the checkout lives. For the Supabase adapter, also pack `@evenkit/auth-next` with the same command's `--workspace` option and install the resulting `evenkit-auth-next-0.1.0.tgz` in the consumer. It requires Next.js `^16.4.6`; generic UI apps need only tokens and UI.
 
 ## Set up styles and themes
 

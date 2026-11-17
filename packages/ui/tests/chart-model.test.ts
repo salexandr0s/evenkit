@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chartDomain, chartPaths, chartScale, chartSegments, chartValue, defaultChartFormat, hasChartData, validChartData } from "../src/chart-model.js";
+import { chartAxis, chartDomain, chartPaths, chartScale, chartSegments, chartValue, defaultChartAxisFormat, defaultChartFormat, hasChartData, validChartData } from "../src/chart-model.js";
 import type { ChartDatum, ChartSeries } from "../src/chart-types.js";
 
 const series: readonly ChartSeries[] = [{ id: "a", label: "Current" }, { id: "b", label: "Previous" }];
@@ -13,6 +13,9 @@ describe("chart data boundaries", () => {
     expect(hasChartData([row("missing", null, NaN)], series)).toBe(false);
     expect(defaultChartFormat(0.000001)).toBe("0.000001");
     expect(defaultChartFormat(1.123456789012345)).toBe("1.123456789012345");
+    expect(defaultChartAxisFormat(1_000_000_000_000)).toBe("1T");
+    expect(defaultChartAxisFormat(0.000001)).toBe("1E-6");
+    expect(defaultChartAxisFormat(0)).toBe("0");
   });
   it("rejects ambiguous identities, excessive series and unsafe stack magnitudes", () => {
     expect(validChartData([row("x", 1), row("x", 2)], series)).toBe(false);
@@ -24,6 +27,20 @@ describe("chart data boundaries", () => {
   });
 });
 describe("chart geometry", () => {
+  it("uses readable axis intervals without clipping signed, fractional or tiny values", () => {
+    expect(chartAxis([0, 46])).toEqual({ domain: [0, 50], ticks: [0, 10, 20, 30, 40, 50] });
+    expect(chartAxis([-12, 56])).toEqual({ domain: [-20, 60], ticks: [-20, 0, 20, 40, 60] });
+    expect(chartAxis([0, 0.46])).toEqual({ domain: [0, 0.5], ticks: [0, 0.1, 0.2, 0.3, 0.4, 0.5] });
+    for (const input of [[0, 1], [-8, 0], [-12, 93], [0, Number.MIN_VALUE], [-Number.MIN_VALUE, Number.MIN_VALUE], [0, Number.MAX_SAFE_INTEGER]] as const) {
+      const { domain, ticks } = chartAxis(input);
+      expect(domain[0]).toBeLessThanOrEqual(input[0]);
+      expect(domain[1]).toBeGreaterThanOrEqual(input[1]);
+      expect(ticks.every(Number.isFinite)).toBe(true);
+      expect(new Set(ticks).size).toBe(ticks.length);
+      expect(ticks.length).toBeLessThanOrEqual(8);
+      for (const value of input) expect(chartScale(value, domain)).toBeGreaterThanOrEqual(8);
+    }
+  });
   it("uses separate positive and negative totals in signed stacks and includes zero", () => {
     const keys = ["a", "b", "c", "d"].map(id => ({ id, label: id }));
     const data = [{ id: "x", label: "x", values: { a: 5, b: -3, c: 7, d: -4 } }];

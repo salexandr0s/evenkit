@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Superseded PR revisions are obsolete; main and manual runs keep their proof.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CI: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+      EVENKIT_AUTH_MODE: demo
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: "24.22.3"
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install locked dependencies
+        run: python3 scripts/ci/measure.py --output .artifacts/ci/install.json -- npm ci --prefer-offline
+      - name: Check timing failure propagation
+        run: python3 -m unittest discover -s scripts/ci -p 'test_*.py'
+      - name: Lint, build packages and unit tests
+        run: python3 scripts/ci/measure.py --output .artifacts/ci/fast.json -- npm run verify:fast
+      - name: Build apps and check all types
+        run: python3 scripts/ci/measure.py --output .artifacts/ci/apps.json -- npm run verify:apps
+      - name: Registry tests using built packages
+        run: python3 scripts/ci/measure.py --output .artifacts/ci/registry.json -- npm run test:registry:built
+      - name: Install all required browsers
+        run: python3 scripts/ci/measure.py --output .artifacts/ci/browser-install.json -- npx --no-install playwright install --with-deps chromium firefox webkit
+      - name: Catalog Chromium tests
+        run: python3 scripts/ci/measure.py --output .artifacts/ci/catalog.json -- npm run test:browser
+      - name: Admin Chromium, Firefox and WebKit tests
+        run: python3 scripts/ci/measure.py --output .artifacts/ci/admin.json -- npm run test:admin
+      - name: Retain timing reports and failure traces
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .artifacts/ci/*.json
+            .artifacts/admin-browser-results/
+            test-results/
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7

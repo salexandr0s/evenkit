@@ -13,7 +13,7 @@ export function ChartLegend({ series, label = chartLabels.legend, variant = "lin
   const id = useId().replace(/:/g, "");
   return <ul className="pk-chart-legend" aria-label={label}>{series.map((item, index) => <li key={item.id}>
     <svg viewBox="0 0 32 16" className="pk-chart-swatch" aria-hidden="true" style={{ color: chartColor(item, index) }}>
-      {variant === "bar" ? <><defs><pattern id={`${id}-${index}`} width={8} height={8} patternUnits="userSpaceOnUse"><rect width={8} height={8} fill="currentColor" />{index ? <path d={seriesPatterns[index]} className="pk-chart-pattern" /> : null}</pattern></defs><rect y={2} width={32} height={12} fill={`url(#${id}-${index})`} /></> : <path d="M0 8H32" stroke="currentColor" strokeWidth="2" strokeDasharray={seriesDashes[index]} />}
+      {variant === "bar" ? <><defs><pattern id={`${id}-${index}`} width={8} height={8} patternUnits="userSpaceOnUse"><rect width={8} height={8} fill="currentColor" />{index ? <path d={seriesPatterns[index]} className="pk-chart-pattern" /> : null}</pattern></defs><rect y={2} width={32} height={12} rx={2} fill={`url(#${id}-${index})`} /></> : <><path d="M0 8H32" stroke="currentColor" strokeWidth="2" strokeDasharray={seriesDashes[index]} /><path className="pk-chart-legend-point" d={index % 3 === 1 ? "M12 4H20V12H12Z" : index % 3 === 2 ? "M16 3L21 8L16 13L11 8Z" : "M20 8a4 4 0 1 1-8 0a4 4 0 1 1 8 0"} /></>}
     </svg><span>{item.label}</span>
   </li>)}</ul>;
 }
@@ -87,9 +87,11 @@ export function ChartFrame({ title, description, unit, categoryLabel = "Category
   const active = activeIndex === null ? undefined : data[activeIndex];
   const select = (index: number | null) => setActiveId(index === null ? null : data[index]?.id ?? null);
   return <figure {...props} className={classes("pk-chart-frame", className)} aria-labelledby={`${id}-title`} aria-busy={loading || undefined}>
-    <figcaption className="pk-chart-caption"><div className="pk-chart-heading"><h3 id={`${id}-title`}>{title}</h3>{description ? <div className="pk-chart-description">{description}</div> : null}</div>
-      <div className="pk-chart-caption-meta"><p className="pk-chart-context">{period ? <span className="pk-chart-period"><bdi dir="auto">{period}</bdi></span> : null}{aggregation ? <span><bdi dir="auto">{aggregation}</bdi></span> : null}<span className="pk-chart-unit"><bdi dir="auto">{unit}</bdi></span></p>
+    <figcaption className="pk-chart-caption"><div className="pk-chart-caption-header"><div className="pk-chart-heading"><h3 id={`${id}-title`}>{title}</h3>{description ? <div className="pk-chart-description">{description}</div> : null}</div>
+      {period || aggregation ? <p className="pk-chart-context">{period ? <span className="pk-chart-period"><bdi dir="auto">{period}</bdi></span> : null}{aggregation ? <span><bdi dir="auto">{aggregation}</bdi></span> : null}</p> : null}
+      </div><div className="pk-chart-caption-meta">
         {series.length > 0 && !invalid ? <ChartLegend series={series} label={text.legend} variant={legendVariant} /> : null}
+        <span className="pk-chart-unit"><bdi dir="auto">{unit}</bdi></span>
       </div>
     </figcaption>
     {hasData ? <p className="pk-chart-instructions pk-visually-hidden" id={`${id}-instructions`}>{text.instructions}</p> : null}

@@ -7,6 +7,12 @@ export const plotInset = 8;
 export const seriesDashes = ["", "8 4", "2 4", "8 3 2 3", "12 4", "4 3 2 3"] as const;
 export const seriesPatterns = ["", "M0 8L8 0", "M0 0L8 8", "M0 4H8", "M4 0V8", "M0 0L8 8M0 8L8 0"] as const;
 export const defaultChartFormat = (value: number) => new Intl.NumberFormat("en", { maximumSignificantDigits: 21 }).format(value);
+export const defaultChartAxisFormat = (value: number) => {
+  const magnitude = Math.abs(value);
+  if (magnitude >= 10_000) return new Intl.NumberFormat("en", { notation: "compact", maximumSignificantDigits: 3 }).format(value);
+  if (magnitude > 0 && magnitude < 0.001) return new Intl.NumberFormat("en", { notation: "scientific", maximumSignificantDigits: 3 }).format(value);
+  return defaultChartFormat(value);
+};
 export function chartValue(value: number | null | undefined): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
@@ -49,6 +55,20 @@ export function chartDomain(data: readonly ChartDatum[], series: readonly ChartS
     max = Math.max(max, segment.start, segment.end);
   }
   return min === max ? [0, 1] : [min, max];
+}
+export function chartAxis(domain: readonly [number, number]): { domain: readonly [number, number]; ticks: readonly number[] } {
+  const roughStep = (domain[1] - domain[0]) / 5;
+  const magnitude = 10 ** Math.floor(Math.log10(roughStep));
+  const multiple = [1, 2, 2.5, 5, 10].find(value => value * magnitude >= roughStep) ?? 10;
+  const step = multiple * magnitude;
+  if (!Number.isFinite(step) || step <= 0) return { domain, ticks: [...domain] };
+  const first = Math.floor(domain[0] / step);
+  const last = Math.ceil(domain[1] / step);
+  const ticks = Array.from({ length: last - first + 1 }, (_, index) => Number(((first + index) * step).toPrecision(15)));
+  const min = ticks[0] ?? domain[0];
+  const max = ticks[ticks.length - 1] ?? domain[1];
+  if (min > domain[0] || max < domain[1] || min === max) return { domain, ticks: [...domain] };
+  return { domain: [min, max], ticks };
 }
 export function chartScale(value: number, domain: readonly [number, number], horizontal = false): number {
   const fraction = (value - domain[0]) / (domain[1] - domain[0]);

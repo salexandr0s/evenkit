@@ -93,8 +93,17 @@ test("attachments recover per file, keep focus and send without text", async ({ 
   await expect(sent.getByRole("list", { name: "Attachments", exact: true }).getByRole("listitem")).toHaveCount(2);
   for (const width of [360, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    const available = await panel.locator(".pk-chat-message-stack").evaluate(element => element.clientWidth);
-    expect(await sent.evaluate(element => element.clientWidth)).toBeGreaterThan(available * 0.75);
+    const sizing = await sent.evaluate(element => {
+      // The prose cap is in ch: system fonts give it different pixel widths.
+      const ruler = document.createElement("span");
+      ruler.style.cssText = "position:absolute;visibility:hidden;inline-size:var(--pk-layout-prose)";
+      element.append(ruler);
+      const prose = ruler.getBoundingClientRect().width;
+      ruler.remove();
+      const available = element.closest(".pk-chat-message-stack")!.clientWidth;
+      return { actual: element.getBoundingClientRect().width, expected: Math.min(available * 0.9, prose) };
+    });
+    expect(Math.abs(sizing.actual - sizing.expected)).toBeLessThanOrEqual(1);
     expect(await sent.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
   }
   await expect(sent.getByRole("link", { name: "Download Review notes.txt", exact: true })).toHaveAttribute("href", /^blob:/);

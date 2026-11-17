@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --hostname 127.0.0.1 --port 5396",
+    "dev": "portless run --name admin.evenkit sh -c 'if [ \"${PORTLESS:-}\" = 0 ]; then exec npm run dev:direct -- \"$@\"; fi; EVENKIT_APP_ORIGIN=\"$PORTLESS_URL\" exec next dev --hostname 127.0.0.1 \"$@\"' --",
+    "dev:direct": "next dev --hostname 127.0.0.1 --port 5396",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1 --port 5396",
     "typecheck": "tsc --noEmit"
@@ -13,7 +14,7 @@
     "@evenkit/tokens": "0.1.0",
     "@evenkit/ui": "0.1.0",
     "@evenkit/auth-next": "0.1.0",
-    "next": "16.4.3",
+    "next": "16.4.6",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "zod": "4.6.7"

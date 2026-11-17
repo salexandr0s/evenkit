@@ -5,6 +5,8 @@ if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error("EVE
 
 export default defineConfig({
   testDir: "./tests/admin",
+  forbidOnly: !!process.env.CI,
+  globalTimeout: process.env.CI ? 10 * 60_000 : 0,
   outputDir: ".artifacts/admin-browser-results",
   fullyParallel: false,
   timeout: 45_000,
