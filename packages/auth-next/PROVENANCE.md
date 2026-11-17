@@ -10,7 +10,7 @@ Runtime dependencies are pinned. Notices are included in `licenses/`. The `serve
 | `@supabase/supabase-js` | 2.118.0 | MIT | Provider SDK |
 | `server-only` | 0.0.1 | MIT | Next client-import rejection |
 | `zod` | 4.6.7 | MIT | Configuration and request validation |
-| Next (peer) | 16.4.3 | MIT | Application runtime and boundary enforcement |
+| Next (peer) | 16.4.6 | MIT | Application runtime and boundary enforcement |
 
 Supabase's SDK brings its Auth, Functions, PostgREST, Realtime and Storage client packages. The starter only calls Auth APIs. The root integration report records the resolved dependency inventory and bundle measurements. Provider use is confined to the adapter and application; generic Vite consumers do not install it.
 
