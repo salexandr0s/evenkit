@@ -280,3 +280,25 @@ attachment `inline-size: 100%` made the new sizing assertion fail by 226.6px,
 confirming the original shrinkage regression remains detected. Lint and all
 type checks passed. Logs and the original hosted failure artifact are retained
 under `.artifacts/security-release/`; a new full hosted run follows the repair.
+
+The second [hosted run](https://github.com/salexandr0s/evenkit/actions/runs/44145517205)
+passed all 337 catalog cases and 62/63 admin cases. Linux WebKit suggested
+`Workshop_notes.txt` for a download whose application filename is
+`Workshop notes.txt`; macOS WebKit preserved the space.
+[Playwright documents browser-specific suggested-filename logic](https://playwright.dev/docs/api/class-download#download-suggested-filename).
+The test now first asserts the exact `download="Workshop notes.txt"` attribute,
+then requires the observed underscore normalization only for Linux WebKit. Other
+engines/platforms still require the original name. Exact downloaded file content,
+navigation, preview, focus, retry and undo checks remain. No application code or
+required check changed.
+
+A fresh release-time npm audit (17 November, 18:22 UTC) reports zero production
+vulnerabilities and 15 development-tool entries (8 moderate, 7 high), superseding
+the earlier nine-entry snapshot. The additional graph includes
+[GHSA-fc5q-39xc-vjpf](https://github.com/advisories/GHSA-fc5q-39xc-vjpf), a picomatch
+advisory reviewed/updated today with no patched version listed. This release
+keeps the verified Next patch; it does not apply npm's proposed toolchain
+major-version downgrades. Full audit JSON remains in
+`.artifacts/security-release/`.
+The complete local documents/team file passed all 12 cases across Chromium,
+Firefox and WebKit after this repair, followed by lint and all type checks.

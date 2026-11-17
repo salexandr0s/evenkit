@@ -2,6 +2,8 @@
 
 Verified on 17 November 2026 at `2da89dd8e4c70ccd72c13ab652f81834ce2f9bf2`.
 
+Release-time follow-up: the [hosted CI record](./ci-audit.md#first-hosted-run) documents two platform-specific test repairs and a fresh audit snapshot of 15 development-tool entries (8 moderate, 7 high). Production audit remains clean; the nine-entry result below is the earlier snapshot.
+
 Next.js is updated from 16.4.3 to **16.4.6** in the admin starter, auth adapter's
 development dependency and standalone Next fixture. The adapter's peer range
 and consumer guide now require `^16.4.6`. This excludes the vulnerable versions
